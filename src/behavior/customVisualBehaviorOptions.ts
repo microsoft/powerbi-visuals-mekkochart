@@ -24,14 +24,12 @@
  *  THE SOFTWARE.
  */
 
-/**
- * Imports external styles.
- * We compile it as a less file in order to wrap the external CSS rules.
- */
-@import (less) "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-chartutils/lib/index.css";
+module powerbi.extensibility.visual.behavior {
+    // d3
+    import Selection = d3.Selection;
 
-.mekkoChart {
-    font-family: helvetica, arial, sans-serif;
+    export interface CustomVisualBehaviorOptions {
+        layerOptions: any[];
+        clearCatcher: Selection<any>;
+    }
 }

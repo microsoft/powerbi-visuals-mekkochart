@@ -24,14 +24,24 @@
  *  THE SOFTWARE.
  */
 
-/**
- * Imports external styles.
- * We compile it as a less file in order to wrap the external CSS rules.
- */
-@import (less) "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-chartutils/lib/index.css";
+module powerbi.extensibility.visual.formattingUtils {
+    // powerbi.extensibility.utils.formatting
+    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
 
-.mekkoChart {
-    font-family: helvetica, arial, sans-serif;
+    export function getFormattedLegendLabel(
+        source: DataViewMetadataColumn,
+        values: DataViewValueColumns): string {
+
+        let sourceForFormat: DataViewMetadataColumn = source,
+            formatName: PrimitiveValue = source.displayName;
+
+        if (source.groupName !== undefined) {
+            sourceForFormat = values.source;
+            formatName = source.groupName;
+        }
+
+        return valueFormatter.format(
+            formatName,
+            valueFormatter.getFormatStringByColumn(sourceForFormat));
+    }
 }

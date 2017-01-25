@@ -24,14 +24,11 @@
  *  THE SOFTWARE.
  */
 
-/**
- * Imports external styles.
- * We compile it as a less file in order to wrap the external CSS rules.
- */
-@import (less) "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-chartutils/lib/index.css";
-
-.mekkoChart {
-    font-family: helvetica, arial, sans-serif;
+module powerbi.extensibility.visual {
+    export const RoleNames = {
+        category: "Category",
+        series: "Series",
+        y: "Y",
+        width: "Width"
+    };
 }

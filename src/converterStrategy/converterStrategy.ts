@@ -24,14 +24,15 @@
  *  THE SOFTWARE.
  */
 
-/**
- * Imports external styles.
- * We compile it as a less file in order to wrap the external CSS rules.
- */
-@import (less) "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-chartutils/lib/index.css";
-
-.mekkoChart {
-    font-family: helvetica, arial, sans-serif;
+module powerbi.extensibility.visual.converterStrategy {
+    export interface ConverterStrategy {
+        getLegend(
+            colors: IColorPalette,
+            defaultLegendLabelColor: string,
+            defaultColor?: string): LegendSeriesInfo;
+        getValueBySeriesAndCategory(series: number, category: number): number;
+        getMeasureNameByIndex(series: number, category: number): string;
+        hasHighlightValues(series: number): boolean;
+        getHighlightBySeriesAndCategory(series: number, category: number): number;
+    }
 }

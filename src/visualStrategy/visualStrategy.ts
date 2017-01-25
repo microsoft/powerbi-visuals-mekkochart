@@ -24,14 +24,30 @@
  *  THE SOFTWARE.
  */
 
-/**
- * Imports external styles.
- * We compile it as a less file in order to wrap the external CSS rules.
- */
-@import (less) "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-chartutils/lib/index.css";
+module powerbi.extensibility.visual.visualStrategy {
+    import IAxisProperties = powerbi.extensibility.utils.chart.axis.IAxisProperties;
 
-.mekkoChart {
-    font-family: helvetica, arial, sans-serif;
+    export interface IVisualStrategy {
+        setData(data: MekkoChartData): void;
+        setupVisualProps(columnChartProps: MekkoChartContext): void;
+        setXScale(
+            is100Pct: boolean,
+            forcedTickCount?: number,
+            forcedXDomain?: any[],
+            axisScaleType?: string,
+            axisDisplayUnits?: number,
+            axisPrecision?: number,
+            ensureXDomain?: NumberRange): IAxisProperties;
+        setYScale(
+            is100Pct: boolean,
+            forcedTickCount?: number,
+            forcedYDomain?: any[],
+            axisScaleType?: string,
+            axisDisplayUnits?: number,
+            axisPrecision?: number,
+            ensureYDomain?: NumberRange): IAxisProperties;
+        drawColumns(useAnimation: boolean): MekkoChartDrawInfo;
+        selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void;
+        getClosestColumnIndex(x: number, y: number): number;
+    }
 }

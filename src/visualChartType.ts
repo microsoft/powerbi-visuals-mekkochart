@@ -24,14 +24,23 @@
  *  THE SOFTWARE.
  */
 
-/**
- * Imports external styles.
- * We compile it as a less file in order to wrap the external CSS rules.
- */
-@import (less) "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
-@import (less) "node_modules/powerbi-visuals-utils-chartutils/lib/index.css";
+module powerbi.extensibility.visual {
+    export const flagBar: number = 1 << 1;
+    export const flagColumn: number = 1 << 2;
+    export const flagClustered: number = 1 << 3;
+    export const flagStacked: number = 1 << 4;
+    export const flagStacked100: number = flagStacked | (1 << 5);
 
-.mekkoChart {
-    font-family: helvetica, arial, sans-serif;
+    export enum MekkoVisualChartType {
+        clusteredBar = flagBar | flagClustered,
+        clusteredColumn = flagColumn | flagClustered,
+        hundredPercentStackedBar = flagBar | flagStacked100,
+        hundredPercentStackedColumn = flagColumn | flagStacked100,
+        stackedBar = flagBar | flagStacked,
+        stackedColumn = flagColumn | flagStacked,
+    }
+
+    export enum MekkoChartType {
+        HundredPercentStackedColumn,
+    }
 }
