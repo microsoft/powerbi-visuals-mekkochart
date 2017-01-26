@@ -112,8 +112,10 @@ module powerbi.extensibility.visual.utils {
     }
 
     export function getFillOpacity(selected: boolean, highlight: boolean, hasSelection: boolean, hasPartialHighlights: boolean): number {
-        if ((hasPartialHighlights && !highlight) || (hasSelection && !selected))
+        if ((hasPartialHighlights && !highlight) || (hasSelection && !selected)) {
             return DimmedOpacity;
+        }
+
         return DefaultOpacity;
     }
 

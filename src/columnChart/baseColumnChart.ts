@@ -95,6 +95,8 @@ module powerbi.extensibility.visual.columnChart {
         public static SeriesClasses: ClassAndSelector = createClassAndSelector("series");
         public static BorderClass: ClassAndSelector = createClassAndSelector("mekkoborder");
 
+        private static HighlightedKeyPostfix: string = "-highlighted-data-point";
+
         private svg: Selection<any>;
         private unclippedGraphicsContext: Selection<any>;
         private mainGraphicsContext: Selection<any>;
@@ -593,7 +595,7 @@ module powerbi.extensibility.visual.columnChart {
                         ? dataViewCat.categories[0]
                         : null;
 
-                    var identity = /*SelectionIdBuilder*/visualHost.createSelectionIdBuilder()
+                    var identity = visualHost.createSelectionIdBuilder()
                         .withCategory(category, categoryIndex)
                         .withSeries(dataViewCat.values, columnGroup)
                         .withMeasure(converterStrategy.getMeasureNameByIndex(seriesIndex))
@@ -659,26 +661,26 @@ module powerbi.extensibility.visual.columnChart {
                     var originalPosition: number = columnStartX[categoryIndex];
 
                     var dataPoint: MekkoChartColumnDataPoint = {
-                        categoryValue: categoryValue,
-                        value: value,
-                        position: position,
-                        valueAbsolute: valueAbsolute,
+                        categoryValue,
+                        value,
+                        position,
+                        valueAbsolute,
+                        categoryIndex,
+                        color,
+                        seriesIndex,
+                        chartType,
+                        identity,
+                        tooltipInfo,
                         valueOriginal: unadjustedValue,
-                        seriesIndex: seriesIndex,
                         labelSettings: dataPointLabelSettings,
-                        categoryIndex: categoryIndex,
-                        color: color,
                         selected: false,
                         originalValue: value,
-                        originalPosition: originalPosition,//position,
+                        originalPosition,//position,
                         originalValueAbsolute: valueAbsolute,
-                        identity: identity,
                         key: identity.getKey(),
-                        tooltipInfo: tooltipInfo,
                         labelFill: labelColor,
                         labelFormatString: metadata.format,
-                        lastSeries: lastValue,
-                        chartType: chartType,
+                        lastSeries: lastValue
                     };
 
                     seriesDataPoints.push(dataPoint);
@@ -706,7 +708,6 @@ module powerbi.extensibility.visual.columnChart {
                             highlightPosition -= valueAbsolute;
                         }
 
-                        //var highlightIdentity = /*SelectionId.createWithHighlight*/(identity);// TODO: check it
                         var rawCategoryValue = categories[categoryIndex];
 
                         var highlightedValue: number = highlightedTooltip
@@ -744,8 +745,8 @@ module powerbi.extensibility.visual.columnChart {
                             originalPosition: originalPosition,
                             originalValueAbsolute: valueAbsolute,
                             drawThinner: highlightsOverflow,
-                            identity: /*highlightIdentity,*/identity,
-                            key: /*highlightIdentity*/identity.getKey(),
+                            identity: identity,
+                            key: `${identity.getKey()}${BaseColumnChart.HighlightedKeyPostfix}`,
                             tooltipInfo: tooltipInfo,
                             labelFormatString: metadata.format,
                             labelFill: labelColor,
@@ -786,8 +787,15 @@ module powerbi.extensibility.visual.columnChart {
             return legendItem.color;
         }
 
-        private static getStackedLabelColor(isNegative: boolean, seriesIndex: number, seriesCount: number, categoryIndex: number, rawValues: number[][]): boolean {
+        private static getStackedLabelColor(
+            isNegative: boolean,
+            seriesIndex: number,
+            seriesCount: number,
+            categoryIndex: number,
+            rawValues: number[][]): boolean {
+
             var lastValue = !(isNegative && seriesIndex === seriesCount - 1 && seriesCount !== 1);
+
             //run for the next series and check if current series is last
             for (var i: number = seriesIndex + 1; i < seriesCount; i++) {
                 var nextValues: number = AxisHelper.normalizeNonFiniteNumber(rawValues[i][categoryIndex]);
@@ -833,6 +841,7 @@ module powerbi.extensibility.visual.columnChart {
 
         public setData(dataViews: DataView[]): void {
             var is100PctStacked: boolean = true;
+
             this.data = {
                 categories: [],
                 categoriesWidth: [],
@@ -868,7 +877,7 @@ module powerbi.extensibility.visual.columnChart {
                         this.chartType);
 
                     var series: MekkoChartSeries[] = this.data.series;
-                    for (var i: number = 0, ilen: number = series.length; i < ilen; i++) {
+                    for (var i: number = 0; i < series.length; i++) {
                         var currentSeries: MekkoChartSeries = series[i];
                         if (this.interactivityService) {
                             this.interactivityService.applySelectionStateToData(currentSeries.data);
