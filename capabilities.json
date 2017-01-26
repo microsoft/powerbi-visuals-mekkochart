@@ -23,7 +23,7 @@
     ],
     "objects": {
         "columnBorder": {
-            "displayName": "ColumnBorder",
+            "displayName": "Column Border",
             "properties": {
                 "show": {
                     "displayName": "Show",
@@ -115,45 +115,6 @@
                         "bool": true
                     }
                 },
-                "position": {
-                    "displayName": "Position",
-                    "type": {
-                        "enumeration": [
-                            {
-                                "value": "Top",
-                                "displayName": "Top"
-                            },
-                            {
-                                "value": "Bottom",
-                                "displayName": "Bottom"
-                            },
-                            {
-                                "value": "Left",
-                                "displayName": "Left"
-                            },
-                            {
-                                "value": "Right",
-                                "displayName": "Right"
-                            },
-                            {
-                                "value": "TopCenter",
-                                "displayName": "Top Center"
-                            },
-                            {
-                                "value": "BottomCenter",
-                                "displayName": "Bottom Center"
-                            },
-                            {
-                                "value": "LeftCenter",
-                                "displayName": "Left Center"
-                            },
-                            {
-                                "value": "RightCenter",
-                                "displayName": "Right center"
-                            }
-                        ]
-                    }
-                },
                 "showTitle": {
                     "displayName": "Title",
                     "type": {
@@ -161,13 +122,13 @@
                     }
                 },
                 "titleText": {
-                    "displayName": "Titletext",
+                    "displayName": "Title text",
                     "type": {
                         "text": true
                     }
                 },
                 "fontSize": {
-                    "displayName": "Textsize",
+                    "displayName": "Text size",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -185,74 +146,10 @@
                         "bool": true
                     }
                 },
-                "position": {
-                    "displayName": "Position",
-                    "type": {
-                        "enumeration": [
-                            {
-                                "value": "Left",
-                                "displayName": "Left"
-                            },
-                            {
-                                "value": "Right",
-                                "displayName": "Right"
-                            }
-                        ]
-                    }
-                },
-                "axisScale": {
-                    "displayName": "Scale type",
-                    "type": {
-                        "enumeration": [
-                            {
-                                "value": "linear",
-                                "displayName": "Linear"
-                            },
-                            {
-                                "value": "log",
-                                "displayName": "Log"
-                            }
-                        ]
-                    }
-                },
-                "axisType": {
-                    "displayName": "Type",
-                    "type": {
-                        "enumeration": [
-                            {
-                                "value": "Scalar",
-                                "displayName": "Continuous"
-                            },
-                            {
-                                "value": "Categorical",
-                                "displayName": "Categorical"
-                            }
-                        ]
-                    }
-                },
                 "showAxisTitle": {
                     "displayName": "Title",
                     "type": {
                         "bool": true
-                    }
-                },
-                "axisStyle": {
-                    "displayName": "Style",
-                    "type": {
-                        "enumeration": [
-                            {
-                                "value": "showBoth",
-                                "displayName": "Show title only"
-                            },
-                            {
-                                "value": "showTitleOnly",
-                                "displayName": "Show unit only"
-                            },
-                            {
-                                "value": "showUnitOnly",
-                                "displayName": "Show both"
-                            }
-                        ]
                     }
                 },
                 "labelColor": {
@@ -284,36 +181,6 @@
                         "bool": true
                     }
                 },
-                "position": {
-                    "displayName": "Position",
-                    "type": {
-                        "enumeration": [
-                            {
-                                "value": "Left",
-                                "displayName": "Left"
-                            },
-                            {
-                                "value": "Right",
-                                "displayName": "Right"
-                            }
-                        ]
-                    }
-                },
-                "axisScale": {
-                    "displayName": "Scale type",
-                    "type": {
-                        "enumeration": [
-                            {
-                                "value": "linear",
-                                "displayName": "Linear"
-                            },
-                            {
-                                "value": "log",
-                                "displayName": "Log"
-                            }
-                        ]
-                    }
-                },
                 "intersection": {
                     "displayName": "Intersection",
                     "type": {
@@ -324,25 +191,6 @@
                     "displayName": "Title",
                     "type": {
                         "bool": true
-                    }
-                },
-                "axisStyle": {
-                    "displayName": "Style",
-                    "type": {
-                        "enumeration": [
-                            {
-                                "value": "showBoth",
-                                "displayName": "Show title only"
-                            },
-                            {
-                                "value": "showTitleOnly",
-                                "displayName": "Show unit only"
-                            },
-                            {
-                                "value": "showUnitOnly",
-                                "displayName": "Show both"
-                            }
-                        ]
                     }
                 },
                 "labelColor": {

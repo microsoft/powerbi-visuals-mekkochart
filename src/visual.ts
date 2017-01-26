@@ -1034,10 +1034,7 @@ module powerbi.extensibility.visual {
                             : axisStyle.showTitleOnly,
                         labelColor: this.categoryAxisProperties
                             ? this.categoryAxisProperties['labelColor']
-                            : null,
-                        fontSize: this.categoryAxisProperties && this.categoryAxisProperties['fontSize'] != null
-                            ? this.categoryAxisProperties['fontSize']
-                            : /*NewDataLabelUtils.DefaultLabelFontSizeInPt*/9
+                            : null
                     },
                     objectName: 'categoryAxis',
                     validValues: {
@@ -1110,10 +1107,7 @@ module powerbi.extensibility.visual {
                             : axisStyle.showTitleOnly,
                         labelColor: this.valueAxisProperties
                             ? this.valueAxisProperties['labelColor']
-                            : null,
-                        fontSize: this.valueAxisProperties && this.valueAxisProperties['fontSize'] != null
-                            ? this.valueAxisProperties['fontSize']
-                            : /*NewDataLabelUtils.DefaultLabelFontSizeInPt*/9
+                            : null
                     },
                     objectName: 'valueAxis',
                     validValues: {
