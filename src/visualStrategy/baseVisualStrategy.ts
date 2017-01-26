@@ -42,6 +42,11 @@ module powerbi.extensibility.visual.visualStrategy {
     // powerbi.extensibility.utils.chart
     import AxisHelper = powerbi.extensibility.utils.chart.axis;
     import IAxisProperties = AxisHelper.IAxisProperties;
+    import getLabelPrecision = powerbi.extensibility.utils.chart.dataLabel.utils.getLabelPrecision;
+    import hundredPercentFormat = powerbi.extensibility.utils.chart.dataLabel.utils.hundredPercentFormat;
+    import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
+    import IColumnFormatterCacheManager = powerbi.extensibility.utils.chart.dataLabel.IColumnFormatterCacheManager;
+    import createColumnFormatterCacheManager = powerbi.extensibility.utils.chart.dataLabel.utils.createColumnFormatterCacheManager;
 
     // powerbi.extensibility.utils.interactivity
     import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
@@ -57,6 +62,8 @@ module powerbi.extensibility.visual.visualStrategy {
     import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
 
     export class BaseVisualStrategy implements IVisualStrategy {
+        private static DefaultLabelFillColor: string = "#ffffff";
+
         private static Classes: MekkoChartClasses = {
             item: createClassAndSelector('column'),
             highlightItem: createClassAndSelector('highlightColumn')
@@ -268,7 +275,7 @@ module powerbi.extensibility.visual.visualStrategy {
             return {
                 scale: scale,
                 axis: axis,
-                formatter: formatter,
+                formatter,
                 values: formattedTickValues,
                 axisType: dataType,
                 axisLabel: null,
@@ -401,7 +408,7 @@ module powerbi.extensibility.visual.visualStrategy {
             };
             var stackedColumnLayout = this.layout = BaseVisualStrategy.getLayout(data, axisOptions);
             //var dataLabelSettings = data.labelSettings;
-            var labelDataPoints: MekkoLabelDataPoint[] = this.createMekkoLabelDataPoints();
+            var labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints();
             var result: MekkoChartAnimationResult;
             var shapes: UpdateSelection<any>;
             var series = utils.drawSeries(data, this.graphicsContext.mainGraphicsContext, axisOptions);
@@ -637,103 +644,77 @@ module powerbi.extensibility.visual.visualStrategy {
             };
         }
 
-        private createMekkoLabelDataPoints(): MekkoLabelDataPoint[] {
-            // var NewDataLabelUtils: any; // TODO: fix it
+        private createMekkoLabelDataPoints(): LabelDataPoint[] {
+            let labelDataPoints: LabelDataPoint[] = [],
+                data: MekkoChartData = this.data,
+                dataSeries: MekkoChartSeries[] = data.series,
+                formattersCache: IColumnFormatterCacheManager = createColumnFormatterCacheManager(),
+                shapeLayout = this.layout.shapeLayout;
 
-            let LabelTextProperties: TextProperties = {
-                fontFamily: "'helvetica', 'arial', 'sans-serif'",
-                fontSize: PixelConverter.fromPoint(/*DefaultLabelFontSizeInPt*/9),
-                fontWeight: 'normal',
-            };
+            for (var currentSeries of dataSeries) {
+                const labelSettings = currentSeries.labelSettings
+                    ? currentSeries.labelSettings
+                    : data.labelSettings;
 
-            var NewDataLabelUtils = {
-                LabelTextProperties,
-                defaultLabelColor: "#777777",
-                defaultInsideLabelColor: "#ffffff"
-            }
-
-            var labelDataPoints: MekkoLabelDataPoint[] = [];
-            var data = this.data;
-            var series = data.series;
-            // var formattersCache = NewDataLabelUtils.createColumnFormatterCacheManager();
-            var shapeLayout = this.layout.shapeLayout;
-
-            for (var i: number = 0, ilen = series.length; i < ilen; i++) {
-                var currentSeries = series[i];
-                var labelSettings = currentSeries.labelSettings ? currentSeries.labelSettings : data.labelSettings;
-
-                if (!labelSettings.show) {
+                if (!labelSettings.show || !currentSeries.data) {
                     continue;
                 }
 
-                if (!currentSeries.data) {
-                    continue;
-                }
+                const axisFormatter: number = getDisplayUnitValueFromAxisFormatter(
+                    this.yProps.formatter,
+                    labelSettings);
 
-                // var axisFormatter: number = NewDataLabelUtils.getDisplayUnitValueFromAxisFormatter(this.yProps.formatter, labelSettings);
-
-                for (var j: number = 0; j < currentSeries.data.length; j++) {
-                    var dataPoint: MekkoChartColumnDataPoint = currentSeries.data[j];
-                    if ((data.hasHighlights && !dataPoint.highlight) || dataPoint.value == null) {
+                for (let dataPoint of currentSeries.data) {
+                    if ((data.hasHighlights && !dataPoint.highlight)
+                        || dataPoint.value == null) {
                         continue;
                     }
 
                     // Calculate parent rectangle
-                    var parentRect: IRect = {
+                    const parentRect: IRect = {
                         left: shapeLayout.x(dataPoint),
                         top: shapeLayout.y(dataPoint),
                         width: shapeLayout.width(dataPoint),
                         height: shapeLayout.height(dataPoint),
                     };
 
-                    // Calculate label text
-                    var formatString = null;
-                    var value: number = dataPoint.valueOriginal;
+                    let formatString: string = null,
+                        value: number = dataPoint.valueOriginal;
 
                     if (!labelSettings.displayUnits) {
-                        // formatString = NewDataLabelUtils.hundredPercentFormat;
+                        formatString = hundredPercentFormat;
                         value = dataPoint.valueAbsolute;
                     }
 
-                    // var formatter = formattersCache.getOrCreate(formatString, labelSettings, axisFormatter);
-                    var text = /*NewDataLabelUtils.getLabelFormattedText(formatter.format*/value.toString()/*)*/;
-
-                    // Calculate text size
-                    var properties: TextProperties = {
-                        text: text,
-                        fontFamily: NewDataLabelUtils.LabelTextProperties.fontFamily,
-                        fontSize: NewDataLabelUtils.LabelTextProperties.fontSize,
-                        fontWeight: NewDataLabelUtils.LabelTextProperties.fontWeight,
-                    };
-                    var textWidth = textMeasurementService.measureSvgTextWidth(properties);
-                    var textHeight = textMeasurementService.estimateSvgTextHeight(properties);
+                    const formatter: IValueFormatter = formattersCache.getOrCreate(
+                        formatString,
+                        labelSettings,
+                        axisFormatter);
 
                     labelDataPoints.push({
-                        isPreferred: true,
-                        text: text,
-                        textSize: {
-                            width: textWidth,
-                            height: textHeight,
-                        },
-                        outsideFill: labelSettings.labelColor
+                        parentRect,
+                        text: formatter.format(value),
+                        fillColor: labelSettings.labelColor
                             ? labelSettings.labelColor
-                            : NewDataLabelUtils.defaultLabelColor,
-                        insideFill: labelSettings.labelColor
-                            ? labelSettings.labelColor
-                            : NewDataLabelUtils.defaultInsideLabelColor,
-                        isParentRect: true,
-                        parentShape: {
-                            rect: parentRect,
-                            orientation: 1,
-                            validPositions: BaseVisualStrategy.validLabelPositions,
-                        },
-                        identity: dataPoint.identity as ISelectionId,
-                        parentType: 1,//LabelDataPointParentType.Rectangle,
+                            : BaseVisualStrategy.DefaultLabelFillColor
                     });
                 }
             }
 
             return labelDataPoints;
         }
+    }
+
+    export function getDisplayUnitValueFromAxisFormatter(
+        axisFormatter: IValueFormatter,
+        labelSettings: VisualDataLabelsSettings): number {
+
+        if (axisFormatter
+            && axisFormatter.displayUnit
+            && labelSettings.displayUnits === 0) {
+            return axisFormatter.displayUnit.value;
+        }
+
+        return null;
     }
 }

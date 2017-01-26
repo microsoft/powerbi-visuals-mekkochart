@@ -56,10 +56,12 @@ module powerbi.extensibility.visual {
     import legendProps = powerbi.extensibility.utils.chart.legend.legendProps;
     import dataLabelUtils = powerbi.extensibility.utils.chart.dataLabel.utils;
     import createLegend = powerbi.extensibility.utils.chart.legend.createLegend;
+    import ILabelLayout = powerbi.extensibility.utils.chart.dataLabel.ILabelLayout;
     import LegendPosition = powerbi.extensibility.utils.chart.legend.LegendPosition;
     import DataLabelObject = powerbi.extensibility.utils.chart.dataLabel.DataLabelObject;
     import LabelEnabledDataPoint = powerbi.extensibility.utils.chart.dataLabel.LabelEnabledDataPoint;
     import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
+    import drawDefaultLabelsForDataPointChart = powerbi.extensibility.utils.chart.dataLabel.utils.drawDefaultLabelsForDataPointChart;
 
     // powerbi.extensibility.utils.svg
     import SVGUtil = powerbi.extensibility.utils.svg;
@@ -193,17 +195,25 @@ module powerbi.extensibility.visual {
         private static MinWidth: number = 100;
         private static MinHeight: number = 100;
 
+        private rootElement: Selection<any>;
+
         private axisGraphicsContext: Selection<any>;
         private xAxisGraphicsContext: Selection<any>;
         private y1AxisGraphicsContext: Selection<any>;
         private y2AxisGraphicsContext: Selection<any>;
-        private element: JQuery;
         private svg: Selection<any>;
         private clearCatcher: Selection<any>;
-        private margin: IMargin;
+
+        private margin: IMargin = {
+            top: 1,
+            right: 1,
+            bottom: 1,
+            left: 1
+        };
+
         private type: MekkoChartType;
         private visualHost: IVisualHost;
-        private layers: IColumnChart[];
+        private layers: IColumnChart[] = [];
         private legend: ILegend;
         private legendMargins: IViewport;
         private layerLegendData: ILegendData;
@@ -228,12 +238,11 @@ module powerbi.extensibility.visual {
         private yAxisOrientation: string;
         private bottomMarginLimit: number;
         private leftRightMarginLimit: number;
-        // private sharedColorPalette: MekkoChartSharedColorPalette;
 
         public animator: /*IGenericAnimator*/any;
 
         // Scrollbar related
-        private isScrollable: boolean;
+        private isScrollable: boolean = false;
         private scrollY: boolean;
         private scrollX: boolean;
         private isXScrollBarVisible: boolean;
@@ -244,59 +253,31 @@ module powerbi.extensibility.visual {
         private brushGraphicsContext: Selection<any>;
         private brush: Brush<any>;
         private static ScrollBarWidth = 10;
-        // TODO: Remove onDataChanged & onResizing once all visuals have implemented update.
+
         private dataViews: DataView[];
         private currentViewport: IViewport;
 
         constructor(options: VisualConstructorOptions) {
-            this.isScrollable = false;
-            // if (options) {
-            // TODO: fix these lines below
-            // this.type = options.chartType;
-            // if (options.isScrollable)
-            //     this.isScrollable = options.isScrollable;
-            // this.animator = options.animator;
-            // if (options.cartesianSmallViewPortProperties) {
-            //     this.cartesianSmallViewPortProperties = options.cartesianSmallViewPortProperties;
-            // }
-
-            // if (options.behavior) {
-            //     this.behavior = options.behavior;
-            // }
-            // } else {
-            this.behavior = new CustomVisualBehavior([new VisualBehavior()]);
-            // }
-
             this.init(options);
         }
 
         public init(options: VisualConstructorOptions) {
             this.visualInitOptions = options;
-            this.layers = [];
-
-            this.element = $(options.element);
-
-            // var viewport = this.currentViewport = options.viewport;
             this.visualHost = options.host;
+
+            this.rootElement = d3.select(options.element)
+                .append("div")
+                .classed(MekkoChart.ClassName, true);
+
+            this.behavior = new CustomVisualBehavior([new VisualBehavior()]);
+
             this.brush = d3.svg.brush();
-
-            this.element.addClass(MekkoChart.ClassName);
-
-            this.margin = {
-                top: 1,
-                right: 1,
-                bottom: 1,
-                left: 1
-            };
             this.yAxisOrientation = axis.position.left;
-            // this.adjustMargins(viewport); // TODO: check it
-
-            // this.sharedColorPalette = new MekkoChartSharedColorPalette(options.host.colorPalette);
 
             var showLinesOnX = true;
             var showLinesOnY = true;
 
-            this.svg = d3.select(this.element.get(0)).append('svg');
+            this.svg = this.rootElement.append('svg');
             this.svg.style('position', 'absolute');
 
             var axisGraphicsContext = this.axisGraphicsContext = this.svg
@@ -313,11 +294,11 @@ module powerbi.extensibility.visual {
             this.labelGraphicsContextScrollable = this.svgScrollable.append('g')
             // .classed(NewDataLabelUtils.labelGraphicsContextClass.class, true); // TODO: check it
 
-            if (this.behavior) {
-                this.clearCatcher = appendClearCatcher(this.axisGraphicsContextScrollable);
-            }
+            this.clearCatcher = appendClearCatcher(this.axisGraphicsContextScrollable);
 
-            var axisGroup = showLinesOnX ? axisGraphicsContextScrollable : axisGraphicsContext;
+            const axisGroup: Selection<any> = showLinesOnX
+                ? axisGraphicsContextScrollable
+                : axisGraphicsContext;
 
             this.xAxisGraphicsContext = showLinesOnX
                 ? axisGraphicsContext
@@ -327,8 +308,13 @@ module powerbi.extensibility.visual {
                     .append('g')
                     .attr('class', 'x axis');
 
-            this.y1AxisGraphicsContext = axisGroup.append('g').attr('class', 'y axis');
-            this.y2AxisGraphicsContext = axisGroup.append('g').attr('class', 'y axis');
+            this.y1AxisGraphicsContext = axisGroup
+                .append('g')
+                .attr('class', 'y axis');
+
+            this.y2AxisGraphicsContext = axisGroup
+                .append('g')
+                .attr('class', 'y axis');
 
             this.xAxisGraphicsContext.classed('showLinesOnAxis', showLinesOnX);
             this.y1AxisGraphicsContext.classed('showLinesOnAxis', showLinesOnY);
@@ -338,12 +324,10 @@ module powerbi.extensibility.visual {
             this.y1AxisGraphicsContext.classed('hideLinesOnAxis', !showLinesOnY);
             this.y2AxisGraphicsContext.classed('hideLinesOnAxis', !showLinesOnY);
 
-            if (this.behavior) {
-                this.interactivityService = createInteractivityService(this.visualHost);
-            }
+            this.interactivityService = createInteractivityService(this.visualHost);
+
             this.legend = createLegend(
-                this.element,
-                /*options.interactivity && options.interactivity.isInteractiveLegend,*/
+                $(this.rootElement.node()),
                 false,
                 this.interactivityService,
                 true);
@@ -367,23 +351,21 @@ module powerbi.extensibility.visual {
 
             if (!options.hideXAxisTitle) {
                 var xAxisYPosition = <number>d3.transform(this.xAxisGraphicsContext.attr("transform")).translate[1] - fontSize + xFontSize + 33;
+
                 var xAxisLabel = this.axisGraphicsContext.append("text")
-                    .style("text-anchor", "middle")
+                    .attr({
+                        x: width / 2,
+                        y: xAxisYPosition
+                    })
+                    .style({
+                        "text-anchor": "middle",
+                        "fill": options.xLabelColor ? options.xLabelColor.solid.color : null
+                    })
                     .text(options.axisLabels.x)
-                    .call((text: Selection<any>) => {
-                        text.each(function () {
-                            var text = d3.select(this);
-                            text.attr({
-                                'class': "xAxisLabel",
-                                'x': width / 2,
-                                'y': xAxisYPosition
-                            });
-                        });
-                    });
+                    .classed("xAxisLabel", true);
 
-                xAxisLabel.style("fill", options.xLabelColor ? options.xLabelColor.solid.color : null);
-
-                xAxisLabel.call(AxisHelper.LabelLayoutStrategy.clip,
+                xAxisLabel.call(
+                    AxisHelper.LabelLayoutStrategy.clip,
                     width,
                     textMeasurementService.svgEllipsis);
             }
@@ -438,25 +420,25 @@ module powerbi.extensibility.visual {
         }
 
         private adjustMargins(viewport: IViewport): void {
-            var margin = this.margin;
-
-            var width = viewport.width - (margin.left + margin.right);
-            var height = viewport.height - (margin.top + margin.bottom);
+            const width: number = viewport.width - (this.margin.left + this.margin.right),
+                height: number = viewport.height - (this.margin.top + this.margin.bottom);
 
             // Adjust margins if ticks are not going to be shown on either axis
-            var xAxis = this.element.find('.x.axis');
+            var xAxis = this.rootElement.selectAll('.x.axis');
 
             if (AxisHelper.getRecommendedNumberOfTicksForXAxis(width) === 0
                 && AxisHelper.getRecommendedNumberOfTicksForYAxis(height) === 0) {
+
                 this.margin = {
                     top: 0,
                     right: 0,
                     bottom: 0,
                     left: 0
                 };
-                xAxis.hide();
+
+                xAxis.style("display", "none");
             } else {
-                xAxis.show();
+                xAxis.style("display", null);
             }
         }
 
@@ -494,24 +476,46 @@ module powerbi.extensibility.visual {
                 'x': 0
             });
 
-            this.axisGraphicsContext.attr('transform', SVGUtil.translate(margin.left, margin.top));
-            this.axisGraphicsContextScrollable.attr('transform', SVGUtil.translate(margin.left, margin.top));
-            this.labelGraphicsContextScrollable.attr('transform', SVGUtil.translate(margin.left, margin.top));
+            this.axisGraphicsContext.attr(
+                'transform',
+                SVGUtil.translate(margin.left, margin.top));
+
+            this.axisGraphicsContextScrollable.attr(
+                'transform',
+                SVGUtil.translate(margin.left, margin.top));
+
+            this.labelGraphicsContextScrollable.attr(
+                'transform',
+                SVGUtil.translate(margin.left, margin.top));
 
             if (this.isXScrollBarVisible) {
                 this.svgScrollable.attr({
                     'x': this.margin.left
                 });
-                this.axisGraphicsContextScrollable.attr('transform', SVGUtil.translate(0, margin.top));
-                this.labelGraphicsContextScrollable.attr('transform', SVGUtil.translate(0, margin.top));
+                this.axisGraphicsContextScrollable.attr(
+                    'transform',
+                    SVGUtil.translate(0, margin.top));
+
+                this.labelGraphicsContextScrollable.attr(
+                    'transform',
+                    SVGUtil.translate(0, margin.top));
+
                 this.svgScrollable.attr('width', width);
-                this.svg.attr('width', viewport.width)
-                    .attr('height', viewport.height + MekkoChart.ScrollBarWidth);
+
+                this.svg
+                    .attr({
+                        "width": viewport.width,
+                        "height": viewport.height + MekkoChart.ScrollBarWidth
+                    });
             }
             else if (this.isYScrollBarVisible) {
                 this.svgScrollable.attr('height', height + margin.top);
-                this.svg.attr('width', viewport.width + MekkoChart.ScrollBarWidth)
-                    .attr('height', viewport.height);
+
+                this.svg
+                    .attr({
+                        'height': viewport.height,
+                        'width': viewport.width + MekkoChart.ScrollBarWidth
+                    });
             }
         }
 
@@ -635,9 +639,12 @@ module powerbi.extensibility.visual {
             this.setVisibility(false);
         }
 
-        private setVisibility(status: boolean = true): void {
-            this.svg.style('display', status ? 'block' : 'none');
-            this.element.find('.legend').toggle(status);
+        private setVisibility(isVisible: boolean = true): void {
+            this.svg.style("display", isVisible ? "block" : "none");
+
+            this.rootElement
+                .selectAll(".legend")
+                .style("display", isVisible ? null : "none");
         }
 
         public static getLayout(data: MekkoChartData, options: MekkoChartCategoryLayoutOptions): MekkoChartCategoryLayout {
@@ -1703,31 +1710,43 @@ module powerbi.extensibility.visual {
                         .call(MekkoChart.setAxisLabelColor, y2LabelColor);
 
                     if (tickLabelMargins.yRight >= leftRightMarginLimit) {
-                        this.y2AxisGraphicsContext.selectAll('text')
-                            .call(AxisHelper.LabelLayoutStrategy.clip,
+                        this.y2AxisGraphicsContext
+                            .selectAll('text')
+                            .call(
+                            AxisHelper.LabelLayoutStrategy.clip,
                             // Can't use padding space to render text, so subtract that from available space for ellipses calculations
                             leftRightMarginLimit - MekkoChart.RightPadding,
                             textMeasurementService.svgEllipsis);
                     }
                 }
                 else {
-                    this.y2AxisGraphicsContext.selectAll('*').remove();
+                    this.y2AxisGraphicsContext
+                        .selectAll('*')
+                        .remove();
                 }
             }
             else {
-                this.y1AxisGraphicsContext.selectAll('*').remove();
-                this.y2AxisGraphicsContext.selectAll('*').remove();
+                this.y1AxisGraphicsContext
+                    .selectAll('*')
+                    .remove();
+
+                this.y2AxisGraphicsContext
+                    .selectAll('*')
+                    .remove();
             }
 
             this.translateAxes(viewport);
 
             // Axis labels
             if (chartHasAxisLabels) {
-                var hideXAxisTitle: boolean = !this.shouldRenderAxis(axes.x, "showAxisTitle");
-                var hideYAxisTitle: boolean = !this.shouldRenderAxis(axes.y1, "showAxisTitle");
-                var hideY2AxisTitle: boolean = this.valueAxisProperties && this.valueAxisProperties["secShowAxisTitle"] != null && this.valueAxisProperties["secShowAxisTitle"] === false;
+                const hideXAxisTitle: boolean = !this.shouldRenderAxis(axes.x, "showAxisTitle"),
+                    hideYAxisTitle: boolean = !this.shouldRenderAxis(axes.y1, "showAxisTitle");
 
-                var renderAxisOptions: MekkoAxisRenderingOptions = {
+                const hideY2AxisTitle: boolean = this.valueAxisProperties
+                    && this.valueAxisProperties["secShowAxisTitle"] != null
+                    && this.valueAxisProperties["secShowAxisTitle"] === false;
+
+                const renderAxisOptions: MekkoAxisRenderingOptions = {
                     axisLabels: axisLabels,
                     legendMargin: this.legendMargins.height,
                     viewport: viewport,
@@ -1737,81 +1756,82 @@ module powerbi.extensibility.visual {
                     xLabelColor: xLabelColor,
                     yLabelColor: yLabelColor,
                     y2LabelColor: y2LabelColor,
-                    margin: undefined,
+                    margin: undefined
                 };
 
                 this.renderAxesLabels(renderAxisOptions, xFontSize);
             }
             else {
-                this.axisGraphicsContext.selectAll('.xAxisLabel').remove();
-                this.axisGraphicsContext.selectAll('.yAxisLabel').remove();
+                this.axisGraphicsContext
+                    .selectAll('.xAxisLabel')
+                    .remove();
+
+                this.axisGraphicsContext
+                    .selectAll('.yAxisLabel')
+                    .remove();
             }
 
-            var dataPoints: SelectableDataPoint[] = [];
-            var layerBehaviorOptions: any[] = [];
-            var labelDataPointsGroup: MekkoLabelDataPointsGroup[] = [];
+            let dataPoints: SelectableDataPoint[] = [],
+                layerBehaviorOptions: any[] = [];
 
-            //Render chart columns
             if (this.behavior) {
-                for (var i: number = 0, len: number = layers.length; i < len; i++) {
-                    var result: MekkoVisualRenderResult = layers[i].render(suppressAnimations);
+                let resultsLabelDataPoints: LabelDataPoint[] = [];
+
+                for (let layerIndex: number = 0; layerIndex < layers.length; layerIndex++) {
+                    const result: MekkoVisualRenderResult = layers[layerIndex].render(suppressAnimations);
+
                     if (result) {
                         dataPoints = dataPoints.concat(result.dataPoints);
                         layerBehaviorOptions.push(result.behaviorOptions);
 
-                        if (result.labelDataPointGroups) {
-                            var resultLabelDataPointsGroups = result.labelDataPointGroups;
-                            for (var j: number = 0, jlen = resultLabelDataPointsGroups.length; j < jlen; j++) {
-                                var resultLabelDataPointsGroup = resultLabelDataPointsGroups[j];
-                                labelDataPointsGroup.push({
-                                    labelDataPoints: resultLabelDataPointsGroup.labelDataPoints,
-                                    maxNumberOfLabels: resultLabelDataPointsGroup.maxNumberOfLabels,
-                                });
-                            }
-                        }
-                        else {
-                            var resultsLabelDataPoints: MekkoLabelDataPoint[] = result.labelDataPoints;
-                            var reducedDataPoints: MekkoLabelDataPoint[] = resultsLabelDataPoints;
-                            labelDataPointsGroup.push({
-                                labelDataPoints: reducedDataPoints,
-                                maxNumberOfLabels: reducedDataPoints.length,
-                            });
-                        }
+                        resultsLabelDataPoints = resultsLabelDataPoints.concat(result.labelDataPoints);
                     }
                 }
 
-                // var labelLayoutOptions: DataLabelLayoutOptions = {
-                //     maximumOffset: NewDataLabelUtils.maxLabelOffset,
-                //     startingOffset: NewDataLabelUtils.startingLabelOffset
-                // };
-
-                // var labelLayout: LabelLayout = new LabelLayout(labelLayoutOptions);
-                // var dataLabels: Label[] = labelLayout.layout(labelDataPointsGroup, chartViewport);
-
-                // if (layers.length > 1) {
-                //     NewDataLabelUtils.drawLabelBackground(this.labelGraphicsContextScrollable, dataLabels, "#FFFFFF", 0.7);
-                // }
-                // if (this.animator && !suppressAnimations) {
-                //     NewDataLabelUtils.animateDefaultLabels(this.labelGraphicsContextScrollable, dataLabels, this.animator.getDuration());
-                // }
-                // else {
-                //     NewDataLabelUtils.drawDefaultLabels(this.labelGraphicsContextScrollable, dataLabels);
-                // }
-
-                this.labelGraphicsContextScrollable
-                    .selectAll("text.label")
-                    .style("pointer-events", "none");
+                drawDefaultLabelsForDataPointChart(
+                    resultsLabelDataPoints,
+                    this.labelGraphicsContextScrollable,
+                    this.getLabelLayout(),
+                    this.currentViewport);
 
                 if (this.interactivityService) {
-                    var behaviorOptions: CustomVisualBehaviorOptions = {
+                    const behaviorOptions: CustomVisualBehaviorOptions = {
                         layerOptions: layerBehaviorOptions,
                         clearCatcher: this.clearCatcher,
                     };
 
-                    this.interactivityService.bind(dataPoints, this.behavior, behaviorOptions);
+                    this.interactivityService.bind(
+                        dataPoints,
+                        this.behavior,
+                        behaviorOptions);
                 }
             }
+        }
 
+        private getLabelLayout(): ILabelLayout {
+            return {
+                labelText: (dataPoint: LabelDataPoint) => {
+                    return dataPoint.text;
+                },
+                labelLayout: {
+                    x: (dataPoint: LabelDataPoint) => {
+                        return dataPoint.parentRect.left + dataPoint.parentRect.width / 2;
+                    },
+                    y: (dataPoint: LabelDataPoint) => {
+                        return dataPoint.parentRect.top + dataPoint.parentRect.height / 2;
+                    }
+                },
+                filter: (dataPoint: LabelDataPoint) => {
+                    return dataPoint != null
+                        && dataPoint.size.height < dataPoint.parentRect.height
+                        && dataPoint.size.width < dataPoint.parentRect.width;
+                },
+                style: {
+                    "fill": (dataPoint: LabelDataPoint) => {
+                        return dataPoint.fillColor;
+                    }
+                }
+            }
         }
 
         /**

@@ -211,74 +211,11 @@ module powerbi.extensibility.visual {
         MinHeightAxesVisible: number;
     }
 
-    export interface MekkoLabelDataPointsGroup/* extends LabelDataPointsGroup */ {
-        labelDataPoints: MekkoLabelDataPoint[];
-        maxNumberOfLabels: number;
-    }
-
-    export const enum LabelDataPointParentType {
-        /* parent shape of data label is a point*/
-        Point,
-
-        /* parent shape of data label is a rectangle*/
-        Rectangle,
-
-        /* parent shape of data label is a polygon*/
-        Polygon
-    }
-
     export interface LabelDataPoint {
-        // Layout members; used by the layout system to position labels
-
-        /** The measured size of the text */
-        textSize: ISize;
-
-        /** Is data label preferred? Preferred labels will be rendered first */
-        isPreferred: boolean;
-
-        /** Whether the parent type is a rectangle, point or polygon */
-        parentType: LabelDataPointParentType;
-
-        /** The parent geometry for the data label */
-        // parentShape: LabelParentRect | LabelParentPoint | LabelParentPolygon;
-        parentShape: any; // TODO: checko it
-
-        /** Whether or not the label has a background */
-        hasBackground?: boolean;
-
-        // Rendering members that are simply passed through to the label for rendering purposes
-
-        /** Text to be displayed in the label */
+        parentRect: IRect;
+        size?: ISize;
         text: string;
-
-        /** A text that represent the label tooltip */
-        tooltip?: string;
-
-        /** Color to use for the data label if drawn inside */
-        insideFill: string;
-
-        /** Color to use for the data label if drawn outside */
-        outsideFill: string;
-
-        /** The identity of the data point associated with the data label */
-        identity: ISelectionId;
-
-        /** The key of the data point associated with the data label (used if identity is not unique to each expected label) */
-        key?: string;
-
-        /** The font size of the data point associated with the data label */
-        fontSize?: number;
-
-        /** Second row of text to be displayed in the label, for additional information */
-        secondRowText?: string;
-
-        /** The calculated weight of the data point associated with the data label */
-        weight?: number;
-    }
-
-    // TODO: LabelDataPoint - implement this interface
-    export interface MekkoLabelDataPoint extends LabelDataPoint {
-        isParentRect?: boolean;
+        fillColor: string;
     }
 
     export interface MekkoChartVisualInitOptions extends VisualConstructorOptions/*extends VisualInitOptions*/ {
@@ -313,7 +250,6 @@ module powerbi.extensibility.visual {
         behaviorOptions: any;
         labelDataPoints: LabelDataPoint[];
         labelsAreNumeric: boolean;
-        labelDataPointGroups?: MekkoLabelDataPointsGroup[];
     }
 
     export interface MekkoCalculateScaleAndDomainOptions {
