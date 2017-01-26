@@ -466,7 +466,7 @@ module powerbi.extensibility.visual {
 
     export interface MekkoChartDrawInfo {
         eventGroup?: Selection<any>;
-        shapesSelection: Selection<any>;
+        shapesSelection: Selection<TooltipEnabledDataPoint>;
         viewport: IViewport;
         axisOptions: MekkoChartAxisOptions;
         labelDataPoints: LabelDataPoint[];

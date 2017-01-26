@@ -38,6 +38,7 @@
     "src/visualStrategy/baseVisualStrategy.ts",
     "src/converterStrategy/converterStrategy.ts",
     "src/converterStrategy/baseConverterStrategy.ts",
+    "src/tooltip.ts",
     "src/columnChart/columnChartVisual.ts",
     "src/columnChart/baseColumnChart.ts",
     "src/visual.ts"

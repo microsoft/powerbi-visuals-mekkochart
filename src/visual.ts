@@ -48,7 +48,6 @@ module powerbi.extensibility.visual {
     import axisScale = AxisHelper.scale;
     import axisStyle = AxisHelper.style;
     import IAxisProperties = AxisHelper.IAxisProperties;
-    import CreateAxisOptions = AxisHelper.CreateAxisOptions;
     import TickLabelMargins = AxisHelper.TickLabelMargins;
     import ILegend = powerbi.extensibility.utils.chart.legend.ILegend;
     import LegendData = powerbi.extensibility.utils.chart.legend.data;
@@ -58,7 +57,6 @@ module powerbi.extensibility.visual {
     import dataLabelUtils = powerbi.extensibility.utils.chart.dataLabel.utils;
     import createLegend = powerbi.extensibility.utils.chart.legend.createLegend;
     import LegendPosition = powerbi.extensibility.utils.chart.legend.LegendPosition;
-    import LegendDataPoint = powerbi.extensibility.utils.chart.legend.LegendDataPoint;
     import DataLabelObject = powerbi.extensibility.utils.chart.dataLabel.DataLabelObject;
     import LabelEnabledDataPoint = powerbi.extensibility.utils.chart.dataLabel.LabelEnabledDataPoint;
     import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
@@ -78,9 +76,6 @@ module powerbi.extensibility.visual {
     import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
     import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
     import createInteractivityService = powerbi.extensibility.utils.interactivity.createInteractivityService;
-
-    // powerbi.extensibility.utils.tooltip
-    import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
 
     // powerbi.extensibility.utils.formatting
     import wordBreaker = powerbi.extensibility.utils.formatting.wordBreaker;

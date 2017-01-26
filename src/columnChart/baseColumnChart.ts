@@ -67,6 +67,12 @@ module powerbi.extensibility.visual.columnChart {
     import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
     import DisplayUnitSystemType = powerbi.extensibility.utils.formatting.DisplayUnitSystemType;
 
+    // powerbi.extensibility.utils.tooltip
+    import TooltipEventArgs = powerbi.extensibility.utils.tooltip.TooltipEventArgs;
+    import ITooltipServiceWrapper = powerbi.extensibility.utils.tooltip.ITooltipServiceWrapper;
+    import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
+    import createTooltipServiceWrapper = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
+
     // powerbi.extensibility.utils.color
     import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
 
@@ -115,6 +121,8 @@ module powerbi.extensibility.visual.columnChart {
         private isScrollable: boolean;
         private element: JQuery;
 
+        private tooltipServiceWrapper: ITooltipServiceWrapper;
+
         constructor(options: MekkoChartConstructorOptions) {
             var chartType: MekkoVisualChartType = options.chartType;
 
@@ -151,6 +159,10 @@ module powerbi.extensibility.visual.columnChart {
             this.supportsOverflow = !EnumExtensions.hasFlag(this.chartType, flagStacked);
             var element = this.element = $(options.element);
             element.addClass(BaseColumnChart.ColumnChartClassName);
+
+            this.tooltipServiceWrapper = createTooltipServiceWrapper(
+                this.visualHost.tooltipService,
+                options.element);
 
             this.columnChart = new BaseVisualStrategy();
         }
@@ -590,7 +602,7 @@ module powerbi.extensibility.visual.columnChart {
                     var rawCategoryValue = categories[categoryIndex];
                     var color = BaseColumnChart.getDataPointColor(legendItem, categoryIndex, dataPointObjects);
 
-                    var seriesData: /*TooltipSeriesDataItem*/any[] = [];
+                    var seriesData: tooltip.TooltipSeriesDataItem[] = [];
 
                     if (columnGroup) {
 
@@ -613,7 +625,14 @@ module powerbi.extensibility.visual.columnChart {
                     }
 
                     // TODO: fix tooltips
-                    var tooltipInfo: VisualTooltipDataItem[] = []//TooltipBuilder.createTooltipInfo(formatStringProp, null/*dataViewCat*/, rawCategoryValue, originalValue, [category], seriesData, null/*seriesIndex*/, categoryIndex);
+                    var tooltipInfo: VisualTooltipDataItem[] = tooltip.createTooltipInfo(
+                        null,
+                        rawCategoryValue,
+                        originalValue,
+                        [category],
+                        seriesData,
+                        null,
+                        categoryIndex);
 
                     var dataPointLabelSettings = (series && series.labelSettings)
                         ? series.labelSettings
@@ -687,10 +706,22 @@ module powerbi.extensibility.visual.columnChart {
                             highlightPosition -= valueAbsolute;
                         }
 
-                        var highlightIdentity = /*SelectionId.createWithHighlight*/(identity);// TODO: check it
+                        //var highlightIdentity = /*SelectionId.createWithHighlight*/(identity);// TODO: check it
                         var rawCategoryValue = categories[categoryIndex];
-                        //var highlightedValue: number = highlightedTooltip ? valueHighlight : undefined;
-                        //var tooltipInfo: TooltipDataItem[] = TooltipBuilder.createTooltipInfo(formatStringProp, dataViewCat, rawCategoryValue, originalValue, null, null, seriesIndex, categoryIndex, highlightedValue);
+
+                        var highlightedValue: number = highlightedTooltip
+                            ? valueHighlight
+                            : undefined;
+
+                        var tooltipInfo: VisualTooltipDataItem[] = tooltip.createTooltipInfo(
+                            dataViewCat,
+                            rawCategoryValue,
+                            originalValue,
+                            null,
+                            null,
+                            seriesIndex,
+                            categoryIndex,
+                            highlightedValue);
 
                         if (highlightedTooltip) {
                             // Override non highlighted data point
@@ -713,8 +744,8 @@ module powerbi.extensibility.visual.columnChart {
                             originalPosition: originalPosition,
                             originalValueAbsolute: valueAbsolute,
                             drawThinner: highlightsOverflow,
-                            identity: highlightIdentity,
-                            key: highlightIdentity.getKey(),
+                            identity: /*highlightIdentity,*/identity,
+                            key: /*highlightIdentity*/identity.getKey(),
                             tooltipInfo: tooltipInfo,
                             labelFormatString: metadata.format,
                             labelFill: labelColor,
@@ -1207,7 +1238,7 @@ module powerbi.extensibility.visual.columnChart {
         }
 
         public render(suppressAnimations: boolean): MekkoVisualRenderResult {
-            var MekkoColumnChartDrawInfo = this.columnChart.drawColumns(!suppressAnimations /* useAnimations */);
+            var chartDrawInfo = this.columnChart.drawColumns(!suppressAnimations /* useAnimations */);
             var data: MekkoColumnChartData = this.data;
 
             var margin = this.margin;
@@ -1219,8 +1250,12 @@ module powerbi.extensibility.visual.columnChart {
                 .attr('height', height)
                 .attr('width', width);
 
-            // TODO: fix tooltips
-            //TooltipManager.addTooltip(MekkoColumnChartDrawInfo.shapesSelection, (tooltipEvent: TooltipEvent) => tooltipEvent.data.tooltipInfo);
+            this.tooltipServiceWrapper.addTooltip<TooltipEnabledDataPoint>(
+                chartDrawInfo.shapesSelection,
+                (tooltipEvent: TooltipEventArgs<TooltipEnabledDataPoint>) => {
+                    return tooltipEvent.data.tooltipInfo;
+                });
+
             let dataPoints: MekkoChartColumnDataPoint[] = [],
                 behaviorOptions: VisualBehaviorOptions = undefined;
 
@@ -1231,12 +1266,12 @@ module powerbi.extensibility.visual.columnChart {
 
                 behaviorOptions = {
                     dataPoints,
-                    bars: MekkoColumnChartDrawInfo.shapesSelection,
+                    bars: chartDrawInfo.shapesSelection,
                     hasHighlights: data.hasHighlights,
                     eventGroup: this.mainGraphicsContext,
                     mainGraphicsContext: this.mainGraphicsContext,
-                    viewport: MekkoColumnChartDrawInfo.viewport,
-                    axisOptions: MekkoColumnChartDrawInfo.axisOptions,
+                    viewport: chartDrawInfo.viewport,
+                    axisOptions: chartDrawInfo.axisOptions,
                     showLabel: data.labelSettings.show
                 };
             }
@@ -1250,7 +1285,7 @@ module powerbi.extensibility.visual.columnChart {
             return {
                 dataPoints,
                 behaviorOptions,
-                labelDataPoints: MekkoColumnChartDrawInfo.labelDataPoints,
+                labelDataPoints: chartDrawInfo.labelDataPoints,
                 labelsAreNumeric: true
             };
         }
