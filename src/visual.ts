@@ -134,6 +134,8 @@ module powerbi.extensibility.visual {
      * Renders a data series as a cartesian visual.
      */
     export class MekkoChart implements IVisual {
+        private static LabelGraphicsContextClass: ClassAndSelector = createClassAndSelector("labelGraphicsContext");
+
         public static Classes: MekkoChartClasses = {
             series: createClassAndSelector('series')
         };
@@ -291,8 +293,9 @@ module powerbi.extensibility.visual {
             var axisGraphicsContextScrollable = this.axisGraphicsContextScrollable = this.svgScrollable.append('g')
                 .classed(MekkoChart.AxisGraphicsContextClassName, true);
 
-            this.labelGraphicsContextScrollable = this.svgScrollable.append('g')
-            // .classed(NewDataLabelUtils.labelGraphicsContextClass.class, true); // TODO: check it
+            this.labelGraphicsContextScrollable = this.svgScrollable
+                .append('g')
+                .classed(MekkoChart.LabelGraphicsContextClass.class, true);
 
             this.clearCatcher = appendClearCatcher(this.axisGraphicsContextScrollable);
 

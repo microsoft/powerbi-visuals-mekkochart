@@ -145,7 +145,7 @@ module powerbi.extensibility.visual.converterStrategy {
         }
 
         public getHighlightBySeriesAndCategory(series: number, category: number): number {
-            return <number>this.dataView.values[series].highlights[category];
+            return this.dataView.values[series].highlights[category] as number;
         }
     }
 }
