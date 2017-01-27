@@ -35,6 +35,13 @@ module powerbi.extensibility.visual.labelUtils {
     import IAxisProperties = AxisHelper.IAxisProperties;
     import TickLabelMargins = AxisHelper.TickLabelMargins;
 
+    const XLabelMaxAllowedOverflow: number = 35;
+    const OffsetDelimiter: number = 2;
+    const WidthDelimiter: number = 2;
+    const DefaultOverflow: number = 0;
+    const HeightFactor: number = 1.4;
+    const HeightOffset: number = 15;
+
     export function getTickLabelMargins(
         viewport: IViewport,
         yMarginLimit: number,
@@ -52,69 +59,87 @@ module powerbi.extensibility.visual.labelUtils {
         renderY1Axis?: boolean,
         renderY2Axis?: boolean): TickLabelMargins {
 
-        var XLabelMaxAllowedOverflow = 35;
+        const xAxisProperties: IAxisProperties = axes.x,
+            y1AxisProperties: IAxisProperties = axes.y1,
+            y2AxisProperties: IAxisProperties = axes.y2,
+            xLabels: any[] = xAxisProperties.values,
+            y1Labels: any[] = y1AxisProperties.values;
 
-        var xAxisProperties: IAxisProperties = axes.x;
-        var y1AxisProperties: IAxisProperties = axes.y1;
-        var y2AxisProperties: IAxisProperties = axes.y2;
+        let leftOverflow: number = 0,
+            rightOverflow: number = 0,
+            maxWidthY1: number = 0,
+            maxWidthY2: number = 0,
+            xMax: number = 0; // bottom margin
 
-        var xLabels = xAxisProperties.values;
-        var y1Labels = y1AxisProperties.values;
+        const ordinalLabelOffset: number = xAxisProperties.categoryThickness
+            ? xAxisProperties.categoryThickness / OffsetDelimiter
+            : 0;
 
-        var leftOverflow = 0;
-        var rightOverflow = 0;
-        var maxWidthY1 = 0;
-        var maxWidthY2 = 0;
-        var xMax = 0; // bottom margin
-        var ordinalLabelOffset = xAxisProperties.categoryThickness ? xAxisProperties.categoryThickness / 2 : 0;
-        var scaleIsOrdinal = AxisHelper.isOrdinalScale(xAxisProperties.scale);
+        const scaleIsOrdinal: boolean = AxisHelper.isOrdinalScale(xAxisProperties.scale);
 
-        var xLabelOuterPadding = 0;
+        let xLabelOuterPadding: number = 0;
+
         if (xAxisProperties.outerPadding !== undefined) {
             xLabelOuterPadding = xAxisProperties.outerPadding;
         }
         else if (xAxisProperties.xLabelMaxWidth !== undefined) {
-            xLabelOuterPadding = Math.max(0, (viewport.width - xAxisProperties.xLabelMaxWidth * xLabels.length) / 2);
+            xLabelOuterPadding = Math.max(
+                0,
+                (viewport.width - xAxisProperties.xLabelMaxWidth * xLabels.length) / OffsetDelimiter);
         }
 
         if (AxisHelper.getRecommendedNumberOfTicksForXAxis(viewport.width) !== 0
             || AxisHelper.getRecommendedNumberOfTicksForYAxis(viewport.height) !== 0) {
-            var rotation;
-            if (scrollbarVisible)
-                rotation = AxisHelper.LabelLayoutStrategy.DefaultRotationWithScrollbar;
-            else
-                rotation = AxisHelper.LabelLayoutStrategy.DefaultRotation;
+
+            let rotation: any = scrollbarVisible
+                ? AxisHelper.LabelLayoutStrategy.DefaultRotationWithScrollbar
+                : AxisHelper.LabelLayoutStrategy.DefaultRotation;
 
             if (renderY1Axis) {
-                for (var i = 0, len = y1Labels.length; i < len; i++) {
+                for (let i = 0; i < y1Labels.length; i++) {
                     y1AxisTextProperties.text = y1Labels[i];
-                    maxWidthY1 = Math.max(maxWidthY1, textWidthMeasurer(y1AxisTextProperties));
+
+                    maxWidthY1 = Math.max(
+                        maxWidthY1,
+                        textWidthMeasurer(y1AxisTextProperties));
                 }
             }
 
             if (y2AxisProperties && renderY2Axis) {
-                var y2Labels = y2AxisProperties.values;
-                for (var i = 0, len = y2Labels.length; i < len; i++) {
+                const y2Labels: any[] = y2AxisProperties.values;
+
+                for (let i = 0; i < y2Labels.length; i++) {
                     y2AxisTextProperties.text = y2Labels[i];
-                    maxWidthY2 = Math.max(maxWidthY2, textWidthMeasurer(y2AxisTextProperties));
+
+                    maxWidthY2 = Math.max(
+                        maxWidthY2,
+                        textWidthMeasurer(y2AxisTextProperties));
                 }
             }
 
-            var textHeight = textHeightMeasurer(xAxisTextProperties);
-            var maxNumLines = Math.floor(bottomMarginLimit / textHeight);
-            var xScale = xAxisProperties.scale;
-            var xDomain = xScale.domain();
+            const textHeight: number = textHeightMeasurer(xAxisTextProperties),
+                maxNumLines: number = Math.floor(bottomMarginLimit / textHeight),
+                xScale: any = xAxisProperties.scale,
+                xDomain: any = xScale.domain();
+
             if (renderXAxis && xLabels.length > 0) {
-                for (var i = 0, len = xLabels.length; i < len; i++) {
-                    // find the max height of the x-labels, perhaps rotated or wrapped
-                    var height: number;
+                for (let i = 0, len = xLabels.length; i < len; i++) {
+                    let height: number;
+
                     xAxisTextProperties.text = xLabels[i];
-                    var width = textWidthMeasurer(xAxisTextProperties);
+
+                    let width: number = textWidthMeasurer(xAxisTextProperties);
+
                     if (xAxisProperties.willLabelsWordBreak) {
                         // Split label and count rows
-                        var wordBreaks = wordBreaker.splitByWidth(xAxisTextProperties.text, xAxisTextProperties, textWidthMeasurer, xAxisProperties.xLabelMaxWidth, maxNumLines);
+                        const wordBreaks: string[] = wordBreaker.splitByWidth(
+                            xAxisTextProperties.text,
+                            xAxisTextProperties,
+                            textWidthMeasurer,
+                            xAxisProperties.xLabelMaxWidth,
+                            maxNumLines);
+
                         height = wordBreaks.length * textHeight;
-                        // word wrapping will truncate at xLabelMaxWidth
                         width = xAxisProperties.xLabelMaxWidth;
                     }
                     else if (!xAxisProperties.willLabelsFit && scaleIsOrdinal) {
@@ -125,52 +150,53 @@ module powerbi.extensibility.visual.labelUtils {
                         height = textHeight;
                     }
 
-                    // calculate left and right overflow due to wide X labels
-                    // (Note: no right overflow when rotated)
                     if (i === 0) {
                         if (scaleIsOrdinal) {
-                            if (!xAxisProperties.willLabelsFit /*rotated text*/)
+                            if (!xAxisProperties.willLabelsFit) {
                                 leftOverflow = width - ordinalLabelOffset - xLabelOuterPadding;
-                            else
-                                leftOverflow = (width / 2) - ordinalLabelOffset - xLabelOuterPadding;
+                            } else {
+                                leftOverflow = (width / WidthDelimiter) - ordinalLabelOffset - xLabelOuterPadding;
+                            }
+
                             leftOverflow = Math.max(leftOverflow, 0);
                         }
                         else if (xDomain.length > 1) {
-                            // Scalar - do some math
-                            var xPos = xScale(xDomain[0]);
-                            // xPos already incorporates xLabelOuterPadding, don't subtract it twice
-                            leftOverflow = (width / 2) - xPos;
+                            const xPos: number = xScale(xDomain[0]);
+
+                            leftOverflow = (width / WidthDelimiter) - xPos;
                             leftOverflow = Math.max(leftOverflow, 0);
                         }
                     } else if (i === len - 1) {
                         if (scaleIsOrdinal) {
-                            // if we are rotating text (!willLabelsFit) there won't be any right overflow
                             if (xAxisProperties.willLabelsFit || xAxisProperties.willLabelsWordBreak) {
-                                // assume this label is placed near the edge
-                                rightOverflow = (width / 2) - ordinalLabelOffset - xLabelOuterPadding;
+                                rightOverflow = (width / WidthDelimiter) - ordinalLabelOffset - xLabelOuterPadding;
                                 rightOverflow = Math.max(rightOverflow, 0);
                             }
                         }
                         else if (xDomain.length > 1) {
-                            // Scalar - do some math
-                            var xPos = xScale(xDomain[1]);
-                            // xPos already incorporates xLabelOuterPadding, don't subtract it twice
-                            rightOverflow = (width / 2) - (viewport.width - xPos);
+                            const xPos: number = xScale(xDomain[1]);
+
+                            rightOverflow = (width / WidthDelimiter) - (viewport.width - xPos);
                             rightOverflow = Math.max(rightOverflow, 0);
                         }
                     }
 
-                    xMax = Math.max(xMax, height * 1.4 - 15);
+                    xMax = Math.max(xMax, height * HeightFactor - HeightOffset);
                 }
                 // trim any actual overflow to the limit
-                leftOverflow = enableOverflowCheck ? Math.min(leftOverflow, XLabelMaxAllowedOverflow) : 0;
-                rightOverflow = enableOverflowCheck ? Math.min(rightOverflow, XLabelMaxAllowedOverflow) : 0;
+                leftOverflow = enableOverflowCheck
+                    ? Math.min(leftOverflow, XLabelMaxAllowedOverflow)
+                    : DefaultOverflow;
+
+                rightOverflow = enableOverflowCheck
+                    ? Math.min(rightOverflow, XLabelMaxAllowedOverflow)
+                    : DefaultOverflow;
             }
         }
 
-        var rightMargin = 0,
-            leftMargin = 0,
-            bottomMargin = Math.min(Math.ceil(xMax), bottomMarginLimit);
+        let rightMargin: number = 0,
+            leftMargin: number = 0,
+            bottomMargin: number = Math.min(Math.ceil(xMax), bottomMarginLimit);
 
         if (showOnRight) {
             leftMargin = Math.min(Math.max(leftOverflow, maxWidthY2), yMarginLimit);

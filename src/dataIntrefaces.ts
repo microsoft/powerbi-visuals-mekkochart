@@ -46,7 +46,7 @@ module powerbi.extensibility.visual {
     import ILegendData = powerbi.extensibility.utils.chart.legend.LegendData;
     import IAxisProperties = powerbi.extensibility.utils.chart.axis.IAxisProperties;
     import LegendDataPoint = powerbi.extensibility.utils.chart.legend.LegendDataPoint;
-    import CreateAxisOptions = powerbi.extensibility.utils.chart.axis.CreateAxisOptions;
+    import CreateAxisOptionsBase = powerbi.extensibility.utils.chart.axis.CreateAxisOptions;
     import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
     import LabelEnabledDataPoint = powerbi.extensibility.utils.chart.dataLabel.LabelEnabledDataPoint;
     import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
@@ -77,7 +77,7 @@ module powerbi.extensibility.visual {
         triggerRender(suppressAnimations: boolean): void;
     }
 
-    export interface MekkoChartAnimationOptions /*extends IAnimationOptions*/ {
+    export interface MekkoChartAnimationOptions {
         viewModel: MekkoChartData;
         series: UpdateSelection<any>;
         layout: IMekkoChartLayout;
@@ -86,20 +86,15 @@ module powerbi.extensibility.visual {
         viewPort: IViewport;
     }
 
-    export interface MekkoChartAnimationResult /*extends IAnimationResult*/ {
+    export interface MekkoChartAnimationResult {
         shapes: UpdateSelection<any>;
     }
-
-    // export type IMekkoChartAnimator = IAnimator<IAnimatorOptions, MekkoChartAnimationOptions, MekkoChartAnimationResult>;
-
-    export interface IMekkoChartAnimator { }
 
     export interface MekkoChartAxisOptions {
         xScale: LinearScale<any, any>;
         yScale: LinearScale<any, any>;
         seriesOffsetScale?: LinearScale<any, any>;
         columnWidth: number;
-        /** Used by clustered only since categoryWidth !== columnWidth */
         categoryWidth?: number;
         isScalar: boolean;
         margin: IMargin;
@@ -152,26 +147,17 @@ module powerbi.extensibility.visual {
         LabelEnabledDataPoint {
 
         categoryValue: number;
-        /** Adjusted for 100% stacked if applicable */
         value: number;
-        /** The top (column) or right (bar) of the rectangle, used for positioning stacked rectangles */
         position: number;
         valueAbsolute: number;
-        /** Not adjusted for 100% stacked */
         valueOriginal: number;
         seriesIndex: number;
         labelSettings: VisualDataLabelsSettings;
         categoryIndex: number;
         color: string;
-        /** The original values from the highlighted rect, used in animations */
         originalValue: number;
         originalPosition: number;
         originalValueAbsolute: number;
-
-        /**
-         * True if this data point is a highlighted portion and overflows (whether due to the highlight
-         * being greater than original or of a different sign), so it needs to be thinner to accomodate.
-         */
         drawThinner?: boolean;
         key: string;
         lastSeries?: boolean;
@@ -218,10 +204,9 @@ module powerbi.extensibility.visual {
         fillColor: string;
     }
 
-    export interface MekkoChartVisualInitOptions extends VisualConstructorOptions/*extends VisualInitOptions*/ {
+    export interface MekkoChartVisualInitOptions extends VisualConstructorOptions {
         svg: Selection<any>;
         cartesianHost: IMekkoChartVisualHost;
-        labelsContext?: Selection<any>; //TEMPORARY - for PlayAxis
     }
 
     export interface IMekkoChartLayout {
@@ -261,7 +246,6 @@ module powerbi.extensibility.visual {
         categoryAxisScaleType: string;
         valueAxisScaleType: string;
         trimOrdinalDataOnOverflow: boolean;
-        // optional
         playAxisControlLayout?: IRect;
         forcedTickCount?: number;
         forcedYDomain?: any[];
@@ -281,9 +265,13 @@ module powerbi.extensibility.visual {
 
     export interface MekkoBorderSettings {
         show: boolean;
-        color: any;
+        color: string;
         width: number;
         maxWidth?: number;
+    }
+
+    export interface CreateAxisOptions extends CreateAxisOptionsBase {
+        borderSettings: MekkoBorderSettings;
     }
 
     export interface MekkoLabelSettings {
@@ -332,8 +320,7 @@ module powerbi.extensibility.visual {
         fontSize?: number;
     }
 
-
-    export interface MekkoCreateAxisOptions extends CreateAxisOptions {
+    export interface MekkoCreateAxisOptions extends CreateAxisOptionsBase {
         formatString: string;
         is100Pct?: boolean;
         shouldClamp?: boolean;
@@ -353,12 +340,9 @@ module powerbi.extensibility.visual {
         duration: number;
         hostService: IVisualHost;
         margin: IMargin;
-        /** A group for graphics can be placed that won't be clipped to the data area of the chart. */
         unclippedGraphicsContext: Selection<any>;
-        /** A SVG for graphics that should be clipped to the data area, e.g. data bars, columns, lines */
         mainGraphicsContext: Selection<any>;
         layout: MekkoChartCategoryLayout;
-        animator: IMekkoChartAnimator;
         onDragStart?: (datum: MekkoChartColumnDataPoint) => void;
         interactivityService: IInteractivityService;
         viewportHeight: number;
@@ -375,7 +359,6 @@ module powerbi.extensibility.visual {
         mainGraphicsContext: Selection<any>;
         labelGraphicsContext: Selection<any>;
         layout: MekkoChartCategoryLayout;
-        animator: IMekkoChartAnimator;
         onDragStart?: (datum: MekkoChartColumnDataPoint) => void;
         interactivityService: IInteractivityService;
         viewportHeight: number;
@@ -388,7 +371,6 @@ module powerbi.extensibility.visual {
     export interface MekkoChartConstructorBaseOptions {
         isScrollable: boolean;
         interactivityService?: IInteractivityService;
-        animator?: /*IGenericAnimator;*/any; // TODO: check it
         isLabelInteractivityEnabled?: boolean;
         tooltipsEnabled?: boolean;
         tooltipBucketEnabled?: boolean;
@@ -397,7 +379,6 @@ module powerbi.extensibility.visual {
 
     export interface MekkoChartConstructorOptions extends MekkoChartConstructorBaseOptions {
         chartType: MekkoVisualChartType;
-        animator: IMekkoChartAnimator;
     }
 
     export interface MekkoChartDrawInfo {

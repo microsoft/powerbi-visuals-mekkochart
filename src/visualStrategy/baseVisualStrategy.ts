@@ -28,6 +28,7 @@ module powerbi.extensibility.visual.visualStrategy {
     // d3
     import Axis = d3.svg.Axis;
     import Selection = d3.Selection;
+    import LinearScale = d3.scale.Linear;
     import UpdateSelection = d3.selection.Update;
 
     // powerbi.visuals
@@ -42,6 +43,7 @@ module powerbi.extensibility.visual.visualStrategy {
     // powerbi.extensibility.utils.chart
     import AxisHelper = powerbi.extensibility.utils.chart.axis;
     import IAxisProperties = AxisHelper.IAxisProperties;
+    import CreateAxisOptionsBase = AxisHelper.CreateAxisOptions;
     import getLabelPrecision = powerbi.extensibility.utils.chart.dataLabel.utils.getLabelPrecision;
     import hundredPercentFormat = powerbi.extensibility.utils.chart.dataLabel.utils.hundredPercentFormat;
     import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
@@ -62,12 +64,23 @@ module powerbi.extensibility.visual.visualStrategy {
     import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
 
     export class BaseVisualStrategy implements IVisualStrategy {
+        private static ItemSelector: ClassAndSelector = createClassAndSelector("column");
+        private static BorderSelector: ClassAndSelector = createClassAndSelector("mekkoborder");
+        private static InteractiveHoverLineSelector: ClassAndSelector = createClassAndSelector("interactive-hover-line");
+        private static DragHandleSelector: ClassAndSelector = createClassAndSelector("drag-handle");
+
+        private static TickLabelPaddingFactor: number = 2;
+        private static ColumnDataPointValueDelimiter: number = 2;
+
+        private static DefaultInnerPaddingRatio: number = 1;
+
+        private static CircleRadius: number = 6;
+
+        private static CategoryWidthDelimiter: number = 2;
+
         private static DefaultLabelFillColor: string = "#ffffff";
 
-        private static Classes: MekkoChartClasses = {
-            item: createClassAndSelector('column'),
-            highlightItem: createClassAndSelector('highlightColumn')
-        };
+        private static PercentageFormat: string = "#,0.##%";
 
         private layout: IMekkoColumnLayout;
         private data: MekkoColumnChartData;
@@ -80,10 +93,9 @@ module powerbi.extensibility.visual.visualStrategy {
         private categoryLayout: MekkoChartCategoryLayout;
         private columnsCenters: number[];
         private columnSelectionLineHandle: Selection<any>;
-        private animator: IMekkoChartAnimator;
+
         private interactivityService: IInteractivityService;
         private viewportHeight: number;
-        private viewportWidth: number;
 
         private static validLabelPositions = [1];
 
@@ -93,13 +105,12 @@ module powerbi.extensibility.visual.visualStrategy {
             this.width = this.graphicsContext.width;
             this.height = this.graphicsContext.height;
             this.categoryLayout = columnChartProps.layout;
-            this.animator = columnChartProps.animator;
+
             this.interactivityService = columnChartProps.interactivityService;
             this.viewportHeight = columnChartProps.viewportHeight;
-            this.viewportWidth = columnChartProps.viewportWidth;
         }
 
-        public setData(data: MekkoColumnChartData) {
+        public setData(data: MekkoColumnChartData): void {
             this.data = data;
         }
 
@@ -120,9 +131,7 @@ module powerbi.extensibility.visual.visualStrategy {
                 if (isScalar) {
                     let value: Date = new Date(scaleDomain[0]),
                         value2: Date = new Date(scaleDomain[1]);
-                    // datetime with only one value needs to pass the same value
-                    // (from the original dataDomain value, not the adjusted scaleDomain)
-                    // so formatting works correctly.
+
                     if (bestTickCount === 1) {
                         value = value2 = new Date(dataDomain[0]);
                     }
@@ -148,19 +157,16 @@ module powerbi.extensibility.visual.visualStrategy {
             }
             else {
                 if (useTickIntervalForDisplayUnits && isScalar && tickValues.length > 1) {
-                    const domainMin: number = tickValues[1] - tickValues[0],
-                        domainMax: number = 0; //force tickInterval to be used with display units
+                    const domainMin: number = tickValues[1] - tickValues[0];
 
                     formatter = valueFormatter.create({
                         format: formatString,
                         value: domainMin,
-                        value2: domainMax,
+                        value2: 0,
                         allowFormatBeautification: true
                     });
                 }
                 else {
-                    // do not use display units, just the basic value formatter
-                    // datetime is handled above, so we are ordinal and either boolean, numeric, or text.
                     formatter = valueFormatter.createDefaultFormatter(formatString, true);
                 }
             }
@@ -179,20 +185,32 @@ module powerbi.extensibility.visual.visualStrategy {
             isScalar: boolean,
             getValueFn?: (index: number, type: ValueType) => any) {
 
-            var formattedTickValues = [];
+            let formattedTickValues: any[] = [];
+
             if (formatter) {
-                // getValueFn takes an ordinal axis index or builds DateTime from milliseconds, do not pass a numeric scalar value.
                 if (getValueFn && !(dataType.numeric && isScalar)) {
-                    axis.tickFormat(d => formatter.format(getValueFn(d, dataType)));
-                    formattedTickValues = tickValues.map(d => formatter.format(getValueFn(d, dataType)));
+                    axis.tickFormat((tickValue: any) => {
+                        return formatter.format(getValueFn(tickValue, dataType));
+                    });
+
+                    formattedTickValues = tickValues.map((tickValue: any) => {
+                        return formatter.format(getValueFn(tickValue, dataType));
+                    });
                 }
                 else {
-                    axis.tickFormat(d => formatter.format(d));
-                    formattedTickValues = tickValues.map((d) => formatter.format(d));
+                    axis.tickFormat((tickValue: any) => {
+                        return formatter.format(tickValue);
+                    });
+
+                    formattedTickValues = tickValues.map((tickValue: any) => {
+                        return formatter.format(tickValue);
+                    });
                 }
             }
             else {
-                formattedTickValues = tickValues.map((d) => getValueFn(d, dataType));
+                formattedTickValues = tickValues.map((tickValue: any) => {
+                    return getValueFn(tickValue, dataType);
+                });
             }
 
             return formattedTickValues;
@@ -202,89 +220,101 @@ module powerbi.extensibility.visual.visualStrategy {
          * Create a D3 axis including scale. Can be vertical or horizontal, and either datetime, numeric, or text.
          * @param options The properties used to create the axis.
          */
-        private createAxis(options): IAxisProperties {
-            var pixelSpan = options.pixelSpan,
-                dataDomain = options.dataDomain,
-                metaDataColumn = options.metaDataColumn,
-                outerPadding = options.outerPadding || 0,
-                isCategoryAxis = !!options.isCategoryAxis,
-                isScalar = !!options.isScalar,
-                isVertical = !!options.isVertical,
-                useTickIntervalForDisplayUnits = !!options.useTickIntervalForDisplayUnits, // DEPRECATE: same meaning as isScalar?
-                getValueFn = options.getValueFn,
-                categoryThickness = options.categoryThickness;
+        private createAxis(options: CreateAxisOptions): IAxisProperties {
+            const pixelSpan: number = options.pixelSpan,
+                dataDomain: number[] = options.dataDomain,
+                metaDataColumn: DataViewMetadataColumn = options.metaDataColumn,
+                outerPadding: number = options.outerPadding || 0,
+                isCategoryAxis: boolean = !!options.isCategoryAxis,
+                isScalar: boolean = !!options.isScalar,
+                isVertical: boolean = !!options.isVertical,
+                useTickIntervalForDisplayUnits: boolean = !!options.useTickIntervalForDisplayUnits,
+                getValueFn: (index: number, type: ValueType) => any = options.getValueFn,
+                categoryThickness: number = options.categoryThickness,
+                formatString: string = valueFormatter.getFormatStringByColumn(metaDataColumn),
+                dataType: ValueType = AxisHelper.getCategoryValueType(metaDataColumn, isScalar),
+                isLogScaleAllowed: boolean = AxisHelper.isLogScalePossible(dataDomain, dataType),
+                scale: LinearScale<number, number> = d3.scale.linear(),
+                scaleDomain: number[] = [0, 1],
+                bestTickCount: number = dataDomain.length || 1,
+                borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(options.borderSettings);
 
-            var formatString = valueFormatter.getFormatStringByColumn(metaDataColumn);
-            var dataType: ValueType = AxisHelper.getCategoryValueType(metaDataColumn, isScalar);
-            var isLogScaleAllowed = AxisHelper.isLogScalePossible(dataDomain, dataType);
-
-            var scale = d3.scale.linear();
-            var scaleDomain = [0, 1];
-            var bestTickCount = dataDomain.length || 1;
-
-            var borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(options.borderSettings);
-            var chartWidth = pixelSpan - borderWidth * (bestTickCount - 1);
+            let chartWidth: number = pixelSpan - borderWidth * (bestTickCount - 1);
 
             if (chartWidth < MekkoChart.MinOrdinalRectThickness) {
                 chartWidth = MekkoChart.MinOrdinalRectThickness;
             }
 
-            scale.domain(scaleDomain)
+            scale
+                .domain(scaleDomain)
                 .range([0, chartWidth]);
-            var tickValues = dataDomain;
 
-            var formatter = BaseVisualStrategy.createFormatter(
+            const formatter: IValueFormatter = BaseVisualStrategy.createFormatter(
                 scaleDomain,
                 dataDomain,
                 dataType,
                 isScalar,
                 formatString,
                 bestTickCount,
-                tickValues,
+                dataDomain,
                 getValueFn,
                 useTickIntervalForDisplayUnits);
 
-            // sets default orientation only, cartesianChart will fix y2 for comboChart
-            // tickSize(pixelSpan) is used to create gridLines
-            var axis = d3.svg.axis()
+            const axis: Axis = d3.svg.axis()
                 .scale(scale)
                 .tickSize(6, 0)
-                .orient(isVertical ? 'left' : 'bottom')
+                .orient(isVertical
+                    ? "left"
+                    : "bottom")
                 .ticks(bestTickCount)
                 .tickValues(dataDomain);
 
-            var formattedTickValues = [];
+            let formattedTickValues: any[] = [];
+
             if (metaDataColumn) {
-                formattedTickValues = BaseVisualStrategy.formatAxisTickValues(axis, tickValues, formatter, dataType, isScalar, getValueFn);
+                formattedTickValues = BaseVisualStrategy.formatAxisTickValues(
+                    axis,
+                    dataDomain,
+                    formatter,
+                    dataType,
+                    isScalar,
+                    getValueFn);
             }
 
-            var xLabelMaxWidth;
-            // Use category layout of labels if specified, otherwise use scalar layout of labels
+            let xLabelMaxWidth: any;
+
             if (!isScalar && categoryThickness) {
-                xLabelMaxWidth = Math.max(1, categoryThickness - MekkoChart.TickLabelPadding * 2);
+                xLabelMaxWidth = Math.max(
+                    1,
+                    categoryThickness - MekkoChart.TickLabelPadding * BaseVisualStrategy.TickLabelPaddingFactor);
             }
             else {
-                // When there are 0 or 1 ticks, then xLabelMaxWidth = pixelSpan
-                // When there is > 1 ticks then we need to +1 so that their widths don't overlap
-                // Example: 2 ticks are drawn at 33.33% and 66.66%, their width needs to be 33.33% so they don't overlap.
-                var labelAreaCount = tickValues.length > 1 ? tickValues.length + 1 : tickValues.length;
-                xLabelMaxWidth = labelAreaCount > 1 ? pixelSpan / labelAreaCount : pixelSpan;
-                xLabelMaxWidth = Math.max(1, xLabelMaxWidth - MekkoChart.TickLabelPadding * 2);
+                const labelAreaCount: number = dataDomain.length > 1
+                    ? dataDomain.length + 1
+                    : dataDomain.length;
+
+                xLabelMaxWidth = labelAreaCount > 1
+                    ? pixelSpan / labelAreaCount
+                    : pixelSpan;
+
+                xLabelMaxWidth = Math.max(
+                    1,
+                    xLabelMaxWidth - MekkoChart.TickLabelPadding * BaseVisualStrategy.TickLabelPaddingFactor);
             }
 
             return {
-                scale: scale,
-                axis: axis,
+                scale,
+                axis,
                 formatter,
+                isCategoryAxis,
+                xLabelMaxWidth,
+                categoryThickness,
+                outerPadding,
+                isLogScaleAllowed,
                 values: formattedTickValues,
                 axisType: dataType,
                 axisLabel: null,
-                isCategoryAxis: isCategoryAxis,
-                xLabelMaxWidth: xLabelMaxWidth,
-                categoryThickness: categoryThickness,
-                outerPadding: outerPadding,
-                usingDefaultDomain: false,//scaleResult.usingDefaultDomain,
-                isLogScaleAllowed: isLogScaleAllowed
+                usingDefaultDomain: false
             };
         }
 
@@ -297,82 +327,99 @@ module powerbi.extensibility.visual.visualStrategy {
             forcedXMax?: DataViewPropertyValue,
             axisScaleType?: string): IAxisProperties {
 
-            var categoryThickness = layout.categoryThickness;
-            var isScalar: boolean = layout.isScalar;
-            var outerPaddingRatio = layout.outerPaddingRatio;
-            var dw = new DataWrapper(data, isScalar);
-            var domain: number[] = [];
+            const categoryThickness: number = layout.categoryThickness,
+                isScalar: boolean = layout.isScalar,
+                outerPaddingRatio: number = layout.outerPaddingRatio,
+                dataWrapper: DataWrapper = new DataWrapper(data, isScalar);
 
-            if (data.series &&
-                (data.series.length > 0) &&
-                data.series[0].data &&
-                (data.series[0].data.length > 0)
-            ) {
-                var domainDoubles = data.series[0].data.map((item: MekkoChartColumnDataPoint) => {
-                    return item.originalPosition + (item.value / 2);
-                });
+            let domain: number[] = [];
 
-                domain = domainDoubles.filter(function (item, pos) {
-                    return domainDoubles.indexOf(item) === pos;
+            if (data.series
+                && (data.series.length > 0)
+                && data.series[0].data
+                && (data.series[0].data.length > 0)) {
+
+                const domainDoubles: number[] = data.series[0].data
+                    .map((item: MekkoChartColumnDataPoint) => {
+                        return item.originalPosition + item.value / BaseVisualStrategy.ColumnDataPointValueDelimiter;
+                    });
+
+                domain = domainDoubles.filter((item: number, position: number) => {
+                    return domainDoubles.indexOf(item) === position;
                 });
             }
 
-            var axisProperties: IAxisProperties = this.createAxis({
+            const axisProperties: IAxisProperties = this.createAxis({
+                isScalar,
+                isVertical,
+                formatString: undefined,
                 pixelSpan: size,
                 dataDomain: domain,
                 metaDataColumn: data.categoryMetadata,
                 outerPadding: categoryThickness * outerPaddingRatio,
                 isCategoryAxis: true,
-                isScalar: isScalar,
-                isVertical: isVertical,
                 categoryThickness: categoryThickness,
                 useTickIntervalForDisplayUnits: true,
-                getValueFn: (index, type) => {
-                    var domainIndex = domain.indexOf(index);
-                    var value = dw.lookupXValue(domainIndex, type);
+                getValueFn: (index: number, type: ValueType) => {
+                    const domainIndex: number = domain.indexOf(index),
+                        value: number = dataWrapper.lookupXValue(domainIndex, type);
+
                     return value;
                 },
                 scaleType: axisScaleType,
                 borderSettings: data.borderSettings
             });
+
             // intentionally updating the input layout by ref
             layout.categoryThickness = axisProperties.categoryThickness;
+
             return axisProperties;
         }
 
-        public setXScale(is100Pct: boolean, forcedTickCount?: number, forcedXDomain?: any[], axisScaleType?: string): IAxisProperties {
-            var width = this.width;
-            var forcedXMin, forcedXMax;
+        public setXScale(
+            is100Pct: boolean,
+            forcedTickCount?: number,
+            forcedXDomain?: any[],
+            axisScaleType?: string): IAxisProperties {
+
+            let forcedXMin: any,
+                forcedXMax: any;
 
             if (forcedXDomain && forcedXDomain.length === 2) {
                 forcedXMin = forcedXDomain[0];
                 forcedXMax = forcedXDomain[1];
             }
 
-            var props = this.xProps = this.getCategoryAxis(
+            const properties: IAxisProperties = this.xProps = this.getCategoryAxis(
                 this.data,
-                width,
+                this.width,
                 this.categoryLayout,
                 false,
                 forcedXMin,
                 forcedXMax,
                 axisScaleType);
 
-            return props;
+            return properties;
         }
 
-        public setYScale(is100Pct: boolean, forcedTickCount?: number, forcedYDomain?: any[], axisScaleType?: string): IAxisProperties {
-            var height = this.viewportHeight;
-            var valueDomain = utils.calcValueDomain(this.data.series, is100Pct);
-            var valueDomainArr = [valueDomain.min, valueDomain.max];
-            var combinedDomain = AxisHelper.combineDomain(forcedYDomain, valueDomainArr);
-            var shouldClamp = AxisHelper.scaleShouldClamp(combinedDomain, valueDomainArr);
-            var metadataColumn = this.data.valuesMetadata[0];
-            var formatString = is100Pct ? // TODO: check it
-                /*this.graphicsContext.hostService.getLocalizedString('Percentage')*/"#,0.##%"
+        public setYScale(
+            is100Pct: boolean,
+            forcedTickCount?: number,
+            forcedYDomain?: any[],
+            axisScaleType?: string): IAxisProperties {
+
+            const height: number = this.viewportHeight,
+                valueDomain: ValueRange<number> = utils.calcValueDomain(this.data.series, is100Pct),
+                valueDomainArr: number[] = [valueDomain.min, valueDomain.max],
+                combinedDomain: any[] = AxisHelper.combineDomain(forcedYDomain, valueDomainArr),
+                shouldClamp: boolean = AxisHelper.scaleShouldClamp(combinedDomain, valueDomainArr),
+                metadataColumn: DataViewMetadataColumn = this.data.valuesMetadata[0];
+
+            const formatString: string = is100Pct
+                ? BaseVisualStrategy.PercentageFormat
                 : valueFormatter.getFormatStringByColumn(metadataColumn);
 
-            var mekkoMekkoCreateAxisOptions: MekkoCreateAxisOptions = {
+            const createAxisOptions: MekkoCreateAxisOptions = {
                 pixelSpan: height,
                 dataDomain: combinedDomain,
                 metaDataColumn: metadataColumn,
@@ -391,120 +438,119 @@ module powerbi.extensibility.visual.visualStrategy {
                 formatStringProp: undefined,
             };
 
-            this.yProps = AxisHelper.createAxis(mekkoMekkoCreateAxisOptions);
+            this.yProps = AxisHelper.createAxis(createAxisOptions);
+
             return this.yProps;
         }
 
         public drawColumns(useAnimation: boolean): MekkoChartDrawInfo {
-            var data = this.data;
-            this.columnsCenters = null; // invalidate the columnsCenters so that will be calculated again
+            const data: MekkoColumnChartData = this.data;
 
-            var axisOptions: MekkoColumnAxisOptions = {
+            this.columnsCenters = null;
+
+            const axisOptions: MekkoColumnAxisOptions = {
                 columnWidth: 0,
                 xScale: this.xProps.scale,
                 yScale: this.yProps.scale,
                 isScalar: this.categoryLayout.isScalar,
                 margin: this.margin,
             };
-            var stackedColumnLayout = this.layout = BaseVisualStrategy.getLayout(data, axisOptions);
-            //var dataLabelSettings = data.labelSettings;
-            var labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints();
-            var result: MekkoChartAnimationResult;
-            var shapes: UpdateSelection<any>;
-            var series = utils.drawSeries(data, this.graphicsContext.mainGraphicsContext, axisOptions);
-            if (this.animator && useAnimation) {
-                // TODO: check it
-                // result = this.animator.animate({
-                //     viewModel: data,
-                //     series: series,
-                //     layout: stackedColumnLayout,
-                //     itemCS: MekkoChartStrategy.Classes["item"],
-                //     interactivityService: this.interactivityService,
-                //     mainGraphicsContext: this.graphicsContext.mainGraphicsContext,
-                //     viewPort: { height: this.height, width: this.width },
-                // });
-                // shapes = result.shapes;
-            }
-            if (!this.animator || !useAnimation /*|| result.failed*/) {
+
+            const stackedColumnLayout: IMekkoColumnLayout = BaseVisualStrategy.getLayout(data, axisOptions);
+
+            this.layout = stackedColumnLayout;
+
+            const labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints(),
+                series: UpdateSelection<MekkoChartSeries> = utils.drawSeries(
+                    data,
+                    this.graphicsContext.mainGraphicsContext,
+                    axisOptions);
+
+            let shapes: UpdateSelection<MekkoChartColumnDataPoint>;
+
+            if (!useAnimation) {
                 shapes = BaseVisualStrategy.drawDefaultShapes(data,
                     series,
                     stackedColumnLayout,
-                    BaseVisualStrategy.Classes["item"],
-                    !this.animator,
+                    BaseVisualStrategy.ItemSelector,
                     this.interactivityService && this.interactivityService.hasSelection());
             }
 
             utils.applyInteractivity(shapes, this.graphicsContext.onDragStart);
 
             return {
-                shapesSelection: shapes,
-                viewport: { height: this.height, width: this.width },
                 axisOptions,
-                labelDataPoints: labelDataPoints,
+                labelDataPoints,
+                shapesSelection: shapes,
+                viewport: {
+                    height: this.height,
+                    width: this.width
+                }
             };
         }
 
-        private static drawDefaultShapes(data: MekkoColumnChartData,
+        private static drawDefaultShapes(
+            data: MekkoColumnChartData,
             series: UpdateSelection<any>,
             layout: IMekkoColumnLayout,
             itemCS: ClassAndSelector,
-            filterZeros: boolean,
-            hasSelection: boolean): UpdateSelection<any> {
-            // We filter out invisible (0, null, etc.) values from the dataset
-            // based on whether animations are enabled or not, Dashboard and
-            // Exploration mode, respectively.
+            hasSelection: boolean): UpdateSelection<MekkoChartColumnDataPoint> {
 
-            var rectName: string = 'rect';
-            filterZeros = false;
+            const dataSelector: (dataPoint: MekkoChartSeries) => any[] =
+                (dataPoint: MekkoChartSeries) => dataPoint.data;
 
-            var dataSelector: (d: MekkoChartSeries) => any[];
-            if (filterZeros) {
-                dataSelector = (d: MekkoChartSeries) => {
-                    var filteredData = _.filter(d.data, (datapoint: MekkoChartColumnDataPoint) => !!datapoint.value);
-                    return filteredData;
-                };
-            }
-            else {
-                dataSelector = (d: MekkoChartSeries) => d.data;
-            }
 
-            var shapeSelection = series.selectAll(itemCS.selector);
-            var shapes = shapeSelection.data(dataSelector, (d: MekkoChartColumnDataPoint) => d.key);
-
-            shapes.enter()
-                .append(rectName)
-                .attr("class", (d: MekkoChartColumnDataPoint) => itemCS.class.concat(d.highlight ? " highlight" : ""));
+            const shapeSelection: UpdateSelection<any> = series.selectAll(itemCS.selector),
+                shapes: UpdateSelection<MekkoChartColumnDataPoint> = shapeSelection.data(
+                    dataSelector,
+                    (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
 
             shapes
-                .style("fill", (d: MekkoChartColumnDataPoint) => data.showAllDataPoints
-                    ? d.color
-                    : data.defaultDataPointColor)
-                .style("fill-opacity", (d: MekkoChartColumnDataPoint) => utils.getFillOpacity(
-                    d.selected,
-                    d.highlight,
-                    hasSelection,
-                    data.hasHighlights))
+                .enter()
+                .append("rect")
+                .attr("class", (dataPoint: MekkoChartColumnDataPoint) => {
+                    return itemCS.class.concat(dataPoint.highlight
+                        ? " highlight"
+                        : "");
+                });
+
+            shapes
+                .style({
+                    "fill": (dataPoint: MekkoChartColumnDataPoint) => data.showAllDataPoints
+                        ? dataPoint.color
+                        : data.defaultDataPointColor,
+                    "fill-opacity": (dataPoint: MekkoChartColumnDataPoint) => utils.getFillOpacity(
+                        dataPoint.selected,
+                        dataPoint.highlight,
+                        hasSelection,
+                        data.hasHighlights)
+                })
                 .attr(layout.shapeLayout as any);
 
             shapes
                 .exit()
                 .remove();
 
-            var borderSelection = series.selectAll(columnChart.BaseColumnChart.BorderClass.selector);
-            var borders = borderSelection.data(dataSelector, (d: MekkoChartColumnDataPoint) => d.key);
+            const borderSelection: UpdateSelection<any> = series.selectAll(BaseVisualStrategy.BorderSelector.selector),
+                borders: UpdateSelection<MekkoChartColumnDataPoint> = borderSelection.data(
+                    dataSelector,
+                    (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
 
-            var borderColor = columnChart.BaseColumnChart.getBorderColor(data.borderSettings);
-
-            borders.enter()
-                .append(rectName)
-                .classed(columnChart.BaseColumnChart.BorderClass.class, true);
+            const borderColor: string = columnChart.BaseColumnChart.getBorderColor(data.borderSettings);
 
             borders
-                .style("fill", (d: MekkoChartColumnDataPoint) => borderColor)
-                .style("fill-opacity", (d: MekkoChartColumnDataPoint) => {
-                    return data.hasHighlights
-                        ? utils.DimmedOpacity
-                        : utils.DefaultOpacity;
+                .enter()
+                .append("rect")
+                .classed(BaseVisualStrategy.BorderSelector.class, true);
+
+            borders
+                .style({
+                    "fill": borderColor,
+                    "fill-opacity": (dataPoint: MekkoChartColumnDataPoint) => {
+                        return data.hasHighlights
+                            ? utils.DimmedOpacity
+                            : utils.DefaultOpacity;
+                    }
                 })
                 .attr(layout.shapeBorder as any);
 
@@ -518,14 +564,14 @@ module powerbi.extensibility.visual.visualStrategy {
         public selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void {
             utils.setChosenColumnOpacity(
                 this.graphicsContext.mainGraphicsContext,
-                BaseVisualStrategy.Classes["item"].selector,
+                BaseVisualStrategy.ItemSelector.selector,
                 selectedColumnIndex,
                 lastSelectedColumnIndex);
 
             this.moveHandle(selectedColumnIndex);
         }
 
-        public getClosestColumnIndex(x: number, y: number): number {
+        public getClosestColumnIndex(x: number): number {
             return utils.getClosestColumnIndex(x, this.getColumnsCenters());
         }
 
@@ -533,32 +579,46 @@ module powerbi.extensibility.visual.visualStrategy {
          * Get the chart's columns centers (x value).
          */
         private getColumnsCenters(): number[] {
-            if (!this.columnsCenters) { // lazy creation
-                var categoryWidth: number = this.categoryLayout.categoryThickness * (1 - MekkoChart.InnerPaddingRatio);
-                // use the axis scale and first series data to get category centers
+            if (!this.columnsCenters) {
+                const categoryWidth: number = this.categoryLayout.categoryThickness
+                    * (BaseVisualStrategy.DefaultInnerPaddingRatio - MekkoChart.InnerPaddingRatio);
+
                 if (this.data.series.length > 0) {
-                    var xScaleOffset = 0;
+                    let xScaleOffset: number = 0;
+
                     if (!this.categoryLayout.isScalar) {
-                        xScaleOffset = categoryWidth / 2;
+                        xScaleOffset = categoryWidth / BaseVisualStrategy.CategoryWidthDelimiter;
                     }
-                    var firstSeries = this.data.series[0];
-                    if (firstSeries &&
-                        firstSeries.data) {
-                        this.columnsCenters = firstSeries.data.map(d => this.xProps.scale(this.categoryLayout.isScalar ? d.categoryValue : d.categoryIndex) + xScaleOffset);
+
+                    const firstSeries: MekkoChartSeries = this.data.series[0];
+
+                    if (firstSeries && firstSeries.data) {
+                        this.columnsCenters = firstSeries.data.map((dataPoint: MekkoChartColumnDataPoint) => {
+                            const value: number = this.categoryLayout.isScalar
+                                ? dataPoint.categoryValue
+                                : dataPoint.categoryIndex;
+
+                            return this.xProps.scale(value) + xScaleOffset;
+                        });
                     }
                 }
             }
+
             return this.columnsCenters;
         }
 
         private moveHandle(selectedColumnIndex: number) {
-            var columnCenters = this.getColumnsCenters();
-            var x = columnCenters[selectedColumnIndex];
+            const columnCenters: number[] = this.getColumnsCenters(),
+                x: number = columnCenters[selectedColumnIndex];
 
             if (!this.columnSelectionLineHandle) {
-                var handle = this.columnSelectionLineHandle = this.graphicsContext.mainGraphicsContext.append('g');
-                handle.append('line')
-                    .classed('interactive-hover-line', true)
+                const handleSelection: Selection<any> = this.graphicsContext.mainGraphicsContext.append("g");
+
+                this.columnSelectionLineHandle = handleSelection;
+
+                handleSelection
+                    .append("line")
+                    .classed(BaseVisualStrategy.InteractiveHoverLineSelector.class, true)
                     .attr({
                         x1: x,
                         x2: x,
@@ -566,93 +626,114 @@ module powerbi.extensibility.visual.visualStrategy {
                         y2: this.height,
                     });
 
-                handle.append('circle')
+                handleSelection
+                    .append("circle")
                     .attr({
                         cx: x,
                         cy: this.height,
-                        r: '6px',
+                        r: PixelConverter.toString(BaseVisualStrategy.CircleRadius)
                     })
-                    .classed('drag-handle', true);
+                    .classed(BaseVisualStrategy.DragHandleSelector.class, true);
             }
             else {
-                var handle = this.columnSelectionLineHandle;
-                handle.select('line').attr({ x1: x, x2: x });
-                handle.select('circle').attr({ cx: x });
+                const handleSelection: Selection<any> = this.columnSelectionLineHandle;
+
+                handleSelection
+                    .select("line")
+                    .attr({
+                        x1: x,
+                        x2: x
+                    });
+
+                handleSelection
+                    .select("circle")
+                    .attr({ cx: x });
             }
         }
 
-        public static getLayout(data: MekkoColumnChartData, axisOptions: MekkoColumnAxisOptions): IMekkoColumnLayout {
-            var xScale = axisOptions.xScale;
-            var yScale = axisOptions.yScale;
-            var scaledY0 = yScale(0);
-            var scaledX0 = xScale(0);
+        public static getLayout(
+            data: MekkoColumnChartData,
+            axisOptions: MekkoColumnAxisOptions): IMekkoColumnLayout {
 
-            var borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(data.borderSettings);
+            const xScale: LinearScale<number, number> = axisOptions.xScale,
+                yScale: LinearScale<number, number> = axisOptions.yScale,
+                scaledY0: number = yScale(0),
+                scaledX0: number = xScale(0),
+                borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(data.borderSettings);
 
-            var columnWidthScale = (d: MekkoChartColumnDataPoint) => {
-                var value: number = AxisHelper.diffScaled(xScale, d.value, 0);
-                return value;
+            const columnWidthScale = (dataPoint: MekkoChartColumnDataPoint) => {
+                return AxisHelper.diffScaled(xScale, dataPoint.value, 0);
             };
 
-            var columnStart = (d: MekkoChartColumnDataPoint) => {
-                var value: number = scaledX0 +
-                    AxisHelper.diffScaled(xScale, d.originalPosition, 0) +
-                    borderWidth * d.categoryIndex;
-                return value;
+            const columnStart = (dataPoint: MekkoChartColumnDataPoint) => {
+                return scaledX0
+                    + AxisHelper.diffScaled(xScale, dataPoint.originalPosition, 0)
+                    + borderWidth * dataPoint.categoryIndex;
             };
 
-            var borderStart = (d: MekkoChartColumnDataPoint) => {
-                var value: number = scaledX0 +
-                    AxisHelper.diffScaled(xScale, d.originalPosition, 0) +
-                    AxisHelper.diffScaled(xScale, d.value, 0) +
-                    borderWidth * d.categoryIndex;
+            const borderStart = (dataPoint: MekkoChartColumnDataPoint) => {
+                return scaledX0
+                    + AxisHelper.diffScaled(xScale, dataPoint.originalPosition, 0)
+                    + AxisHelper.diffScaled(xScale, dataPoint.value, 0)
+                    + borderWidth * dataPoint.categoryIndex;
+            };
 
-                return value;
+            const yPosition = (dataPoint: MekkoChartColumnDataPoint) => {
+                return scaledY0 + AxisHelper.diffScaled(yScale, dataPoint.position, 0);
+            };
+
+            const height = (dataPoint: MekkoChartColumnDataPoint) => {
+                return utils.getSize(yScale, dataPoint.valueAbsolute);
             };
 
             return {
                 shapeLayout: {
                     width: columnWidthScale,
                     x: columnStart,
-                    y: (d: MekkoChartColumnDataPoint) => scaledY0 + AxisHelper.diffScaled(yScale, d.position, 0),
-                    height: (d: MekkoChartColumnDataPoint) => utils.getSize(yScale, d.valueAbsolute)
+                    y: yPosition,
+                    height: height
                 },
                 shapeBorder: {
-                    width: (d: MekkoChartColumnDataPoint) => borderWidth,
+                    width: () => borderWidth,
                     x: borderStart,
-                    y: (d: MekkoChartColumnDataPoint) => scaledY0 + AxisHelper.diffScaled(yScale, d.position, 0),
-                    height: (d: MekkoChartColumnDataPoint) => utils.getSize(yScale, d.valueAbsolute)
+                    y: yPosition,
+                    height: height
                 },
                 shapeLayoutWithoutHighlights: {
                     width: columnWidthScale,
                     x: columnStart,
-                    y: (d: MekkoChartColumnDataPoint) => scaledY0 + AxisHelper.diffScaled(yScale, d.position, 0),
-                    height: (d: MekkoChartColumnDataPoint) => utils.getSize(yScale, d.originalValueAbsolute)
+                    y: yPosition,
+                    height: (dataPoint: MekkoChartColumnDataPoint) => {
+                        return utils.getSize(yScale, dataPoint.originalValueAbsolute);
+                    }
                 },
                 zeroShapeLayout: {
                     width: columnWidthScale,
                     x: columnStart,
-                    y: (d: MekkoChartColumnDataPoint) => scaledY0 + AxisHelper.diffScaled(yScale, d.position, 0) + utils.getSize(yScale, d.valueAbsolute),
-                    height: (d: MekkoChartColumnDataPoint) => 0
+                    y: (dataPoint: MekkoChartColumnDataPoint) => {
+                        return scaledY0 + AxisHelper.diffScaled(yScale, dataPoint.position, 0)
+                            + utils.getSize(yScale, dataPoint.valueAbsolute);
+                    },
+                    height: () => 0
                 },
                 shapeXAxis: {
                     width: columnWidthScale,
                     x: columnStart,
-                    y: (d: MekkoChartColumnDataPoint) => scaledY0 + AxisHelper.diffScaled(yScale, d.position, 0),
-                    height: (d: MekkoChartColumnDataPoint) => utils.getSize(yScale, d.valueAbsolute)
+                    y: yPosition,
+                    height: height
                 },
             };
         }
 
         private createMekkoLabelDataPoints(): LabelDataPoint[] {
-            let labelDataPoints: LabelDataPoint[] = [],
+            const labelDataPoints: LabelDataPoint[] = [],
                 data: MekkoChartData = this.data,
                 dataSeries: MekkoChartSeries[] = data.series,
                 formattersCache: IColumnFormatterCacheManager = createColumnFormatterCacheManager(),
                 shapeLayout = this.layout.shapeLayout;
 
-            for (var currentSeries of dataSeries) {
-                const labelSettings = currentSeries.labelSettings
+            for (let currentSeries of dataSeries) {
+                const labelSettings: VisualDataLabelsSettings = currentSeries.labelSettings
                     ? currentSeries.labelSettings
                     : data.labelSettings;
 
@@ -660,7 +741,7 @@ module powerbi.extensibility.visual.visualStrategy {
                     continue;
                 }
 
-                const axisFormatter: number = getDisplayUnitValueFromAxisFormatter(
+                const displayUnitValue: number = getDisplayUnitValueFromAxisFormatter(
                     this.yProps.formatter,
                     labelSettings);
 
@@ -670,7 +751,6 @@ module powerbi.extensibility.visual.visualStrategy {
                         continue;
                     }
 
-                    // Calculate parent rectangle
                     const parentRect: IRect = {
                         left: shapeLayout.x(dataPoint),
                         top: shapeLayout.y(dataPoint),
@@ -689,7 +769,7 @@ module powerbi.extensibility.visual.visualStrategy {
                     const formatter: IValueFormatter = formattersCache.getOrCreate(
                         formatString,
                         labelSettings,
-                        axisFormatter);
+                        displayUnitValue);
 
                     labelDataPoints.push({
                         parentRect,
@@ -712,6 +792,7 @@ module powerbi.extensibility.visual.visualStrategy {
         if (axisFormatter
             && axisFormatter.displayUnit
             && labelSettings.displayUnits === 0) {
+
             return axisFormatter.displayUnit.value;
         }
 

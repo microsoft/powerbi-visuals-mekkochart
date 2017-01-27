@@ -31,18 +31,22 @@ module powerbi.extensibility.visual.behavior {
     // powerbi.extensibility.utils.interactivity
     import ISelectionHandler = powerbi.extensibility.utils.interactivity.ISelectionHandler;
     import interactivityUtils = powerbi.extensibility.utils.interactivity.interactivityUtils;
+    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
     import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
 
     export class VisualBehavior implements IInteractiveBehavior {
         private options: VisualBehaviorOptions;
 
-        public bindEvents(options: VisualBehaviorOptions, selectionHandler: ISelectionHandler) {
+        public bindEvents(
+            options: VisualBehaviorOptions,
+            selectionHandler: ISelectionHandler): void {
+
             this.options = options;
 
             const eventGroup: Selection<any> = options.eventGroup;
 
             eventGroup.on("click", () => {
-                const dataOfTheLastEvent: any = VisualBehavior.getDatumForLastInputEvent();
+                const dataOfTheLastEvent: SelectableDataPoint = VisualBehavior.getDatumForLastInputEvent();
 
                 selectionHandler.handleSelection(
                     dataOfTheLastEvent,
@@ -50,19 +54,13 @@ module powerbi.extensibility.visual.behavior {
             });
 
             eventGroup.on("contextmenu", () => {
-                const mouseEvent: MouseEvent = d3.event as MouseEvent
+                const mouseEvent: MouseEvent = d3.event as MouseEvent;
 
                 if (mouseEvent.ctrlKey) {
                     return;
                 }
 
                 mouseEvent.preventDefault();
-
-                // var d = MekkoChartWebBehavior.getDatumForLastInputEvent();
-                // var position = interactivityUtils.getPositionOfLastInputEvent();
-
-                // TODO: check it
-                // selectionHandler.handleContextMenu(d, position);
             });
         }
 
@@ -76,7 +74,7 @@ module powerbi.extensibility.visual.behavior {
             });
         }
 
-        private static getDatumForLastInputEvent(): any {
+        private static getDatumForLastInputEvent(): SelectableDataPoint {
             const target: EventTarget = (d3.event as MouseEvent).target;
 
             return d3.select(target).datum();

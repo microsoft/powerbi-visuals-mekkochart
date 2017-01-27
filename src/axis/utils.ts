@@ -31,9 +31,15 @@ module powerbi.extensibility.visual.axis.utils {
     // powerbi.extensibility.utils.chart
     import AxisHelper = powerbi.extensibility.utils.chart.axis;
     import axisScale = AxisHelper.scale;
+    import IAxisProperties = AxisHelper.IAxisProperties;
 
     // powerbi.extensibility.utils.formatting
     import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+
+    export interface AxesLabels {
+        xAxisLabel: string;
+        yAxisLabel: string;
+    }
 
     /**
      * Returns a boolean, that indicates if y axis title should be displayed.
@@ -47,11 +53,11 @@ module powerbi.extensibility.visual.axis.utils {
 
         return (layerNumber === 0
             && !!valueAxisProperties
-            && !!valueAxisProperties['showAxisTitle'])
+            && !!valueAxisProperties["showAxisTitle"])
             || (layerNumber === 1
                 && !yAxisWillMerge
                 && !!valueAxisProperties
-                && !!valueAxisProperties['secShowAxisTitle']);
+                && !!valueAxisProperties["secShowAxisTitle"]);
     }
 
     /**
@@ -66,48 +72,52 @@ module powerbi.extensibility.visual.axis.utils {
         scrollbarVisible: boolean,
         existingAxisProperties: MekkoChartAxisProperties): MekkoChartAxisProperties {
 
-        var visualOptions: MekkoCalculateScaleAndDomainOptions = {
-            viewport: viewport,
-            margin: margin,
+        const visualOptions: MekkoCalculateScaleAndDomainOptions = {
+            viewport,
+            margin,
             forcedXDomain: [
                 categoryAxisProperties
-                    ? categoryAxisProperties['start']
+                    ? categoryAxisProperties["start"]
                     : null,
                 categoryAxisProperties
-                    ? categoryAxisProperties['end']
+                    ? categoryAxisProperties["end"]
                     : null
             ],
-            forceMerge: valueAxisProperties && valueAxisProperties['secShow'] === false,
+            forceMerge: valueAxisProperties && valueAxisProperties["secShow"] === false,
             showCategoryAxisLabel: false,
             showValueAxisLabel: false,
-            categoryAxisScaleType: categoryAxisProperties && categoryAxisProperties['axisScale'] != null
-                ? <string>categoryAxisProperties['axisScale']
+            categoryAxisScaleType: categoryAxisProperties && categoryAxisProperties["axisScale"] != null
+                ? <string>categoryAxisProperties["axisScale"]
                 : axisScale.linear,
-            valueAxisScaleType: valueAxisProperties && valueAxisProperties['axisScale'] != null
-                ? <string>valueAxisProperties['axisScale']
+            valueAxisScaleType: valueAxisProperties && valueAxisProperties["axisScale"] != null
+                ? <string>valueAxisProperties["axisScale"]
                 : axisScale.linear,
             trimOrdinalDataOnOverflow: false
         };
 
-        var yAxisWillMerge = false;
-
         if (valueAxisProperties) {
             visualOptions.forcedYDomain = AxisHelper.applyCustomizedDomain(
                 [
-                    valueAxisProperties['start'],
-                    valueAxisProperties['end']
+                    valueAxisProperties["start"],
+                    valueAxisProperties["end"]
                 ],
                 visualOptions.forcedYDomain);
         }
 
-        var result: MekkoChartAxisProperties;
-        for (var layerNumber: number = 0, len: number = layers.length; layerNumber < len; layerNumber++) {
-            var currentlayer = layers[layerNumber];
-            visualOptions.showCategoryAxisLabel = (!!categoryAxisProperties && !!categoryAxisProperties['showAxisTitle']);//here
-            //visualOptions.showBorder = (!!categoryAxisProperties && !!categoryAxisProperties['showBorder']);//here
-            visualOptions.showValueAxisLabel = shouldShowYAxisLabel(layerNumber, valueAxisProperties, yAxisWillMerge);
+        let result: MekkoChartAxisProperties;
 
-            var axes = currentlayer.calculateAxesProperties(visualOptions);
+        for (let layerNumber: number = 0; layerNumber < layers.length; layerNumber++) {
+            const currentLayer: columnChart.IColumnChart = layers[layerNumber];
+
+            visualOptions.showCategoryAxisLabel = !!categoryAxisProperties
+                && !!categoryAxisProperties["showAxisTitle"];
+
+            visualOptions.showValueAxisLabel = shouldShowYAxisLabel(
+                layerNumber,
+                valueAxisProperties,
+                false);
+
+            const axes: IAxisProperties[] = currentLayer.calculateAxesProperties(visualOptions);
 
             if (layerNumber === 0) {
                 result = {
@@ -123,15 +133,16 @@ module powerbi.extensibility.visual.axis.utils {
         return result;
     }
 
-    export function createAxesLabels(categoryAxisProperties: DataViewObject,
+    export function createAxesLabels(
+        categoryAxisProperties: DataViewObject,
         valueAxisProperties: DataViewObject,
         category: DataViewMetadataColumn,
-        values: DataViewMetadataColumn[]) {
-        let xAxisLabel = null;
-        let yAxisLabel = null;
+        values: DataViewMetadataColumn[]): AxesLabels {
+
+        let xAxisLabel: string = null,
+            yAxisLabel: string = null;
 
         if (categoryAxisProperties) {
-
             // Take the value only if it's there
             if (category && category.displayName) {
                 xAxisLabel = category.displayName;
@@ -139,17 +150,25 @@ module powerbi.extensibility.visual.axis.utils {
         }
 
         if (valueAxisProperties) {
-            let valuesNames: string[] = [];
-
             if (values) {
                 // Take the name from the values, and make it unique because there are sometimes duplications
-                valuesNames = values
-                    .map(v => v ? v.displayName : '')
-                    .filter((value, index, self) => value !== '' && self.indexOf(value) === index);
+                const valuesNames: string[] = values
+                    .map((metadata: DataViewMetadataColumn) => {
+                        return metadata
+                            ? metadata.displayName
+                            : "";
+                    })
+                    .filter((value: string, index: number, self: string[]) => {
+                        return value !== "" && self.indexOf(value) === index;
+                    });
 
                 yAxisLabel = valueFormatter.formatListAnd(valuesNames);
             }
         }
-        return { xAxisLabel: xAxisLabel, yAxisLabel: yAxisLabel };
+
+        return {
+            xAxisLabel,
+            yAxisLabel
+        };
     }
 }

@@ -39,33 +39,46 @@ module powerbi.extensibility.visual.utils {
     // powerbi.extensibility.utils.type
     import Prototype = powerbi.extensibility.utils.type.Prototype;
 
-    var PctRoundingError = 0.0001;
-    var rectName = 'rect';
+    const PctRoundingError: number = 0.0001;
+    const RectName: string = "rect";
 
-    export var DimmedOpacity = 0.4;
-    export var DefaultOpacity = 1.0;
+    export const DimmedOpacity = 0.4;
+    export const DefaultOpacity = 1.0;
+
+    const DefaultNumberRange: NumberRange = {
+        min: 0,
+        max: 10
+    };
 
     export function getSize(scale: LinearScale<any, any>, size: number, zeroVal: number = 0): number {
         return AxisHelper.diffScaled(scale, zeroVal, size);
     }
 
     export function calcValueDomain(data: MekkoChartSeries[], is100pct: boolean): NumberRange {
-        var defaultNumberRange = {
-            min: 0,
-            max: 10
-        };
+        if (data.length === 0) {
+            return {
+                min: DefaultNumberRange.min,
+                max: DefaultNumberRange.max
+            };
+        }
 
-        if (data.length === 0)
-            return defaultNumberRange;
+        let min: number = d3.min<MekkoChartSeries, number>(
+            data,
+            (series: MekkoChartSeries) => {
+                return d3.min<MekkoChartColumnDataPoint, number>(
+                    series.data,
+                    (dataPoint: MekkoChartColumnDataPoint) => {
+                        return dataPoint.position - dataPoint.valueAbsolute;
+                    });
+            });
 
-        // Can't use AxisHelper because Stacked layout has a slightly different calc, (position - valueAbs)
-        var min = d3.min<MekkoChartSeries, number>(data, d => {
-            return d3.min<MekkoChartColumnDataPoint, number>(d.data, e => e.position - e.valueAbsolute);
-        });
-
-        var max = d3.max<MekkoChartSeries, number>(data, d => {
-            return d3.max<MekkoChartColumnDataPoint, number>(d.data, e => e.position);
-        });
+        let max: number = d3.max<MekkoChartSeries, number>(
+            data,
+            (series: MekkoChartSeries) => {
+                return d3.max<MekkoChartColumnDataPoint, number>(
+                    series.data,
+                    (dataPoint: MekkoChartColumnDataPoint) => dataPoint.position);
+            });
 
         if (is100pct) {
             min = Double.roundToPrecision(min, PctRoundingError);
@@ -73,27 +86,28 @@ module powerbi.extensibility.visual.utils {
         }
 
         return {
-            min: min,
-            max: max,
+            min,
+            max
         };
     }
 
     export function drawSeries(
         data: MekkoChartData,
         graphicsContext: Selection<any>,
-        axisOptions: MekkoChartAxisOptions): UpdateSelection<any> {
+        axisOptions: MekkoChartAxisOptions): UpdateSelection<MekkoChartSeries> {
 
-        var colGroupSelection = graphicsContext.selectAll(MekkoChart.Classes["series"].selector);
-        var series = colGroupSelection.data(data.series, (d: MekkoChartSeries) => d.key);
+        const series: UpdateSelection<MekkoChartSeries> = graphicsContext
+            .selectAll(MekkoChart.SeriesSelector.selector)
+            .data(data.series, (series: MekkoChartSeries) => series.key);
 
         series
             .enter()
-            .append('g')
-            .classed(MekkoChart.Classes["series"].class, true);
+            .append("g")
+            .classed(MekkoChart.SeriesSelector.class, true);
 
         series
             .style({
-                fill: (d: MekkoChartSeries) => d.color,
+                fill: (series: MekkoChartSeries) => series.color,
             });
 
         series
@@ -106,12 +120,17 @@ module powerbi.extensibility.visual.utils {
     export function applyInteractivity(columns: Selection<any>, onDragStart): void {
         if (onDragStart) {
             columns
-                .attr('draggable', 'true')
-                .on('dragstart', onDragStart);
+                .attr("draggable", "true")
+                .on("dragstart", onDragStart);
         }
     }
 
-    export function getFillOpacity(selected: boolean, highlight: boolean, hasSelection: boolean, hasPartialHighlights: boolean): number {
+    export function getFillOpacity(
+        selected: boolean,
+        highlight: boolean,
+        hasSelection: boolean,
+        hasPartialHighlights: boolean): number {
+
         if ((hasPartialHighlights && !highlight) || (hasSelection && !selected)) {
             return DimmedOpacity;
         }
@@ -125,24 +144,33 @@ module powerbi.extensibility.visual.utils {
         selectedColumnIndex: number,
         lastColumnIndex: number): void {
 
-        var series = mainGraphicsContext.selectAll(MekkoChart.Classes["series"].selector);
-        var lastColumnUndefined = typeof lastColumnIndex === 'undefined';
-        // find all columns that do not belong to the selected column and set a dimmed opacity with a smooth animation to those columns
-        series.selectAll(rectName + columnGroupSelector).filter((d: MekkoChartColumnDataPoint) => {
-            return (d.categoryIndex !== selectedColumnIndex) && (lastColumnUndefined || d.categoryIndex === lastColumnIndex);
-        }).transition().style('fill-opacity', DimmedOpacity);
+        const series: Selection<any> = mainGraphicsContext
+            .selectAll(MekkoChart.SeriesSelector.selector);
 
-        // set the default opacity for the selected column
-        series.selectAll(rectName + columnGroupSelector).filter((d: MekkoChartColumnDataPoint) => {
-            return d.categoryIndex === selectedColumnIndex;
-        }).style('fill-opacity', DefaultOpacity);
+        const lastColumnUndefined: boolean = typeof lastColumnIndex === "undefined";
+
+        series.selectAll(RectName + columnGroupSelector)
+            .filter((dataPoint: MekkoChartColumnDataPoint) => {
+                return (dataPoint.categoryIndex !== selectedColumnIndex)
+                    && (lastColumnUndefined || dataPoint.categoryIndex === lastColumnIndex);
+            })
+            .transition()
+            .style("fill-opacity", DimmedOpacity);
+
+        series.selectAll(RectName + columnGroupSelector)
+            .filter((dataPoint: MekkoChartColumnDataPoint) => {
+                return dataPoint.categoryIndex === selectedColumnIndex;
+            })
+            .style("fill-opacity", DefaultOpacity);
     }
 
     export function getClosestColumnIndex(coordinate: number, columnsCenters: number[]): number {
-        var currentIndex = 0;
-        var distance: number = Number.MAX_VALUE;
-        for (var i = 0, ilen = columnsCenters.length; i < ilen; i++) {
-            var currentDistance = Math.abs(coordinate - columnsCenters[i]);
+        let currentIndex: number = 0,
+            distance: number = Number.MAX_VALUE;
+
+        for (let i: number = 0; i < columnsCenters.length; i++) {
+            const currentDistance: number = Math.abs(coordinate - columnsCenters[i]);
+
             if (currentDistance < distance) {
                 distance = currentDistance;
                 currentIndex = i;
@@ -152,10 +180,14 @@ module powerbi.extensibility.visual.utils {
         return currentIndex;
     }
 
-    export function applyUserMinMax(isScalar: boolean, dataView: DataViewCategorical, xAxisCardProperties: DataViewObject): DataViewCategorical {
+    export function applyUserMinMax(
+        isScalar: boolean,
+        dataView: DataViewCategorical,
+        xAxisCardProperties: DataViewObject): DataViewCategorical {
+
         if (isScalar) {
-            var min = xAxisCardProperties['start'];
-            var max = xAxisCardProperties['end'];
+            const min: DataViewPropertyValue = xAxisCardProperties["start"],
+                max: DataViewPropertyValue = xAxisCardProperties["end"];
 
             return transformDomain(dataView, min, max);
         }
@@ -163,30 +195,45 @@ module powerbi.extensibility.visual.utils {
         return dataView;
     }
 
-    export function transformDomain(dataView: DataViewCategorical, min: DataViewPropertyValue, max: DataViewPropertyValue): DataViewCategorical {
-        if (!dataView.categories || !dataView.values || dataView.categories.length === 0 || dataView.values.length === 0)
-            return dataView;// no need to do something when there are no categories
+    export function transformDomain(
+        dataView: DataViewCategorical,
+        min: DataViewPropertyValue,
+        max: DataViewPropertyValue): DataViewCategorical {
 
-        if (typeof min !== "number" && typeof max !== "number")
-            return dataView;//user did not set min max, nothing to do here
+        if (!dataView.categories
+            || !dataView.values
+            || dataView.categories.length === 0
+            || dataView.values.length === 0) {
 
-        var category = dataView.categories[0];//at the moment we only support one category
-        var categoryType = category ? category.source.type : null;
+            return dataView;
+        }
+
+        if (typeof min !== "number" && typeof max !== "number") {
+            return dataView;
+        }
+
+        const category: DataViewCategoryColumn = dataView.categories[0];
+
+        const categoryType: ValueTypeDescriptor = category
+            ? category.source.type
+            : null;
 
         // Min/Max comparison won't work if category source is Ordinal
-        if (AxisHelper.isOrdinal(categoryType))
+        if (AxisHelper.isOrdinal(categoryType)) {
             return;
+        }
 
-        var categoryValues = category.values;
-        var categoryObjects = category.objects;
+        const categoryValues: PrimitiveValue[] = category.values,
+            categoryObjects: DataViewObjects[] = category.objects;
 
-        if (!categoryValues || !categoryObjects)
+        if (!categoryValues || !categoryObjects) {
             return dataView;
-        var newcategoryValues = [];
-        var newValues = [];
-        var newObjects = [];
+        }
 
-        //get new min max
+        const newcategoryValues: PrimitiveValue[] = [],
+            newValues: PrimitiveValue[][] = [],
+            newObjects: DataViewObjects[] = [];
+
         if (typeof min !== "number") {
             min = categoryValues[0];
         }
@@ -194,50 +241,55 @@ module powerbi.extensibility.visual.utils {
             max = categoryValues[categoryValues.length - 1];
         }
 
-        //don't allow this
-        if (min > max)
+        if (min > max) {
             return dataView;
+        }
 
-        //build measure array
-        for (var j = 0, len = dataView.values.length; j < len; j++) {
+        for (let j: number = 0; j < dataView.values.length; j++) {
             newValues.push([]);
         }
 
-        for (var t = 0, len = categoryValues.length; t < len; t++) {
+        for (let t: number = 0; t < categoryValues.length; t++) {
             if (categoryValues[t] >= min && categoryValues[t] <= max) {
                 newcategoryValues.push(categoryValues[t]);
+
                 if (categoryObjects) {
                     newObjects.push(categoryObjects[t]);
                 }
 
-                //on each measure set the new range
                 if (dataView.values) {
-                    for (var k = 0; k < dataView.values.length; k++) {
+                    for (let k: number = 0; k < dataView.values.length; k++) {
                         newValues[k].push(dataView.values[k].values[t]);
                     }
                 }
             }
         }
 
-        //don't write directly to dataview
-        var resultDataView = Prototype.inherit(dataView);
-        var resultDataViewValues = resultDataView.values = Prototype.inherit(resultDataView.values);
-        var resultDataViewCategories = resultDataView.categories = Prototype.inherit(dataView.categories);
-        var resultDataViewCategories0 = resultDataView.categories[0] = Prototype.inherit(resultDataViewCategories[0]);
+        const resultDataView: DataViewCategorical = Prototype.inherit(dataView),
+            resultDataViewValues: DataViewValueColumns
+                = resultDataView.values
+                = Prototype.inherit(resultDataView.values),
+            resultDataViewCategories: DataViewCategoryColumn[]
+                = resultDataView.categories
+                = Prototype.inherit(dataView.categories),
+            resultDataViewCategories0: DataViewCategoryColumn
+                = resultDataView.categories[0]
+                = Prototype.inherit(resultDataViewCategories[0]);
 
         resultDataViewCategories0.values = newcategoryValues;
-        //only if we had objects, then you set the new objects
+
         if (resultDataViewCategories0.objects) {
             resultDataViewCategories0.objects = newObjects;
         }
 
-        //update measure array
-        for (var t = 0, len = dataView.values.length; t < len; t++) {
-            var measureArray = resultDataViewValues[t] = Prototype.inherit(resultDataViewValues[t]);
+        for (let t: number = 0; t < dataView.values.length; t++) {
+            const measureArray: DataViewValueColumn
+                = resultDataViewValues[t]
+                = Prototype.inherit(resultDataViewValues[t]);
+
             measureArray.values = newValues[t];
         }
 
         return resultDataView;
     }
-
 }

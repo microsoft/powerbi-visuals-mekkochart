@@ -40,7 +40,21 @@
 
     -webkit-tap-highlight-color: transparent;
 
+    .root-svg-element {
+        position: absolute;
+    }
+
     .labels .data-labels {
         transform: translate(0, 0.35em);
+    }
+
+    .xAxisLabel,
+    .yAxisLabel,
+    .labelMiddle {
+        text-anchor: middle;
+    }
+
+    .svgScrollable {
+        overflow: hidden;
     }
 }

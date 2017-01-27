@@ -29,10 +29,7 @@ module powerbi.extensibility.visual.columnChart {
     import LegendData = powerbi.extensibility.utils.chart.legend.LegendData;
     import IAxisProperties = powerbi.extensibility.utils.chart.axis.IAxisProperties;
 
-    /**
- * Renders a stacked and clustered column chart.
- */
-    export interface IColumnChart /*extends ICartesianVisual*/ {
+    export interface IColumnChart {
         getColumnsWidth(): number[];
         getBorderWidth(): number;
 

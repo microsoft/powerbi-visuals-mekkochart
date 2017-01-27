@@ -84,7 +84,7 @@ module powerbi.extensibility.visual.test {
                         roles: { Category: true },
                         type: ValueType.fromDescriptor({ text: true })
                     },
-                    values: this.valuesCategorySeries.map(x => x[0])
+                    values: this.valuesCategorySeries.map((values: string[]) => values[0])
                 },
                 {
                     isGroup: true,
@@ -93,7 +93,7 @@ module powerbi.extensibility.visual.test {
                         roles: { Series: true },
                         type: ValueType.fromDescriptor({ text: true })
                     },
-                    values: this.valuesCategorySeries.map(x => x[1]),
+                    values: this.valuesCategorySeries.map((values: string[]) => values[1]),
                 }
             ], [
                     {

@@ -48,6 +48,6 @@ module powerbi.extensibility.visual.visualStrategy {
             ensureYDomain?: NumberRange): IAxisProperties;
         drawColumns(useAnimation: boolean): MekkoChartDrawInfo;
         selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void;
-        getClosestColumnIndex(x: number, y: number): number;
+        getClosestColumnIndex(x: number): number;
     }
 }

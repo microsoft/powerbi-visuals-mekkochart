@@ -46,7 +46,7 @@ module powerbi.extensibility.visual.test.helpers {
     export function isTextElementInOrOutElement(
         mainElement: Element,
         textElement: Element,
-        compareValues: compareValues) {
+        compareValues: compareValues): boolean {
 
         return isRectangleInOrOutRectangle(
             mainElement.getBoundingClientRect(),

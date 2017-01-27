@@ -28,6 +28,7 @@
 
 module powerbi.extensibility.visual.test {
     // powerbi.extensibility.utils.type
+    import toString = powerbi.extensibility.utils.type.PixelConverter.toString;
     import fromPointToPixel = powerbi.extensibility.utils.type.PixelConverter.fromPointToPixel;
 
     // powerbi.extensibility.utils.test
@@ -80,13 +81,13 @@ module powerbi.extensibility.visual.test {
                         .toBe(dataView.categorical.categories[0].values.length);
 
                     expect(visualBuilder.columnElement).toBeInDOM();
-                    let series: JQuery = visualBuilder.columnElement.children("g.series");
-                    let grouped: powerbi.DataViewValueColumnGroup[] = dataView.categorical.values.grouped();
 
-                    expect(series.length)
-                        .toBe(grouped.length);
+                    let series: JQuery = visualBuilder.columnElement.children("g.series"),
+                        grouped: DataViewValueColumnGroup[] = dataView.categorical.values.grouped();
 
-                    for (let i = 0, length = series.length; i < length; i++) {
+                    expect(series.length).toBe(grouped.length);
+
+                    for (let i: number = 0, length = series.length; i < length; i++) {
                         expect($(series[i]).children("rect.column").length)
                             .toBe((i === 0
                                 ? grouped[i].values[0].values
@@ -97,7 +98,7 @@ module powerbi.extensibility.visual.test {
                 });
             });
 
-            it("validate that labels are not cut off", done => {
+            it("validate that labels are not cut off", (done) => {
                 const fontSize: number = 40;
 
                 dataView.metadata.objects = {
@@ -127,22 +128,30 @@ module powerbi.extensibility.visual.test {
                 });
             });
 
-            it("visual is hidden when chart height is less than minimum height", done => {
-                visualBuilder.viewport = { height: 49, width: 350 };
+            it("visual is hidden when chart height is less than minimum height", (done) => {
+                visualBuilder.viewport = {
+                    height: 49,
+                    width: 350
+                };
 
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    expect(visualBuilder.element.find('.legend')).toHaveCss({ display: "none" });
+                    expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
                     expect(visualBuilder.mainElement[0]).toHaveCss({ display: "none" });
+
                     done();
                 });
             });
 
-            it("visual is hidden when chart width is less than minimum width", done => {
-                visualBuilder.viewport = { height: 350, width: 49 };
+            it("visual is hidden when chart width is less than minimum width", (done) => {
+                visualBuilder.viewport = {
+                    height: 350,
+                    width: 49
+                };
 
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     expect($(visualBuilder.mainElement[0])).toHaveCss({ display: "none" });
-                    expect(visualBuilder.element.find('.legend')).toHaveCss({ display: "none" });
+                    expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
+
                     done();
                 });
             });
@@ -160,28 +169,38 @@ module powerbi.extensibility.visual.test {
                 };
 
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    expect(isTextElementInOrOutElement(
+                    checkAxisLabels(
                         visualBuilder.mainElement[0],
-                        visualBuilder.xAxisLabel[0],
-                        (v1, v2) => v1 >= v2)).toBeTruthy();
+                        visualBuilder.xAxisLabel[0]);
 
-                    expect(isTextElementInOrOutElement(
+                    checkAxisLabels(
                         visualBuilder.mainElement[0],
-                        visualBuilder.yAxisLabel[0],
-                        (v1, v2) => v1 >= v2)).toBeTruthy();
+                        visualBuilder.yAxisLabel[0]);
 
                     done();
                 }, 300);
             });
 
-            it("multi-selection test", () => {
-                dataView = defaultDataViewBuilder.getDataView([MekkoChartData.ColumnCategory, MekkoChartData.ColumnY]);
-                visualBuilder.updateFlushAllD3Transitions(dataView);
-                let columns = visualBuilder.columnsWithSize;
+            function checkAxisLabels(mainElement: Element, textElement: Element): void {
+                expect(isTextElementInOrOutElement(
+                    visualBuilder.mainElement[0],
+                    visualBuilder.xAxisLabel[0],
+                    (firstValue: number, secondValue: number) => firstValue >= secondValue)).toBeTruthy();
+            }
 
-                let firstColumn = columns.eq(0);
-                let secondColumn = columns.eq(1);
-                let thirdColumn = columns.eq(2);
+            it("multi-selection test", () => {
+                dataView = defaultDataViewBuilder.getDataView([
+                    MekkoChartData.ColumnCategory,
+                    MekkoChartData.ColumnY
+                ]);
+
+                visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                const columns: JQuery = visualBuilder.columnsWithSize;
+
+                const firstColumn: JQuery = columns.eq(0),
+                    secondColumn: JQuery = columns.eq(1),
+                    thirdColumn: JQuery = columns.eq(2);
 
                 clickElement(firstColumn);
                 clickElement(secondColumn, true);
@@ -190,7 +209,6 @@ module powerbi.extensibility.visual.test {
                 expect(parseFloat(secondColumn.css("fill-opacity"))).toBe(1);
                 expect(parseFloat(thirdColumn.css("fill-opacity"))).toBeLessThan(1);
             });
-
         });
 
         describe("Format settings test", () => {
@@ -205,14 +223,22 @@ module powerbi.extensibility.visual.test {
 
                 it("show", () => {
                     visualBuilder.updateFlushAllD3Transitions(dataView);
-                    visualBuilder.borders.toArray().map($).forEach(e =>
-                        expect(parseFloat(e.attr('width'))).toBeGreaterThan(0));
+
+                    visualBuilder.borders
+                        .toArray()
+                        .forEach((element: Element) => {
+                            expect(parseFloat($(element).attr("width"))).toBeGreaterThan(0);
+                        });
 
                     (dataView.metadata.objects as any).columnBorder.show = false;
 
                     visualBuilder.updateFlushAllD3Transitions(dataView);
-                    visualBuilder.borders.toArray().map($).forEach(e =>
-                        expect(parseFloat(e.attr('width'))).toBe(0));
+
+                    visualBuilder.borders
+                        .toArray()
+                        .forEach((element: Element) => {
+                            expect(parseFloat($(element).attr("width"))).toBe(0);
+                        });
                 });
             });
 
@@ -227,22 +253,27 @@ module powerbi.extensibility.visual.test {
 
                 it("show", () => {
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.dataLabels).toBeInDOM();
 
                     (dataView.metadata.objects as any).labels.show = false;
+
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.dataLabels).not.toBeInDOM();
                 });
 
                 it("color", () => {
-                    let color = "#ABCDEF";
+                    const color: string = "#ABCDEF";
 
                     (dataView.metadata.objects as any).labels.color = getSolidColorStructuralObject(color);
                     visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                    visualBuilder.dataLabels.toArray().map($).forEach(e => {
-                        assertColorsMatch(e.css('fill'), color);
-                    });
+                    visualBuilder.dataLabels
+                        .toArray()
+                        .forEach((element: Element) => {
+                            assertColorsMatch($(element).css("fill"), color);
+                        });
                 });
             });
 
@@ -257,10 +288,12 @@ module powerbi.extensibility.visual.test {
 
                 it("show", () => {
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.legendGroup.children()).toBeInDOM();
 
                     (dataView.metadata.objects as any).legend.show = false;
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.legendGroup.children()).not.toBeInDOM();
                 });
             });
@@ -276,32 +309,39 @@ module powerbi.extensibility.visual.test {
 
                 it("show", () => {
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.xAxisTicks).toBeInDOM();
 
                     (dataView.metadata.objects as any).categoryAxis.show = false;
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.xAxisTicks).not.toBeInDOM();
                 });
 
                 it("show title", () => {
                     (dataView.metadata.objects as any).categoryAxis.showAxisTitle = true;
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.xAxisLabel).toBeInDOM();
 
                     (dataView.metadata.objects as any).categoryAxis.showAxisTitle = false;
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.xAxisLabel).not.toBeInDOM();
                 });
 
                 it("color", () => {
-                    let color = "#ABCDEF";
+                    const color: string = "#ABCDEF";
 
                     (dataView.metadata.objects as any).categoryAxis.labelColor = getSolidColorStructuralObject(color);
                     visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                    visualBuilder.xAxisTicks.children("text").toArray().map($).forEach(e => {
-                        assertColorsMatch(e.css('fill'), color);
-                    });
+                    visualBuilder.xAxisTicks
+                        .children("text")
+                        .toArray()
+                        .forEach((element: Element) => {
+                            assertColorsMatch($(element).css("fill"), color);
+                        });
                 });
             });
 
@@ -316,31 +356,39 @@ module powerbi.extensibility.visual.test {
 
                 it("show", () => {
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.yAxisTicks).toBeInDOM();
 
                     (dataView.metadata.objects as any).valueAxis.show = false;
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.yAxisTicks).not.toBeInDOM();
                 });
 
                 it("show title", () => {
                     (dataView.metadata.objects as any).valueAxis.showAxisTitle = true;
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.yAxisLabel).toBeInDOM();
 
                     (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
                     visualBuilder.updateFlushAllD3Transitions(dataView);
+
                     expect(visualBuilder.yAxisLabel).not.toBeInDOM();
                 });
 
                 it("color", () => {
-                    let color = "#ABCDEF";
+                    const color: string = "#ABCDEF";
+
                     (dataView.metadata.objects as any).valueAxis.labelColor = getSolidColorStructuralObject(color);
                     visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                    visualBuilder.yAxisTicks.children("text").toArray().map($).forEach(e => {
-                        assertColorsMatch(e.css('fill'), color);
-                    });
+                    visualBuilder.yAxisTicks
+                        .children("text")
+                        .toArray()
+                        .forEach((element: Element) => {
+                            assertColorsMatch($(element).css("fill"), color);
+                        });
                 });
             });
         });
@@ -406,7 +454,8 @@ module powerbi.extensibility.visual.test {
                 describe("MekkoColumnChartData", () => {
                     describe("converter", () => {
                         it("nodes border change color", done => {
-                            let color = "#123123";
+                            let color: string = "#123123";
+
                             dataView.metadata.objects = {
                                 columnBorder: {
                                     color: getSolidColorStructuralObject(color)
@@ -414,7 +463,13 @@ module powerbi.extensibility.visual.test {
                             };
 
                             visualBuilder.updateRenderTimeout(dataView, () => {
-                                assertColorsMatch(visualBuilder.mainElement.find('rect.mekkoborder').first().css('fill'), color);
+                                const fillColor: string = visualBuilder.mainElement
+                                    .find("rect.mekkoborder")
+                                    .first()
+                                    .css("fill");
+
+                                assertColorsMatch(fillColor, color);
+
                                 done();
                             });
 
@@ -434,10 +489,19 @@ module powerbi.extensibility.visual.test {
                             };
 
                             visualBuilder.updateRenderTimeout(dataView, () => {
-                                expect(visualBuilder.mainElement.find('.x.axis g.tick text').first().attr('font-size'))
-                                    .toBe(fromPointToPixel(17) + "px");
-                                expect(visualBuilder.mainElement.find('.y.axis g.tick text').first().attr('font-size'))
-                                    .toBe(fromPointToPixel(15) + "px");
+                                const xAxisFontSize: string = visualBuilder.mainElement
+                                    .find(".x.axis g.tick text")
+                                    .first()
+                                    .attr("font-size");
+
+                                expect(xAxisFontSize).toBe(toString(fromPointToPixel(categoryAxisFontSize)));
+
+                                const yAxisFontSize: string = visualBuilder.mainElement
+                                    .find(".y.axis g.tick text")
+                                    .first()
+                                    .attr("font-size");
+
+                                expect(yAxisFontSize).toBe(toString(fromPointToPixel(valueAxisFontSize)));
 
                                 done();
                             });
@@ -501,13 +565,10 @@ module powerbi.extensibility.visual.test {
 
                                 done();
                             });
-
                         });
                     });
-
                 });
             });
         });
-
     });
 }

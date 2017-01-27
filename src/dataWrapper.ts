@@ -32,6 +32,8 @@ module powerbi.extensibility.visual {
     import ValueType = powerbi.extensibility.utils.type.ValueType;
 
     export class DataWrapper {
+        private static HighlightedIndexFactor: number = 2;
+
         private data: MekkoChartBaseData;
         private isScalar: boolean;
 
@@ -58,7 +60,7 @@ module powerbi.extensibility.visual {
 
                 if (dataPoints) {
                     if (this.data.hasHighlights) {
-                        index = index * 2;
+                        index = index * DataWrapper.HighlightedIndexFactor;
                     }
 
                     const dataPoint: MekkoChartDataPoint = dataPoints[index];

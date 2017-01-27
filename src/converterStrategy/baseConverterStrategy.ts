@@ -30,11 +30,15 @@ module powerbi.extensibility.visual.converterStrategy {
 
     // powerbi.extensibility.utils.chart
     import LegendIcon = powerbi.extensibility.utils.chart.legend.LegendIcon;
+    import ILegendData = powerbi.extensibility.utils.chart.legend.LegendData;
 
     // formattingUtils
     import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 
     export class BaseConverterStrategy implements ConverterStrategy {
+        private static WidthColumnName: string = "Width";
+        private static YColumnName: string = "Y";
+
         private dataView: DataViewCategorical;
         private visualHost: IVisualHost;
 
@@ -44,44 +48,45 @@ module powerbi.extensibility.visual.converterStrategy {
         }
 
         private static hasRole(column: DataViewMetadataColumn, name: string): boolean {
-            var roles = column.roles;
-            return roles && roles[name];
+            return column.roles && column.roles[name];
         }
 
         public getLegend(colorPalette: IColorPalette, defaultColor?: string): LegendSeriesInfo {
-            var legend: MekkoLegendDataPoint[] = [];
-            var seriesSources: DataViewMetadataColumn[] = [];
-            var seriesObjects: DataViewObjects[][] = [];
-            var grouped: boolean = false;
+            const legend: MekkoLegendDataPoint[] = [],
+                seriesSources: DataViewMetadataColumn[] = [],
+                seriesObjects: DataViewObjects[][] = [];
 
-            var colorHelper = new ColorHelper(colorPalette, MekkoChart.Properties["dataPoint"]["fill"], defaultColor);
-            var legendTitle = undefined;
+            let grouped: boolean = false,
+                legendTitle: string = undefined;
+
+            const colorHelper: ColorHelper = new ColorHelper(
+                colorPalette,
+                MekkoChart.Properties["dataPoint"]["fill"],
+                defaultColor);
+
             if (this.dataView && this.dataView.values) {
-                var allValues = this.dataView.values;
-                var valueGroups = allValues.grouped();
+                const allValues: DataViewValueColumns = this.dataView.values,
+                    valueGroups: DataViewValueColumnGroup[] = allValues.grouped(),
+                    hasDynamicSeries: boolean = !!(allValues && allValues.source);
 
-                var hasDynamicSeries = !!(allValues && allValues.source);
+                for (let valueGroupsIndex: number = 0; valueGroupsIndex < valueGroups.length; valueGroupsIndex++) {
+                    const valueGroup: DataViewValueColumnGroup = valueGroups[valueGroupsIndex],
+                        valueGroupObjects: DataViewObjects = valueGroup.objects,
+                        values: DataViewValueColumn[] = valueGroup.values;
 
-                for (var valueGroupsIndex = 0, valueGroupsLen = valueGroups.length; valueGroupsIndex < valueGroupsLen; valueGroupsIndex++) {
-                    var valueGroup = valueGroups[valueGroupsIndex],
-                        valueGroupObjects = valueGroup.objects,
-                        values = valueGroup.values;
+                    for (let valueIndex: number = 0; valueIndex < values.length; valueIndex++) {
+                        const series: DataViewValueColumn = values[valueIndex],
+                            source: DataViewMetadataColumn = series.source;
 
-                    for (var valueIndex = 0, valuesLen = values.length; valueIndex < valuesLen; valueIndex++) {
-                        var series: DataViewValueColumn = values[valueIndex];
-                        var source: DataViewMetadataColumn = series.source;
                         // Gradient measures do not create series.
-                        if (BaseConverterStrategy.hasRole(source, 'Width') && !BaseConverterStrategy.hasRole(source, 'Y')) {
+                        if (BaseConverterStrategy.hasRole(source, BaseConverterStrategy.WidthColumnName)
+                            && !BaseConverterStrategy.hasRole(source, BaseConverterStrategy.YColumnName)) {
+
                             continue;
                         }
 
                         seriesSources.push(source);
                         seriesObjects.push(series.objects);
-
-                        // TODO: check it
-                        /* var selectionId = undefined;/*series.identity
-                            ? SelectionId.createWithIdAndMeasure(series.identity, source.queryName)
-                            : SelectionId.createWithMeasure(this.getMeasureNameByIndex(valueIndex));*/
 
                         const categoryColumn: DataViewCategoryColumn = {
                             source: series.source,
@@ -89,21 +94,25 @@ module powerbi.extensibility.visual.converterStrategy {
                             values: undefined
                         };
 
-                        var selectionId: ISelectionId = this.visualHost.createSelectionIdBuilder()
+                        const selectionId: ISelectionId = this.visualHost.createSelectionIdBuilder()
                             .withCategory(categoryColumn, 0)
                             .withMeasure(this.getMeasureNameByIndex(valueIndex))
                             .createSelectionId();
 
-                        var label = getFormattedLegendLabel(source, allValues);
+                        const label: string = getFormattedLegendLabel(source, allValues);
 
-                        var color = hasDynamicSeries
-                            ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, /*allValues.identityFields,*/ source.groupName)
-                            : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
+                        const color: string = hasDynamicSeries
+                            ? colorHelper.getColorForSeriesValue(
+                                valueGroupObjects || source.objects,
+                                source.groupName)
+                            : colorHelper.getColorForMeasure(
+                                valueGroupObjects || source.objects,
+                                source.queryName);
 
                         legend.push({
+                            color,
+                            label,
                             icon: LegendIcon.Box,
-                            color: color,
-                            label: label,
                             identity: selectionId,
                             selected: false,
                         });
@@ -114,25 +123,26 @@ module powerbi.extensibility.visual.converterStrategy {
                     }
                 }
 
-                var dvValues: DataViewValueColumns = this.dataView.values;
-                legendTitle = dvValues && dvValues.source ? dvValues.source.displayName : "";
+                legendTitle = allValues && allValues.source
+                    ? allValues.source.displayName
+                    : "";
             }
 
-            var legendData = {
+            const legendData: ILegendData = {
                 title: legendTitle,
                 dataPoints: legend,
                 grouped: grouped,
             };
 
             return {
-                legend: legendData,
-                seriesSources: seriesSources,
-                seriesObjects: seriesObjects,
+                seriesSources,
+                seriesObjects,
+                legend: legendData
             };
         }
 
         public getValueBySeriesAndCategory(series: number, category: number): number {
-            return <number>this.dataView.values[series].values[category];
+            return this.dataView.values[series].values[category] as number;
         }
 
         public getMeasureNameByIndex(index: number): string {
@@ -140,8 +150,11 @@ module powerbi.extensibility.visual.converterStrategy {
         }
 
         public hasHighlightValues(series: number): boolean {
-            var column = this.dataView && this.dataView.values ? this.dataView.values[series] : undefined;
-            return column && !!column.highlights;
+            const valueColumn: DataViewValueColumn = this.dataView && this.dataView.values
+                ? this.dataView.values[series]
+                : undefined;
+
+            return valueColumn && !!valueColumn.highlights;
         }
 
         public getHighlightBySeriesAndCategory(series: number, category: number): number {

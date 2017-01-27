@@ -47,78 +47,78 @@ module powerbi.extensibility.visual.test {
             return this.element.find(".mekkoChart");
         }
 
-        public get mainElement() {
+        public get mainElement(): JQuery {
             return this.rootElement
                 .children("svg");
         }
 
-        public get categoriesAxis() {
+        public get categoriesAxis(): JQuery {
             return this.mainElement
                 .children("g.axisGraphicsContext")
                 .children("g.x.axis.showLinesOnAxis");
         }
 
-        public get categoriesAxisTicks() {
+        public get categoriesAxisTicks(): JQuery {
             return this.categoriesAxis.children("g.tick");
         }
 
-        public get rootAxisGraphicsContext() {
+        public get rootAxisGraphicsContext(): JQuery {
             return this.mainElement.children("g.axisGraphicsContext");
         }
 
-        public get svgScrollableAxisGraphicsContext() {
+        public get svgScrollableAxisGraphicsContext(): JQuery {
             return this.mainElement
                 .children("svg.svgScrollable")
                 .children("g.axisGraphicsContext");
         }
 
-        public get xAxisTicks() {
+        public get xAxisTicks(): JQuery {
             return this.rootAxisGraphicsContext
                 .children("g.x.axis")
                 .children("g.tick");
         }
 
-        public get yAxisTicks() {
+        public get yAxisTicks(): JQuery {
             return this.svgScrollableAxisGraphicsContext
                 .children("g.y.axis")
                 .children("g.tick");
         }
 
-        public get xAxisLabel() {
+        public get xAxisLabel(): JQuery {
             return this.rootAxisGraphicsContext
                 .children("text.xAxisLabel");
         }
 
-        public get yAxisLabel() {
+        public get yAxisLabel(): JQuery {
             return this.rootAxisGraphicsContext
                 .children("text.yAxisLabel");
         }
 
-        public get columnElement() {
+        public get columnElement(): JQuery {
             return this.mainElement
                 .find("svg.svgScrollable g.axisGraphicsContext .columnChartMainGraphicsContext");
         }
 
-        public get series() {
+        public get series(): JQuery {
             return this.columnElement.children("g.series");
         }
 
-        public get columns() {
+        public get columns(): JQuery {
             return this.series.children("rect.column");
         }
 
-        public get borders() {
+        public get borders(): JQuery {
             return this.series.children("rect.mekkoborder");
         }
 
-        public get dataLabels() {
+        public get dataLabels(): JQuery {
             return this.mainElement
                 .children("svg.svgScrollable")
                 .find(".labels")
                 .children(".data-labels");
         }
 
-        public get columnsWithSize() {
+        public get columnsWithSize(): JQuery {
             return this.series
                 .children("rect.column")
                 .filter((i, element: Element) => {
@@ -126,17 +126,17 @@ module powerbi.extensibility.visual.test {
                 });
         }
 
-        public get legendGroup() {
+        public get legendGroup(): JQuery {
             return this.rootElement
                 .children("svg.legend")
                 .children("g#legendGroup");
         }
 
-        public get legendTitle() {
+        public get legendTitle(): JQuery {
             return this.legendGroup.children(".legendTitle");
         }
 
-        public get legendItemText() {
+        public get legendItemText(): JQuery {
             return this.legendGroup
                 .children(".legendItem")
                 .children("text.legendText");
