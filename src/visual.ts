@@ -267,6 +267,10 @@ module powerbi.extensibility.visual {
             this.visualInitOptions = options;
             this.visualHost = options.host;
 
+            d3.select("body").style({
+                "-webkit-tap-highlight-color": "transparent"
+            });
+
             this.rootElement = d3.select(options.element)
                 .append("div")
                 .classed(MekkoChart.ClassName, true);
