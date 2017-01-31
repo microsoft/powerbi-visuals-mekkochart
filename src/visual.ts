@@ -114,14 +114,13 @@ module powerbi.extensibility.visual {
      * Renders a data series as a cartesian visual.
      */
     export class MekkoChart implements IVisual {
-        private static LabelGraphicsContextClass: ClassAndSelector = createClassAndSelector("labelGraphicsContext");
-
         private static XAxisYPositionOffset: number = 33;
         private static WidthDelimiter: number = 2;
         private static XDelimiter: number = 2;
         private static TransformRotate: string = "rotate(-90)";
         private static DefaultDy: string = "1em";
 
+        private static LabelGraphicsContextClass: ClassAndSelector = createClassAndSelector("labelGraphicsContext");
         private static BaseXAxisSelector: ClassAndSelector = createClassAndSelector("x.axis");
         private static XAxisLabelSelector: ClassAndSelector = createClassAndSelector("xAxisLabel");
         private static YAxisLabelSelector: ClassAndSelector = createClassAndSelector("yAxisLabel");
@@ -154,25 +153,23 @@ module powerbi.extensibility.visual {
         private static OuterPaddingRatioDelimiter: number = 2;
         private static OuterPaddingRatioOffset: number = 3;
 
-        private static ClassName = "mekkoChart";
-        private static AxisGraphicsContextClassName = "axisGraphicsContext";
-        private static MaxMarginFactor = 0.25;
-        private static MinBottomMargin = 50;
-        private static LeftPadding = 10;
-        private static RightPadding = 10;
-        private static BottomPadding = 16;
-        private static YAxisLabelPadding = 20;
-        private static XAxisLabelPadding = 20;
-        private static TickPaddingY = 10;
-        private static TickPaddingRotatedX = 5;
-        private static FontSize = 11;
-
-        public static MaxNumberOfLabels = 100;
+        private static ClassName: string = "mekkoChart";
+        private static AxisGraphicsContextClassName: string = "axisGraphicsContext";
+        private static MaxMarginFactor: number = 0.25;
+        private static MinBottomMargin: number = 50;
+        private static LeftPadding: number = 17;
+        private static RightPadding: number = 10;
+        private static BottomPadding: number = 22;
+        private static YAxisLabelPadding: number = 20;
+        private static XAxisLabelPadding: number = 20;
+        private static TickPaddingY: number = 10;
+        private static TickPaddingRotatedX: number = 5;
+        private static FontSize: number = 11;
 
         private static MinWidth: number = 100;
         private static MinHeight: number = 100;
 
-        private static ScrollBarWidth = 10;
+        private static ScrollBarWidth: number = 10;
 
         private static AnimationDuration: number = 0;
 
@@ -214,11 +211,11 @@ module powerbi.extensibility.visual {
             }
         };
 
-        public static MinOrdinalRectThickness = 20;
-        public static MinScalarRectThickness = 2;
-        public static OuterPaddingRatio = 0.4;
-        public static InnerPaddingRatio = 0.2;
-        public static TickLabelPadding = 2;
+        public static MinOrdinalRectThickness: number = 20;
+        public static MinScalarRectThickness: number = 2;
+        public static OuterPaddingRatio: number = 0.4;
+        public static InnerPaddingRatio: number = 0.2;
+        public static TickLabelPadding: number = 2;
 
         private rootElement: Selection<any>;
 

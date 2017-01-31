@@ -92,7 +92,7 @@ module powerbi.extensibility.visual.columnChart {
     import VisualBehaviorOptions = behavior.VisualBehaviorOptions;
 
     export class BaseColumnChart implements IColumnChart {
-        private static ColumnChartClassName = "columnChart";
+        private static ColumnChartClassName: string = "columnChart";
 
         private static LabelGraphicsContextSelector: ClassAndSelector = createClassAndSelector("labelGraphicsContext");
 
@@ -1271,6 +1271,7 @@ module powerbi.extensibility.visual.columnChart {
 
             return viewport;
         }
+
         private selectColumn(indexOfColumnSelected: number, force: boolean = false): void {
             if (!force && this.lastInteractiveSelectedColumnIndex === indexOfColumnSelected) { // same column, nothing to do here
                 return;
