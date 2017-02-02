@@ -96,7 +96,7 @@ module powerbi.extensibility.visual.labelUtils {
                 : AxisHelper.LabelLayoutStrategy.DefaultRotation;
 
             if (renderY1Axis) {
-                for (let i = 0; i < y1Labels.length; i++) {
+                for (let i: number = 0; i < y1Labels.length; i++) {
                     y1AxisTextProperties.text = y1Labels[i];
 
                     maxWidthY1 = Math.max(
@@ -108,7 +108,7 @@ module powerbi.extensibility.visual.labelUtils {
             if (y2AxisProperties && renderY2Axis) {
                 const y2Labels: any[] = y2AxisProperties.values;
 
-                for (let i = 0; i < y2Labels.length; i++) {
+                for (let i: number = 0; i < y2Labels.length; i++) {
                     y2AxisTextProperties.text = y2Labels[i];
 
                     maxWidthY2 = Math.max(
@@ -123,7 +123,7 @@ module powerbi.extensibility.visual.labelUtils {
                 xDomain: any = xScale.domain();
 
             if (renderXAxis && xLabels.length > 0) {
-                for (let i = 0, len = xLabels.length; i < len; i++) {
+                for (let i: number = 0, len = xLabels.length; i < len; i++) {
                     let height: number;
 
                     xAxisTextProperties.text = xLabels[i];

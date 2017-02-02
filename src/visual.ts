@@ -1673,7 +1673,7 @@ module powerbi.extensibility.visual {
 
         private static getUnitType(
             axis: MekkoChartAxisProperties,
-            axisPropertiesLookup: (axis: MekkoChartAxisProperties) => IAxisProperties) {
+            axisPropertiesLookup: (axis: MekkoChartAxisProperties) => IAxisProperties): string {
 
             if (axisPropertiesLookup(axis).formatter &&
                 axisPropertiesLookup(axis).formatter.displayUnit &&

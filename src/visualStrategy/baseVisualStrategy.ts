@@ -63,6 +63,10 @@ module powerbi.extensibility.visual.visualStrategy {
     import ValueType = powerbi.extensibility.utils.type.ValueType;
     import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
 
+    interface LayoutFunction {
+        (dataPoint: MekkoChartColumnDataPoint): number;
+    }
+
     export class BaseVisualStrategy implements IVisualStrategy {
         private static ItemSelector: ClassAndSelector = createClassAndSelector("column");
         private static BorderSelector: ClassAndSelector = createClassAndSelector("mekkoborder");
@@ -661,28 +665,28 @@ module powerbi.extensibility.visual.visualStrategy {
                 scaledX0: number = xScale(0),
                 borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(data.borderSettings);
 
-            const columnWidthScale = (dataPoint: MekkoChartColumnDataPoint) => {
+            const columnWidthScale: LayoutFunction = (dataPoint: MekkoChartColumnDataPoint) => {
                 return AxisHelper.diffScaled(xScale, dataPoint.value, 0);
             };
 
-            const columnStart = (dataPoint: MekkoChartColumnDataPoint) => {
+            const columnStart: LayoutFunction = (dataPoint: MekkoChartColumnDataPoint) => {
                 return scaledX0
                     + AxisHelper.diffScaled(xScale, dataPoint.originalPosition, 0)
                     + borderWidth * dataPoint.categoryIndex;
             };
 
-            const borderStart = (dataPoint: MekkoChartColumnDataPoint) => {
+            const borderStart: LayoutFunction = (dataPoint: MekkoChartColumnDataPoint) => {
                 return scaledX0
                     + AxisHelper.diffScaled(xScale, dataPoint.originalPosition, 0)
                     + AxisHelper.diffScaled(xScale, dataPoint.value, 0)
                     + borderWidth * dataPoint.categoryIndex;
             };
 
-            const yPosition = (dataPoint: MekkoChartColumnDataPoint) => {
+            const yPosition: LayoutFunction = (dataPoint: MekkoChartColumnDataPoint) => {
                 return scaledY0 + AxisHelper.diffScaled(yScale, dataPoint.position, 0);
             };
 
-            const height = (dataPoint: MekkoChartColumnDataPoint) => {
+            const height: LayoutFunction = (dataPoint: MekkoChartColumnDataPoint) => {
                 return utils.getSize(yScale, dataPoint.valueAbsolute);
             };
 
