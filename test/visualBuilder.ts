@@ -31,12 +31,11 @@ module powerbi.extensibility.visual.test {
     import VisualBuilderBase = powerbi.extensibility.utils.test.VisualBuilderBase;
 
     // MekkoChart1449744733038
-    import VisualPlugin = powerbi.visuals.plugins.MekkoChart1449744733038;
     import VisualClass = powerbi.extensibility.visual.MekkoChart1449744733038.MekkoChart;
 
     export class MekkoChartBuilder extends VisualBuilderBase<VisualClass> {
         constructor(width: number, height: number) {
-            super(width, height, VisualPlugin.name);
+            super(width, height, "MekkoChart1449744733038");
         }
 
         protected build(options: VisualConstructorOptions) {
