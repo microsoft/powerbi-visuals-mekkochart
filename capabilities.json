@@ -1,0 +1,311 @@
+{
+    "dataRoles": [
+        {
+            "name": "Category",
+            "kind": "Grouping",
+            "displayName": "Category"
+        },
+        {
+            "name": "Series",
+            "kind": "Grouping",
+            "displayName": "Series"
+        },
+        {
+            "name": "Y",
+            "kind": "Measure",
+            "displayName": "YAxis"
+        },
+        {
+            "name": "Width",
+            "kind": "Measure",
+            "displayName": "Axiswidth"
+        }
+    ],
+    "objects": {
+        "columnBorder": {
+            "displayName": "Column Border",
+            "properties": {
+                "show": {
+                    "displayName": "Show",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "color": {
+                    "displayName": "Color",
+                    "description": "Select color for data labels",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "width": {
+                    "displayName": "Width",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "labels": {
+            "displayName": "Data labels",
+            "description": "Display data label options",
+            "properties": {
+                "show": {
+                    "displayName": "Show",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "color": {
+                    "displayName": "Color",
+                    "description": "Select color for data labels",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "labelDisplayUnits": {
+                    "displayName": "Display units",
+                    "description": "Select the units (millions, billions, etc.)",
+                    "type": {
+                        "formatting": {
+                            "labelDisplayUnits": true
+                        }
+                    },
+                    "suppressFormatPainterCopy": true
+                },
+                "labelPrecision": {
+                    "displayName": "Decimal Places",
+                    "description": "Select the number of decimal places to display",
+                    "placeHolderText": "Auto",
+                    "type": {
+                        "numeric": true
+                    },
+                    "suppressFormatPainterCopy": true
+                },
+                "showAll": {
+                    "displayName": "Show All",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Text Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
+        "legend": {
+            "displayName": "Legend",
+            "properties": {
+                "show": {
+                    "displayName": "Show",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "showTitle": {
+                    "displayName": "Title",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "titleText": {
+                    "displayName": "Title text",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Text size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
+        "categoryAxis": {
+            "displayName": "X-Axis",
+            "properties": {
+                "show": {
+                    "displayName": "Show",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "showAxisTitle": {
+                    "displayName": "Title",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "labelColor": {
+                    "displayName": "Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Text Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
+        "valueAxis": {
+            "displayName": "Y-Axis",
+            "properties": {
+                "show": {
+                    "displayName": "Show",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "intersection": {
+                    "displayName": "Intersection",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "showAxisTitle": {
+                    "displayName": "Title",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "labelColor": {
+                    "displayName": "Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Text Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
+        "dataPoint": {
+            "displayName": "Data colors",
+            "properties": {
+                "defaultColor": {
+                    "displayName": "Default color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "showAllDataPoints": {
+                    "displayName": "Show all",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fill": {
+                    "displayName": "Fill",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [
+                {
+                    "Category": {
+                        "min": 0,
+                        "max": 1
+                    },
+                    "Series": {
+                        "min": 0,
+                        "max": 1
+                    },
+                    "Y": {
+                        "min": 0,
+                        "max": 1
+                    },
+                    "Width": {
+                        "min": 0,
+                        "max": 1
+                    }
+                }
+            ],
+            "categorical": {
+                "categories": {
+                    "for": {
+                        "in": "Category"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {}
+                    }
+                },
+                "values": {
+                    "group": {
+                        "by": "Series",
+                        "select": [
+                            {
+                                "for": {
+                                    "in": "Y"
+                                }
+                            },
+                            {
+                                "for": {
+                                    "in": "Width"
+                                }
+                            }
+                        ],
+                        "dataReductionAlgorithm": {
+                            "top": {}
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "supportsHighlight": true,
+    "sorting": {
+        "default": {}
+    },
+    "drilldown": {
+        "roles": [
+            "Category"
+        ]
+    }
+}

@@ -1,0 +1,37 @@
+{
+  "visual": {
+    "name": "MekkoChart",
+    "displayName": "Mekko Chart",
+    "guid": "MekkoChart1449744733038",
+    "visualClassName": "MekkoChart",
+    "version": "1.8.0",
+    "description": "A Mekko chart is a mix of a 100% stacked column chart and a 100% stacked bar chart combined into one view. Similar to a treemap, the dimensional values are represented by length and width of each rectangle. The width of a column is proportional to the total value of the column.",
+    "supportUrl": "http://community.powerbi.com",
+    "gitHubUrl": "https://github.com/Microsoft/powerbi-visuals-mekkochart"
+  },
+  "apiVersion": "1.4.0",
+  "author": {
+    "name": "Microsoft",
+    "email": "pbicvsupport@microsoft.com"
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [
+    "node_modules/jquery/dist/jquery.min.js",
+    "node_modules/d3/d3.min.js",
+    "node_modules/lodash/lodash.min.js",
+    "node_modules/globalize/lib/globalize.js",
+    "node_modules/globalize/lib/cultures/globalize.culture.en-US.js",
+    "node_modules/powerbi-visuals-utils-dataviewutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-typeutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-svgutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-formattingutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-interactivityutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-chartutils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-tooltiputils/lib/index.js",
+    "node_modules/powerbi-visuals-utils-colorutils/lib/index.js"
+  ],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json"
+}
