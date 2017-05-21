@@ -156,6 +156,26 @@ module powerbi.extensibility.visual.test {
                 });
             });
 
+            it("X axis lable should not be visible if axis off", (done) => {
+                dataView.metadata.objects = {
+                    categoryAxis: {
+                        showAxisTitle: true,
+                        show: false                        
+                    },
+                    valueAxis: {
+                        show: true,
+                        showAxisTitle: true
+                    }
+                };
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(visualBuilder.xAxisLabel).not.toBeInDOM();
+                    done();
+                }, 300);
+
+                 
+            });
+
             it("axes labels shouldn't be cut off", (done) => {
                 dataView.metadata.objects = {
                     categoryAxis: {
