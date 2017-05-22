@@ -367,7 +367,7 @@ module powerbi.extensibility.visual {
 
             const showOnRight: boolean = this.yAxisOrientation === axis.position.right;
 
-            if (!options.hideXAxisTitle) {
+            if (!options.hideXAxisTitle && (this.categoryAxisProperties["show"] === undefined || this.categoryAxisProperties["show"])) {
                 const xAxisYPosition: number = d3.transform(this.xAxisGraphicsContext.attr("transform")).translate[1]
                     - fontSize + xFontSize + MekkoChart.XAxisYPositionOffset;
 
