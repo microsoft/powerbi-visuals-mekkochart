@@ -63,6 +63,8 @@ module powerbi.extensibility.visual.visualStrategy {
     import ValueType = powerbi.extensibility.utils.type.ValueType;
     import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
 
+    import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
+
     interface LayoutFunction {
         (dataPoint: MekkoChartColumnDataPoint): number;
     }
@@ -148,14 +150,17 @@ module powerbi.extensibility.visual.visualStrategy {
                     });
                 }
                 else {
-                    const minDate: Date = getValueFn(0, dataType),
-                        maxDate: Date = getValueFn(scaleDomain.length - 1, dataType);
+                    const minDate: Date = getValueFn(dataDomain[0], dataType),
+                        maxDate: Date = getValueFn(dataDomain[dataDomain.length - 1], dataType);
 
                     formatter = valueFormatter.create({
                         format: formatString,
                         value: minDate,
                         value2: maxDate,
-                        tickCount: bestTickCount
+                        tickCount: bestTickCount,
+                        columnType: <ValueTypeDescriptor>{
+                            dateTime: true
+                        }
                     });
                 }
             }
@@ -531,6 +536,8 @@ module powerbi.extensibility.visual.visualStrategy {
                 })
                 .attr(layout.shapeLayout as any);
 
+            let columns = this.createAlternateStructure(shapes);
+
             shapes
                 .exit()
                 .remove();
@@ -563,6 +570,37 @@ module powerbi.extensibility.visual.visualStrategy {
                 .remove();
 
             return shapes;
+        }
+
+        private static createAlternateStructure(shapes: UpdateSelection<MekkoChartColumnDataPoint>): any {
+            let columns = [];
+            let rowsCount = shapes.length;
+            let colsCount = shapes[0].length;
+
+            for (let col = 0; col < colsCount; col++) {
+                for (let row = 0; row < rowsCount; row++) {
+                    columns[col] = columns[col] || [];
+                    columns[col][row] = shapes[row][col];
+                }
+            }
+
+            for (let col = 0; col < colsCount; col++) {
+                columns[col] = _.sortBy(columns[col], "__data__.valueOriginal");
+            }
+
+            return columns;
+        }
+
+        private static reorderPositions(shapes: UpdateSelection<MekkoChartColumnDataPoint>, columns: any) {
+            let rowsCount = shapes.length;
+            let colsCount = shapes[0].length;
+            for (let col = 0; col < colsCount; col++) {
+                let columnHeight = d3.sum(columns[col].map( val => +val.attributes.height.value ));
+                for (let row = 0; row < rowsCount; row++) {
+                    columns[col][row].attributes.y.value = columnHeight - columns[col][row].attributes.height.value;
+                    columnHeight -= columns[col][row].attributes.height.value;
+                }
+            }
         }
 
         public selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void {
@@ -729,7 +767,7 @@ module powerbi.extensibility.visual.visualStrategy {
             };
         }
 
-        private createMekkoLabelDataPoints(): LabelDataPoint[] {
+        protected createMekkoLabelDataPoints(): LabelDataPoint[] {
             const labelDataPoints: LabelDataPoint[] = [],
                 data: MekkoChartData = this.data,
                 dataSeries: MekkoChartSeries[] = data.series,

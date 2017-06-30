@@ -52,12 +52,12 @@ module powerbi.extensibility.visual.converterStrategy {
         }
 
         public getLegend(colorPalette: IColorPalette, defaultColor?: string): LegendSeriesInfo {
-            const legend: MekkoLegendDataPoint[] = [],
-                seriesSources: DataViewMetadataColumn[] = [],
-                seriesObjects: DataViewObjects[][] = [];
+            const legend: MekkoLegendDataPoint[] = [];
+            const seriesSources: DataViewMetadataColumn[] = [];
+            const seriesObjects: DataViewObjects[][] = [];
 
-            let grouped: boolean = false,
-                legendTitle: string = undefined;
+            let grouped: boolean = false;
+            let legendTitle: string = undefined;
 
             const colorHelper: ColorHelper = new ColorHelper(
                 colorPalette,
@@ -65,18 +65,18 @@ module powerbi.extensibility.visual.converterStrategy {
                 defaultColor);
 
             if (this.dataView && this.dataView.values) {
-                const allValues: DataViewValueColumns = this.dataView.values,
-                    valueGroups: DataViewValueColumnGroup[] = allValues.grouped(),
-                    hasDynamicSeries: boolean = !!(allValues && allValues.source);
+                const allValues: DataViewValueColumns = this.dataView.values;
+                const valueGroups: DataViewValueColumnGroup[] = allValues.grouped();
+                const hasDynamicSeries: boolean = !!(allValues && allValues.source);
 
                 for (let valueGroupsIndex: number = 0; valueGroupsIndex < valueGroups.length; valueGroupsIndex++) {
-                    const valueGroup: DataViewValueColumnGroup = valueGroups[valueGroupsIndex],
-                        valueGroupObjects: DataViewObjects = valueGroup.objects,
-                        values: DataViewValueColumn[] = valueGroup.values;
+                    const valueGroup: DataViewValueColumnGroup = valueGroups[valueGroupsIndex];
+                    const valueGroupObjects: DataViewObjects = valueGroup.objects;
+                    const values: DataViewValueColumn[] = valueGroup.values;
 
                     for (let valueIndex: number = 0; valueIndex < values.length; valueIndex++) {
-                        const series: DataViewValueColumn = values[valueIndex],
-                            source: DataViewMetadataColumn = series.source;
+                        const series: DataViewValueColumn = values[valueIndex];
+                        const source: DataViewMetadataColumn = series.source;
 
                         // Gradient measures do not create series.
                         if (BaseConverterStrategy.hasRole(source, BaseConverterStrategy.WidthColumnName)
@@ -109,12 +109,19 @@ module powerbi.extensibility.visual.converterStrategy {
                                 valueGroupObjects || source.objects,
                                 source.queryName);
 
+                        let avialableCategories = {};
+                        series.values.forEach((ser: PrimitiveValue, index: number) => {
+                            avialableCategories[index] = ser;
+                        });
+
                         legend.push({
                             color,
                             label,
                             icon: LegendIcon.Box,
                             identity: selectionId,
                             selected: false,
+                            valueSum: d3.sum(<number[]>series.values),
+                            categoryValues: series.values
                         });
 
                         if (series.identity && source.groupName !== undefined) {

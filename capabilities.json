@@ -19,7 +19,8 @@
             "name": "Width",
             "kind": "Measure",
             "displayName": "Axiswidth"
-        }
+        },
+        {"name":"CategoryCustomSorting","kind":"Grouping","displayName":"Category sorting"}
     ],
     "objects": {
         "columnBorder": {
@@ -60,6 +61,12 @@
                         "bool": true
                     }
                 },
+                "forceDisplay": {
+                    "displayName": "Force display",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "color": {
                     "displayName": "Color",
                     "description": "Select color for data labels",
@@ -96,7 +103,7 @@
                         "bool": true
                     }
                 },
-                "fontSize": {
+                "fontSize_": {
                     "displayName": "Text Size",
                     "type": {
                         "formatting": {
@@ -133,6 +140,75 @@
                         "formatting": {
                             "fontSize": true
                         }
+                    }
+                }
+            }
+        },
+        "sortLegend": {
+            "displayName": "Sort legend",
+            "properties": {
+                "enabled": {
+                    "displayName": "Enabled",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "groupByCategory": {
+                    "displayName": "Group by category",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "direction": {
+                    "displayName": "Direction",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "asc",
+                                "displayName": "Ascending"
+                            },
+                            {
+                                "value": "des",
+                                "displayName": "Descending"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "sortSeries": {
+            "displayName": "Sort series",
+            "properties": {
+                "enabled": {
+                    "displayName": "Enabled",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "direction": {
+                    "displayName": "Direction",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "asc",
+                                "displayName": "Ascending"
+                            },
+                            {
+                                "value": "des",
+                                "displayName": "Descending"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "xAxisLabels": {
+            "displayName": "X axis labels",
+            "properties": {
+                "enableRotataion": {
+                    "displayName": "Enable rotate",
+                    "type": {
+                        "bool": true
                     }
                 }
             }
@@ -264,7 +340,8 @@
                     "Width": {
                         "min": 0,
                         "max": 1
-                    }
+                    },
+                    "CategoryCustomSorting":{"min":0,"max":1}
                 }
             ],
             "categorical": {
@@ -289,7 +366,8 @@
                                 "for": {
                                     "in": "Width"
                                 }
-                            }
+                            },
+                            {"for":{"in":"CategoryCustomSorting"}}
                         ],
                         "dataReductionAlgorithm": {
                             "top": {}

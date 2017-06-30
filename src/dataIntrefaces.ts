@@ -60,6 +60,9 @@ module powerbi.extensibility.visual {
     // powerbi.extensibility.utils.formatting
     import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
 
+    import VisualDataLabelsSettingsOptions = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettingsOptions;
+    import DataLabelObject = powerbi.extensibility.utils.chart.dataLabel.DataLabelObject;
+
     export interface ValueMultiplers {
         pos: number;
         neg: number;
@@ -174,6 +177,18 @@ module powerbi.extensibility.visual {
         labelSettings: VisualDataLabelsSettings;
     }
 
+    export interface MekkoChartLabelSettingsOptions extends VisualDataLabelsSettingsOptions {
+        forceDisplay: boolean;
+    }
+
+    export interface MekkoChartLabelSettings extends VisualDataLabelsSettings {
+        forceDisplay: boolean;
+    }
+
+    export interface MekkoChartDataLabelObject extends DataLabelObject {
+        forceDisplay: boolean;
+    }
+
     export interface MekkoChartData extends MekkoChartBaseData {
         categoryFormatter: IValueFormatter;
         series: MekkoChartSeries[];
@@ -260,6 +275,9 @@ module powerbi.extensibility.visual {
 
     export interface MekkoColumnChartData extends MekkoChartData {
         borderSettings: MekkoBorderSettings;
+        sortSeries: MekkoSeriesSortSettings;
+        sortlegend: MekkoLegendSortSettings;
+        xAxisLabelsSettings: MekkoXAxisLabelsSettings;
         categoriesWidth: number[];
     }
 
@@ -268,6 +286,21 @@ module powerbi.extensibility.visual {
         color: string;
         width: number;
         maxWidth?: number;
+    }
+
+    export interface MekkoLegendSortSettings {
+        enabled: boolean;
+        groupByCategory: boolean;
+        direction: any;
+    }
+
+    export interface MekkoSeriesSortSettings {
+        enabled: boolean;
+        direction: any;
+    }
+
+    export interface MekkoXAxisLabelsSettings {
+        enableRotataion: boolean;
     }
 
     export interface CreateAxisOptions extends CreateAxisOptionsBase {
@@ -318,6 +351,8 @@ module powerbi.extensibility.visual {
 
     export interface MekkoLegendDataPoint extends LegendDataPoint {
         fontSize?: number;
+        valueSum?: number;
+        categoryValues?: PrimitiveValue[];
     }
 
     export interface MekkoCreateAxisOptions extends CreateAxisOptionsBase {
