@@ -1,0 +1,19 @@
+{
+    "Visual_Show": "Show",
+    "Visual_Color": "Color",
+    "Visual_Width": "Width",
+    "Visual_Data_Labels": "Data labels",
+    "Visual_Force_Display": "Force display",
+    "Visual_Display_Units": "Display units",
+    "Visual_Decimal_Places": ""Decimal places",
+    "Visual_Show_All": "Show All",
+    "Visual_Font_Size": "Text Size",
+    "Visual_Legend": "Legend",
+    "Visual_Title": "Title",
+    "Visual_Fill": "Fill",
+    "Visual_Default_Color": "Default color",
+    "Visual_Data_Colors": "Data Colors",
+    "Visual_Series": "Series",
+    "Visual_Series_Category_Percentage": "Display % in category scope"
+    "Visual_Series_All_Data_Percentage": "Display % in all data scope"
+}
