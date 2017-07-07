@@ -88,8 +88,8 @@ module powerbi.extensibility.visual.labelUtils {
                 (viewport.width - xAxisProperties.xLabelMaxWidth * xLabels.length) / OffsetDelimiter);
         }
 
-        if (AxisHelper.getRecommendedNumberOfTicksForXAxis(viewport.width) !== 0
-            || AxisHelper.getRecommendedNumberOfTicksForYAxis(viewport.height) !== 0) {
+        if (<number>AxisHelper.getRecommendedNumberOfTicksForXAxis(viewport.width) !== 0
+            || <number>AxisHelper.getRecommendedNumberOfTicksForYAxis(viewport.height) !== 0) {
 
             let rotation: any = scrollbarVisible
                 ? AxisHelper.LabelLayoutStrategy.DefaultRotationWithScrollbar

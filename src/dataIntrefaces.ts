@@ -161,6 +161,7 @@ module powerbi.extensibility.visual {
         originalValue: number;
         originalPosition: number;
         originalValueAbsolute: number;
+        originalValueAbsoluteByAlLData?: number;
         drawThinner?: boolean;
         key: string;
         lastSeries?: boolean;
@@ -292,11 +293,13 @@ module powerbi.extensibility.visual {
         enabled: boolean;
         groupByCategory: boolean;
         direction: any;
+        groupByCategoryDirection: any;
     }
 
     export interface MekkoSeriesSortSettings {
         enabled: boolean;
         direction: any;
+        displayPercents: any;
     }
 
     export interface MekkoXAxisLabelsSettings {

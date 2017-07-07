@@ -137,14 +137,14 @@
                 },
                 "showTitle": {
                     "displayName": "Title",
-                    "displayNamekey": "Visual_Title",
+                    "displayNameKey": "Visual_Title",
                     "type": {
                         "bool": true
                     }
                 },
                 "titleText": {
                     "displayName": "Title text",
-                    "displayNamekey": "Visual_Text",
+                    "displayNameKey": "Visual_Text",
                     "type": {
                         "text": true
                     }
@@ -162,13 +162,31 @@
         },
         "sortLegend": {
             "displayName": "Sort legend",
-            "displayNamekey": "Visual_SortLegend",
+            "displayNameKey": "Visual_SortLegend",
             "properties": {
                 "enabled": {
                     "displayName": "Enabled",
                     "displayNameKey": "Visual_Enbaled",
                     "type": {
                         "bool": true
+                    }
+                },
+                "direction": {
+                    "displayName": "Direction",
+                    "displayNameKey": "Visual_Direction",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "asc",
+                                "displayName": "Ascending",
+                                "displayNameKey": "Visual_Ascending"
+                            },
+                            {
+                                "value": "des",
+                                "displayName": "Descending",
+                                "displayNameKey": "Visual_Descending"
+                            }
+                        ]
                     }
                 },
                 "groupByCategory": {
@@ -178,9 +196,9 @@
                         "bool": true
                     }
                 },
-                "direction": {
-                    "displayName": "Direction",
-                    "displayNameKey": "Visual_Direction",
+                "groupByCategoryDirection": {
+                    "displayName": "Group sort direction",
+                    "displayNameKey": "Visual_Group_Direction",
                     "type": {
                         "enumeration": [
                             {
@@ -222,6 +240,24 @@
                                 "value": "des",
                                 "displayName": "Descending",
                                 "displayNameKey": "Visual_Descending"
+                            }
+                        ]
+                    }
+                },
+                "displayPercents": {
+                    "displayName": "Display percents",
+                    "displayNameKey": "Visual_DisplayPercents",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "category",
+                                "displayName": "Category",
+                                "displayNameKey": "Visual_Category"
+                            },
+                            {
+                                "value": "allDataset",
+                                "displayName": "All dataset",
+                                "displayNameKey": "Visual_DataSet"
                             }
                         ]
                     }

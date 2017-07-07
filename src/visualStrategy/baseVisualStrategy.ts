@@ -509,7 +509,7 @@ module powerbi.extensibility.visual.visualStrategy {
                 (dataPoint: MekkoChartSeries) => dataPoint.data;
 
 
-            const shapeSelection: UpdateSelection<any> = series.selectAll(itemCS.selector),
+            const shapeSelection: UpdateSelection<any> = series.selectAll(itemCS.selectorName),
                 shapes: UpdateSelection<MekkoChartColumnDataPoint> = shapeSelection.data(
                     dataSelector,
                     (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
@@ -518,7 +518,7 @@ module powerbi.extensibility.visual.visualStrategy {
                 .enter()
                 .append("rect")
                 .attr("class", (dataPoint: MekkoChartColumnDataPoint) => {
-                    return itemCS.class.concat(dataPoint.highlight
+                    return itemCS.className.concat(dataPoint.highlight
                         ? " highlight"
                         : "");
                 });
@@ -536,13 +536,13 @@ module powerbi.extensibility.visual.visualStrategy {
                 })
                 .attr(layout.shapeLayout as any);
 
-            let columns = this.createAlternateStructure(shapes);
+            //let columns = this.createAlternateStructure(shapes);
 
             shapes
                 .exit()
                 .remove();
 
-            const borderSelection: UpdateSelection<any> = series.selectAll(BaseVisualStrategy.BorderSelector.selector),
+            const borderSelection: UpdateSelection<any> = series.selectAll(BaseVisualStrategy.BorderSelector.selectorName),
                 borders: UpdateSelection<MekkoChartColumnDataPoint> = borderSelection.data(
                     dataSelector,
                     (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
@@ -552,7 +552,7 @@ module powerbi.extensibility.visual.visualStrategy {
             borders
                 .enter()
                 .append("rect")
-                .classed(BaseVisualStrategy.BorderSelector.class, true);
+                .classed(BaseVisualStrategy.BorderSelector.className, true);
 
             borders
                 .style({
@@ -606,7 +606,7 @@ module powerbi.extensibility.visual.visualStrategy {
         public selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void {
             utils.setChosenColumnOpacity(
                 this.graphicsContext.mainGraphicsContext,
-                BaseVisualStrategy.ItemSelector.selector,
+                BaseVisualStrategy.ItemSelector.selectorName,
                 selectedColumnIndex,
                 lastSelectedColumnIndex);
 
@@ -660,7 +660,7 @@ module powerbi.extensibility.visual.visualStrategy {
 
                 handleSelection
                     .append("line")
-                    .classed(BaseVisualStrategy.InteractiveHoverLineSelector.class, true)
+                    .classed(BaseVisualStrategy.InteractiveHoverLineSelector.className, true)
                     .attr({
                         x1: x,
                         x2: x,
@@ -675,7 +675,7 @@ module powerbi.extensibility.visual.visualStrategy {
                         cy: this.height,
                         r: PixelConverter.toString(BaseVisualStrategy.CircleRadius)
                     })
-                    .classed(BaseVisualStrategy.DragHandleSelector.class, true);
+                    .classed(BaseVisualStrategy.DragHandleSelector.className, true);
             }
             else {
                 const handleSelection: Selection<any> = this.columnSelectionLineHandle;
@@ -805,7 +805,11 @@ module powerbi.extensibility.visual.visualStrategy {
 
                     if (!labelSettings.displayUnits) {
                         formatString = hundredPercentFormat;
-                        value = dataPoint.valueAbsolute;
+                        if (this.data.sortSeries.displayPercents === "category") {
+                            value = dataPoint.valueAbsolute;
+                        } else {
+                            value = dataPoint.originalValueAbsoluteByAlLData;
+                        }
                     }
 
                     const formatter: IValueFormatter = formattersCache.getOrCreate(
