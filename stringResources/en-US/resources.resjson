@@ -15,6 +15,9 @@
     "Visual_DefaultColor": "Default color",
     "Visual_DataPoint": "Data Colors",
     "Visual_Series": "Series",
-    "Visual_Series_Category_Percentage": "Display % in category scope"
-    "Visual_Series_All_Data_Percentage": "Display % in all data scope"
+    "Visual_Series_Category_Percentage": "Display % in category scope",
+    "Visual_Series_All_Data_Percentage": "Display % in all data scope",
+    "Visual_Category": "Category",,
+    "Visual_Y": "Y",
+    "Visual_Width": "Width"
 }
