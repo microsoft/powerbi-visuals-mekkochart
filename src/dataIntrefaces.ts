@@ -306,6 +306,10 @@ module powerbi.extensibility.visual {
         enableRotataion: boolean;
     }
 
+    export interface MekkoCategoryColorSettings {
+        color: string;
+    }
+
     export interface CreateAxisOptions extends CreateAxisOptionsBase {
         borderSettings: MekkoBorderSettings;
     }

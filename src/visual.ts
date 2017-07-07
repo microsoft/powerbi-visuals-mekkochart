@@ -114,6 +114,7 @@ module powerbi.extensibility.visual {
         sortSeries: MekkoSeriesSortSettings;
         sortLegend: MekkoLegendSortSettings;
         xAxisLabels: MekkoXAxisLabelsSettings;
+        categoryColor: MekkoCategoryColorSettings;
     }
 
     /**
@@ -217,6 +218,9 @@ module powerbi.extensibility.visual {
             },
             xAxisLabels: {
                 enableRotataion: { objectName: "xAxisLabels", propertyName: "enableRotataion", },
+            },
+            categoryColors: {
+                color: { objectName: "categoryColors", propertyName: "color" },
             }
         };
 
@@ -244,6 +248,9 @@ module powerbi.extensibility.visual {
             },
             xAxisLabels: {
                 enableRotataion: false
+            },
+            categoryColor: {
+                color: "#ffffff",
             }
         };
 

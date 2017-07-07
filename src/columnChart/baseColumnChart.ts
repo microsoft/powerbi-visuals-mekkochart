@@ -278,6 +278,7 @@ module powerbi.extensibility.visual.columnChart {
                 sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries,
                 sortLegendSettings: MekkoLegendSortSettings = MekkoChart.DefaultSettings.sortLegend,
                 xAxisLabelsSettings: MekkoXAxisLabelsSettings = MekkoChart.DefaultSettings.xAxisLabels,
+                categoryColumnSettings: MekkoCategoryColorSettings = MekkoChart.DefaultSettings.categoryColor,
                 labelSettings: VisualDataLabelsSettings = dataLabelUtils.getDefaultColumnLabelSettings(true);
 
             let defaultDataPointColor: string = undefined,
@@ -299,6 +300,7 @@ module powerbi.extensibility.visual.columnChart {
                 sortLegendSettings = MekkoChart.parseLegendSortSettings(objects);
                 sortSeriesSettings = MekkoChart.parseSeriesSortSettings(objects);
                 xAxisLabelsSettings = MekkoChart.parseXAxisLabelsSettings(objects);
+                // categoryColumnSettings = MekkoChart.parseCategoryColumnSettings(objects);
             }
 
             // Allocate colors
@@ -331,9 +333,8 @@ module powerbi.extensibility.visual.columnChart {
             if (sortSeriesSettings.enabled) {
                 let columns = BaseColumnChart.createAlternateStructure(result, sortSeriesSettings.direction === "des");
                 BaseColumnChart.reorderPositions(result, columns);
-                //BaseColumnChart.redefineColors(result, columns);
+                BaseColumnChart.redefineColors(result, columns);
             }
-            debugger;
 
             const valuesMetadata: DataViewMetadataColumn[] = [];
 
@@ -397,25 +398,36 @@ module powerbi.extensibility.visual.columnChart {
                     if (series[row].data[col] === undefined) {
                         continue;
                     }
-                    columns[series[row].data[col].categoryIndex] = columns[series[row].data[col].categoryIndex] || [];
+                    if (columns[series[row].data[col].categoryIndex].categoryValue === undefined) {
+                        columns[series[row].data[col].categoryIndex].identity = series[row].data[col].identity;
+                        columns[series[row].data[col].categoryIndex].categoryValue = series[row].data[col].categoryValue;
+                        columns[series[row].data[col].categoryIndex].color = series[row].data[col].color;
+                    }
 
                     columns[series[row].data[col].categoryIndex][row] = series[row].data[col];
                 }
             }
 
+            debugger;
+            // TODO 
             for (let col = 0; col < colsCount; col++) {
+                let tmp = [];
+                tmp["identity"] = columns[col].identity;
+                tmp["categoryValue"] = columns[col].categoryValue;
+                tmp["color"] = columns[col].color;
                 columns[col] = _.sortBy(columns[col], BaseColumnChart.ColumSortField);
                 if  (descendingDirection) {
                     columns[col] = columns[col].reverse();
                 }
+                columns[col].identity = tmp["identity"];
+                columns[col].categoryValue = tmp["categoryValue"];
+                columns[col].color = tmp["color"];
             }
 
             return columns;
         }
 
-        private static redefineColors(dataPoint: MekkoDataPoints, columns: any) {            
-            debugger;
-
+        private static redefineColors(dataPoint: MekkoDataPoints, columns: any) {
             let series: MekkoChartSeries[] = dataPoint.series;
             let serCount: number = series.length;
             for (let serIndex = 0; serIndex < serCount; serIndex++) {
@@ -1175,6 +1187,10 @@ module powerbi.extensibility.visual.columnChart {
                     this.enumerateSortSeries(enumeration);
                     break;
                 }
+                case "categoryColors": {
+                    this.enumerateCategoryColors(enumeration);
+                    break;
+                }
             }
         }
 
@@ -1332,6 +1348,29 @@ module powerbi.extensibility.visual.columnChart {
                         },
                     });
                 }
+
+                // TODO create instances for category colors
+            }
+        }
+
+        private enumerateCategoryColors(instances: VisualObjectInstance[]): void {
+            let columns = BaseColumnChart.createAlternateStructure(this.data);
+
+            for (let series of columns) {
+                debugger;
+
+                // TODO find series with max data
+                // Generate colors for each category
+                // Apply color  for categories
+
+                instances.push({
+                    objectName: "categoryColors",
+                    displayName: series.categoryValue,
+                    selector: ColorHelper.normalizeSelector(series.identity.getSelector()),
+                    properties: {
+                        color: { solid: { color: series.color } }
+                    },
+                });
             }
         }
 

@@ -216,6 +216,23 @@
                 }
             }
         },
+        "categoryColors": {
+            "displayName": "Category colors",
+            "displayNameKey": "Visual_CategoryColors",
+            "properties": {
+                "color": {
+                    "displayName": "Color",
+                    "displayNameKey": "Visual_Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "sortSeries": {
             "displayName": "Sort series",
             "properties": {
