@@ -365,6 +365,24 @@
             "displayName": "Data colors",
             "displayNameKey": "Visual_Data_Colors",
             "properties": {
+                "colorGradient": {
+                    "displayName": "Color gradient for category",
+                    "displayNameKey": "Visual_ColorGradient",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "colorGradientEndColor": {
+                    "displayName": "End color of gradient",
+                    "displayNameKey": "Visual_ColorGradientEndColor",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
                 "defaultColor": {
                     "displayName": "Default color",
                     "displayNameKey": "Visual_Default_Color",
