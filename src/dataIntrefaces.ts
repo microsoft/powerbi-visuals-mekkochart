@@ -50,6 +50,7 @@ module powerbi.extensibility.visual {
     import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
     import LabelEnabledDataPoint = powerbi.extensibility.utils.chart.dataLabel.LabelEnabledDataPoint;
     import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
+    import ILegend = powerbi.extensibility.utils.chart.legend.ILegend;
 
     // powerbi.extensibility.utils.interactivity
     import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
@@ -280,6 +281,8 @@ module powerbi.extensibility.visual {
         sortlegend: MekkoLegendSortSettings;
         xAxisLabelsSettings: MekkoXAxisLabelsSettings;
         categoriesWidth: number[];
+        categoryProperties: MekkoCategoryProperties[];
+        dataPointSettings: MekkoDataPointSettings;
     }
 
     export interface MekkoBorderSettings {
@@ -294,6 +297,11 @@ module powerbi.extensibility.visual {
         groupByCategory: boolean;
         direction: any;
         groupByCategoryDirection: any;
+    }
+
+    export interface MekkoDataPointSettings {
+        categoryGradient: boolean;
+        colorGradientEndColor: any;
     }
 
     export interface MekkoSeriesSortSettings {
@@ -349,11 +357,20 @@ module powerbi.extensibility.visual {
         y2LabelColor?: Fill;
     }
 
+    export interface MekkoCategoryProperties {
+        color?: string;
+        identity?: ISelectionId;
+        name?: string;
+        valueAbsolute?: any;
+        series?: MekkoChartSeries;
+    }
+
     export interface MekkoDataPoints {
         categoriesWidth: number[];
         series: MekkoChartSeries[];
         hasHighlights: boolean;
         hasDynamicSeries: boolean;
+        categoryProperties?: MekkoCategoryProperties[];
     }
 
     export interface MekkoLegendDataPoint extends LegendDataPoint {
@@ -429,6 +446,14 @@ module powerbi.extensibility.visual {
         viewport: IViewport;
         axisOptions: MekkoChartAxisOptions;
         labelDataPoints: LabelDataPoint[];
+    }
+
+    export interface ICategoryLegend {
+        categoryIndex: number;
+        category: string;
+        legend: ILegend;
+        legendData: ILegendData;
+        parentElement: any;
     }
 
 }

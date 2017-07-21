@@ -216,23 +216,6 @@
                 }
             }
         },
-        "categoryColors": {
-            "displayName": "Category colors",
-            "displayNameKey": "Visual_CategoryColors",
-            "properties": {
-                "color": {
-                    "displayName": "Color",
-                    "displayNameKey": "Visual_Color",
-                    "type": {
-                        "fill": {
-                            "solid": {
-                                "color": true
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "sortSeries": {
             "displayName": "Sort series",
             "properties": {
@@ -382,9 +365,9 @@
             "displayName": "Data colors",
             "displayNameKey": "Visual_Data_Colors",
             "properties": {
-                "colorGradient": {
-                    "displayName": "Color gradient for category",
-                    "displayNameKey": "Visual_ColorGradient",
+                "categoryGradient": {
+                    "displayName": "Category gradient",
+                    "displayNameKey": "Visual_Enable",
                     "type": {
                         "bool": true
                     }

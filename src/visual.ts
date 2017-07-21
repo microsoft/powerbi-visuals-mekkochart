@@ -115,6 +115,7 @@ module powerbi.extensibility.visual {
         sortLegend: MekkoLegendSortSettings;
         xAxisLabels: MekkoXAxisLabelsSettings;
         categoryColor: MekkoCategoryColorSettings;
+        dataPoint: MekkoDataPointSettings;
     }
 
     /**
@@ -198,7 +199,9 @@ module powerbi.extensibility.visual {
             dataPoint: {
                 defaultColor: { objectName: "dataPoint", propertyName: "defaultColor" },
                 fill: { objectName: "dataPoint", propertyName: "fill" },
-                showAllDataPoints: { objectName: "dataPoint", propertyName: "showAllDataPoints" }
+                showAllDataPoints: { objectName: "dataPoint", propertyName: "showAllDataPoints" },
+                categoryGradient: { objectName: "dataPoint", propertyName: "categoryGradient" },
+                colorGradientEndColor: { objectName: "dataPoint", propertyName: "colorGradientEndColor" }
             },
             columnBorder: {
                 show: { objectName: "columnBorder", propertyName: "show", },
@@ -251,6 +254,14 @@ module powerbi.extensibility.visual {
             },
             categoryColor: {
                 color: "#ffffff",
+            },
+            dataPoint: {
+                categoryGradient: false,
+                colorGradientEndColor: {
+                    solid: {
+                        color: "#f9eaea"
+                    }
+                }
             }
         };
 
@@ -261,7 +272,7 @@ module powerbi.extensibility.visual {
         public static TickLabelPadding: number = 2;
 
         private rootElement: Selection<any>;
-
+        private legendParent: Selection<any>;
         private axisGraphicsContext: Selection<any>;
         private xAxisGraphicsContext: Selection<any>;
         private y1AxisGraphicsContext: Selection<any>;
@@ -280,6 +291,7 @@ module powerbi.extensibility.visual {
         private visualHost: IVisualHost;
         private layers: IColumnChart[] = [];
         private legend: ILegend;
+        private categoryLegends: ILegend[];
         private legendMargins: IViewport;
         private layerLegendData: ILegendData;
         private hasSetData: boolean;
@@ -387,8 +399,10 @@ module powerbi.extensibility.visual {
 
             this.interactivityService = createInteractivityService(this.visualHost);
 
+            let legendParent = d3.select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
+
             this.legend = createLegend(
-                <HTMLElement>this.rootElement.node(),
+                <HTMLElement>legendParent.node(),
                 false,
                 this.interactivityService,
                 true);
@@ -523,9 +537,9 @@ module powerbi.extensibility.visual {
                 "height": viewport.height
             });
 
-            this.svg.style("top", this.legend.isVisible()
-                ? PixelConverter.toString(this.legend.getMargins().height)
-                : 0);
+            this.svg.style("top", () => {
+                    return this.legend.isVisible() || this.categoryLegends.length > 0 && this.categoryLegends[0].isVisible() ? PixelConverter.toString(this.legendMargins.height) : 0;
+                });
 
             this.svgScrollable.attr({
                 "width": viewport.width,
@@ -865,6 +879,22 @@ module powerbi.extensibility.visual {
             };
         }
 
+        public static parseDataPointSettings(objects: IDataViewObjects): MekkoDataPointSettings {
+            const categoryGradient: boolean = DataViewObjects.getValue(
+                objects,
+                MekkoChart.Properties["dataPoint"]["categoryGradient"],
+                MekkoChart.DefaultSettings.dataPoint.categoryGradient);
+
+            const colorGradientEndColor: string = DataViewObjects.getValue(
+                objects,
+                MekkoChart.Properties["dataPoint"]["colorGradientEndColor"],
+                MekkoChart.DefaultSettings.dataPoint.colorGradientEndColor);
+
+            return {
+                categoryGradient,
+                colorGradientEndColor
+            };
+        }
         public static parseSeriesSortSettings(objects: IDataViewObjects): MekkoSeriesSortSettings {
             const enabled: boolean = DataViewObjects.getValue(
                 objects,
@@ -1326,7 +1356,9 @@ module powerbi.extensibility.visual {
             cartesianOptions.svg = this.axisGraphicsContextScrollable;
 
             cartesianOptions.cartesianHost = {
-                updateLegend: data => this.legend.drawLegend(data, this.currentViewport),
+                updateLegend: data => {
+                    this.legend.drawLegend(data, this.currentViewport);
+                },
                 getSharedColors: () => this.visualHost.colorPalette,
                 triggerRender: undefined,
             };
@@ -1385,6 +1417,7 @@ module powerbi.extensibility.visual {
                 legendData.dataPoints = [];
             }
 
+            let reducedLegends = [];
             let legendSortSettings: MekkoLegendSortSettings = (<BaseColumnChart>this.layers[0]).getLegendSortSettings();
             if (legendSortSettings.enabled) {
                 if (legendSortSettings.groupByCategory) {
@@ -1398,7 +1431,6 @@ module powerbi.extensibility.visual {
                         };
                     });
 
-                    let reducedLegends = [];
                     mappedLegends.forEach(element => {
                         reducedLegends[element.categoryIndex] =
                         reducedLegends[element.categoryIndex] || {
@@ -1444,6 +1476,50 @@ module powerbi.extensibility.visual {
                         legendData.dataPoints = legendData.dataPoints.reverse();
                     }
                 }
+            }
+
+            let legendParents = d3.select(this.rootElement.node()).selectAll("div.legendParent");
+
+            let legendParentsWithData = legendParents.data(reducedLegends);
+            let legendParentsWithChilds = legendParentsWithData.enter().append("div");
+
+            let legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
+            .style({
+                position: "absolute"
+            })
+            .style({
+                top: data => PixelConverter.toString(26 * data.index)
+            });
+
+            let mekko = this;
+            this.categoryLegends = this.categoryLegends || [];
+            legendParentsWithChildsAttr.each( function(data, index) {
+                let legendSvg = d3.select(this);
+                if (legendSvg.select("svg").node() === null) {
+                    let legend: ILegend = createLegend(
+                        this,
+                        false,
+                        mekko.interactivityService,
+                        true);
+
+                    mekko.categoryLegends[index] = legend;
+                }
+            });
+
+            legendParentsWithData.exit().remove();
+            if (reducedLegends.length > 0) {
+                this.categoryLegends.forEach( (legend, index) => {
+                    let legendData: ILegendData = {
+                        title: reducedLegends[index].category,
+                        dataPoints: reducedLegends[index].data
+                    };
+                    LegendData.update(legendData, legendProperties);
+                    legend.drawLegend(legendData, this.currentViewport);
+                });
+            }
+
+            if (reducedLegends.length > 0) {
+                this.legend.changeOrientation(LegendPosition.None);
             }
 
             this.legend.drawLegend(legendData, this.currentViewport);
@@ -1575,6 +1651,14 @@ module powerbi.extensibility.visual {
             this.setVisibility(true);
 
             this.legendMargins = this.legend.getMargins();
+
+            if (this.categoryLegends.length > 0 && this.categoryLegends[0].isVisible()) {
+                this.legendMargins = this.categoryLegends[0].getMargins();
+                this.legendMargins.height = this.legendMargins.height * this.categoryLegends.length;
+            }
+            if (this.legend.isVisible()) {
+                this.legendMargins = this.legend.getMargins();
+            }
 
             const viewport: IViewport = {
                 height: this.currentViewport.height - this.legendMargins.height,
@@ -2032,7 +2116,6 @@ module powerbi.extensibility.visual {
                         borderWidth);
                 }
                 else {
-                    // TODO add legend text rotations
                     xAxisTextNodes
                     .classed(MekkoChart.LabelMiddleSelector.className, true)
                     .attr({

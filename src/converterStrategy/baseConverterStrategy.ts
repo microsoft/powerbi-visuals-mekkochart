@@ -27,6 +27,7 @@
 module powerbi.extensibility.visual.converterStrategy {
     // powerbi.extensibility.utils.color
     import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
+    import createLinearColorScale = powerbi.extensibility.utils.color.createLinearColorScale;
 
     // powerbi.extensibility.utils.chart
     import LegendIcon = powerbi.extensibility.utils.chart.legend.LegendIcon;
@@ -34,6 +35,13 @@ module powerbi.extensibility.visual.converterStrategy {
 
     // formattingUtils
     import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
+
+    export interface BaseColorIdentity {
+        identity: ISelectionId;
+        category: string;
+        color: string;
+        group: DataViewValueColumnGroup;
+    }
 
     export class BaseConverterStrategy implements ConverterStrategy {
         private static WidthColumnName: string = "Width";
@@ -51,7 +59,7 @@ module powerbi.extensibility.visual.converterStrategy {
             return column.roles && column.roles[name];
         }
 
-        public getLegend(colorPalette: IColorPalette, defaultColor?: string): LegendSeriesInfo {
+        public getLegend(colorPalette: IColorPalette, defaultLabelLegendColor?: string, defaultColor?: string, colorGradient?: boolean, colorGradientEndColor?: string): LegendSeriesInfo {
             const legend: MekkoLegendDataPoint[] = [];
             const seriesSources: DataViewMetadataColumn[] = [];
             const seriesObjects: DataViewObjects[][] = [];
@@ -62,7 +70,80 @@ module powerbi.extensibility.visual.converterStrategy {
             const colorHelper: ColorHelper = new ColorHelper(
                 colorPalette,
                 MekkoChart.Properties["dataPoint"]["fill"],
-                defaultColor);
+                defaultLabelLegendColor
+            );
+
+            let categoryMaxValues = {
+
+            };
+            this.dataView.categories[0].values.forEach( (category, index) => {
+                categoryMaxValues[index] = {
+                    category: category,
+                    maxValueOfCategory: d3.max(this.dataView.values.map(v => <number>v.values[index])),
+                    maxItemOfCategory: d3.sum(this.dataView.values.map(v => <number>v.values[index] !== undefined ? 1 : 0)),
+                    minValueOfCategory: d3.min(this.dataView.values.map(v => <number>v.values[index]))
+                };
+            });
+
+            // find base color identity
+            // todo handle color change of 
+            let valueGroups: DataViewValueColumnGroup[] = this.dataView.values.grouped();
+            let categoryGradientStartBaseColorIdentities: BaseColorIdentity[] = [];
+            let categoryGradientEndBaseColorIdentities: BaseColorIdentity[] = [];
+            this.dataView.categories[0].values.forEach( (category, index) => {
+                // gradiend start color
+                let baseStartColorIdentity = _.maxBy(valueGroups.map( group => {
+                    return {
+                        gr: group,
+                        categoryValue: group.values[0].values[index],
+                        categoryIndex: index,
+                        category: category,
+                    };
+                }), "categoryValue");
+                if (baseStartColorIdentity === undefined) {
+                    return;
+                }
+
+                let colorStart: string = defaultLabelLegendColor;
+
+                if (baseStartColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
+                    colorStart = (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid.color;
+                }
+
+                categoryGradientStartBaseColorIdentities[index] = {
+                    category: baseStartColorIdentity.category.toString(),
+                    color: colorStart,
+                    identity: baseStartColorIdentity.gr.identity,
+                    group: baseStartColorIdentity.gr
+                };
+
+                // gradiend end color
+                let baseEndColorIdentity = _.minBy(valueGroups.map( group => {
+                    return {
+                        gr: group,
+                        categoryValue: group.values[0].values[index],
+                        categoryIndex: index,
+                        category: category,
+                    };
+                }), "categoryValue");
+
+                if (baseEndColorIdentity === undefined) {
+                    return;
+                }
+
+                let colorEnd: string = defaultLabelLegendColor;
+
+                if (baseEndColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
+                    colorEnd = (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid.color;
+                }
+
+                categoryGradientEndBaseColorIdentities[index] = {
+                    category: baseEndColorIdentity.category.toString(),
+                    color: colorEnd,
+                    identity: baseEndColorIdentity.gr.identity,
+                    group: baseEndColorIdentity.gr
+                };
+            });
 
             if (this.dataView && this.dataView.values) {
                 const allValues: DataViewValueColumns = this.dataView.values;
@@ -100,14 +181,24 @@ module powerbi.extensibility.visual.converterStrategy {
                             .createSelectionId();
 
                         const label: string = getFormattedLegendLabel(source, allValues);
+                        let category: string;
 
-                        const color: string = hasDynamicSeries
-                            ? colorHelper.getColorForSeriesValue(
-                                valueGroupObjects || source.objects,
-                                source.groupName)
-                            : colorHelper.getColorForMeasure(
-                                valueGroupObjects || source.objects,
-                                source.queryName);
+                        let color: string;
+                        if (!colorGradient) {
+                            color = hasDynamicSeries ?  colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
+                                                                : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
+                        }
+                        else {
+                            let categoryIndex = _.findIndex(series.values, value => value != undefined);
+                            category = categoryMaxValues[categoryIndex].category;
+                            let gradientBaseColorStart = colorHelper.getColorForSeriesValue(categoryGradientStartBaseColorIdentities[categoryIndex].group.objects, category);
+                            let gradientBaseColorEnd = colorHelper.getColorForSeriesValue(categoryGradientEndBaseColorIdentities[categoryIndex].group.objects, category);
+                            color = createLinearColorScale(
+                                [0, categoryMaxValues[categoryIndex].maxValueOfCategory],
+                                [colorGradientEndColor, gradientBaseColorStart], true)
+                                (d3.sum(<number[]>series.values)
+                            );
+                        }
 
                         let avialableCategories = {};
                         series.values.forEach((ser: PrimitiveValue, index: number) => {
@@ -121,7 +212,8 @@ module powerbi.extensibility.visual.converterStrategy {
                             identity: selectionId,
                             selected: false,
                             valueSum: d3.sum(<number[]>series.values),
-                            categoryValues: series.values
+                            categoryValues: series.values,
+                            category: category
                         });
 
                         if (series.identity && source.groupName !== undefined) {
