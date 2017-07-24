@@ -160,7 +160,7 @@ module powerbi.extensibility.visual.test {
                 dataView.metadata.objects = {
                     categoryAxis: {
                         showAxisTitle: true,
-                        show: false                        
+                        show: false
                     },
                     valueAxis: {
                         show: true,
@@ -172,8 +172,6 @@ module powerbi.extensibility.visual.test {
                     expect(visualBuilder.xAxisLabel).not.toBeInDOM();
                     done();
                 }, 300);
-
-                 
             });
 
             it("axes labels shouldn't be cut off", (done) => {
