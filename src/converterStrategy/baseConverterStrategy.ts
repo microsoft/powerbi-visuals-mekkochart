@@ -90,16 +90,22 @@ module powerbi.extensibility.visual.converterStrategy {
             let valueGroups: DataViewValueColumnGroup[] = this.dataView.values.grouped();
             let categoryGradientStartBaseColorIdentities: BaseColorIdentity[] = [];
             let categoryGradientEndBaseColorIdentities: BaseColorIdentity[] = [];
+            let categoryItemsCount: any[] = [];
             this.dataView.categories[0].values.forEach( (category, index) => {
                 // gradiend start color
-                let baseStartColorIdentity = _.maxBy(valueGroups.map( group => {
+                let mappedItems = valueGroups.map( group => {
                     return {
                         gr: group,
                         categoryValue: group.values[0].values[index],
                         categoryIndex: index,
                         category: category,
+                        identity: group.identity
                     };
-                }), "categoryValue");
+                }).filter(v => v.categoryValue !== null);
+
+                categoryItemsCount[index] = mappedItems;
+
+                let baseStartColorIdentity = _.maxBy(mappedItems, "categoryValue");
                 if (baseStartColorIdentity === undefined) {
                     return;
                 }
@@ -195,9 +201,8 @@ module powerbi.extensibility.visual.converterStrategy {
                             let gradientBaseColorEnd = colorHelper.getColorForSeriesValue(categoryGradientEndBaseColorIdentities[categoryIndex].group.objects, category);
                             color = createLinearColorScale(
                                 [0, categoryMaxValues[categoryIndex].maxValueOfCategory],
-                                [colorGradientEndColor, gradientBaseColorStart], true)
-                                (d3.sum(<number[]>series.values)
-                            );
+                                [gradientBaseColorEnd, gradientBaseColorStart], true)
+                                (d3.sum(<number[]>series.values));
                         }
 
                         let avialableCategories = {};

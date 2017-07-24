@@ -1388,14 +1388,14 @@ module powerbi.extensibility.visual.columnChart {
                         },
                     });
 
-                    // instances.push({
-                    //     objectName: "dataPoint",
-                    //     displayName: "End color -" + category,
-                    //     selector: ColorHelper.normalizeSelector((minValueDataPoint.identity as ISelectionId).getSelector(), true),
-                    //     properties: {
-                    //         fill: { solid: { color: minValueDataPoint.color } }
-                    //     },
-                    // });
+                    instances.push({
+                        objectName: "dataPoint",
+                        displayName: "End color -" + category,
+                        selector: ColorHelper.normalizeSelector((minValueDataPoint.identity as ISelectionId).getSelector(), true),
+                        properties: {
+                            fill: { solid: { color: minValueDataPoint.color } }
+                        },
+                    });
                 });
                 }
             }
