@@ -201,7 +201,8 @@ module powerbi.extensibility.visual {
                 fill: { objectName: "dataPoint", propertyName: "fill" },
                 showAllDataPoints: { objectName: "dataPoint", propertyName: "showAllDataPoints" },
                 categoryGradient: { objectName: "dataPoint", propertyName: "categoryGradient" },
-                colorGradientEndColor: { objectName: "dataPoint", propertyName: "colorGradientEndColor" }
+                colorGradientEndColor: { objectName: "dataPoint", propertyName: "colorGradientEndColor" },
+                colorDistribution: { objectName: "dataPoint", propertyName: "colorDistribution" }
             },
             columnBorder: {
                 show: { objectName: "columnBorder", propertyName: "show", },
@@ -257,6 +258,7 @@ module powerbi.extensibility.visual {
             },
             dataPoint: {
                 categoryGradient: false,
+                colorDistribution: true,
                 colorGradientEndColor: {
                     solid: {
                         color: "#f9eaea"
@@ -890,9 +892,15 @@ module powerbi.extensibility.visual {
                 MekkoChart.Properties["dataPoint"]["colorGradientEndColor"],
                 MekkoChart.DefaultSettings.dataPoint.colorGradientEndColor);
 
+            const colorDistribution: boolean = DataViewObjects.getValue(
+                objects,
+                MekkoChart.Properties["dataPoint"]["colorDistribution"],
+                MekkoChart.DefaultSettings.dataPoint.colorDistribution);
+
             return {
                 categoryGradient,
-                colorGradientEndColor
+                colorGradientEndColor,
+                colorDistribution
             };
         }
         public static parseSeriesSortSettings(objects: IDataViewObjects): MekkoSeriesSortSettings {
@@ -1440,7 +1448,7 @@ module powerbi.extensibility.visual {
                             dataValues: 0
                         };
                         reducedLegends[element.categoryIndex].data.push(element.data);
-                        //reducedLegends[element.categoryIndex].dataValues += element.data.valueSum;
+                        // reducedLegends[element.categoryIndex].dataValues += element.data.valueSum;
                     });
                     reducedLegends.forEach(element => {
                         element.dataValues = d3.sum(element.data.map((d) => d.valueSum));
@@ -1482,13 +1490,17 @@ module powerbi.extensibility.visual {
 
             let legendParentsWithData = legendParents.data(reducedLegends);
             let legendParentsWithChilds = legendParentsWithData.enter().append("div");
-
             let legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style({
                 position: "absolute"
-            })
-            .style({
-                top: data => PixelConverter.toString(26 * data.index)
+            });
+            // .style({
+            //     top: data => PixelConverter.toString(26 * data.index)
+            // });
+
+            legendParentsWithData.style({
+                top: function (data) { return PixelConverter.toString(26 * data.index); },
+                position: "absolute"
             });
 
             let mekko = this;
@@ -1509,6 +1521,17 @@ module powerbi.extensibility.visual {
             legendParentsWithData.exit().remove();
             if (reducedLegends.length > 0) {
                 this.categoryLegends.forEach( (legend, index) => {
+                    if (reducedLegends[index] === undefined) {
+                        LegendData.update({
+                            dataPoints: []
+                        }, legendProperties);
+                        legend.changeOrientation(LegendPosition.None);
+                        legend.drawLegend({
+                            dataPoints: []
+                        }, this.currentViewport);
+
+                        return;
+                    }
                     let legendData: ILegendData = {
                         title: reducedLegends[index].category,
                         dataPoints: reducedLegends[index].data
@@ -1654,7 +1677,7 @@ module powerbi.extensibility.visual {
 
             if (this.categoryLegends.length > 0 && this.categoryLegends[0].isVisible()) {
                 this.legendMargins = this.categoryLegends[0].getMargins();
-                this.legendMargins.height = this.legendMargins.height * this.categoryLegends.length;
+                this.legendMargins.height = this.legendMargins.height * this.dataViews[0].categorical.categories[0].values.length;
             }
             if (this.legend.isVisible()) {
                 this.legendMargins = this.legend.getMargins();

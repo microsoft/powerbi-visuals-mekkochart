@@ -334,7 +334,6 @@ module powerbi.extensibility.visual.columnChart {
             if (sortSeriesSettings.enabled) {
                 let columns = BaseColumnChart.createAlternateStructure(result, sortSeriesSettings.direction === "des");
                 BaseColumnChart.reorderPositions(result, columns);
-                //BaseColumnChart.redefineColors(result, legend, columns);
             }
 
             const valuesMetadata: DataViewMetadataColumn[] = [];
@@ -1335,13 +1334,17 @@ module powerbi.extensibility.visual.columnChart {
             }
 
             if (this.data.dataPointSettings.categoryGradient) {
+                let properties: any = {};
+                properties["categoryGradient"] = this.data.dataPointSettings.categoryGradient;
+
+                // if (this.data.dataPointSettings.categoryGradient) {
+                //     properties["colorDistribution"] = this.data.dataPointSettings.colorDistribution;
+                // }
+
                 instances.push({
                     objectName: "dataPoint",
                     selector: null,
-                    properties: {
-                        categoryGradient: this.data.dataPointSettings.categoryGradient
-                        // colorGradientEndColor: { solid: { color: this.data.dataPointSettings.colorGradientEndColor } }
-                    }
+                    properties: properties
                 });
             }
             else {

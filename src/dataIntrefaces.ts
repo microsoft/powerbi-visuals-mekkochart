@@ -302,6 +302,7 @@ module powerbi.extensibility.visual {
     export interface MekkoDataPointSettings {
         categoryGradient: boolean;
         colorGradientEndColor: any;
+        colorDistribution: boolean;
     }
 
     export interface MekkoSeriesSortSettings {

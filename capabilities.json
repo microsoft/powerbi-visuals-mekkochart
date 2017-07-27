@@ -372,6 +372,13 @@
                         "bool": true
                     }
                 },
+                "colorDistribution": {
+                    "displayName": "Color distibution by value",
+                    "displayNameKey": "Visual_ColorDistibution",
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "colorGradientEndColor": {
                     "displayName": "End color of gradient",
                     "displayNameKey": "Visual_ColorGradientEndColor",

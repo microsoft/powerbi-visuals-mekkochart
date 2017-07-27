@@ -105,6 +105,10 @@ module powerbi.extensibility.visual.converterStrategy {
 
                 categoryItemsCount[index] = mappedItems;
 
+                if (colorGradient) {
+                    categoryItemsCount[index] = _.sortBy(categoryItemsCount[index], "categoryValue");
+                }
+
                 let baseStartColorIdentity = _.maxBy(mappedItems, "categoryValue");
                 if (baseStartColorIdentity === undefined) {
                     return;
@@ -196,13 +200,22 @@ module powerbi.extensibility.visual.converterStrategy {
                         }
                         else {
                             let categoryIndex = _.findIndex(series.values, value => value != undefined);
+
+                            let positionIndex = categoryItemsCount[categoryIndex].findIndex( ser => ser.identity === series.identity );
                             category = categoryMaxValues[categoryIndex].category;
                             let gradientBaseColorStart = colorHelper.getColorForSeriesValue(categoryGradientStartBaseColorIdentities[categoryIndex].group.objects, category);
                             let gradientBaseColorEnd = colorHelper.getColorForSeriesValue(categoryGradientEndBaseColorIdentities[categoryIndex].group.objects, category);
+
                             color = createLinearColorScale(
-                                [0, categoryMaxValues[categoryIndex].maxValueOfCategory],
+                                [0, categoryItemsCount[categoryIndex].length],
                                 [gradientBaseColorEnd, gradientBaseColorStart], true)
-                                (d3.sum(<number[]>series.values));
+                                (positionIndex); // (d3.sum(<number[]>series.values));
+
+                            // debugger;
+                            // color = createLinearColorScale(
+                            //     [0, categoryMaxValues[categoryIndex].maxValueOfCategory],
+                            //     [gradientBaseColorEnd, gradientBaseColorStart], true)
+                            //     (d3.sum(<number[]>series.values));
                         }
 
                         let avialableCategories = {};
