@@ -376,9 +376,9 @@ module powerbi.extensibility.visual.columnChart {
             };
         }
 
-        private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): any {
+        private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): ICategoryValuesCollection[] {
             let series: MekkoChartSeries[] = dataPoint.series;
-            let columns = []; //  TODO define type (array of array)
+            let columns: ICategoryValuesCollection[] = [];
             let rowsCount: number = series.length;
             let colsCount: number = d3.max(series.map( s => s.data.length));
 
@@ -418,7 +418,7 @@ module powerbi.extensibility.visual.columnChart {
                 tmp["color"] = columns[col].color;
                 columns[col] = _.sortBy(columns[col], BaseColumnChart.ColumSortField);
                 if  (descendingDirection) {
-                    columns[col] = columns[col].reverse();
+                    columns[col] = (columns[col]).reverse();
                 }
                 columns[col].identity = tmp["identity"];
                 columns[col].categoryValue = tmp["categoryValue"];
@@ -429,11 +429,8 @@ module powerbi.extensibility.visual.columnChart {
         }
 
         private static redefineColors(dataPoint: MekkoDataPoints, legend: MekkoLegendDataPoint[], columns: any) {
-            // TODO get colors from settigns
             let series: MekkoChartSeries[] = dataPoint.series;
             let serCount: number = series.length;
-            // TODO prevent change color for series with max value in category
-            //for (let category in dataPoint.categoryProperties) {
             for (let serIndex = 0; serIndex < serCount; serIndex++) {
                 if (dataPoint.categoryProperties[series[serIndex].data[0].categoryIndex].series === series[serIndex]) {
                     continue;
@@ -443,8 +440,6 @@ module powerbi.extensibility.visual.columnChart {
                     dataPoint.categoryProperties[series[serIndex].data[0].categoryIndex].color, "#bababa");
                 let color = gradient((series[serIndex].data[0].valueAbsolute) * 1);
                 series[serIndex].color = color;
-                //series[serIndex].data[0].color = series[serIndex].color;
-                //legend[serIndex].color = series[serIndex].color;
             }
         }
 
@@ -843,8 +838,7 @@ module powerbi.extensibility.visual.columnChart {
                     let color: string = BaseColumnChart.getDataPointColor(
                             legendItem,
                             categoryIndex
-                            //dataPointObjects
-                        );
+                    );
 
                     const seriesData: tooltip.TooltipSeriesDataItem[] = [];
 

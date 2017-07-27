@@ -36,16 +36,11 @@ module powerbi.extensibility.visual.converterStrategy {
     // formattingUtils
     import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 
-    export interface BaseColorIdentity {
-        identity: ISelectionId;
-        category: string;
-        color: string;
-        group: DataViewValueColumnGroup;
-    }
-
     export class BaseConverterStrategy implements ConverterStrategy {
         private static WidthColumnName: string = "Width";
         private static YColumnName: string = "Y";
+
+        private static SortField: string = "categoryValue";
 
         private dataView: DataViewCategorical;
         private visualHost: IVisualHost;
@@ -73,9 +68,7 @@ module powerbi.extensibility.visual.converterStrategy {
                 defaultLabelLegendColor
             );
 
-            let categoryMaxValues = {
-
-            };
+            let categoryMaxValues: ICategotyValuesStatsCollection = { };
             this.dataView.categories[0].values.forEach( (category, index) => {
                 categoryMaxValues[index] = {
                     category: category,
@@ -90,11 +83,11 @@ module powerbi.extensibility.visual.converterStrategy {
             let valueGroups: DataViewValueColumnGroup[] = this.dataView.values.grouped();
             let categoryGradientStartBaseColorIdentities: BaseColorIdentity[] = [];
             let categoryGradientEndBaseColorIdentities: BaseColorIdentity[] = [];
-            let categoryItemsCount: any[] = [];
-            this.dataView.categories[0].values.forEach( (category, index) => {
+            let categoryItemsCount: Array<IFilteredValueGroups[]> = [];
+            this.dataView.categories[0].values.forEach( (category: PrimitiveValue, index: number) => {
                 // gradiend start color
-                let mappedItems = valueGroups.map( group => {
-                    return {
+                let mappedItems: IFilteredValueGroups[] = valueGroups.map( group => {
+                    return <IFilteredValueGroups>{
                         gr: group,
                         categoryValue: group.values[0].values[index],
                         categoryIndex: index,
@@ -106,10 +99,10 @@ module powerbi.extensibility.visual.converterStrategy {
                 categoryItemsCount[index] = mappedItems;
 
                 if (colorGradient) {
-                    categoryItemsCount[index] = _.sortBy(categoryItemsCount[index], "categoryValue");
+                    categoryItemsCount[index] = _.sortBy(categoryItemsCount[index], BaseConverterStrategy.SortField);
                 }
 
-                let baseStartColorIdentity = _.maxBy(mappedItems, "categoryValue");
+                let baseStartColorIdentity: IFilteredValueGroups = _.maxBy(mappedItems, BaseConverterStrategy.SortField);
                 if (baseStartColorIdentity === undefined) {
                     return;
                 }
@@ -128,14 +121,15 @@ module powerbi.extensibility.visual.converterStrategy {
                 };
 
                 // gradiend end color
-                let baseEndColorIdentity = _.minBy(valueGroups.map( group => {
-                    return {
+                let baseEndColorIdentity: IFilteredValueGroups = _.minBy(valueGroups.map( group => {
+                    return <IFilteredValueGroups>{
                         gr: group,
                         categoryValue: group.values[0].values[index],
                         categoryIndex: index,
                         category: category,
+                        identity: group.identity
                     };
-                }), "categoryValue");
+                }), BaseConverterStrategy.SortField);
 
                 if (baseEndColorIdentity === undefined) {
                     return;
@@ -199,29 +193,18 @@ module powerbi.extensibility.visual.converterStrategy {
                                                                 : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
                         }
                         else {
-                            let categoryIndex = _.findIndex(series.values, value => value != undefined);
+                            let categoryIndex: number = _.findIndex(series.values, value => value);
 
-                            let positionIndex = categoryItemsCount[categoryIndex].findIndex( ser => ser.identity === series.identity );
-                            category = categoryMaxValues[categoryIndex].category;
-                            let gradientBaseColorStart = colorHelper.getColorForSeriesValue(categoryGradientStartBaseColorIdentities[categoryIndex].group.objects, category);
-                            let gradientBaseColorEnd = colorHelper.getColorForSeriesValue(categoryGradientEndBaseColorIdentities[categoryIndex].group.objects, category);
+                            let positionIndex: number = (<any>categoryItemsCount[categoryIndex]).findIndex( ser => ser.identity === series.identity );
+                            category = categoryMaxValues[categoryIndex].category.toString();
+                            let gradientBaseColorStart: string = colorHelper.getColorForSeriesValue(categoryGradientStartBaseColorIdentities[categoryIndex].group.objects, category);
+                            let gradientBaseColorEnd: string = colorHelper.getColorForSeriesValue(categoryGradientEndBaseColorIdentities[categoryIndex].group.objects, category);
 
                             color = createLinearColorScale(
                                 [0, categoryItemsCount[categoryIndex].length],
                                 [gradientBaseColorEnd, gradientBaseColorStart], true)
-                                (positionIndex); // (d3.sum(<number[]>series.values));
-
-                            // debugger;
-                            // color = createLinearColorScale(
-                            //     [0, categoryMaxValues[categoryIndex].maxValueOfCategory],
-                            //     [gradientBaseColorEnd, gradientBaseColorStart], true)
-                            //     (d3.sum(<number[]>series.values));
+                                (positionIndex);
                         }
-
-                        let avialableCategories = {};
-                        series.values.forEach((ser: PrimitiveValue, index: number) => {
-                            avialableCategories[index] = ser;
-                        });
 
                         legend.push({
                             color,

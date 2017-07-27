@@ -91,7 +91,7 @@ module powerbi.extensibility.visual {
 
     // columnChart
     import IColumnChart = columnChart.IColumnChart;
-    import BaseColumnChart = columnChart.BaseColumnChart;    
+    import BaseColumnChart = columnChart.BaseColumnChart;
     import createBaseColumnChartLayer = columnChart.createBaseColumnChartLayer;
 
     // dataViewUtils
@@ -2065,17 +2065,17 @@ module powerbi.extensibility.visual {
 
             if (this.shouldRenderAxis(axes.x)) {
                 if (axes.x.isCategoryAxis) {
-                    xLabelColor = this.categoryAxisProperties
+                    xLabelColor = <Fill>this.categoryAxisProperties
                         && this.categoryAxisProperties["labelColor"]
                         ? this.categoryAxisProperties["labelColor"]
                         : null;
 
-                    xFontSize = this.categoryAxisProperties
+                    xFontSize = <Fill>this.categoryAxisProperties
                         && this.categoryAxisProperties["fontSize"] != null
                         ? this.categoryAxisProperties["fontSize"]
                         : MekkoChart.DefaultLabelFontSizeInPt;
                 } else {
-                    xLabelColor = this.valueAxisProperties
+                    xLabelColor = <Fill>this.valueAxisProperties
                         && this.valueAxisProperties["labelColor"]
                         ? this.valueAxisProperties["labelColor"]
                         : null;

@@ -449,12 +449,36 @@ module powerbi.extensibility.visual {
         labelDataPoints: LabelDataPoint[];
     }
 
-    export interface ICategoryLegend {
-        categoryIndex: number;
+    export interface BaseColorIdentity {
+        identity: DataViewScopeIdentity;
         category: string;
-        legend: ILegend;
-        legendData: ILegendData;
-        parentElement: any;
+        color: string;
+        group: DataViewValueColumnGroup;
     }
 
+    export interface ICategotyValuesStatsCollection {
+        [propName: number]: ICategotyValuesStats;
+    }
+
+    export interface ICategotyValuesStats {
+        category: PrimitiveValue;
+        maxValueOfCategory: number;
+        maxItemOfCategory: number;
+        minValueOfCategory: number;
+    }
+
+    export interface IFilteredValueGroups {
+        gr: DataViewValueColumnGroup;
+        categoryValue: PrimitiveValue;
+        categoryIndex: number;
+        category: PrimitiveValue;
+        identity: DataViewScopeIdentity;
+    }
+
+    export class ICategoryValuesCollection extends Array<MekkoChartColumnDataPoint> {
+        [index: number]: MekkoChartColumnDataPoint;
+        categoryValue?: PrimitiveValue;
+        identity?: powerbi.extensibility.ISelectionId;
+        color?: string;
+    }
 }
