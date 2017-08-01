@@ -245,8 +245,8 @@ module powerbi.extensibility.visual.columnChart {
             dataViewMetadata: DataViewMetadata = null,
             chartType?: MekkoVisualChartType): MekkoColumnChartData {
 
-            const xAxisCardProperties: DataViewObject = dataViewUtils.getCategoryAxisProperties(dataViewMetadata),
-                valueAxisProperties: DataViewObject = dataViewUtils.getValueAxisProperties(dataViewMetadata);
+            const xAxisCardProperties: DataViewObject = dataViewUtils.getCategoryAxisProperties(dataViewMetadata);
+            const valueAxisProperties: DataViewObject = dataViewUtils.getValueAxisProperties(dataViewMetadata);
 
             isScalar = dataViewUtils.isScalar(isScalar, xAxisCardProperties);
             categorical = utils.applyUserMinMax(isScalar, categorical, xAxisCardProperties);
@@ -410,44 +410,25 @@ module powerbi.extensibility.visual.columnChart {
                 }
             }
 
-            // TODO reformat code to pretty
+            // copy array with specific fields
             for (let col = 0; col < colsCount; col++) {
-                let tmp = [];
-                tmp["identity"] = columns[col].identity;
-                tmp["categoryValue"] = columns[col].categoryValue;
-                tmp["color"] = columns[col].color;
+                let tmpObject = [];
+                tmpObject["identity"] = columns[col].identity;
+                tmpObject["categoryValue"] = columns[col].categoryValue;
+                tmpObject["color"] = columns[col].color;
                 columns[col] = _.sortBy(columns[col], BaseColumnChart.ColumSortField);
                 if  (descendingDirection) {
                     columns[col] = (columns[col]).reverse();
                 }
-                columns[col].identity = tmp["identity"];
-                columns[col].categoryValue = tmp["categoryValue"];
-                columns[col].color = tmp["color"];
+                columns[col].identity = tmpObject["identity"];
+                columns[col].categoryValue = tmpObject["categoryValue"];
+                columns[col].color = tmpObject["color"];
             }
 
             return columns;
         }
 
-        private static redefineColors(dataPoint: MekkoDataPoints, legend: MekkoLegendDataPoint[], columns: any) {
-            let series: MekkoChartSeries[] = dataPoint.series;
-            let serCount: number = series.length;
-            for (let serIndex = 0; serIndex < serCount; serIndex++) {
-                if (dataPoint.categoryProperties[series[serIndex].data[0].categoryIndex].series === series[serIndex]) {
-                    continue;
-                }
-                let gradient = BaseColumnChart.getColorGradientForCategory(
-                    dataPoint.categoryProperties[series[serIndex].data[0].categoryIndex].valueAbsolute,
-                    dataPoint.categoryProperties[series[serIndex].data[0].categoryIndex].color, "#bababa");
-                let color = gradient((series[serIndex].data[0].valueAbsolute) * 1);
-                series[serIndex].color = color;
-            }
-        }
-
-        private static getColorGradientForCategory(gradientColors: number, gradientStartColor: string, gradiendEndColor) {
-            return createLinearColorScale([0, gradientColors], [gradientStartColor, gradiendEndColor], true);
-        }
-
-        private static reorderPositions(dataPoint: MekkoDataPoints, columns: any) {
+        private static reorderPositions(dataPoint: MekkoDataPoints, columns: ICategoryValuesCollection[]) {
             let series: MekkoChartSeries[] = dataPoint.series;
             let colsCount: number = series[0].data.length;
             for (let col = 0; col < colsCount; col++) {
@@ -468,7 +449,6 @@ module powerbi.extensibility.visual.columnChart {
                 }
             }
         }
-
 
         private static getStackedMultiplier(
             rawValues: number[][],
@@ -1229,32 +1209,36 @@ module powerbi.extensibility.visual.columnChart {
         }
 
         private enumerateXAxisLabels(instances: VisualObjectInstance[]): void {
-            instances[0] = <any>{
+            instances[0] = <VisualObjectInstance>{
                 objectName: "xAxisLabels",
                 properties: {}
             };
-            (<any>instances[0].properties).enableRotataion = this.data.xAxisLabelsSettings.enableRotataion;
+            instances[0].properties["enableRotataion"] = this.data.xAxisLabelsSettings.enableRotataion;
         }
 
         private enumerateSortLegend(instances: VisualObjectInstance[]): void {
-            instances[0] = <any>{
+            instances[0] = <VisualObjectInstance>{
                 objectName: "sortLegend",
                 properties: {}
             };
-            (<any>instances[0].properties).enabled = this.data.sortlegend.enabled;
-            (<any>instances[0].properties).direction = this.data.sortlegend.direction;
-            (<any>instances[0].properties).groupByCategory = this.data.sortlegend.groupByCategory;
-            (<any>instances[0].properties).groupByCategoryDirection = this.data.sortlegend.groupByCategoryDirection;
+            instances[0].properties["enabled"] = this.data.sortlegend.enabled;
+            instances[0].properties["direction"] = this.data.sortlegend.direction;
+            let allowedGroupByCategory = this.checkDataToFeatures();
+
+            if (allowedGroupByCategory) {
+                instances[0].properties["groupByCategory"] = this.data.sortlegend.groupByCategory;
+                instances[0].properties["groupByCategoryDirection"] = this.data.sortlegend.groupByCategoryDirection;
+            }
         }
 
         private enumerateSortSeries(instances: VisualObjectInstance[]): void {
-            instances[0] = <any>{
+            instances[0] = <VisualObjectInstance>{
                 objectName: "sortSeries",
                 properties: {}
             };
-            (<any>instances[0].properties).enabled = this.data.sortSeries.enabled;
-            (<any>instances[0].properties).direction = this.data.sortSeries.direction;
-            (<any>instances[0].properties).displayPercents = this.data.sortSeries.displayPercents;
+            instances[0].properties["enabled"] = this.data.sortSeries.enabled;
+            instances[0].properties["direction"] = this.data.sortSeries.direction;
+            instances[0].properties["displayPercents"] = this.data.sortSeries.displayPercents;
         }
 
         private enumerateDataLabels(instances: VisualObjectInstance[]): void {
@@ -1314,6 +1298,12 @@ module powerbi.extensibility.visual.columnChart {
             return this.data;
         }
 
+        private checkDataToFeatures(): boolean {
+            return !this.data.legendData.dataPoints.some( (value: MekkoLegendDataPoint) => {
+                return value.categoryValues.filter( value => value).length > 1;
+            });
+        }
+
         private enumerateDataPoints(instances: VisualObjectInstance[]): void {
             const data: MekkoColumnChartData = this.data;
 
@@ -1327,7 +1317,9 @@ module powerbi.extensibility.visual.columnChart {
                 return;
             }
 
-            if (this.data.dataPointSettings.categoryGradient) {
+            let allowedCategoryGradient = this.checkDataToFeatures();
+
+            if (allowedCategoryGradient) {
                 let properties: any = {};
                 properties["categoryGradient"] = this.data.dataPointSettings.categoryGradient;
 
@@ -1339,15 +1331,6 @@ module powerbi.extensibility.visual.columnChart {
                     objectName: "dataPoint",
                     selector: null,
                     properties: properties
-                });
-            }
-            else {
-                instances.push({
-                    objectName: "dataPoint",
-                    selector: null,
-                    properties: {
-                        categoryGradient: this.data.dataPointSettings.categoryGradient
-                    }
                 });
             }
 

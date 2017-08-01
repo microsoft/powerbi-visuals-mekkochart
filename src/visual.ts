@@ -195,7 +195,7 @@ module powerbi.extensibility.visual {
 
         public static SeriesSelector: ClassAndSelector = createClassAndSelector("series");
 
-        public static Properties: MekkoChartProperties = {
+        public static Properties: MekkoChartProperties = <MekkoChartProperties>{
             dataPoint: {
                 defaultColor: { objectName: "dataPoint", propertyName: "defaultColor" },
                 fill: { objectName: "dataPoint", propertyName: "fill" },
@@ -2065,19 +2065,19 @@ module powerbi.extensibility.visual {
 
             if (this.shouldRenderAxis(axes.x)) {
                 if (axes.x.isCategoryAxis) {
-                    xLabelColor = <Fill>this.categoryAxisProperties
+                    xLabelColor = this.categoryAxisProperties
                         && this.categoryAxisProperties["labelColor"]
-                        ? this.categoryAxisProperties["labelColor"]
+                        ? <Fill>this.categoryAxisProperties["labelColor"]
                         : null;
 
-                    xFontSize = <Fill>this.categoryAxisProperties
+                    xFontSize = this.categoryAxisProperties
                         && this.categoryAxisProperties["fontSize"] != null
-                        ? this.categoryAxisProperties["fontSize"]
+                        ? <Fill>this.categoryAxisProperties["fontSize"]
                         : MekkoChart.DefaultLabelFontSizeInPt;
                 } else {
-                    xLabelColor = <Fill>this.valueAxisProperties
+                    xLabelColor = this.valueAxisProperties
                         && this.valueAxisProperties["labelColor"]
-                        ? this.valueAxisProperties["labelColor"]
+                        ? <Fill>this.valueAxisProperties["labelColor"]
                         : null;
 
                     xFontSize = this.valueAxisProperties
@@ -2170,7 +2170,7 @@ module powerbi.extensibility.visual {
             if (this.shouldRenderAxis(axes.y1)) {
                 if (axes.y1.isCategoryAxis) {
                     yLabelColor = this.categoryAxisProperties && this.categoryAxisProperties["labelColor"]
-                        ? this.categoryAxisProperties["labelColor"]
+                        ? <Fill>this.categoryAxisProperties["labelColor"]
                         : null;
 
                     yFontSize = this.categoryAxisProperties && this.categoryAxisProperties["fontSize"] != null
@@ -2178,7 +2178,7 @@ module powerbi.extensibility.visual {
                         : MekkoChart.DefaultLabelFontSizeInPt;
                 } else {
                     yLabelColor = this.valueAxisProperties && this.valueAxisProperties["labelColor"]
-                        ? this.valueAxisProperties["labelColor"]
+                        ? <Fill>this.valueAxisProperties["labelColor"]
                         : null;
 
                     yFontSize = this.valueAxisProperties && this.valueAxisProperties["fontSize"] != null
@@ -2228,7 +2228,7 @@ module powerbi.extensibility.visual {
                         || this.valueAxisProperties["secShow"])) {
 
                     y2LabelColor = this.valueAxisProperties && this.valueAxisProperties["secLabelColor"]
-                        ? this.valueAxisProperties["secLabelColor"]
+                        ? <Fill>this.valueAxisProperties["secLabelColor"]
                         : null;
 
                     axes.y2.axis

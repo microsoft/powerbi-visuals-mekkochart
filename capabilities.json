@@ -126,7 +126,7 @@
         },
         "legend": {
             "displayName": "Legend",
-            "displayName": "Visual_Legend",
+            "displayNameKey": "Visual_Legend",
             "properties": {
                 "show": {
                     "displayName": "Show",
@@ -473,7 +473,11 @@
                                     "in": "Width"
                                 }
                             },
-                            {"for":{"in":"CategoryCustomSorting"}}
+                            {   
+                                "for": {
+                                    "in": "CategoryCustomSorting"
+                                }
+                            }
                         ],
                         "dataReductionAlgorithm": {
                             "top": {
