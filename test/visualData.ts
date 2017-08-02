@@ -76,6 +76,30 @@ module powerbi.extensibility.visual.test {
             MekkoChartData.MinValue,
             MekkoChartData.MaxValue);
 
+        // the data set with unique items in each category
+        // one series value belongs to only one category
+        public specificValuesCategorySeries: string[][] = [
+            ["Russia", "Moscow"],
+            ["Russia", "St. Petersburg"],
+            ["Russia", "Kazan"],
+            ["Germany", "Berlin"],
+            ["Germany", "Cologne"],
+            ["Germany", "Frankfurt am Main"],
+            ["USA", "Redmond"],
+            ["USA", "Seattle"],
+            ["USA", "Bellevue"],
+        ];
+
+        public specificValuesY: number[] = getRandomNumbers(
+            this.specificValuesCategorySeries.length,
+            MekkoChartData.MinValue,
+            MekkoChartData.MaxValue);
+
+        public specificValuesWidth: number[] = getRandomNumbers(
+            this.specificValuesCategorySeries.length,
+            MekkoChartData.MinValue,
+            MekkoChartData.MaxValue);
+
         public getDataView(columnNames?: string[]): powerbi.DataView {
             return this.createCategoricalDataViewBuilder([
                 {
@@ -115,6 +139,48 @@ module powerbi.extensibility.visual.test {
                             type: ValueType.fromDescriptor({ numeric: true })
                         },
                         values: this.valuesWidth
+                    }], columnNames).build();
+        }
+
+        public getSpecificDataView(columnNames?: string[]): powerbi.DataView {
+            return this.createCategoricalDataViewBuilder([
+                {
+                    source: {
+                        displayName: MekkoChartData.ColumnCategory,
+                        roles: { Category: true },
+                        type: ValueType.fromDescriptor({ text: true })
+                    },
+                    values: this.specificValuesCategorySeries.map((values: string[]) => values[0])
+                },
+                {
+                    isGroup: true,
+                    source: {
+                        displayName: MekkoChartData.ColumnSeries,
+                        roles: { Series: true },
+                        type: ValueType.fromDescriptor({ text: true })
+                    },
+                    values: this.specificValuesCategorySeries.map((values: string[]) => values[1]),
+                }
+            ], [
+                    {
+                        source: {
+                            displayName: MekkoChartData.ColumnY,
+                            format: MekkoChartData.DefaultFormat,
+                            roles: { Y: true },
+                            isMeasure: true,
+                            type: ValueType.fromDescriptor({ numeric: true })
+                        },
+                        values: this.specificValuesY
+                    },
+                    {
+                        source: {
+                            displayName: MekkoChartData.ColumnWidth,
+                            format: MekkoChartData.DefaultFormat,
+                            roles: { Width: true },
+                            isMeasure: true,
+                            type: ValueType.fromDescriptor({ numeric: true })
+                        },
+                        values: this.specificValuesWidth
                     }], columnNames).build();
         }
     }

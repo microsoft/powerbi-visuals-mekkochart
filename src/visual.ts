@@ -857,7 +857,7 @@ module powerbi.extensibility.visual {
 
             (<MekkoChartLabelSettings>labelSettings).forceDisplay = false;
             dataLabelUtils.updateLabelSettingsFromLabelsObject(labelsObj, labelSettings);
-            (<MekkoChartLabelSettings>labelSettings).forceDisplay = <boolean>labelsObj.forceDisplay;
+            (<MekkoChartLabelSettings>labelSettings).forceDisplay = <boolean>(labelsObj || { forceDisplay: false }).forceDisplay;
 
             if (labelSettings.precision < minPrecision) {
                 labelSettings.precision = minPrecision;
@@ -1893,7 +1893,6 @@ module powerbi.extensibility.visual {
                 }
 
                 this.addUnitTypeToAxisLabel(axes);
-
                 axisLabels = {
                     x: axes.x.axisLabel,
                     y: axes.y1.axisLabel,

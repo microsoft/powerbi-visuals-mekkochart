@@ -127,6 +127,14 @@ module powerbi.extensibility.visual.test {
 
         public get legendGroup(): JQuery {
             return this.rootElement
+                .children(".legendParentDefault")
+                .children("svg.legend")
+                .children("g#legendGroup");
+        }
+
+        public get categoryLegendGroup(): JQuery {
+            return this.rootElement
+                .children(".legendParent")
                 .children("svg.legend")
                 .children("g#legendGroup");
         }
