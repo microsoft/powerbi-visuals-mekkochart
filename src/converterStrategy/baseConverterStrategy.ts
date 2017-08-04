@@ -189,13 +189,13 @@ module powerbi.extensibility.visual.converterStrategy {
 
                         let color: string;
                         if (!colorGradient) {
-                            color = hasDynamicSeries ?  colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
-                                                                : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
+                            color = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
+                                : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
                         }
                         else {
                             let categoryIndex: number = _.findIndex(series.values, value => value);
 
-                            let positionIndex: number = (<any>categoryItemsCount[categoryIndex]).findIndex( ser => ser.identity === series.identity );
+                            let positionIndex: number = _.findIndex(<IFilteredValueGroups[]>categoryItemsCount[categoryIndex], ser => ser.identity === series.identity );
                             category = categoryMaxValues[categoryIndex].category.toString();
                             let gradientBaseColorStart: string = colorHelper.getColorForSeriesValue(categoryGradientStartBaseColorIdentities[categoryIndex].group.objects, category);
                             let gradientBaseColorEnd: string = colorHelper.getColorForSeriesValue(categoryGradientEndBaseColorIdentities[categoryIndex].group.objects, category);

@@ -1,4 +1,4 @@
-## 1.8.10
+## 1.9.0
 
 * Add sorting of legend items by value
 * Add sorting values of series in each category

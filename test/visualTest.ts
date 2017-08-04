@@ -383,16 +383,16 @@ module powerbi.extensibility.visual.test {
                     expect(visualBuilder.yAxisTicks).not.toBeInDOM();
                 });
 
-                xit("show title", () => {
+                it("show title", () => {
                     (dataView.metadata.objects as any).valueAxis.showAxisTitle = true;
                     visualBuilder.updateFlushAllD3Transitions(dataView);
 
                     expect(visualBuilder.yAxisLabel).toBeInDOM();
 
                     (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
-                    visualBuilder.updateFlushAllD3Transitions(dataView);
-
-                    expect(visualBuilder.yAxisLabel).not.toBeInDOM();
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        expect(visualBuilder.yAxisLabel).not.toBeInDOM();
+                    });
                 });
 
                 it("color", () => {
@@ -777,10 +777,6 @@ module powerbi.extensibility.visual.test {
                     });
                     done();
                 }, 300);
-            });
-
-            it("display percents in scope of all dataset", () => {
-
             });
         });
     });

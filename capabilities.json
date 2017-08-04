@@ -20,7 +20,11 @@
             "kind": "Measure",
             "displayName": "Axiswidth"
         },
-        {"name":"CategoryCustomSorting","kind":"Grouping","displayName":"Category sorting"}
+        {
+            "name":"CategoryCustomSorting",
+            "kind":"Grouping",
+            "displayName":"Category sorting"
+        }
     ],
     "objects": {
         "columnBorder": {
@@ -113,7 +117,7 @@
                         "bool": true
                     }
                 },
-                "fontSize_": {
+                "fontSize": {
                     "displayName": "Text Size",
                     "displayNameKey": "Visual_Font_Size",
                     "type": {
@@ -218,6 +222,7 @@
         },
         "sortSeries": {
             "displayName": "Sort series",
+            "displayNameKey": "Visual_SortSeries",
             "properties": {
                 "enabled": {
                     "displayName": "Enabled",
@@ -266,6 +271,7 @@
         },
         "xAxisLabels": {
             "displayName": "X Axis labels rotation",
+            "displayNameKey": "Visual_XAxisLabelsRotation",
             "properties": {
                 "enableRotataion": {
                     "displayName": "Enbaled",
@@ -278,6 +284,7 @@
         },
         "categoryAxis": {
             "displayName": "X-Axis",
+            "displayNameKey": "Visual_XAxis",
             "properties": {
                 "show": {
                     "displayName": "Show",
@@ -317,6 +324,7 @@
         },
         "valueAxis": {
             "displayName": "Y-Axis",
+            "displayNameKey": "Visual_YAxis",
             "properties": {
                 "show": {
                     "displayName": "Show",

@@ -988,7 +988,6 @@ module powerbi.extensibility.visual.columnChart {
             };
 
             let categoryProperties: MekkoCategoryProperties[] = [];
-            let maxValueSeriesOfCategory = {};
 
             result.series.forEach((series) => {
                 if (series.data.length !== 1) {
@@ -1008,8 +1007,6 @@ module powerbi.extensibility.visual.columnChart {
                 }
             });
             result.categoryProperties = categoryProperties;
-
-            result.categoryProperties.forEach(p => console.log(`${p.name}-${p.series.displayName} : ${p.series.data[0].valueAbsolute}`));
 
             return result;
         }
@@ -1322,10 +1319,6 @@ module powerbi.extensibility.visual.columnChart {
             if (allowedCategoryGradient) {
                 let properties: any = {};
                 properties["categoryGradient"] = this.data.dataPointSettings.categoryGradient;
-
-                // if (this.data.dataPointSettings.categoryGradient) {
-                //     properties["colorDistribution"] = this.data.dataPointSettings.colorDistribution;
-                // }
 
                 instances.push({
                     objectName: "dataPoint",

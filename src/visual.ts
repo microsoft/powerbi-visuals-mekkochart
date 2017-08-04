@@ -1448,7 +1448,6 @@ module powerbi.extensibility.visual {
                             dataValues: 0
                         };
                         reducedLegends[element.categoryIndex].data.push(element.data);
-                        // reducedLegends[element.categoryIndex].dataValues += element.data.valueSum;
                     });
                     reducedLegends.forEach(element => {
                         element.dataValues = d3.sum(element.data.map((d) => d.valueSum));
@@ -1494,14 +1493,6 @@ module powerbi.extensibility.visual {
             .style({
                 position: "absolute"
             });
-            // .style({
-            //     top: data => PixelConverter.toString(26 * data.index)
-            // });
-
-            legendParentsWithData.style({
-                top: function (data) { return PixelConverter.toString(26 * data.index); },
-                position: "absolute"
-            });
 
             let mekko = this;
             this.categoryLegends = this.categoryLegends || [];
@@ -1519,6 +1510,7 @@ module powerbi.extensibility.visual {
             });
 
             legendParentsWithData.exit().remove();
+            let svgHeight: number = 26;
             if (reducedLegends.length > 0) {
                 this.categoryLegends.forEach( (legend, index) => {
                     if (reducedLegends[index] === undefined) {
@@ -1536,6 +1528,29 @@ module powerbi.extensibility.visual {
                         title: reducedLegends[index].category,
                         dataPoints: reducedLegends[index].data
                     };
+
+                    LegendData.update(legendData, legendProperties);
+                    legend.drawLegend(legendData, this.currentViewport);
+
+                    if (index === 0) {
+                        if (legendParentsWithChildsAttr.node() === null) {
+                            svgHeight = +legendParents.select("svg").attr("height").replace("px", "");
+                        } else {
+                            svgHeight = +d3.select(legendParentsWithChildsAttr.node()).select("svg").attr("height").replace("px", "");
+                        }
+                    }
+                });
+
+                legendParentsWithData.style({
+                    top: function (data) { return PixelConverter.toString(svgHeight * data.index); },
+                    position: "absolute"
+                });
+            }
+
+            if (legendProperties["show"] === false) {
+                legendData.dataPoints = [];
+                this.categoryLegends.forEach( legend => {
+                    legend.changeOrientation(LegendPosition.None);
                     LegendData.update(legendData, legendProperties);
                     legend.drawLegend(legendData, this.currentViewport);
                 });
@@ -2149,10 +2164,10 @@ module powerbi.extensibility.visual {
                     // fix positions 
                     let categoryLabels = xAxisGraphicsElement.selectAll(".tick");
                     categoryLabels.each( function(tick, index){
-                        let shiftX = this.getBBox().width * 1 / Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
-                        let shiftY = this.getBBox().width * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
-                        let currTransform = this.attributes.transform.value;
-                        let translate = d3.transform(currTransform).translate;
+                        let shiftX: number = this.getBBox().width / Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
+                        let shiftY: number = this.getBBox().width * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
+                        let currTransform: string = this.attributes.transform.value;
+                        let translate: [number, number] = d3.transform(currTransform).translate;
                         d3.select(<any>this)
                         .attr("transform", (value: number, index: number) => {
                             return SVGUtil.translate(+translate[0] - shiftX, +translate[1] + shiftY);
