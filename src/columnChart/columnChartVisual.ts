@@ -51,5 +51,7 @@ module powerbi.extensibility.visual.columnChart {
             categoryCount: number,
             categoryThickness: number): IViewport;
         setFilteredData?(startIndex: number, endIndex: number): MekkoChartBaseData;
+
+        getData?(): MekkoChartBaseData;
     }
 }

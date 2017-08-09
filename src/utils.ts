@@ -97,13 +97,13 @@ module powerbi.extensibility.visual.utils {
         axisOptions: MekkoChartAxisOptions): UpdateSelection<MekkoChartSeries> {
 
         const series: UpdateSelection<MekkoChartSeries> = graphicsContext
-            .selectAll(MekkoChart.SeriesSelector.selector)
+            .selectAll(MekkoChart.SeriesSelector.selectorName)
             .data(data.series, (series: MekkoChartSeries) => series.key);
 
         series
             .enter()
             .append("g")
-            .classed(MekkoChart.SeriesSelector.class, true);
+            .classed(MekkoChart.SeriesSelector.className, true);
 
         series
             .style({
@@ -145,7 +145,7 @@ module powerbi.extensibility.visual.utils {
         lastColumnIndex: number): void {
 
         const series: Selection<any> = mainGraphicsContext
-            .selectAll(MekkoChart.SeriesSelector.selector);
+            .selectAll(MekkoChart.SeriesSelector.selectorName);
 
         const lastColumnUndefined: boolean = typeof lastColumnIndex === "undefined";
 

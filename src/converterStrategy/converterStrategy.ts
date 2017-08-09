@@ -29,7 +29,9 @@ module powerbi.extensibility.visual.converterStrategy {
         getLegend(
             colors: IColorPalette,
             defaultLegendLabelColor: string,
-            defaultColor?: string): LegendSeriesInfo;
+            defaultColor?: string,
+            colorGradient?: boolean,
+            colorGradientEndColor?: string): LegendSeriesInfo;
         getValueBySeriesAndCategory(series: number, category: number): number;
         getMeasureNameByIndex(series: number, category: number): string;
         hasHighlightValues(series: number): boolean;

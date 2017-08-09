@@ -15,9 +15,12 @@
     "Visual_DefaultColor": "Default color",
     "Visual_DataPoint": "Data Colors",
     "Visual_Series": "Series",
+    "Visual_SortSeries": "Sort series",
+    "Visual_XAxisLabelsRotation": "X Axis labels rotation",
+    "Visual_XAxis": "X-Axis",
+    "Visual_YAxis": "Y-Axis",
     "Visual_Series_Category_Percentage": "Display % in category scope",
     "Visual_Series_All_Data_Percentage": "Display % in all data scope",
     "Visual_Category": "Category",,
-    "Visual_Y": "Y",
-    "Visual_Width": "Width"
+    "Visual_Y": "Y"
 }

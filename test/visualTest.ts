@@ -390,9 +390,9 @@ module powerbi.extensibility.visual.test {
                     expect(visualBuilder.yAxisLabel).toBeInDOM();
 
                     (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
-                    visualBuilder.updateFlushAllD3Transitions(dataView);
-
-                    expect(visualBuilder.yAxisLabel).not.toBeInDOM();
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        expect(visualBuilder.yAxisLabel).not.toBeInDOM();
+                    });
                 });
 
                 it("color", () => {
@@ -586,6 +586,197 @@ module powerbi.extensibility.visual.test {
                         });
                     });
                 });
+            });
+        });
+
+        describe("Mekko chart legend features:", () => {
+            beforeEach(() => {
+                dataView = defaultDataViewBuilder.getSpecificDataView();
+            });
+
+            it("sort legend by value", (done) => {
+                dataView.metadata.objects = {
+                    sortLegend: {
+                        enabled: true,
+                        direction: "asc",
+                        groupByCategory: false,
+                        groupByCategoryDirection: "asc"
+                    }
+                };
+
+                let data = dataView.categorical.values.grouped().map( v => {return {key: v.name, data: _.sum(v.values[0].values)}; } );
+
+                let reduced = {};
+                data.forEach(d => {
+                    reduced[d.key.toString()] = reduced[d.key.toString()] || { data: 0};
+                    reduced[d.key.toString()].data += d.data;
+                });
+
+                let index = 0;
+                let array = [];
+                for (let key in reduced) {
+                    array[index++] = {
+                        key: key,
+                        data: reduced[key].data
+                    };
+                }
+
+                array = _.sortBy(array, "data");
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(visualBuilder.legendGroup).toBeInDOM();
+                    array.forEach( (element, index) => {
+                        let textElements = visualBuilder.legendGroup.children("g").children("text");
+                        expect(element.key).toEqual(textElements[index].textContent);
+                    });
+                    done();
+                }, 300);
+            });
+
+            it("group legend by category", (done) => {
+                dataView.metadata.objects = {
+                    sortLegend: {
+                        enabled: true,
+                        direction: "asc",
+                        groupByCategory: true,
+                        groupByCategoryDirection: "asc"
+                    }
+                };
+
+                let data = dataView.categorical.values.grouped();
+                let catigoried = data.map( d => { return {name: d.name, values: d.values[0].values, category: _.findIndex(d.values[0].values, i => i !== null) }; });
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(visualBuilder.categoryLegendGroup).toBeInDOM();
+                    expect(visualBuilder.categoryLegendGroup.length).toEqual(dataView.categorical.categories[0].values.length);
+
+                    let mappedCategoryLegendGroup = visualBuilder.categoryLegendGroup.map( (index, clg) => {
+                        return {
+                            position: clg.parentElement.parentElement.style.top.replace("px", ""),
+                            dom: clg
+                        };
+                    });
+                    let sortedCategoryLegendGroup = _.sortBy(mappedCategoryLegendGroup, "position").map( d => d.dom );
+
+                    dataView.categorical.categories[0].values.forEach( (category, index) => {
+                        let filteredByCategory = catigoried.filter(cat => cat.category === index);
+                        filteredByCategory = _.sortBy(filteredByCategory, "values");
+                        let legentItem = $(sortedCategoryLegendGroup[index]).children("g").children("text");
+                        expect(filteredByCategory.length).toEqual(legentItem.length);
+                        filteredByCategory.forEach((categoryItem, index) => {
+                            expect(legentItem[index].textContent).toEqual(categoryItem.name);
+                        });
+                    });
+                    done();
+                }, 300);
+            });
+        });
+
+        describe("Mekko chart label features:", () => {
+            beforeEach(() => {
+                dataView = defaultDataViewBuilder.getSpecificDataView();
+            });
+
+            it("force display", (done) => {
+                dataView.metadata.objects = {
+                    labels: {
+                        show: true,
+                        forceDisplay: true
+                    }
+                };
+
+                let countBefore: number = 0;
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    countBefore = visualBuilder.dataLabels.length;
+                });
+
+                dataView.metadata.objects = {
+                    labels: {
+                        show: true,
+                        forceDisplay: false
+                    }
+                };
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(countBefore).toBeGreaterThanOrEqual(visualBuilder.dataLabels.length);
+                    done();
+                });
+            });
+
+            it("rotate category label to 45 degrees", (done) => {
+                dataView.metadata.objects = {
+                    xAxisLabels: {
+                        enableRotataion: true
+                    },
+                    categoryAxis: {
+                        showAxisTitle: true,
+                        show: true
+                    },
+                    valueAxis: {
+                        show: true,
+                        showAxisTitle: true
+                    }
+                };
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    let expectedDegree: number = -45;
+                    visualBuilder.xAxisTicks.children("text").each( (index, element) => {
+                        expect(d3.transform(d3.select(element).attr("transform")).rotate).toBe(expectedDegree);
+                    });
+                    done();
+                }, 300);
+            });
+        });
+
+        describe("Mekko chart series features:", () => {
+            beforeEach(() => {
+                dataView = defaultDataViewBuilder.getSpecificDataView();
+            });
+
+            it("sort series by value", (done) => {
+                dataView.metadata.objects = {
+                    labels: {
+                        show: true,
+                        forceDisplay: true
+                    },
+                    sortSeries: {
+                        enabled: true,
+                        direction: "asc",
+                        displayPercents: "category"
+                    }
+                };
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    let seriesElements = visualBuilder.mainElement.find(".columnChartMainGraphicsContext")[0].children;
+                    let mappedSeries = [];
+                    const firstCtegory: number = 0;
+                    const secondCtegory: number = 1;
+                    const thirdCtegory: number = 2;
+                    const seriesMainRectanglePositionIndex: number = 0;
+                    // first category elements
+                    mappedSeries[firstCtegory] = [];
+                    mappedSeries[firstCtegory].push(seriesElements[0].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[firstCtegory].push(seriesElements[1].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[firstCtegory].push(seriesElements[2].children[seriesMainRectanglePositionIndex]);
+
+                    // second category elements
+                    mappedSeries[secondCtegory] = [];
+                    mappedSeries[secondCtegory].push(seriesElements[3].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[secondCtegory].push(seriesElements[4].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[secondCtegory].push(seriesElements[5].children[seriesMainRectanglePositionIndex]);
+
+                    // third category elements
+                    mappedSeries[thirdCtegory] = [];
+                    mappedSeries[thirdCtegory].push(seriesElements[6].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[thirdCtegory].push(seriesElements[7].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[thirdCtegory].push(seriesElements[8].children[seriesMainRectanglePositionIndex]);
+
+                    mappedSeries.forEach( (element: any[]) => {
+                        let sortedByHeight = _.sortBy(element, "height");
+                        let sortedByPosition = _.sortBy(element, "y");
+                        sortedByHeight.forEach( (el, index ) => expect(sortedByHeight[index] === sortedByPosition[index]).toBeTruthy());
+                    });
+                    done();
+                }, 300);
             });
         });
     });

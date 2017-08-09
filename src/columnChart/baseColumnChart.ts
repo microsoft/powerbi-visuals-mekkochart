@@ -27,6 +27,7 @@
 module powerbi.extensibility.visual.columnChart {
     // powerbi.visuals
     import ISelectionId = powerbi.visuals.ISelectionId;
+    import createLinearColorScale = powerbi.extensibility.utils.color.createLinearColorScale;
 
     // d3
     import Selection = d3.Selection;
@@ -103,6 +104,8 @@ module powerbi.extensibility.visual.columnChart {
 
         private static DefaultStackedPosition: number = 0;
 
+        private static ColumSortField: string = "valueOriginal";
+
         private static Is100Pct: boolean = true;
 
         private svg: Selection<any>;
@@ -147,15 +150,15 @@ module powerbi.extensibility.visual.columnChart {
 
             this.unclippedGraphicsContext = this.svg
                 .append("g")
-                .classed(BaseColumnChart.ColumnChartUnclippedGraphicsContextSelector.class, true);
+                .classed(BaseColumnChart.ColumnChartUnclippedGraphicsContextSelector.className, true);
 
             this.mainGraphicsContext = this.unclippedGraphicsContext
                 .append("svg")
-                .classed(BaseColumnChart.ColumnChartMainGraphicsContextSelector.class, true);
+                .classed(BaseColumnChart.ColumnChartMainGraphicsContextSelector.className, true);
 
             this.labelGraphicsContext = this.svg
                 .append("g")
-                .classed(BaseColumnChart.LabelGraphicsContextSelector.class, true);
+                .classed(BaseColumnChart.LabelGraphicsContextSelector.className, true);
 
             this.visualHost = options.host;
             this.colorPalette = this.visualHost.colorPalette;
@@ -242,8 +245,8 @@ module powerbi.extensibility.visual.columnChart {
             dataViewMetadata: DataViewMetadata = null,
             chartType?: MekkoVisualChartType): MekkoColumnChartData {
 
-            const xAxisCardProperties: DataViewObject = dataViewUtils.getCategoryAxisProperties(dataViewMetadata),
-                valueAxisProperties: DataViewObject = dataViewUtils.getValueAxisProperties(dataViewMetadata);
+            const xAxisCardProperties: DataViewObject = dataViewUtils.getCategoryAxisProperties(dataViewMetadata);
+            const valueAxisProperties: DataViewObject = dataViewUtils.getValueAxisProperties(dataViewMetadata);
 
             isScalar = dataViewUtils.isScalar(isScalar, xAxisCardProperties);
             categorical = utils.applyUserMinMax(isScalar, categorical, xAxisCardProperties);
@@ -272,7 +275,12 @@ module powerbi.extensibility.visual.columnChart {
             });
 
             let borderSettings: MekkoBorderSettings = MekkoChart.DefaultSettings.columnBorder,
-                labelSettings: VisualDataLabelsSettings = dataLabelUtils.getDefaultColumnLabelSettings(true);
+                sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries,
+                sortLegendSettings: MekkoLegendSortSettings = MekkoChart.DefaultSettings.sortLegend,
+                xAxisLabelsSettings: MekkoXAxisLabelsSettings = MekkoChart.DefaultSettings.xAxisLabels,
+                categoryColumnSettings: MekkoCategoryColorSettings = MekkoChart.DefaultSettings.categoryColor,
+                labelSettings: VisualDataLabelsSettings = dataLabelUtils.getDefaultColumnLabelSettings(true),
+                dataPointSettings: MekkoDataPointSettings = MekkoChart.DefaultSettings.dataPoint;
 
             let defaultDataPointColor: string = undefined,
                 showAllDataPoints: boolean = undefined;
@@ -290,15 +298,19 @@ module powerbi.extensibility.visual.columnChart {
 
                 labelSettings = MekkoChart.parseLabelSettings(objects);
                 borderSettings = MekkoChart.parseBorderSettings(objects);
+                sortLegendSettings = MekkoChart.parseLegendSortSettings(objects);
+                sortSeriesSettings = MekkoChart.parseSeriesSortSettings(objects);
+                xAxisLabelsSettings = MekkoChart.parseXAxisLabelsSettings(objects);
+                dataPointSettings = MekkoChart.parseDataPointSettings(objects);
             }
 
             // Allocate colors
-            let legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, defaultDataPointColor),
-                legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints,
-                seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
+            let legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, defaultDataPointColor, "", dataPointSettings.categoryGradient, dataPointSettings.colorGradientEndColor.solid.color);
+            let legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
+            let seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
 
             // Determine data points
-            const result: MekkoDataPoints = BaseColumnChart.createDataPoints(
+            let result: MekkoDataPoints = BaseColumnChart.createDataPoints(
                 visualHost,
                 categorical,
                 categories,
@@ -318,6 +330,11 @@ module powerbi.extensibility.visual.columnChart {
                 defaultDataPointColor,
                 chartType,
                 categoryMetadata);
+
+            if (sortSeriesSettings.enabled) {
+                let columns = BaseColumnChart.createAlternateStructure(result, sortSeriesSettings.direction === "des");
+                BaseColumnChart.reorderPositions(result, columns);
+            }
 
             const valuesMetadata: DataViewMetadataColumn[] = [];
 
@@ -339,6 +356,9 @@ module powerbi.extensibility.visual.columnChart {
                 categoryMetadata,
                 categoriesWidth: result.categoriesWidth,
                 borderSettings,
+                sortlegend: sortLegendSettings,
+                sortSeries: sortSeriesSettings,
+                xAxisLabelsSettings: xAxisLabelsSettings,
                 labelSettings,
                 series: result.series,
                 valuesMetadata,
@@ -350,8 +370,84 @@ module powerbi.extensibility.visual.columnChart {
                     y: labels.yAxisLabel
                 },
                 hasDynamicSeries: result.hasDynamicSeries,
+                categoryProperties: result.categoryProperties,
                 isMultiMeasure: false,
+                dataPointSettings: dataPointSettings
             };
+        }
+
+        private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): ICategoryValuesCollection[] {
+            let series: MekkoChartSeries[] = dataPoint.series;
+            let columns: ICategoryValuesCollection[] = [];
+            let rowsCount: number = series.length;
+            let colsCount: number = d3.max(series.map( s => s.data.length));
+
+            // define all cols 
+            series.some((value: MekkoChartSeries, index: number, arr: MekkoChartSeries[]): boolean => {
+                if (value.data.length === colsCount) {
+                    value.data.forEach(data => {
+                        columns[data.categoryIndex] = [];
+                    });
+
+                    return true;
+                }
+                return false;
+            });
+
+            for (let col = 0; col < colsCount; col++) {
+                for (let row = 0; row < rowsCount; row++) {
+                    columns[col] = columns[col] || [];
+                    if (series[row].data[col] === undefined) {
+                        continue;
+                    }
+                    if (columns[series[row].data[col].categoryIndex].categoryValue === undefined) {
+                        columns[series[row].data[col].categoryIndex].identity = series[row].data[col].identity;
+                        columns[series[row].data[col].categoryIndex].categoryValue = series[row].data[col].categoryValue;
+                        columns[series[row].data[col].categoryIndex].color = series[row].data[col].color;
+                    }
+
+                    columns[series[row].data[col].categoryIndex][row] = series[row].data[col];
+                }
+            }
+
+            // copy array with specific fields
+            for (let col = 0; col < colsCount; col++) {
+                let tmpObject = [];
+                tmpObject["identity"] = columns[col].identity;
+                tmpObject["categoryValue"] = columns[col].categoryValue;
+                tmpObject["color"] = columns[col].color;
+                columns[col] = _.sortBy(columns[col], BaseColumnChart.ColumSortField);
+                if  (descendingDirection) {
+                    columns[col] = (columns[col]).reverse();
+                }
+                columns[col].identity = tmpObject["identity"];
+                columns[col].categoryValue = tmpObject["categoryValue"];
+                columns[col].color = tmpObject["color"];
+            }
+
+            return columns;
+        }
+
+        private static reorderPositions(dataPoint: MekkoDataPoints, columns: ICategoryValuesCollection[]) {
+            let series: MekkoChartSeries[] = dataPoint.series;
+            let colsCount: number = series[0].data.length;
+            for (let col = 0; col < colsCount; col++) {
+                let columnAbsoluteValue: number = d3.sum(columns[col].map( (val) => {
+                    if (val === undefined) {
+                        return 0;
+                    }
+                    return val.valueAbsolute;
+                }));
+                let absValScale: LinearScale<number, number> = d3.scale.linear().domain([0, columnAbsoluteValue]).range([0, 1]);
+                let rowsCount: number = columns[col].length;
+                for (let row = 0; row < rowsCount; row++) {
+                    if (columns[col][row] === undefined) {
+                        continue;
+                    }
+                    columns[col][row].position = absValScale(columnAbsoluteValue);
+                    columnAbsoluteValue -= columns[col][row].valueAbsolute;
+                }
+            }
         }
 
         private static getStackedMultiplier(
@@ -375,6 +471,35 @@ module powerbi.extensibility.visual.columnChart {
                 }
             }
 
+            const absTotal: number = pos + neg;
+
+            return {
+                pos: BaseColumnChart.getPosition(pos, absTotal),
+                neg: BaseColumnChart.getPosition(neg, absTotal)
+            };
+        }
+
+        private static getStackedMultiplierForAllDataSet(
+            rawValues: number[][],
+            seriesCount: number,
+            categoryCount: number): ValueMultiplers {
+
+            let pos: number = 0,
+                neg: number = 0;
+
+            for (let j: number = 0; j < categoryCount; j++) {
+                for (let i: number = 0; i < seriesCount; i++) {
+                    let value: number = rawValues[i][j];
+
+                    value = AxisHelper.normalizeNonFiniteNumber(value);
+
+                    if (value > 0) {
+                        pos += value;
+                    } else if (value < 0) {
+                        neg -= value;
+                    }
+                }
+            }
             const absTotal: number = pos + neg;
 
             return {
@@ -417,7 +542,7 @@ module powerbi.extensibility.visual.columnChart {
 
             if (seriesCount < 1
                 || categoryCount < 1
-                || categories[0] === null) {
+                || (categories[0] === null && categories[1] === undefined)) {
 
                 return {
                     series: columnSeries,
@@ -554,6 +679,7 @@ module powerbi.extensibility.visual.columnChart {
             }
 
             let dataPointObjects: IDataViewObjects[] = categoryObjectsList;
+            let multipliersAllData: ValueMultiplers = BaseColumnChart.getStackedMultiplierForAllDataSet(rawValues, seriesCount, categoryCount);
 
             for (let seriesIndex: number = 0; seriesIndex < seriesCount; seriesIndex++) {
                 let seriesDataPoints: MekkoChartColumnDataPoint[] = [],
@@ -643,8 +769,19 @@ module powerbi.extensibility.visual.columnChart {
                         }
                     }
 
-                    let valueAbsolute: number = Math.abs(value),
-                        position: number;
+                    let  valueByAllData = originalValue;
+                    if (multipliersAllData) {
+                        if (isNegative) {
+                            valueByAllData *= multipliersAllData.neg;
+                        } else {
+                            valueByAllData *= multipliersAllData.pos;
+                        }
+                    }
+
+                    let valueAbsolute: number = Math.abs(value);
+                    let position: number;
+
+                    let valueAbsoluteByAllData: number = Math.abs(valueByAllData);
 
                     if (isNegative) {
                         position = baseValuesNeg[categoryIndex];
@@ -678,11 +815,10 @@ module powerbi.extensibility.visual.columnChart {
                         .withMeasure(converterStrategy.getMeasureNameByIndex(seriesIndex))
                         .createSelectionId();
 
-                    let rawCategoryValue: any = categories[categoryIndex],
-                        color: string = BaseColumnChart.getDataPointColor(
+                    let color: string = BaseColumnChart.getDataPointColor(
                             legendItem,
-                            categoryIndex,
-                            dataPointObjects);
+                            categoryIndex
+                    );
 
                     const seriesData: tooltip.TooltipSeriesDataItem[] = [];
 
@@ -707,6 +843,7 @@ module powerbi.extensibility.visual.columnChart {
                         }
                     }
 
+                    let rawCategoryValue: any = categories[categoryIndex];
                     let tooltipInfo: VisualTooltipDataItem[] = tooltip.createTooltipInfo(
                         null,
                         rawCategoryValue,
@@ -757,6 +894,7 @@ module powerbi.extensibility.visual.columnChart {
                             selected: false,
                             originalValue: value,
                             originalValueAbsolute: valueAbsolute,
+                            originalValueAbsoluteByAlLData: valueAbsoluteByAllData,
                             key: identity.getKey(),
                             labelFill: labelColor,
                             labelFormatString: metadata.format,
@@ -842,12 +980,35 @@ module powerbi.extensibility.visual.columnChart {
                 columnSeries.push(series);
             }
 
-            return {
+            let result: MekkoDataPoints = {
                 series: columnSeries,
                 categoriesWidth: columnWidth,
                 hasHighlights: hasHighlights,
-                hasDynamicSeries: hasDynamicSeries,
+                hasDynamicSeries: hasDynamicSeries
             };
+
+            let categoryProperties: MekkoCategoryProperties[] = [];
+
+            result.series.forEach((series) => {
+                if (series.data.length !== 1) {
+                        return;
+                }
+                if (categoryProperties[series.data[0].categoryIndex] === undefined) {
+                    categoryProperties[series.data[0].categoryIndex] = {
+                        valueAbsolute: 0
+                    };
+                }
+                if (series.data[0] !== undefined && series.data[0].valueAbsolute > categoryProperties[series.data[0].categoryIndex].valueAbsolute) {
+                    categoryProperties[series.data[0].categoryIndex].valueAbsolute = series.data[0].valueAbsolute;
+                    categoryProperties[series.data[0].categoryIndex].color = series.data[0].color;
+                    categoryProperties[series.data[0].categoryIndex].name = series.data[0].categoryValue.toString();
+                    categoryProperties[series.data[0].categoryIndex].series = series;
+                    categoryProperties[series.data[0].categoryIndex].identity = series.identity;
+                }
+            });
+            result.categoryProperties = categoryProperties;
+
+            return result;
         }
 
         private static getDataPointColor(
@@ -934,6 +1095,18 @@ module powerbi.extensibility.visual.columnChart {
             return BaseColumnChart.getBorderWidth(this.data.borderSettings);
         }
 
+        public getSeriesSortSettings(): MekkoSeriesSortSettings {
+            return this.data.sortSeries;
+        }
+
+        public getLegendSortSettings(): MekkoLegendSortSettings {
+            return this.data.sortlegend;
+        }
+
+        public getXAxisLabelsSettings(): MekkoXAxisLabelsSettings {
+            return this.data.xAxisLabelsSettings;
+        }
+
         public setData(dataViews: DataView[]): void {
             this.data = {
                 categories: [],
@@ -946,11 +1119,16 @@ module powerbi.extensibility.visual.columnChart {
                 categoryMetadata: null,
                 scalarCategoryAxis: false,
                 borderSettings: null,
+                sortlegend: null,
+                sortSeries: null,
+                xAxisLabelsSettings: null,
                 labelSettings: dataLabelUtils.getDefaultColumnLabelSettings(true),
                 axesLabels: { x: null, y: null },
                 hasDynamicSeries: false,
                 defaultDataPointColor: null,
                 isMultiMeasure: false,
+                categoryProperties: null,
+                dataPointSettings: null
             };
 
             if (dataViews.length > 0) {
@@ -958,7 +1136,6 @@ module powerbi.extensibility.visual.columnChart {
 
                 if (dataView && dataView.categorical) {
                     this.dataViewCat = dataView.categorical;
-
                     this.data = BaseColumnChart.converter(
                         this.visualHost,
                         this.dataViewCat,
@@ -1013,7 +1190,52 @@ module powerbi.extensibility.visual.columnChart {
                     this.enumerateDataLabels(enumeration);
                     break;
                 }
+                case "xAxisLabels": {
+                    this.enumerateXAxisLabels(enumeration);
+                    break;
+                }
+                case "sortLegend": {
+                    this.enumerateSortLegend(enumeration);
+                    break;
+                }
+                case "sortSeries": {
+                    this.enumerateSortSeries(enumeration);
+                    break;
+                }
             }
+        }
+
+        private enumerateXAxisLabels(instances: VisualObjectInstance[]): void {
+            instances[0] = <VisualObjectInstance>{
+                objectName: "xAxisLabels",
+                properties: {}
+            };
+            instances[0].properties["enableRotataion"] = this.data.xAxisLabelsSettings.enableRotataion;
+        }
+
+        private enumerateSortLegend(instances: VisualObjectInstance[]): void {
+            instances[0] = <VisualObjectInstance>{
+                objectName: "sortLegend",
+                properties: {}
+            };
+            instances[0].properties["enabled"] = this.data.sortlegend.enabled;
+            instances[0].properties["direction"] = this.data.sortlegend.direction;
+            let allowedGroupByCategory = this.checkDataToFeatures();
+
+            if (allowedGroupByCategory) {
+                instances[0].properties["groupByCategory"] = this.data.sortlegend.groupByCategory;
+                instances[0].properties["groupByCategoryDirection"] = this.data.sortlegend.groupByCategoryDirection;
+            }
+        }
+
+        private enumerateSortSeries(instances: VisualObjectInstance[]): void {
+            instances[0] = <VisualObjectInstance>{
+                objectName: "sortSeries",
+                properties: {}
+            };
+            instances[0].properties["enabled"] = this.data.sortSeries.enabled;
+            instances[0].properties["direction"] = this.data.sortSeries.direction;
+            instances[0].properties["displayPercents"] = this.data.sortSeries.displayPercents;
         }
 
         private enumerateDataLabels(instances: VisualObjectInstance[]): void {
@@ -1025,6 +1247,8 @@ module powerbi.extensibility.visual.columnChart {
                 instances,
                 this.data.labelSettings,
                 false));
+
+            (<any>instances[0].properties).forceDisplay = (<MekkoChartLabelSettings>this.data.labelSettings).forceDisplay;
 
             if (seriesCount === 0) {
                 return;
@@ -1051,7 +1275,7 @@ module powerbi.extensibility.visual.columnChart {
             instances: VisualObjectInstance[],
             labelSettings: VisualDataLabelsSettings,
             isSeries: boolean,
-            series?: MekkoChartSeries): VisualDataLabelsSettingsOptions {
+            series?: MekkoChartSeries): MekkoChartLabelSettingsOptions {
 
             return {
                 instances: instances,
@@ -1059,10 +1283,22 @@ module powerbi.extensibility.visual.columnChart {
                 show: !isSeries,
                 displayUnits: true,
                 precision: true,
+                forceDisplay: true,
+                fontSize: false,
                 selector: series && series.identity
                     ? series.identity.getSelector()
                     : null
             };
+        }
+
+        public getData() {
+            return this.data;
+        }
+
+        private checkDataToFeatures(): boolean {
+            return !this.data.legendData.dataPoints.some( (value: MekkoLegendDataPoint) => {
+                return value.categoryValues.filter( value => value).length > 1;
+            });
         }
 
         private enumerateDataPoints(instances: VisualObjectInstance[]): void {
@@ -1078,16 +1314,62 @@ module powerbi.extensibility.visual.columnChart {
                 return;
             }
 
+            let allowedCategoryGradient = this.checkDataToFeatures();
+
+            if (allowedCategoryGradient) {
+                let properties: any = {};
+                properties["categoryGradient"] = this.data.dataPointSettings.categoryGradient;
+
+                instances.push({
+                    objectName: "dataPoint",
+                    selector: null,
+                    properties: properties
+                });
+            }
+
             if (data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata) {
-                for (let series of data.series) {
+                if (!this.data.dataPointSettings.categoryGradient) {
+                    for (let series of data.series) {
+                        instances.push({
+                            objectName: "dataPoint",
+                            displayName: series.displayName,
+                            selector: ColorHelper.normalizeSelector(series.identity.getSelector()),
+                            properties: {
+                                fill: { solid: { color: series.color } }
+                            },
+                        });
+                    }
+                }
+                else {
+                    this.data.categories.forEach( (category, index ) => {
+                    let categoryLegends: MekkoLegendDataPoint[] = this.data.legendData.dataPoints.filter( legend => legend.category === category);
+                    let maxValueDataPoint = _.maxBy(categoryLegends, "valueSum");
+                    if (maxValueDataPoint === undefined) {
+                        return;
+                    }
+                    let minValueDataPoint = _.minBy(categoryLegends, "valueSum");
+                    if (minValueDataPoint === undefined) {
+                        return;
+                    }
+
                     instances.push({
                         objectName: "dataPoint",
-                        displayName: series.displayName,
-                        selector: ColorHelper.normalizeSelector(series.identity.getSelector()),
+                        displayName: "Start color -" + category,
+                        selector: ColorHelper.normalizeSelector((maxValueDataPoint.identity as ISelectionId).getSelector(), true),
                         properties: {
-                            fill: { solid: { color: series.color } }
+                            fill: { solid: { color: maxValueDataPoint.color } }
                         },
                     });
+
+                    instances.push({
+                        objectName: "dataPoint",
+                        displayName: "End color -" + category,
+                        selector: ColorHelper.normalizeSelector((minValueDataPoint.identity as ISelectionId).getSelector(), true),
+                        properties: {
+                            fill: { solid: { color: minValueDataPoint.color } }
+                        },
+                    });
+                });
                 }
             }
             else {
@@ -1334,7 +1616,7 @@ module powerbi.extensibility.visual.columnChart {
                         measure,
                         valueFormatter.getFormatStringByColumn(valueMetadata)),
                     identity: emptyIdentity,
-                    selected: false,
+                    selected: false
                 });
             }
 
@@ -1423,7 +1705,6 @@ module powerbi.extensibility.visual.columnChart {
 
             data.series = BaseColumnChart.sliceSeries(data.series, endIndex, startIndex);
             data.categories = data.categories.slice(startIndex, endIndex);
-
             this.columnChart.setData(data);
 
             return data;

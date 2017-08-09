@@ -50,6 +50,7 @@ module powerbi.extensibility.visual {
     import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
     import LabelEnabledDataPoint = powerbi.extensibility.utils.chart.dataLabel.LabelEnabledDataPoint;
     import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
+    import ILegend = powerbi.extensibility.utils.chart.legend.ILegend;
 
     // powerbi.extensibility.utils.interactivity
     import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
@@ -59,6 +60,9 @@ module powerbi.extensibility.visual {
 
     // powerbi.extensibility.utils.formatting
     import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
+
+    import VisualDataLabelsSettingsOptions = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettingsOptions;
+    import DataLabelObject = powerbi.extensibility.utils.chart.dataLabel.DataLabelObject;
 
     export interface ValueMultiplers {
         pos: number;
@@ -158,6 +162,7 @@ module powerbi.extensibility.visual {
         originalValue: number;
         originalPosition: number;
         originalValueAbsolute: number;
+        originalValueAbsoluteByAlLData?: number;
         drawThinner?: boolean;
         key: string;
         lastSeries?: boolean;
@@ -172,6 +177,18 @@ module powerbi.extensibility.visual {
         identity: ISelectionId;
         color: string;
         labelSettings: VisualDataLabelsSettings;
+    }
+
+    export interface MekkoChartLabelSettingsOptions extends VisualDataLabelsSettingsOptions {
+        forceDisplay: boolean;
+    }
+
+    export interface MekkoChartLabelSettings extends VisualDataLabelsSettings {
+        forceDisplay: boolean;
+    }
+
+    export interface MekkoChartDataLabelObject extends DataLabelObject {
+        forceDisplay: boolean;
     }
 
     export interface MekkoChartData extends MekkoChartBaseData {
@@ -260,7 +277,12 @@ module powerbi.extensibility.visual {
 
     export interface MekkoColumnChartData extends MekkoChartData {
         borderSettings: MekkoBorderSettings;
+        sortSeries: MekkoSeriesSortSettings;
+        sortlegend: MekkoLegendSortSettings;
+        xAxisLabelsSettings: MekkoXAxisLabelsSettings;
         categoriesWidth: number[];
+        categoryProperties: MekkoCategoryProperties[];
+        dataPointSettings: MekkoDataPointSettings;
     }
 
     export interface MekkoBorderSettings {
@@ -268,6 +290,33 @@ module powerbi.extensibility.visual {
         color: string;
         width: number;
         maxWidth?: number;
+    }
+
+    export interface MekkoLegendSortSettings {
+        enabled: boolean;
+        groupByCategory: boolean;
+        direction: any;
+        groupByCategoryDirection: any;
+    }
+
+    export interface MekkoDataPointSettings {
+        categoryGradient: boolean;
+        colorGradientEndColor: any;
+        colorDistribution: boolean;
+    }
+
+    export interface MekkoSeriesSortSettings {
+        enabled: boolean;
+        direction: any;
+        displayPercents: any;
+    }
+
+    export interface MekkoXAxisLabelsSettings {
+        enableRotataion: boolean;
+    }
+
+    export interface MekkoCategoryColorSettings {
+        color: string;
     }
 
     export interface CreateAxisOptions extends CreateAxisOptionsBase {
@@ -309,15 +358,26 @@ module powerbi.extensibility.visual {
         y2LabelColor?: Fill;
     }
 
+    export interface MekkoCategoryProperties {
+        color?: string;
+        identity?: ISelectionId;
+        name?: string;
+        valueAbsolute?: any;
+        series?: MekkoChartSeries;
+    }
+
     export interface MekkoDataPoints {
         categoriesWidth: number[];
         series: MekkoChartSeries[];
         hasHighlights: boolean;
         hasDynamicSeries: boolean;
+        categoryProperties?: MekkoCategoryProperties[];
     }
 
     export interface MekkoLegendDataPoint extends LegendDataPoint {
         fontSize?: number;
+        valueSum?: number;
+        categoryValues?: PrimitiveValue[];
     }
 
     export interface MekkoCreateAxisOptions extends CreateAxisOptionsBase {
@@ -389,4 +449,36 @@ module powerbi.extensibility.visual {
         labelDataPoints: LabelDataPoint[];
     }
 
+    export interface BaseColorIdentity {
+        identity: DataViewScopeIdentity;
+        category: string;
+        color: string;
+        group: DataViewValueColumnGroup;
+    }
+
+    export interface ICategotyValuesStatsCollection {
+        [propName: number]: ICategotyValuesStats;
+    }
+
+    export interface ICategotyValuesStats {
+        category: PrimitiveValue;
+        maxValueOfCategory: number;
+        maxItemOfCategory: number;
+        minValueOfCategory: number;
+    }
+
+    export interface IFilteredValueGroups {
+        gr: DataViewValueColumnGroup;
+        categoryValue: PrimitiveValue;
+        categoryIndex: number;
+        category: PrimitiveValue;
+        identity: DataViewScopeIdentity;
+    }
+
+    export class ICategoryValuesCollection extends Array<MekkoChartColumnDataPoint> {
+        [index: number]: MekkoChartColumnDataPoint;
+        categoryValue?: PrimitiveValue;
+        identity?: powerbi.extensibility.ISelectionId;
+        color?: string;
+    }
 }
