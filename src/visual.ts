@@ -410,6 +410,37 @@ module powerbi.extensibility.visual {
                 true);
         }
 
+        private calculateXAxisAdditionalHeight(): number {
+            let categories: any[] = (<BaseColumnChart>this.layers[0]).getData().categories;
+            let sortedByLength: any[] = _.sortBy(categories, "length");
+            let longestCategory: any = sortedByLength[categories.length - 1];
+            let shortestCategory: any = sortedByLength[0];
+
+            if (longestCategory instanceof Date) {
+                let metadataColumn: DataViewMetadataColumn = (<BaseColumnChart>this.layers[0]).getData().valuesMetadata[0];
+                let formatString: string = valueFormatter.getFormatStringByColumn(metadataColumn);
+
+                let formatter = valueFormatter.create({
+                    format: formatString,
+                    value: shortestCategory,
+                    value2: longestCategory,
+                    columnType: <ValueTypeDescriptor>{
+                        dateTime: true
+                    }
+                });
+
+                longestCategory = formatter.format(longestCategory);
+            }
+
+            const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.categoryAxisProperties
+                && PixelConverter.fromPointToPixel(
+                    parseFloat(<any>this.categoryAxisProperties["fontSize"])) || undefined);
+
+            let longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory);
+            let requiredHeight = longestCategoryWidth * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180);
+            return requiredHeight;
+        }
+
         private renderAxesLabels(options: MekkoAxisRenderingOptions, xFontSize: number): void {
             this.axisGraphicsContext
                 .selectAll(MekkoChart.XAxisLabelSelector.selectorName)
@@ -430,10 +461,17 @@ module powerbi.extensibility.visual {
                 const xAxisYPosition: number = d3.transform(this.xAxisGraphicsContext.attr("transform")).translate[1]
                     - fontSize + xFontSize + MekkoChart.XAxisYPositionOffset;
 
+                const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
+
+                let shiftTitle: number = 0;
+                if (rotataionEnabled) {
+                    shiftTitle = this.calculateXAxisAdditionalHeight();
+                }
+
                 const xAxisLabel: Selection<any> = this.axisGraphicsContext.append("text")
                     .attr({
                         x: width / MekkoChart.WidthDelimiter,
-                        y: xAxisYPosition
+                        y: xAxisYPosition + shiftTitle
                     })
                     .style({
                         "fill": options.xLabelColor
@@ -1872,30 +1910,7 @@ module powerbi.extensibility.visual {
                 const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
 
                 if (rotataionEnabled) {
-                    let categories: any[] = (<BaseColumnChart>this.layers[0]).getData().categories;
-                    let sortedByLength: any[] = _.sortBy(categories, "length");
-                    let longestCategory: any = sortedByLength[categories.length - 1];
-                    let shortestCategory: any = sortedByLength[0];
-
-                    if (longestCategory instanceof Date) {
-                        let metadataColumn: DataViewMetadataColumn = (<BaseColumnChart>this.layers[0]).getData().valuesMetadata[0];
-                        let formatString: string = valueFormatter.getFormatStringByColumn(metadataColumn);
-
-                        let formatter = valueFormatter.create({
-                            format: formatString,
-                            value: shortestCategory,
-                            value2: longestCategory,
-                            columnType: <ValueTypeDescriptor>{
-                                dateTime: true
-                            }
-                        });
-
-                        longestCategory = formatter.format(longestCategory);
-                    }
-
-                    let longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory);
-                    let requiredHeight = longestCategoryWidth * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180);
-                    xMax += requiredHeight;
+                    xMax += this.calculateXAxisAdditionalHeight();
                 }
 
                 if (this.hideAxisLabels(this.legendMargins)) {
