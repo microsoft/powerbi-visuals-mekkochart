@@ -84,70 +84,75 @@ module powerbi.extensibility.visual.converterStrategy {
             let categoryGradientStartBaseColorIdentities: BaseColorIdentity[] = [];
             let categoryGradientEndBaseColorIdentities: BaseColorIdentity[] = [];
             let categoryItemsCount: Array<IFilteredValueGroups[]> = [];
-            this.dataView.categories[0].values.forEach( (category: PrimitiveValue, index: number) => {
-                // gradiend start color
-                let mappedItems: IFilteredValueGroups[] = valueGroups.map( group => {
-                    return <IFilteredValueGroups>{
-                        gr: group,
-                        categoryValue: group.values[0].values[index],
-                        categoryIndex: index,
-                        category: category,
-                        identity: group.identity
+
+            if (colorGradient) {
+                this.dataView.categories[0].values.forEach( (category: PrimitiveValue, index: number) => {
+                    // gradiend start color
+                    let mappedItems: IFilteredValueGroups[] = [];
+                    valueGroups.forEach( group => {
+                        if (group.values[0].values[index] !== null) {
+                            mappedItems.push(<IFilteredValueGroups>{
+                                gr: group,
+                                categoryValue: group.values[0].values[index],
+                                categoryIndex: index,
+                                category: category || "",
+                                identity: group.identity
+                            });
+                        }
+                    });
+                    categoryItemsCount[index] = mappedItems;
+
+                    if (colorGradient) {
+                        categoryItemsCount[index] = _.sortBy(categoryItemsCount[index], BaseConverterStrategy.SortField);
+                    }
+
+                    let baseStartColorIdentity: IFilteredValueGroups = _.maxBy(mappedItems, BaseConverterStrategy.SortField);
+                    if (baseStartColorIdentity === undefined) {
+                        return;
+                    }
+
+                    let colorStart: string = defaultLabelLegendColor;
+
+                    if (baseStartColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
+                        colorStart = (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid.color;
+                    }
+
+                    categoryGradientStartBaseColorIdentities[index] = {
+                        category: (baseStartColorIdentity.category || "").toString(),
+                        color: colorStart,
+                        identity: baseStartColorIdentity.gr.identity,
+                        group: baseStartColorIdentity.gr
                     };
-                }).filter(v => v.categoryValue !== null);
 
-                categoryItemsCount[index] = mappedItems;
+                    // gradiend end color
+                    let baseEndColorIdentity: IFilteredValueGroups = _.minBy(valueGroups.map( group => {
+                        return <IFilteredValueGroups>{
+                            gr: group,
+                            categoryValue: group.values[0].values[index],
+                            categoryIndex: index,
+                            category: category,
+                            identity: group.identity
+                        };
+                    }), BaseConverterStrategy.SortField);
 
-                if (colorGradient) {
-                    categoryItemsCount[index] = _.sortBy(categoryItemsCount[index], BaseConverterStrategy.SortField);
-                }
+                    if (baseEndColorIdentity === undefined) {
+                        return;
+                    }
 
-                let baseStartColorIdentity: IFilteredValueGroups = _.maxBy(mappedItems, BaseConverterStrategy.SortField);
-                if (baseStartColorIdentity === undefined) {
-                    return;
-                }
+                    let colorEnd: string = defaultLabelLegendColor;
 
-                let colorStart: string = defaultLabelLegendColor;
+                    if (baseEndColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
+                        colorEnd = (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid.color;
+                    }
 
-                if (baseStartColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
-                    colorStart = (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid.color;
-                }
-
-                categoryGradientStartBaseColorIdentities[index] = {
-                    category: baseStartColorIdentity.category.toString(),
-                    color: colorStart,
-                    identity: baseStartColorIdentity.gr.identity,
-                    group: baseStartColorIdentity.gr
-                };
-
-                // gradiend end color
-                let baseEndColorIdentity: IFilteredValueGroups = _.minBy(valueGroups.map( group => {
-                    return <IFilteredValueGroups>{
-                        gr: group,
-                        categoryValue: group.values[0].values[index],
-                        categoryIndex: index,
-                        category: category,
-                        identity: group.identity
+                    categoryGradientEndBaseColorIdentities[index] = {
+                        category: (baseEndColorIdentity.category || "").toString(),
+                        color: colorEnd,
+                        identity: baseEndColorIdentity.gr.identity,
+                        group: baseEndColorIdentity.gr
                     };
-                }), BaseConverterStrategy.SortField);
-
-                if (baseEndColorIdentity === undefined) {
-                    return;
-                }
-
-                let colorEnd: string = defaultLabelLegendColor;
-
-                if (baseEndColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
-                    colorEnd = (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid.color;
-                }
-
-                categoryGradientEndBaseColorIdentities[index] = {
-                    category: baseEndColorIdentity.category.toString(),
-                    color: colorEnd,
-                    identity: baseEndColorIdentity.gr.identity,
-                    group: baseEndColorIdentity.gr
-                };
-            });
+                });
+            }
 
             if (this.dataView && this.dataView.values) {
                 const allValues: DataViewValueColumns = this.dataView.values;
@@ -196,7 +201,7 @@ module powerbi.extensibility.visual.converterStrategy {
                             let categoryIndex: number = _.findIndex(series.values, value => value);
 
                             let positionIndex: number = _.findIndex(<IFilteredValueGroups[]>categoryItemsCount[categoryIndex], ser => ser.identity === series.identity );
-                            category = categoryMaxValues[categoryIndex].category.toString();
+                            category = (categoryMaxValues[categoryIndex].category || "").toString();
                             let gradientBaseColorStart: string = colorHelper.getColorForSeriesValue(categoryGradientStartBaseColorIdentities[categoryIndex].group.objects, category);
                             let gradientBaseColorEnd: string = colorHelper.getColorForSeriesValue(categoryGradientEndBaseColorIdentities[categoryIndex].group.objects, category);
 

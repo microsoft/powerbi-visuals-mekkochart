@@ -817,7 +817,8 @@ module powerbi.extensibility.visual.columnChart {
 
                     let color: string = BaseColumnChart.getDataPointColor(
                             legendItem,
-                            categoryIndex
+                            categoryIndex,
+                            dataPointObjects
                     );
 
                     const seriesData: tooltip.TooltipSeriesDataItem[] = [];
@@ -1001,7 +1002,7 @@ module powerbi.extensibility.visual.columnChart {
                 if (series.data[0] !== undefined && series.data[0].valueAbsolute > categoryProperties[series.data[0].categoryIndex].valueAbsolute) {
                     categoryProperties[series.data[0].categoryIndex].valueAbsolute = series.data[0].valueAbsolute;
                     categoryProperties[series.data[0].categoryIndex].color = series.data[0].color;
-                    categoryProperties[series.data[0].categoryIndex].name = series.data[0].categoryValue.toString();
+                    categoryProperties[series.data[0].categoryIndex].name = (series.data[0].categoryValue || "").toString();
                     categoryProperties[series.data[0].categoryIndex].series = series;
                     categoryProperties[series.data[0].categoryIndex].identity = series.identity;
                 }
