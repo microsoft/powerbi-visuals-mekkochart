@@ -1,3 +1,9 @@
+## 1.9.1
+
+* Fix x-axis title position, when axis labels rotated to 45 degrees
+* Fix color selection, when visual doesn't have series
+* Displaying category with null value
+
 ## 1.9.0
 
 * Add sorting of legend items by value
