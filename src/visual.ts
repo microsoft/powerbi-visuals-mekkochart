@@ -411,10 +411,10 @@ module powerbi.extensibility.visual {
         }
 
         private calculateXAxisAdditionalHeight(): number {
-            let categories: any[] = (<BaseColumnChart>this.layers[0]).getData().categories;
-            let sortedByLength: any[] = _.sortBy(categories, "length");
-            let longestCategory: any = sortedByLength[categories.length - 1];
-            let shortestCategory: any = sortedByLength[0];
+            let categories: PrimitiveValue[] = (<BaseColumnChart>this.layers[0]).getData().categories;
+            let sortedByLength: PrimitiveValue[] = _.sortBy(categories, "length");
+            let longestCategory: PrimitiveValue = sortedByLength[categories.length - 1] || "";
+            let shortestCategory: PrimitiveValue = sortedByLength[0] || "";
 
             if (longestCategory instanceof Date) {
                 let metadataColumn: DataViewMetadataColumn = (<BaseColumnChart>this.layers[0]).getData().valuesMetadata[0];
@@ -436,7 +436,7 @@ module powerbi.extensibility.visual {
                 && PixelConverter.fromPointToPixel(
                     parseFloat(<any>this.categoryAxisProperties["fontSize"])) || undefined);
 
-            let longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory);
+            let longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory.toString());
             let requiredHeight = longestCategoryWidth * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180);
             return requiredHeight;
         }

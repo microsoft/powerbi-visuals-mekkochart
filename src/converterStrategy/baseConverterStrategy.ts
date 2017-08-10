@@ -88,16 +88,18 @@ module powerbi.extensibility.visual.converterStrategy {
             if (colorGradient) {
                 this.dataView.categories[0].values.forEach( (category: PrimitiveValue, index: number) => {
                     // gradiend start color
-                    let mappedItems: IFilteredValueGroups[] = valueGroups.map( group => {
-                        return <IFilteredValueGroups>{
-                            gr: group,
-                            categoryValue: group.values[0].values[index],
-                            categoryIndex: index,
-                            category: category || "",
-                            identity: group.identity
-                        };
-                    }).filter(v => v.categoryValue !== null);
-
+                    let mappedItems: IFilteredValueGroups[] = [];
+                    valueGroups.forEach( group => {
+                        if (group.values[0].values[index] !== null) {
+                            mappedItems.push(<IFilteredValueGroups>{
+                                gr: group,
+                                categoryValue: group.values[0].values[index],
+                                categoryIndex: index,
+                                category: category || "",
+                                identity: group.identity
+                            });
+                        }
+                    });
                     categoryItemsCount[index] = mappedItems;
 
                     if (colorGradient) {
@@ -237,7 +239,6 @@ module powerbi.extensibility.visual.converterStrategy {
                 grouped: grouped,
             };
 
-            debugger;
             return {
                 seriesSources,
                 seriesObjects,
