@@ -817,7 +817,8 @@ module powerbi.extensibility.visual.columnChart {
 
                     let color: string = BaseColumnChart.getDataPointColor(
                             legendItem,
-                            categoryIndex
+                            categoryIndex,
+                            dataPointObjects
                     );
 
                     const seriesData: tooltip.TooltipSeriesDataItem[] = [];
