@@ -1,3 +1,8 @@
+
+## 1.9.2
+
+* Prevent creating visual SVG with negative sizes when no enough space for svg elements
+
 ## 1.9.1
 
 * Fix x-axis title position, when axis labels rotated to 45 degrees
