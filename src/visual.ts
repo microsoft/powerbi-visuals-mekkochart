@@ -411,13 +411,13 @@ module powerbi.extensibility.visual {
         }
 
         private calculateXAxisAdditionalHeight(): number {
-            let categories: PrimitiveValue[] = (<BaseColumnChart>this.layers[0]).getData().categories;
+            let categories: PrimitiveValue[] = this.dataViews[0].categorical.categories[0].values;
             let sortedByLength: PrimitiveValue[] = _.sortBy(categories, "length");
             let longestCategory: PrimitiveValue = sortedByLength[categories.length - 1] || "";
             let shortestCategory: PrimitiveValue = sortedByLength[0] || "";
 
             if (longestCategory instanceof Date) {
-                let metadataColumn: DataViewMetadataColumn = (<BaseColumnChart>this.layers[0]).getData().valuesMetadata[0];
+                let metadataColumn: DataViewMetadataColumn = this.dataViews[0].categorical.categories[0].source;
                 let formatString: string = valueFormatter.getFormatStringByColumn(metadataColumn);
 
                 let formatter = valueFormatter.create({
@@ -710,16 +710,30 @@ module powerbi.extensibility.visual {
             }
         }
 
+        public checkDataset(): boolean {
+            if (!this.dataViews ||
+                !this.dataViews[0] ||
+                !this.dataViews[0].categorical ||
+                !this.dataViews[0].categorical.categories ||
+                !this.dataViews[0].categorical.categories[0] ||
+                !this.dataViews[0].categorical.categories[0].values[0]
+            ) {
+                return false;
+            }
+
+            return true;
+        }
+
         public update(options: VisualUpdateOptions) {
             this.dataViews = options.dataViews;
             this.currentViewport = options.viewport;
-            if (!this.dataViews) {
+            if (!this.checkDataset()) {
                 this.clearViewport();
                 return;
             }
 
             if ((this.currentViewport.width < MekkoChart.MinWidth)
-                || (this.currentViewport.height < MekkoChart.MinHeight)) {
+                || (this.currentViewport.height < MekkoChart.MinHeight + this.calculateXAxisAdditionalHeight())) {
 
                 this.clearViewport();
 
