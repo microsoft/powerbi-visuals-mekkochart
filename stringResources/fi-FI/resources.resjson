@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Näytä",
+	"Visual_LabelsFill": "Väri",
+	"Visual_General_Properties_Width": "Leveys",
+	"Visual_DataPointsLabels": "Arvopisteiden otsikot",
+	"Visual_Force_Display": "Pakota näyttö",
+	"Visual_DisplayUnits": "Yksiköt",
+	"Visual_Decimal_Places": "Desimaalit",
+	"Visual_DataPoint_Show_All": "Näytä kaikki",
+	"Visual_Labels_Show_All": "Näytä kaikki",
+	"Visual_TextSize": "Tekstin koko",
+	"Visual_Legend": "Selite",
+	"Visual_Title": "Otsikko",
+	"Visual_FillPoint": "Täyttö",
+	"Visual_DefaultColor": "Oletusväri",
+	"Visual_DataPoint": "Tietojen värit",
+	"Visual_Series": "Sarja",
+	"Visual_Series_Category_Percentage": "Näytä prosentti luokan alueella",
+	"Visual_Series_All_Data_Percentage": "Näytä prosentti kaikkien tietojen alueella",
+	"Visual_Category": "Luokka",
+	"Visual_Y": "K",
+	"Visual_Width": "Leveys"
+}

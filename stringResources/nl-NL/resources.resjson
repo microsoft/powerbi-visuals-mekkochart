@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Weergeven",
+	"Visual_LabelsFill": "Kleur",
+	"Visual_General_Properties_Width": "Breedte",
+	"Visual_DataPointsLabels": "Gegevenslabels",
+	"Visual_Force_Display": "Weergave afdwingen",
+	"Visual_DisplayUnits": "Weergave-eenheden",
+	"Visual_Decimal_Places": "Aantal decimalen",
+	"Visual_DataPoint_Show_All": "Alles weergeven",
+	"Visual_Labels_Show_All": "Alles weergeven",
+	"Visual_TextSize": "Tekengrootte",
+	"Visual_Legend": "Legenda",
+	"Visual_Title": "Titel",
+	"Visual_FillPoint": "Opvullen",
+	"Visual_DefaultColor": "Standaardkleur",
+	"Visual_DataPoint": "Gegevenskleuren",
+	"Visual_Series": "Reeks",
+	"Visual_Series_Category_Percentage": "Percentage weergeven in bereik van alle categorieën",
+	"Visual_Series_All_Data_Percentage": "Percentage weergeven in bereik van alle gegevens",
+	"Visual_Category": "Categorie",
+	"Visual_Y": "Y",
+	"Visual_Width": "Breedte"
+}

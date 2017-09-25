@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "表示",
+	"Visual_LabelsFill": "色",
+	"Visual_General_Properties_Width": "幅",
+	"Visual_DataPointsLabels": "データ ラベル",
+	"Visual_Force_Display": "強制的に表示",
+	"Visual_DisplayUnits": "表示単位",
+	"Visual_Decimal_Places": "小数点以下表示桁数",
+	"Visual_DataPoint_Show_All": "すべて表示",
+	"Visual_Labels_Show_All": "すべて表示",
+	"Visual_TextSize": "テキスト サイズ",
+	"Visual_Legend": "凡例",
+	"Visual_Title": "タイトル",
+	"Visual_FillPoint": "塗りつぶし",
+	"Visual_DefaultColor": "既定色",
+	"Visual_DataPoint": "データの色",
+	"Visual_Series": "シリーズ",
+	"Visual_Series_Category_Percentage": "カテゴリ スコープに % を表示",
+	"Visual_Series_All_Data_Percentage": "すべてのデータ スコープに % を表示",
+	"Visual_Category": "カテゴリ",
+	"Visual_Y": "Y",
+	"Visual_Width": "幅"
+}

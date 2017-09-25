@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "표시",
+	"Visual_LabelsFill": "색",
+	"Visual_General_Properties_Width": "너비",
+	"Visual_DataPointsLabels": "데이터 레이블",
+	"Visual_Force_Display": "강제 표시",
+	"Visual_DisplayUnits": "표시 단위",
+	"Visual_Decimal_Places": "소수 자릿수",
+	"Visual_DataPoint_Show_All": "모두 표시",
+	"Visual_Labels_Show_All": "모두 표시",
+	"Visual_TextSize": "텍스트 크기",
+	"Visual_Legend": "범례",
+	"Visual_Title": "제목",
+	"Visual_FillPoint": "채우기",
+	"Visual_DefaultColor": "기본 색",
+	"Visual_DataPoint": "데이터 색",
+	"Visual_Series": "계열",
+	"Visual_Series_Category_Percentage": "범주 범위의 표시 비율(%)",
+	"Visual_Series_All_Data_Percentage": "전체 데이터 범위의 표시 비율(%)",
+	"Visual_Category": "범주",
+	"Visual_Y": "Y",
+	"Visual_Width": "너비"
+}

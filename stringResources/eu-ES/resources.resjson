@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Erakutsi",
+	"Visual_LabelsFill": "Kolorea",
+	"Visual_General_Properties_Width": "Zabalera",
+	"Visual_DataPointsLabels": "Datuen etiketak",
+	"Visual_Force_Display": "Behartu bistaratzera",
+	"Visual_DisplayUnits": "Bistaratze-unitateak",
+	"Visual_Decimal_Places": "Hamartarrak",
+	"Visual_DataPoint_Show_All": "Erakutsi guztiak",
+	"Visual_Labels_Show_All": "Erakutsi guztiak",
+	"Visual_TextSize": "Testu-tamaina",
+	"Visual_Legend": "Legenda",
+	"Visual_Title": "Titulua",
+	"Visual_FillPoint": "Bete",
+	"Visual_DefaultColor": "Kolore lehenetsia",
+	"Visual_DataPoint": "Datuen koloreak",
+	"Visual_Series": "Seriea",
+	"Visual_Series_Category_Percentage": "Bistaratu % kategorien esparruan",
+	"Visual_Series_All_Data_Percentage": "Bistaratu % datu-esparru guztietan",
+	"Visual_Category": "Kategoria",
+	"Visual_Y": "B",
+	"Visual_Width": "Zabalera"
+}

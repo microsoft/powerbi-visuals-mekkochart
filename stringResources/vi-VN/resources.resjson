@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Hiện",
+	"Visual_LabelsFill": "Màu",
+	"Visual_General_Properties_Width": "Độ rộng",
+	"Visual_DataPointsLabels": "Các nhãn dữ liệu",
+	"Visual_Force_Display": "Buộc hiển thị",
+	"Visual_DisplayUnits": "Hiển thị đơn vị",
+	"Visual_Decimal_Places": "Dấu thập phân",
+	"Visual_DataPoint_Show_All": "Hiển thị Tất cả",
+	"Visual_Labels_Show_All": "Hiển thị Tất cả",
+	"Visual_TextSize": "Kích thước Văn bản",
+	"Visual_Legend": "Chú giải",
+	"Visual_Title": "Tiêu đề",
+	"Visual_FillPoint": "Điền",
+	"Visual_DefaultColor": "Màu mặc định",
+	"Visual_DataPoint": "Màu dữ liệu",
+	"Visual_Series": "Chuỗi",
+	"Visual_Series_Category_Percentage": "Hiển thị % trong phạm vi danh mục",
+	"Visual_Series_All_Data_Percentage": "Hiển thị % trong tất cả phạm vi dữ liệu",
+	"Visual_Category": "Danh mục",
+	"Visual_Y": "C",
+	"Visual_Width": "Độ rộng"
+}

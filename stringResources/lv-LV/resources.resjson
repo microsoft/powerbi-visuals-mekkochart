@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Rādīt",
+	"Visual_LabelsFill": "Krāsa",
+	"Visual_General_Properties_Width": "Platums",
+	"Visual_DataPointsLabels": "Datu etiķetes",
+	"Visual_Force_Display": "Uzspiest rādīšanu",
+	"Visual_DisplayUnits": "Rādāmās vienības",
+	"Visual_Decimal_Places": "Decimāldaļas",
+	"Visual_DataPoint_Show_All": "Rādīt visus",
+	"Visual_Labels_Show_All": "Rādīt visus",
+	"Visual_TextSize": "Teksta lielums",
+	"Visual_Legend": "Apzīmējums",
+	"Visual_Title": "Nosaukums",
+	"Visual_FillPoint": "Aizpildīt",
+	"Visual_DefaultColor": "Noklusējuma krāsa",
+	"Visual_DataPoint": "Datu krāsas",
+	"Visual_Series": "Sērija",
+	"Visual_Series_Category_Percentage": "Rādīt procentuālās vērtības kategorijas tvērumā",
+	"Visual_Series_All_Data_Percentage": "Rādīt procentuālās vērtības visā datu tvērumā",
+	"Visual_Category": "Kategorija",
+	"Visual_Y": "J",
+	"Visual_Width": "Platums"
+}

@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Megjelenítés",
+	"Visual_LabelsFill": "Szín",
+	"Visual_General_Properties_Width": "Szélesség",
+	"Visual_DataPointsLabels": "Adatfeliratok",
+	"Visual_Force_Display": "Megjelenítés kényszerítése",
+	"Visual_DisplayUnits": "Megjelenítési egységek",
+	"Visual_Decimal_Places": "Tizedeshelyek",
+	"Visual_DataPoint_Show_All": "Az összes megjelenítése",
+	"Visual_Labels_Show_All": "Az összes megjelenítése",
+	"Visual_TextSize": "Szöveg mérete",
+	"Visual_Legend": "Jelmagyarázat",
+	"Visual_Title": "Cím",
+	"Visual_FillPoint": "Kitöltés",
+	"Visual_DefaultColor": "Alapértelmezett szín",
+	"Visual_DataPoint": "Adatszínek",
+	"Visual_Series": "Adatsorozat",
+	"Visual_Series_Category_Percentage": "% megjelenítése a kategória hatókörében",
+	"Visual_Series_All_Data_Percentage": "% megjelenítése az összes adat hatókörében",
+	"Visual_Category": "Kategória",
+	"Visual_Y": "Y",
+	"Visual_Width": "Szélesség"
+}

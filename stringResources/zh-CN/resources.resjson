@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "显示",
+	"Visual_LabelsFill": "颜色",
+	"Visual_General_Properties_Width": "宽度",
+	"Visual_DataPointsLabels": "数据标签",
+	"Visual_Force_Display": "强制显示",
+	"Visual_DisplayUnits": "显示单位",
+	"Visual_Decimal_Places": "小数位数",
+	"Visual_DataPoint_Show_All": "全部显示",
+	"Visual_Labels_Show_All": "全部显示",
+	"Visual_TextSize": "文本大小",
+	"Visual_Legend": "图例",
+	"Visual_Title": "标题",
+	"Visual_FillPoint": "填充",
+	"Visual_DefaultColor": "默认颜色",
+	"Visual_DataPoint": "数据颜色",
+	"Visual_Series": "系列",
+	"Visual_Series_Category_Percentage": "显示类别范围内的 %",
+	"Visual_Series_All_Data_Percentage": "显示所有数据范围内的 %",
+	"Visual_Category": "类别",
+	"Visual_Y": "Y",
+	"Visual_Width": "宽度"
+}

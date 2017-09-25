@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Pokaži",
+	"Visual_LabelsFill": "Barva",
+	"Visual_General_Properties_Width": "Širina",
+	"Visual_DataPointsLabels": "Oznake podatkov",
+	"Visual_Force_Display": "Vsili prikaz",
+	"Visual_DisplayUnits": "Enote prikaza",
+	"Visual_Decimal_Places": "Decimalna mesta",
+	"Visual_DataPoint_Show_All": "Pokaži vse",
+	"Visual_Labels_Show_All": "Pokaži vse",
+	"Visual_TextSize": "Velikost besedila",
+	"Visual_Legend": "Legenda",
+	"Visual_Title": "Naslov",
+	"Visual_FillPoint": "Zapolni",
+	"Visual_DefaultColor": "Privzeta barva",
+	"Visual_DataPoint": "Barve podatkov",
+	"Visual_Series": "Niz",
+	"Visual_Series_Category_Percentage": "Prikaži % v obsegu kategorije",
+	"Visual_Series_All_Data_Percentage": "Prikaži % v vseh obsegih podatkov",
+	"Visual_Category": "Kategorija",
+	"Visual_Y": "D",
+	"Visual_Width": "Širina"
+}

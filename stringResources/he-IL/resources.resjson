@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "‏‏הצג",
+	"Visual_LabelsFill": "צבע",
+	"Visual_General_Properties_Width": "רוחב",
+	"Visual_DataPointsLabels": "תוויות נתונים",
+	"Visual_Force_Display": "הכרח תצוגה",
+	"Visual_DisplayUnits": "יחידות תצוגה",
+	"Visual_Decimal_Places": "‏‏מקומות עשרוניים",
+	"Visual_DataPoint_Show_All": "הצג הכל",
+	"Visual_Labels_Show_All": "הצג הכל",
+	"Visual_TextSize": "גודל טקסט",
+	"Visual_Legend": "מקרא",
+	"Visual_Title": "כותרת",
+	"Visual_FillPoint": "מילוי",
+	"Visual_DefaultColor": "צבע ברירת מחדל",
+	"Visual_DataPoint": "צבעי נתונים",
+	"Visual_Series": "סידרה",
+	"Visual_Series_Category_Percentage": "הצגת אחוזים בטווח הקטגוריות",
+	"Visual_Series_All_Data_Percentage": "הצגת אחוזים בכל טווח הנתונים",
+	"Visual_Category": "קטגוריה",
+	"Visual_Y": "כן",
+	"Visual_Width": "רוחב"
+}

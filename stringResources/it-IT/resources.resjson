@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Mostra",
+	"Visual_LabelsFill": "Colore",
+	"Visual_General_Properties_Width": "Larghezza",
+	"Visual_DataPointsLabels": "Etichette dati",
+	"Visual_Force_Display": "Forza la visualizzazione",
+	"Visual_DisplayUnits": "Unità visualizzate",
+	"Visual_Decimal_Places": "Posizioni decimali",
+	"Visual_DataPoint_Show_All": "Mostra tutto",
+	"Visual_Labels_Show_All": "Mostra tutto",
+	"Visual_TextSize": "Dimensioni testo",
+	"Visual_Legend": "Legenda",
+	"Visual_Title": "Titolo",
+	"Visual_FillPoint": "Riempimento",
+	"Visual_DefaultColor": "Colore predefinito",
+	"Visual_DataPoint": "Colori dati",
+	"Visual_Series": "Serie",
+	"Visual_Series_Category_Percentage": "Visualizza % nell'ambito categoria",
+	"Visual_Series_All_Data_Percentage": "Visualizza % in tutto l'ambito di dati",
+	"Visual_Category": "Categoria",
+	"Visual_Y": "Y",
+	"Visual_Width": "Larghezza"
+}

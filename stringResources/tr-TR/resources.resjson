@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Göster",
+	"Visual_LabelsFill": "Renk",
+	"Visual_General_Properties_Width": "Genişlik",
+	"Visual_DataPointsLabels": "Veri etiketleri",
+	"Visual_Force_Display": "Görüntülemeye zorla",
+	"Visual_DisplayUnits": "Birimleri görüntüle",
+	"Visual_Decimal_Places": "Ondalık basamaklar",
+	"Visual_DataPoint_Show_All": "Tümünü Göster",
+	"Visual_Labels_Show_All": "Tümünü Göster",
+	"Visual_TextSize": "Metin Boyutu",
+	"Visual_Legend": "Açıklama",
+	"Visual_Title": "Başlık",
+	"Visual_FillPoint": "Doldur",
+	"Visual_DefaultColor": "Varsayılan renk",
+	"Visual_DataPoint": "Veri Renkleri",
+	"Visual_Series": "Seri",
+	"Visual_Series_Category_Percentage": "Kategori kapsamında % görüntüle",
+	"Visual_Series_All_Data_Percentage": "Tüm veri kapsamında % görüntüle",
+	"Visual_Category": "Kategori",
+	"Visual_Y": "Y",
+	"Visual_Width": "Genişlik"
+}

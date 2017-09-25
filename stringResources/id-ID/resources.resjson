@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Tampilkan",
+	"Visual_LabelsFill": "Warna",
+	"Visual_General_Properties_Width": "Lebar",
+	"Visual_DataPointsLabels": "Label data",
+	"Visual_Force_Display": "Tampilan penjualan",
+	"Visual_DisplayUnits": "Unit tampilan",
+	"Visual_Decimal_Places": "Tempat desimal",
+	"Visual_DataPoint_Show_All": "Tampilkan Semua",
+	"Visual_Labels_Show_All": "Tampilkan Semua",
+	"Visual_TextSize": "Ukuran Teks",
+	"Visual_Legend": "Legenda",
+	"Visual_Title": "Judul",
+	"Visual_FillPoint": "Isi",
+	"Visual_DefaultColor": "Warna default",
+	"Visual_DataPoint": "Warna Data",
+	"Visual_Series": "Seri",
+	"Visual_Series_Category_Percentage": "Tampilkan % dalam lingkup kategori",
+	"Visual_Series_All_Data_Percentage": "Tampilkan % dalam semua lingkup data",
+	"Visual_Category": "Kategori",
+	"Visual_Y": "Y",
+	"Visual_Width": "Lebar"
+}

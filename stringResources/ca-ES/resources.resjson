@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Mostra",
+	"Visual_LabelsFill": "Color",
+	"Visual_General_Properties_Width": "Amplària",
+	"Visual_DataPointsLabels": "Etiquetes de dades",
+	"Visual_Force_Display": "Força la visualització",
+	"Visual_DisplayUnits": "Unitats de visualització",
+	"Visual_Decimal_Places": "Posicions decimals",
+	"Visual_DataPoint_Show_All": "Mostra'ls tots",
+	"Visual_Labels_Show_All": "Mostra'ls tots",
+	"Visual_TextSize": "Mida del text",
+	"Visual_Legend": "Llegenda",
+	"Visual_Title": "Títol",
+	"Visual_FillPoint": "Emplena",
+	"Visual_DefaultColor": "Color per defecte",
+	"Visual_DataPoint": "Colors de les dades",
+	"Visual_Series": "Sèrie",
+	"Visual_Series_Category_Percentage": "Mostra el percentatge en l'àmbit de categoria",
+	"Visual_Series_All_Data_Percentage": "Mostra el percentatge en tots els àmbits de dades",
+	"Visual_Category": "Categoria",
+	"Visual_Y": "S",
+	"Visual_Width": "Amplada"
+}

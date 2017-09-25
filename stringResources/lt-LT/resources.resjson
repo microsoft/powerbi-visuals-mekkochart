@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Rodyti",
+	"Visual_LabelsFill": "Spalva",
+	"Visual_General_Properties_Width": "Plotis",
+	"Visual_DataPointsLabels": "Duomenų žymos",
+	"Visual_Force_Display": "Priverstinis rodymas",
+	"Visual_DisplayUnits": "Rodomi vienetai",
+	"Visual_Decimal_Places": "Skaitmenys po kablelio",
+	"Visual_DataPoint_Show_All": "Rodyti viską",
+	"Visual_Labels_Show_All": "Rodyti viską",
+	"Visual_TextSize": "Teksto dydis",
+	"Visual_Legend": "Legenda",
+	"Visual_Title": "Pavadinimas",
+	"Visual_FillPoint": "Užpildyti",
+	"Visual_DefaultColor": "Numatytoji spalva",
+	"Visual_DataPoint": "Duomenų spalvos",
+	"Visual_Series": "Seka",
+	"Visual_Series_Category_Percentage": "Rodyti % kategorijų aprėptyje",
+	"Visual_Series_All_Data_Percentage": "Rodyti % visoje duomenų aprėptyje",
+	"Visual_Category": "Kategorija",
+	"Visual_Y": "T",
+	"Visual_Width": "Plotis"
+}

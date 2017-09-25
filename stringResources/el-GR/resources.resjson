@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Εμφάνιση",
+	"Visual_LabelsFill": "Χρώμα",
+	"Visual_General_Properties_Width": "Πλάτος",
+	"Visual_DataPointsLabels": "Ετικέτες δεδομένων",
+	"Visual_Force_Display": "Επιβολή εμφάνισης",
+	"Visual_DisplayUnits": "Εμφάνιση μονάδων",
+	"Visual_Decimal_Places": "Δεκαδικά ψηφία",
+	"Visual_DataPoint_Show_All": "Εμφάνιση όλων",
+	"Visual_Labels_Show_All": "Εμφάνιση όλων",
+	"Visual_TextSize": "Μέγεθος κειμένου",
+	"Visual_Legend": "Υπόμνημα",
+	"Visual_Title": "Τίτλος",
+	"Visual_FillPoint": "Γέμισμα",
+	"Visual_DefaultColor": "Προεπιλεγμένο χρώμα",
+	"Visual_DataPoint": "Χρώματα δεδομένων",
+	"Visual_Series": "Σειρά",
+	"Visual_Series_Category_Percentage": "Ποσοστό εμφάνισης σε εμβέλεια κατηγορίας",
+	"Visual_Series_All_Data_Percentage": "Ποσοστό εμφάνισης σε εμβέλεια όλων των δεδομένων",
+	"Visual_Category": "Κατηγορία",
+	"Visual_Y": "Ν",
+	"Visual_Width": "Πλάτος"
+}

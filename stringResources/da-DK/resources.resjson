@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Vis",
+	"Visual_LabelsFill": "Farve",
+	"Visual_General_Properties_Width": "Bredde",
+	"Visual_DataPointsLabels": "Datanavne",
+	"Visual_Force_Display": "Gennemtving visning",
+	"Visual_DisplayUnits": "Vis enheder",
+	"Visual_Decimal_Places": "Decimalpladser",
+	"Visual_DataPoint_Show_All": "Vis alle",
+	"Visual_Labels_Show_All": "Vis alle",
+	"Visual_TextSize": "Tekststørrelse",
+	"Visual_Legend": "Forklaring",
+	"Visual_Title": "Titel",
+	"Visual_FillPoint": "Udfyldning",
+	"Visual_DefaultColor": "Standardfarve",
+	"Visual_DataPoint": "Datafarver",
+	"Visual_Series": "Serie",
+	"Visual_Series_Category_Percentage": "Vis % i kategoriområdet",
+	"Visual_Series_All_Data_Percentage": "Vis % i hele dataområdet",
+	"Visual_Category": "Kategori",
+	"Visual_Y": "J",
+	"Visual_Width": "Bredde"
+}

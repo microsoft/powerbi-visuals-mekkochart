@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Прикажи",
+	"Visual_LabelsFill": "Боја",
+	"Visual_General_Properties_Width": "Ширина",
+	"Visual_DataPointsLabels": "Ознаке података",
+	"Visual_Force_Display": "Наметање приказа",
+	"Visual_DisplayUnits": "Мерне јединице",
+	"Visual_Decimal_Places": "Децимална места",
+	"Visual_DataPoint_Show_All": "Прикажи све",
+	"Visual_Labels_Show_All": "Прикажи све",
+	"Visual_TextSize": "Величина текста",
+	"Visual_Legend": "Легенда",
+	"Visual_Title": "Наслов",
+	"Visual_FillPoint": "Попуни",
+	"Visual_DefaultColor": "Подразумевана боја",
+	"Visual_DataPoint": "Боје података",
+	"Visual_Series": "Група",
+	"Visual_Series_Category_Percentage": "Прикажи % у опсегу категорије",
+	"Visual_Series_All_Data_Percentage": "Прикажи % у опсегу свих података",
+	"Visual_Category": "Категорија",
+	"Visual_Y": "Д",
+	"Visual_Width": "Ширина"
+}

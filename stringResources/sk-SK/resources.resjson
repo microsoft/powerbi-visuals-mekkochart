@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Zobraziť",
+	"Visual_LabelsFill": "Farba",
+	"Visual_General_Properties_Width": "Šírka",
+	"Visual_DataPointsLabels": "Označenia údajov",
+	"Visual_Force_Display": "Vynútiť zobrazenie",
+	"Visual_DisplayUnits": "Zobrazované jednotky",
+	"Visual_Decimal_Places": "Desatinné miesta",
+	"Visual_DataPoint_Show_All": "Zobraziť všetky",
+	"Visual_Labels_Show_All": "Zobraziť všetky",
+	"Visual_TextSize": "Veľkosť textu",
+	"Visual_Legend": "Legenda",
+	"Visual_Title": "Názov",
+	"Visual_FillPoint": "Vyplniť",
+	"Visual_DefaultColor": "Predvolená farba",
+	"Visual_DataPoint": "Farby údajov",
+	"Visual_Series": "Rad",
+	"Visual_Series_Category_Percentage": "Zobraziť % v rozsahu kategórie",
+	"Visual_Series_All_Data_Percentage": "Zobraziť % v rozsahu všetkých údajov",
+	"Visual_Category": "Kategória",
+	"Visual_Y": "A",
+	"Visual_Width": "Šírka"
+}

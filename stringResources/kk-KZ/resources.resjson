@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Көрсету",
+	"Visual_LabelsFill": "Түс",
+	"Visual_General_Properties_Width": "Ені",
+	"Visual_DataPointsLabels": "Деректер белгілері",
+	"Visual_Force_Display": "Мәжбүрлі түрде көрсету",
+	"Visual_DisplayUnits": "Бірліктерді көрсету",
+	"Visual_Decimal_Places": "Ондық таңбалар саны",
+	"Visual_DataPoint_Show_All": "Барлығын көрсету",
+	"Visual_Labels_Show_All": "Барлығын көрсету",
+	"Visual_TextSize": "Мәтін өлшемі",
+	"Visual_Legend": "Мәндік белгілер",
+	"Visual_Title": "Тақырып",
+	"Visual_FillPoint": "Толтыру",
+	"Visual_DefaultColor": "Әдепкі түс",
+	"Visual_DataPoint": "Деректер түстері",
+	"Visual_Series": "Бірізді",
+	"Visual_Series_Category_Percentage": "% санат аумағында көрсету",
+	"Visual_Series_All_Data_Percentage": "% барлық деректер аумағында көрсету",
+	"Visual_Category": "Санат",
+	"Visual_Y": "И",
+	"Visual_Width": "Ені"
+}

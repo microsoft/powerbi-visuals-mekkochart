@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Показване",
+	"Visual_LabelsFill": "Цвят",
+	"Visual_General_Properties_Width": "Широчина",
+	"Visual_DataPointsLabels": "Етикети на данни",
+	"Visual_Force_Display": "Принудително показване",
+	"Visual_DisplayUnits": "Показване на единици",
+	"Visual_Decimal_Places": "Знаци след десетичната запетая",
+	"Visual_DataPoint_Show_All": "Показване на всички",
+	"Visual_Labels_Show_All": "Показване на всички",
+	"Visual_TextSize": "Размер на текста",
+	"Visual_Legend": "Легенда",
+	"Visual_Title": "Заглавие",
+	"Visual_FillPoint": "Запълване",
+	"Visual_DefaultColor": "Цвят по подразбиране",
+	"Visual_DataPoint": "Цветове на данните",
+	"Visual_Series": "Серия",
+	"Visual_Series_Category_Percentage": "Показване на % в обхват на категория",
+	"Visual_Series_All_Data_Percentage": "Показване на % в целия обхват от данни",
+	"Visual_Category": "Категория",
+	"Visual_Y": "Д",
+	"Visual_Width": "Широчина"
+}

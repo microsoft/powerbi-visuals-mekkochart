@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Відображення",
+	"Visual_LabelsFill": "Колір",
+	"Visual_General_Properties_Width": "Ширина",
+	"Visual_DataPointsLabels": "Мітки даних",
+	"Visual_Force_Display": "Відображати примусово",
+	"Visual_DisplayUnits": "Одиниці вимірювання",
+	"Visual_Decimal_Places": "Кількість знаків після десяткової коми",
+	"Visual_DataPoint_Show_All": "Показати все",
+	"Visual_Labels_Show_All": "Показати все",
+	"Visual_TextSize": "Розмір тексту",
+	"Visual_Legend": "Легенда",
+	"Visual_Title": "Назва",
+	"Visual_FillPoint": "Заповнити",
+	"Visual_DefaultColor": "Колір за замовчуванням",
+	"Visual_DataPoint": "Кольори даних",
+	"Visual_Series": "Ряд",
+	"Visual_Series_Category_Percentage": "Відображати % відносно категорії",
+	"Visual_Series_All_Data_Percentage": "Відображати % відносно всіх даних",
+	"Visual_Category": "Категорія",
+	"Visual_Y": "Т",
+	"Visual_Width": "Ширина"
+}

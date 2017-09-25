@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "顯示",
+	"Visual_LabelsFill": "色彩",
+	"Visual_General_Properties_Width": "寬度",
+	"Visual_DataPointsLabels": "資料標籤",
+	"Visual_Force_Display": "強制顯示",
+	"Visual_DisplayUnits": "顯示單位",
+	"Visual_Decimal_Places": "小數位數",
+	"Visual_DataPoint_Show_All": "全部顯示",
+	"Visual_Labels_Show_All": "全部顯示",
+	"Visual_TextSize": "文字大小",
+	"Visual_Legend": "圖例",
+	"Visual_Title": "標題",
+	"Visual_FillPoint": "填滿",
+	"Visual_DefaultColor": "預設色彩",
+	"Visual_DataPoint": "資料色彩",
+	"Visual_Series": "系列",
+	"Visual_Series_Category_Percentage": "顯示類別範圍中的百分比",
+	"Visual_Series_All_Data_Percentage": "顯示所有資料範圍中的百分比",
+	"Visual_Category": "類別",
+	"Visual_Y": "Y",
+	"Visual_Width": "寬度"
+}

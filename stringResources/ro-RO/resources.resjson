@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Afişare",
+	"Visual_LabelsFill": "Culoare",
+	"Visual_General_Properties_Width": "Lățime",
+	"Visual_DataPointsLabels": "Etichete de date",
+	"Visual_Force_Display": "Impunere afișare",
+	"Visual_DisplayUnits": "Afișare unități",
+	"Visual_Decimal_Places": "Zecimale",
+	"Visual_DataPoint_Show_All": "Afişare totală",
+	"Visual_Labels_Show_All": "Afişare totală",
+	"Visual_TextSize": "Dimensiune text",
+	"Visual_Legend": "Legendă",
+	"Visual_Title": "Titlu",
+	"Visual_FillPoint": "Completare",
+	"Visual_DefaultColor": "Culoare implicită",
+	"Visual_DataPoint": "Culori date",
+	"Visual_Series": "Serie",
+	"Visual_Series_Category_Percentage": "Afișați % în domeniul categoriei",
+	"Visual_Series_All_Data_Percentage": "Afișați % în toate domeniile de date",
+	"Visual_Category": "Categorie",
+	"Visual_Y": "D",
+	"Visual_Width": "Lățime"
+}

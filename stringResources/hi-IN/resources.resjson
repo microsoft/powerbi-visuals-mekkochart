@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "दिखाएँ",
+	"Visual_LabelsFill": "रंग",
+	"Visual_General_Properties_Width": "चौड़ाई",
+	"Visual_DataPointsLabels": "डेटा लेबल",
+	"Visual_Force_Display": "बाध्य प्रदर्शन",
+	"Visual_DisplayUnits": "प्रदर्शन इकाइयाँ",
+	"Visual_Decimal_Places": "दशमलव स्थान",
+	"Visual_DataPoint_Show_All": "सभी दिखाएँ",
+	"Visual_Labels_Show_All": "सभी दिखाएँ",
+	"Visual_TextSize": "पाठ आकार",
+	"Visual_Legend": "लेजेंड",
+	"Visual_Title": "शीर्षक",
+	"Visual_FillPoint": "भरें",
+	"Visual_DefaultColor": "डिफ़ॉल्‍ट रंग",
+	"Visual_DataPoint": "डेटा रंग",
+	"Visual_Series": "श्रृंखला",
+	"Visual_Series_Category_Percentage": "श्रेणी स्कोप में % प्रदर्शित करें",
+	"Visual_Series_All_Data_Percentage": "सभी डेटा स्कोप में % प्रदर्शित करें",
+	"Visual_Category": "श्रेणी",
+	"Visual_Y": "Y",
+	"Visual_Width": "चौड़ाई"
+}

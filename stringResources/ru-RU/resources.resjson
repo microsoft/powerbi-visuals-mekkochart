@@ -1,0 +1,23 @@
+{
+	"Visual_Show": "Показать",
+	"Visual_LabelsFill": "Цвет",
+	"Visual_General_Properties_Width": "Ширина",
+	"Visual_DataPointsLabels": "Метки данных",
+	"Visual_Force_Display": "Принудительное отображение",
+	"Visual_DisplayUnits": "Показывать единицы",
+	"Visual_Decimal_Places": "Десятичные разряды",
+	"Visual_DataPoint_Show_All": "Показать все",
+	"Visual_Labels_Show_All": "Показать все",
+	"Visual_TextSize": "Размер текста",
+	"Visual_Legend": "Условные обозначения",
+	"Visual_Title": "Заголовок",
+	"Visual_FillPoint": "Заливка",
+	"Visual_DefaultColor": "Цвет по умолчанию",
+	"Visual_DataPoint": "Цвета данных",
+	"Visual_Series": "Ряды",
+	"Visual_Series_Category_Percentage": "% отображения в области категорий",
+	"Visual_Series_All_Data_Percentage": "% отображения во всей области данных",
+	"Visual_Category": "Категория",
+	"Visual_Y": "Y",
+	"Visual_Width": "Ширина"
+}
