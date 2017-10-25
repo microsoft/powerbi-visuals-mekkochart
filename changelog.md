@@ -1,3 +1,6 @@
+## 1.9.3
+
+* Displaying the legend with specific dataset breaks the visual - fixed
 
 ## 1.9.2
 

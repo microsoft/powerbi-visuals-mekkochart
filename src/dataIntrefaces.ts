@@ -75,6 +75,13 @@ module powerbi.extensibility.visual {
         seriesObjects: IDataViewObjects[][];
     }
 
+    export interface IGrouppedLegendData {
+        category: string;
+        index: number;
+        data: Array<any>;
+        dataValues: number;
+    }
+
     export interface IMekkoChartVisualHost {
         updateLegend(data: ILegendData): void;
         getSharedColors(): IColorPalette;

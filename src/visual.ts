@@ -1477,7 +1477,7 @@ module powerbi.extensibility.visual {
                 legendData.dataPoints = [];
             }
 
-            let reducedLegends = [];
+            let reducedLegends: Array<IGrouppedLegendData> = [];
             let legendSortSettings: MekkoLegendSortSettings = (<BaseColumnChart>this.layers[0]).getLegendSortSettings();
             if (legendSortSettings.enabled) {
                 if (legendSortSettings.groupByCategory) {
@@ -1539,7 +1539,7 @@ module powerbi.extensibility.visual {
 
             let legendParents = d3.select(this.rootElement.node()).selectAll("div.legendParent");
 
-            let legendParentsWithData = legendParents.data(reducedLegends);
+            let legendParentsWithData = legendParents.data(reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined));
             let legendParentsWithChilds = legendParentsWithData.enter().append("div");
             let legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style({
