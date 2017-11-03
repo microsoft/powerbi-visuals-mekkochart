@@ -184,6 +184,9 @@ module powerbi.extensibility.visual {
         private static ShowAxisTitlePropertyName: string = "showAxisTitle";
         private static SecondShowAxisTitlePropertyName: string = "secShowAxisTitle";
 
+        private static SortDireacionDescending: string = "des";
+        private static SortDireacionAscending: string = "asc";
+
         private static CategoryTextRotataionDegree: number = 45.0;
 
         private static getTextProperties(fontSize: number = MekkoChart.FontSize): TextProperties {
@@ -242,12 +245,12 @@ module powerbi.extensibility.visual {
             sortLegend: {
                 enabled: false,
                 groupByCategory: false,
-                direction: "asc",
-                groupByCategoryDirection: "asc"
+                direction: SortDirection.Ascending,
+                groupByCategoryDirection: SortDirection.Ascending
             },
             sortSeries: {
                 enabled: false,
-                direction: "asc",
+                direction: SortDirection.Ascending,
                 displayPercents: "category"
             },
             xAxisLabels: {
@@ -1507,16 +1510,16 @@ module powerbi.extensibility.visual {
 
                     reducedLegends = _.sortBy(reducedLegends, "dataValues");
 
-                    if (legendSortSettings.direction === "des")
+                    if (legendSortSettings.direction === MekkoChart.SortDireacionDescending) {
                         reducedLegends = reducedLegends.reverse();
+                    }
 
                     reducedLegends.forEach(legend => {
                         if (legend === undefined) {
                             return;
                         }
-
                         legend.data = _.sortBy( legend.data, "valueSum");
-                        if (legendSortSettings.groupByCategoryDirection === "des") {
+                        if (legendSortSettings.groupByCategoryDirection === MekkoChart.SortDireacionDescending) {
                             legend.data = legend.data.reverse();
                         }
                     });
@@ -1531,7 +1534,7 @@ module powerbi.extensibility.visual {
                 }
                 else {
                     legendData.dataPoints = _.sortBy(legendData.dataPoints, "valueSum");
-                    if (legendSortSettings.direction === "des") {
+                    if (legendSortSettings.direction === MekkoChart.SortDireacionDescending) {
                         legendData.dataPoints = legendData.dataPoints.reverse();
                     }
                 }
@@ -1557,13 +1560,17 @@ module powerbi.extensibility.visual {
                         mekko.interactivityService,
                         true);
 
-                    mekko.categoryLegends[index] = legend;
+                    mekko.categoryLegends[index] = <ILegend>legend;
                 }
             });
 
             legendParentsWithData.exit().remove();
             let svgHeight: number = 26;
             if (reducedLegends.length > 0) {
+                this.categoryLegends.forEach((legend, index) => {
+                    (<ILegendGroup>legend).position = +d3.select((<ILegendGroup>legend).element).style("top").replace("px", "");
+                } );
+                this.categoryLegends = _.sortBy( this.categoryLegends, "position").reverse();
                 this.categoryLegends.forEach( (legend, index) => {
                     if (reducedLegends[index] === undefined) {
                         LegendData.update({
@@ -1576,6 +1583,7 @@ module powerbi.extensibility.visual {
 
                         return;
                     }
+
                     let legendData: ILegendData = {
                         title: reducedLegends[index].category,
                         dataPoints: reducedLegends[index].data

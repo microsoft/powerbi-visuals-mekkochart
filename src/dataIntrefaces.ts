@@ -82,6 +82,11 @@ module powerbi.extensibility.visual {
         dataValues: number;
     }
 
+    export interface ILegendGroup extends ILegend {
+        element: HTMLElement;
+        position: number;
+    }
+
     export interface IMekkoChartVisualHost {
         updateLegend(data: ILegendData): void;
         getSharedColors(): IColorPalette;
