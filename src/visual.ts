@@ -184,8 +184,8 @@ module powerbi.extensibility.visual {
         private static ShowAxisTitlePropertyName: string = "showAxisTitle";
         private static SecondShowAxisTitlePropertyName: string = "secShowAxisTitle";
 
-        private static SortDireacionDescending: string = "des";
-        private static SortDireacionAscending: string = "asc";
+        private static SortDirectionDescending: string = "des";
+        private static SortDirectionAscending: string = "asc";
 
         private static CategoryTextRotataionDegree: number = 45.0;
 
@@ -1480,7 +1480,7 @@ module powerbi.extensibility.visual {
                 legendData.dataPoints = [];
             }
 
-            let reducedLegends: Array<IGrouppedLegendData> = [];
+            let reducedLegends: IGrouppedLegendData[] = [];
             let legendSortSettings: MekkoLegendSortSettings = (<BaseColumnChart>this.layers[0]).getLegendSortSettings();
             if (legendSortSettings.enabled) {
                 if (legendSortSettings.groupByCategory) {
@@ -1510,7 +1510,7 @@ module powerbi.extensibility.visual {
 
                     reducedLegends = _.sortBy(reducedLegends, "dataValues");
 
-                    if (legendSortSettings.direction === MekkoChart.SortDireacionDescending) {
+                    if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
                         reducedLegends = reducedLegends.reverse();
                     }
 
@@ -1519,7 +1519,7 @@ module powerbi.extensibility.visual {
                             return;
                         }
                         legend.data = _.sortBy( legend.data, "valueSum");
-                        if (legendSortSettings.groupByCategoryDirection === MekkoChart.SortDireacionDescending) {
+                        if (legendSortSettings.groupByCategoryDirection === MekkoChart.SortDirectionDescending) {
                             legend.data = legend.data.reverse();
                         }
                     });
@@ -1534,7 +1534,7 @@ module powerbi.extensibility.visual {
                 }
                 else {
                     legendData.dataPoints = _.sortBy(legendData.dataPoints, "valueSum");
-                    if (legendSortSettings.direction === MekkoChart.SortDireacionDescending) {
+                    if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
                         legendData.dataPoints = legendData.dataPoints.reverse();
                     }
                 }
