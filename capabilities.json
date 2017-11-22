@@ -428,6 +428,40 @@
                     }
                 }
             }
+        },
+        "categoryColorStart": {
+            "displayName": "Categoty data colors start",
+            "displayNameKey": "Visual_CategoryDataColorsStart",
+            "properties": {
+                "categoryGradient": {
+                    "displayName": "Category gradient",
+                    "displayNameKey": "Visual_Enable",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "categoryColorEnd": {
+            "displayName": "Categoty data colors end",
+            "displayNameKey": "Visual_CategoryDataColorsEnd",
+            "properties": {
+                "categoryGradient": {
+                    "displayName": "Category gradient",
+                    "displayNameKey": "Visual_Enable",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "dataViewMappings": [

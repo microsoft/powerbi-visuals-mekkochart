@@ -317,6 +317,10 @@ module powerbi.extensibility.visual {
         colorDistribution: boolean;
     }
 
+    export interface MekkoGradientSettings {
+        categoryGradient: Fill;
+    }
+
     export interface MekkoSeriesSortSettings {
         enabled: boolean;
         direction: any;
@@ -390,6 +394,9 @@ module powerbi.extensibility.visual {
         fontSize?: number;
         valueSum?: number;
         categoryValues?: PrimitiveValue[];
+        categoryIdentity?: powerbi.data.Selector;
+        categoryStartColor?: string;
+        categoryEndColor?: string;
     }
 
     export interface MekkoCreateAxisOptions extends CreateAxisOptionsBase {
@@ -466,6 +473,9 @@ module powerbi.extensibility.visual {
         category: string;
         color: string;
         group: DataViewValueColumnGroup;
+        categorySelectionId: powerbi.extensibility.ISelectionId;
+        categoryStartColor?: string;
+        categoryEndColor?: string;
     }
 
     export interface ICategotyValuesStatsCollection {

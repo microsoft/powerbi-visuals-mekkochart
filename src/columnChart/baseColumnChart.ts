@@ -307,6 +307,8 @@ module powerbi.extensibility.visual.columnChart {
             // Allocate colors
             let legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, defaultDataPointColor, "", dataPointSettings.categoryGradient, dataPointSettings.colorGradientEndColor.solid.color);
             let legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
+            let currentColors: string = BaseColumnChart.serelizeColors(legend);
+
             let seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
 
             // Determine data points
@@ -374,6 +376,15 @@ module powerbi.extensibility.visual.columnChart {
                 isMultiMeasure: false,
                 dataPointSettings: dataPointSettings
             };
+        }
+
+        private static serelizeColors(currentColors: MekkoLegendDataPoint[]): string {
+            return JSON.stringify(currentColors.map( (legend: MekkoLegendDataPoint) => {
+                return {
+                    key: legend.identity,
+                    color: legend.color
+                };
+            }));
         }
 
         private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): ICategoryValuesCollection[] {
@@ -1199,10 +1210,35 @@ module powerbi.extensibility.visual.columnChart {
                     this.enumerateSortLegend(enumeration);
                     break;
                 }
-                case "sortSeries": {
-                    this.enumerateSortSeries(enumeration);
+                case "categoryColorStart": {
+                    this.enumerateCategoryColors(enumeration, "categoryColorStart", "Start color");
                     break;
                 }
+                case "categoryColorEnd": {
+                    this.enumerateCategoryColors(enumeration, "categoryColorEnd", "End color");
+                    break;
+                }
+            }
+        }
+
+        private enumerateCategoryColors(instances: VisualObjectInstance[], objectName, label) {
+            if (this.data.dataPointSettings && this.data.dataPointSettings.categoryGradient) {
+                this.data.categories.forEach( (category, index ) => {
+                    let categoryLegends: MekkoLegendDataPoint[] = this.data.legendData.dataPoints.filter( legend => legend.category === category);
+
+                    instances.push({
+                        objectName: objectName,
+                        displayName: `${label} -${category}`,
+                        selector: ColorHelper.normalizeSelector((categoryLegends[0].categoryIdentity as ISelectionId).getSelector(), true),
+                        properties: {
+                            categoryGradient: {
+                                solid: {
+                                    color: objectName === "categoryColorStart" ? categoryLegends[0].categoryStartColor : categoryLegends[0].categoryEndColor
+                                }
+                            }
+                        },
+                    });
+                });
             }
         }
 
@@ -1221,12 +1257,12 @@ module powerbi.extensibility.visual.columnChart {
             };
             instances[0].properties["enabled"] = this.data.sortlegend.enabled;
             instances[0].properties["direction"] = this.data.sortlegend.direction;
-            let allowedGroupByCategory = this.checkDataToFeatures();
+            // let allowedGroupByCategory = this.checkDataToFeatures();
 
-            if (allowedGroupByCategory) {
+            // if (allowedGroupByCategory) {
                 instances[0].properties["groupByCategory"] = this.data.sortlegend.groupByCategory;
                 instances[0].properties["groupByCategoryDirection"] = this.data.sortlegend.groupByCategoryDirection;
-            }
+            // }
         }
 
         private enumerateSortSeries(instances: VisualObjectInstance[]): void {
@@ -1315,9 +1351,9 @@ module powerbi.extensibility.visual.columnChart {
                 return;
             }
 
-            let allowedCategoryGradient = this.checkDataToFeatures();
+            // let allowedCategoryGradient = this.checkDataToFeatures();
 
-            if (allowedCategoryGradient) {
+            // if (allowedCategoryGradient) {
                 let properties: any = {};
                 properties["categoryGradient"] = this.data.dataPointSettings.categoryGradient;
 
@@ -1326,7 +1362,7 @@ module powerbi.extensibility.visual.columnChart {
                     selector: null,
                     properties: properties
                 });
-            }
+            // }
 
             if (data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata) {
                 if (!this.data.dataPointSettings.categoryGradient) {
@@ -1341,37 +1377,37 @@ module powerbi.extensibility.visual.columnChart {
                         });
                     }
                 }
-                else {
-                    this.data.categories.forEach( (category, index ) => {
-                    let categoryLegends: MekkoLegendDataPoint[] = this.data.legendData.dataPoints.filter( legend => legend.category === category);
-                    let maxValueDataPoint = _.maxBy(categoryLegends, "valueSum");
-                    if (maxValueDataPoint === undefined) {
-                        return;
-                    }
-                    let minValueDataPoint = _.minBy(categoryLegends, "valueSum");
-                    if (minValueDataPoint === undefined) {
-                        return;
-                    }
+                // else {
+                //     this.data.categories.forEach( (category, index ) => {
+                //         let categoryLegends: MekkoLegendDataPoint[] = this.data.legendData.dataPoints.filter( legend => legend.category === category);
+                //         let maxValueDataPoint = _.maxBy(categoryLegends, "valueSum");
+                //         if (maxValueDataPoint === undefined) {
+                //             return;
+                //         }
+                //         let minValueDataPoint = _.minBy(categoryLegends, "valueSum");
+                //         if (minValueDataPoint === undefined) {
+                //             return;
+                //         }
 
-                    instances.push({
-                        objectName: "dataPoint",
-                        displayName: "Start color -" + category,
-                        selector: ColorHelper.normalizeSelector((maxValueDataPoint.identity as ISelectionId).getSelector(), true),
-                        properties: {
-                            fill: { solid: { color: maxValueDataPoint.color } }
-                        },
-                    });
+                //         instances.push({
+                //             objectName: "dataPoint",
+                //             displayName: "Start color -" + category,
+                //             selector: ColorHelper.normalizeSelector((maxValueDataPoint.identity as ISelectionId).getSelector(), true),
+                //             properties: {
+                //                 fill: { solid: { color: maxValueDataPoint.color } }
+                //             },
+                //         });
 
-                    instances.push({
-                        objectName: "dataPoint",
-                        displayName: "End color -" + category,
-                        selector: ColorHelper.normalizeSelector((minValueDataPoint.identity as ISelectionId).getSelector(), true),
-                        properties: {
-                            fill: { solid: { color: minValueDataPoint.color } }
-                        },
-                    });
-                });
-                }
+                //         instances.push({
+                //             objectName: "dataPoint",
+                //             displayName: "End color -" + category,
+                //             selector: ColorHelper.normalizeSelector((minValueDataPoint.identity as ISelectionId).getSelector(), true),
+                //             properties: {
+                //                 fill: { solid: { color: minValueDataPoint.color } }
+                //             },
+                //         });
+                //     });
+                // }
             }
             else {
                 // For single-category, single-measure column charts, the user can color the individual bars.

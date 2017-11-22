@@ -189,6 +189,10 @@ module powerbi.extensibility.visual {
 
         private static CategoryTextRotataionDegree: number = 45.0;
 
+        private static LegendBarHeightMargin: number = 5;
+
+        private static LegendBarTextFont: string = "helvetica, arial, sans-serif;";
+
         private static getTextProperties(fontSize: number = MekkoChart.FontSize): TextProperties {
             return {
                 fontFamily: "helvetica, arial, sans-serif",
@@ -1508,12 +1512,6 @@ module powerbi.extensibility.visual {
                         element.dataValues = d3.sum(element.data.map((d) => d.valueSum));
                     });
 
-                    reducedLegends = _.sortBy(reducedLegends, "dataValues");
-
-                    if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
-                        reducedLegends = reducedLegends.reverse();
-                    }
-
                     reducedLegends.forEach(legend => {
                         if (legend === undefined) {
                             return;
@@ -1523,6 +1521,12 @@ module powerbi.extensibility.visual {
                             legend.data = legend.data.reverse();
                         }
                     });
+
+                    reducedLegends = _.sortBy(reducedLegends, "dataValues");
+
+                    if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
+                        reducedLegends = reducedLegends.reverse();
+                    }
 
                     legendData.dataPoints = [];
                     reducedLegends.forEach(legend => {
@@ -1540,13 +1544,24 @@ module powerbi.extensibility.visual {
                 }
             }
 
+            let svgHeight: number = textMeasurementService.estimateSvgTextHeight({
+                fontFamily: MekkoChart.LegendBarTextFont,
+                fontSize: PixelConverter.toString(+legendProperties["fontSize"] + MekkoChart.LegendBarHeightMargin),
+                text: "AZ"
+            });
+
+            d3.select(this.rootElement.node()).selectAll("div.legendParent").remove();
+            this.categoryLegends = [];
             let legendParents = d3.select(this.rootElement.node()).selectAll("div.legendParent");
 
             let legendParentsWithData = legendParents.data(reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined));
             let legendParentsWithChilds = legendParentsWithData.enter().append("div");
             let legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style({
-                position: "absolute"
+                position: "absolute",
+                top: function (data) {
+                    return PixelConverter.toString(svgHeight * data.index);
+                }
             });
 
             let mekko = this;
@@ -1564,8 +1579,6 @@ module powerbi.extensibility.visual {
                 }
             });
 
-            legendParentsWithData.exit().remove();
-            let svgHeight: number = 26;
             if (reducedLegends.length > 0) {
                 this.categoryLegends.forEach((legend, index) => {
                     (<ILegendGroup>legend).position = +d3.select((<ILegendGroup>legend).element).style("top").replace("px", "");
@@ -1600,12 +1613,8 @@ module powerbi.extensibility.visual {
                         }
                     }
                 });
-
-                legendParentsWithData.style({
-                    top: function (data) { return PixelConverter.toString(svgHeight * data.index); },
-                    position: "absolute"
-                });
             }
+            legendParentsWithData.exit().remove();
 
             if (legendProperties["show"] === false) {
                 legendData.dataPoints = [];
@@ -1752,6 +1761,7 @@ module powerbi.extensibility.visual {
 
             if (this.categoryLegends.length > 0 && this.categoryLegends[0].isVisible()) {
                 this.legendMargins = this.categoryLegends[0].getMargins();
+                this.legendMargins.height = this.legendMargins.height - MekkoChart.LegendBarHeightMargin;
                 this.legendMargins.height = this.legendMargins.height * this.dataViews[0].categorical.categories[0].values.length;
             }
             if (this.legend.isVisible()) {
