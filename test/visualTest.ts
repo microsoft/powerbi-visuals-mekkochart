@@ -644,23 +644,29 @@ module powerbi.extensibility.visual.test {
 
                 let data = dataView.categorical.values.grouped();
                 let catigoried = data.map( d => { return {name: d.name, values: d.values[0].values, category: _.findIndex(d.values[0].values, i => i !== null) }; });
+                catigoried = _.sortBy(catigoried, "values");
+
+                interface CategoryLegendDom {
+                    position: string;
+                    dom: Element;
+                }
 
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     expect(visualBuilder.categoryLegendGroup).toBeInDOM();
                     expect(visualBuilder.categoryLegendGroup.length).toEqual(dataView.categorical.categories[0].values.length);
 
-                    let mappedCategoryLegendGroup = visualBuilder.categoryLegendGroup.map( (index, clg) => {
-                        return {
+                    let mappedCategoryLegendGroup: JQuery = visualBuilder.categoryLegendGroup.map( (index, clg) => {
+                        return <CategoryLegendDom>{
                             position: clg.parentElement.parentElement.style.top.replace("px", ""),
                             dom: clg
                         };
                     });
-                    let sortedCategoryLegendGroup = _.sortBy(mappedCategoryLegendGroup, "position").map( d => d.dom );
 
                     dataView.categorical.categories[0].values.forEach( (category, index) => {
                         let filteredByCategory = catigoried.filter(cat => cat.category === index);
                         filteredByCategory = _.sortBy(filteredByCategory, "values");
-                        let legentItem = $(sortedCategoryLegendGroup[index]).children("g").children("text");
+                        let categoryDOM: any = mappedCategoryLegendGroup.filter( (val: any) => { return <any>$((<any>mappedCategoryLegendGroup[val]).dom).children("text.legendTitle").children("title").text() === category; });
+                        let legentItem = $((categoryDOM[0].dom)).children("g").children("text");
                         expect(filteredByCategory.length).toEqual(legentItem.length);
                         filteredByCategory.forEach((categoryItem, index) => {
                             expect(legentItem[index].textContent).toEqual(categoryItem.name);

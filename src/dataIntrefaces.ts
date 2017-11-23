@@ -75,6 +75,18 @@ module powerbi.extensibility.visual {
         seriesObjects: IDataViewObjects[][];
     }
 
+    export interface IGrouppedLegendData {
+        category: string;
+        index: number;
+        data: MekkoLegendDataPoint[];
+        dataValues: number;
+    }
+
+    export interface ILegendGroup extends ILegend {
+        element: HTMLElement;
+        position: number;
+    }
+
     export interface IMekkoChartVisualHost {
         updateLegend(data: ILegendData): void;
         getSharedColors(): IColorPalette;
@@ -305,6 +317,10 @@ module powerbi.extensibility.visual {
         colorDistribution: boolean;
     }
 
+    export interface MekkoGradientSettings {
+        categoryGradient: Fill;
+    }
+
     export interface MekkoSeriesSortSettings {
         enabled: boolean;
         direction: any;
@@ -378,6 +394,9 @@ module powerbi.extensibility.visual {
         fontSize?: number;
         valueSum?: number;
         categoryValues?: PrimitiveValue[];
+        categoryIdentity?: powerbi.data.Selector;
+        categoryStartColor?: string;
+        categoryEndColor?: string;
     }
 
     export interface MekkoCreateAxisOptions extends CreateAxisOptionsBase {
@@ -454,6 +473,9 @@ module powerbi.extensibility.visual {
         category: string;
         color: string;
         group: DataViewValueColumnGroup;
+        categorySelectionId: powerbi.extensibility.ISelectionId;
+        categoryStartColor?: string;
+        categoryEndColor?: string;
     }
 
     export interface ICategotyValuesStatsCollection {

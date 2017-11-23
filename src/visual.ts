@@ -184,7 +184,14 @@ module powerbi.extensibility.visual {
         private static ShowAxisTitlePropertyName: string = "showAxisTitle";
         private static SecondShowAxisTitlePropertyName: string = "secShowAxisTitle";
 
+        private static SortDirectionDescending: string = "des";
+        private static SortDirectionAscending: string = "asc";
+
         private static CategoryTextRotataionDegree: number = 45.0;
+
+        private static LegendBarHeightMargin: number = 5;
+
+        private static LegendBarTextFont: string = "helvetica, arial, sans-serif;";
 
         private static getTextProperties(fontSize: number = MekkoChart.FontSize): TextProperties {
             return {
@@ -242,12 +249,12 @@ module powerbi.extensibility.visual {
             sortLegend: {
                 enabled: false,
                 groupByCategory: false,
-                direction: "asc",
-                groupByCategoryDirection: "asc"
+                direction: SortDirection.Ascending,
+                groupByCategoryDirection: SortDirection.Ascending
             },
             sortSeries: {
                 enabled: false,
-                direction: "asc",
+                direction: SortDirection.Ascending,
                 displayPercents: "category"
             },
             xAxisLabels: {
@@ -1477,13 +1484,13 @@ module powerbi.extensibility.visual {
                 legendData.dataPoints = [];
             }
 
-            let reducedLegends = [];
+            let reducedLegends: IGrouppedLegendData[] = [];
             let legendSortSettings: MekkoLegendSortSettings = (<BaseColumnChart>this.layers[0]).getLegendSortSettings();
             if (legendSortSettings.enabled) {
                 if (legendSortSettings.groupByCategory) {
-                    let mappedLegends = legendData.dataPoints.map( (dataPoint: any) => {
-                        let maxVal = d3.max(dataPoint.categoryValues);
-                        let index = dataPoint.categoryValues.indexOf(maxVal);
+                    let mappedLegends = legendData.dataPoints.map( (dataPoint: MekkoLegendDataPoint) => {
+                        let maxVal = d3.max(dataPoint.categoryValues as Number[]);
+                        let index = dataPoint.categoryValues.indexOf(maxVal as PrimitiveValue);
                         return {
                             categoryIndex: index,
                             data: dataPoint,
@@ -1505,21 +1512,21 @@ module powerbi.extensibility.visual {
                         element.dataValues = d3.sum(element.data.map((d) => d.valueSum));
                     });
 
-                    reducedLegends = _.sortBy(reducedLegends, "dataValues");
-
-                    if (legendSortSettings.direction === "des")
-                        reducedLegends = reducedLegends.reverse();
-
                     reducedLegends.forEach(legend => {
                         if (legend === undefined) {
                             return;
                         }
-
                         legend.data = _.sortBy( legend.data, "valueSum");
-                        if (legendSortSettings.groupByCategoryDirection === "des") {
+                        if (legendSortSettings.groupByCategoryDirection === MekkoChart.SortDirectionDescending) {
                             legend.data = legend.data.reverse();
                         }
                     });
+
+                    reducedLegends = _.sortBy(reducedLegends, "dataValues");
+
+                    if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
+                        reducedLegends = reducedLegends.reverse();
+                    }
 
                     legendData.dataPoints = [];
                     reducedLegends.forEach(legend => {
@@ -1531,19 +1538,30 @@ module powerbi.extensibility.visual {
                 }
                 else {
                     legendData.dataPoints = _.sortBy(legendData.dataPoints, "valueSum");
-                    if (legendSortSettings.direction === "des") {
+                    if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
                         legendData.dataPoints = legendData.dataPoints.reverse();
                     }
                 }
             }
 
+            let svgHeight: number = textMeasurementService.estimateSvgTextHeight({
+                fontFamily: MekkoChart.LegendBarTextFont,
+                fontSize: PixelConverter.toString(+legendProperties["fontSize"] + MekkoChart.LegendBarHeightMargin),
+                text: "AZ"
+            });
+
+            d3.select(this.rootElement.node()).selectAll("div.legendParent").remove();
+            this.categoryLegends = [];
             let legendParents = d3.select(this.rootElement.node()).selectAll("div.legendParent");
 
-            let legendParentsWithData = legendParents.data(reducedLegends);
+            let legendParentsWithData = legendParents.data(reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined));
             let legendParentsWithChilds = legendParentsWithData.enter().append("div");
             let legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style({
-                position: "absolute"
+                position: "absolute",
+                top: function (data) {
+                    return PixelConverter.toString(svgHeight * data.index);
+                }
             });
 
             let mekko = this;
@@ -1557,13 +1575,15 @@ module powerbi.extensibility.visual {
                         mekko.interactivityService,
                         true);
 
-                    mekko.categoryLegends[index] = legend;
+                    mekko.categoryLegends[index] = <ILegend>legend;
                 }
             });
 
-            legendParentsWithData.exit().remove();
-            let svgHeight: number = 26;
             if (reducedLegends.length > 0) {
+                this.categoryLegends.forEach((legend: ILegend, index: number) => {
+                    (<ILegendGroup>legend).position = +d3.select((<ILegendGroup>legend).element).style("top").replace("px", "");
+                } );
+                this.categoryLegends = _.sortBy( this.categoryLegends, "position").reverse();
                 this.categoryLegends.forEach( (legend, index) => {
                     if (reducedLegends[index] === undefined) {
                         LegendData.update({
@@ -1576,6 +1596,7 @@ module powerbi.extensibility.visual {
 
                         return;
                     }
+
                     let legendData: ILegendData = {
                         title: reducedLegends[index].category,
                         dataPoints: reducedLegends[index].data
@@ -1592,12 +1613,8 @@ module powerbi.extensibility.visual {
                         }
                     }
                 });
-
-                legendParentsWithData.style({
-                    top: function (data) { return PixelConverter.toString(svgHeight * data.index); },
-                    position: "absolute"
-                });
             }
+            legendParentsWithData.exit().remove();
 
             if (legendProperties["show"] === false) {
                 legendData.dataPoints = [];
@@ -1744,6 +1761,7 @@ module powerbi.extensibility.visual {
 
             if (this.categoryLegends.length > 0 && this.categoryLegends[0].isVisible()) {
                 this.legendMargins = this.categoryLegends[0].getMargins();
+                this.legendMargins.height = this.legendMargins.height - MekkoChart.LegendBarHeightMargin;
                 this.legendMargins.height = this.legendMargins.height * this.dataViews[0].categorical.categories[0].values.length;
             }
             if (this.legend.isVisible()) {
