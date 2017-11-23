@@ -46,6 +46,6 @@
 	"Visual_ColorGradientEndColor": "End color of gradient",
 	"Visual_Default_Color": "Default color",
 	"Visual_Fill": "Fill",
-    "Visual_GradientStartColor": "Start color",
-    "Visual_GradientEndColor": "End color"
+	"Visual_GradientStartColor": "Start color",
+	"Visual_GradientEndColor": "End color"
 }
