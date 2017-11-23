@@ -434,8 +434,8 @@
             "displayNameKey": "Visual_CategoryDataColorsStart",
             "properties": {
                 "categoryGradient": {
-                    "displayName": "Category gradient",
-                    "displayNameKey": "Visual_Enable",
+                    "displayName": "Start color",
+                    "displayNameKey": "Visual_GradientStartColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -451,8 +451,8 @@
             "displayNameKey": "Visual_CategoryDataColorsEnd",
             "properties": {
                 "categoryGradient": {
-                    "displayName": "Category gradient",
-                    "displayNameKey": "Visual_Enable",
+                    "displayName": "End color",
+                    "displayNameKey": "Visual_GradientEndColor",
                     "type": {
                         "fill": {
                             "solid": {

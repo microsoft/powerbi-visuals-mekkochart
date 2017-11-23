@@ -78,7 +78,7 @@ module powerbi.extensibility.visual {
     export interface IGrouppedLegendData {
         category: string;
         index: number;
-        data: any[];
+        data: MekkoLegendDataPoint[];
         dataValues: number;
     }
 

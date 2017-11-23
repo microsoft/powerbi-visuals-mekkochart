@@ -22,5 +22,7 @@
     "Visual_Series_Category_Percentage": "Display % in category scope",
     "Visual_Series_All_Data_Percentage": "Display % in all data scope",
     "Visual_Category": "Category",
-    "Visual_Y": "Y"
+    "Visual_Y": "Y",
+    "Visual_GradientStartColor": "Start color",
+    "Visual_GradientEndColor": "End color"
 }

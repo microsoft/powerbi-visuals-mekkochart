@@ -69,8 +69,8 @@ module powerbi.extensibility.visual.converterStrategy {
             );
 
             const categoryFieldIndex: number = 0;
-            let categoryMaxValues: ICategotyValuesStatsCollection = { };
-            this.dataView.categories[categoryFieldIndex].values.forEach( (category, index) => {
+            let categoryMaxValues: ICategotyValuesStatsCollection = {};
+            this.dataView.categories[categoryFieldIndex].values.forEach((category, index) => {
                 categoryMaxValues[index] = {
                     category: category,
                     maxValueOfCategory: d3.max(this.dataView.values.map(v => <number>v.values[index])),
@@ -87,15 +87,15 @@ module powerbi.extensibility.visual.converterStrategy {
             let categoryItemsCount: Array<IFilteredValueGroups[]> = [];
 
             let restoredColors: any;
-            this.dataView.categories[categoryFieldIndex].values.forEach( (category: PrimitiveValue, index: number) => {
+            this.dataView.categories[categoryFieldIndex].values.forEach((category: PrimitiveValue, index: number) => {
 
                 const categorySelectionId: ISelectionId = this.visualHost.createSelectionIdBuilder()
-                .withCategory(this.dataView.categories[categoryFieldIndex], index)
-                .createSelectionId();
+                    .withCategory(this.dataView.categories[categoryFieldIndex], index)
+                    .createSelectionId();
 
                 // gradiend start color
                 let mappedItems: IFilteredValueGroups[] = [];
-                valueGroups.forEach( group => {
+                valueGroups.forEach(group => {
                     if (group.values[0].values[index] !== null) {
                         mappedItems.push(<IFilteredValueGroups>{
                             gr: group,
@@ -148,24 +148,24 @@ module powerbi.extensibility.visual.converterStrategy {
                     this.dataView.categories[categoryFieldIndex].objects[index] &&
                     this.dataView.categories[categoryFieldIndex].objects[index]["categoryColorStart"] ||
                     <MekkoGradientSettings>{
-                    categoryGradient: {
-                        solid: {
-                            color: colorStart
+                        categoryGradient: {
+                            solid: {
+                                color: colorStart
+                            }
                         }
-                    }
-                }) as MekkoGradientSettings).categoryGradient.solid.color;
+                    }) as MekkoGradientSettings).categoryGradient.solid.color;
 
                 let categoryEndColor: string = ((
                     this.dataView.categories[categoryFieldIndex].objects &&
                     this.dataView.categories[categoryFieldIndex].objects[index] &&
                     this.dataView.categories[categoryFieldIndex].objects[index]["categoryColorEnd"] ||
                     <MekkoGradientSettings>{
-                    categoryGradient: {
-                        solid: {
-                            color: colorEnd
+                        categoryGradient: {
+                            solid: {
+                                color: colorEnd
+                            }
                         }
-                    }
-                }) as MekkoGradientSettings).categoryGradient.solid.color;
+                    }) as MekkoGradientSettings).categoryGradient.solid.color;
 
                 categoryGradientBaseColorIdentities[index] = {
                     category: (baseStartColorIdentity.category || "").toString(),
@@ -225,7 +225,7 @@ module powerbi.extensibility.visual.converterStrategy {
                         }
                         else {
 
-                            let positionIndex: number = _.findIndex(<IFilteredValueGroups[]>categoryItemsCount[categoryIndex], ser => ser.identity === series.identity );
+                            let positionIndex: number = _.findIndex(<IFilteredValueGroups[]>categoryItemsCount[categoryIndex], ser => ser.identity === series.identity);
                             category = (categoryMaxValues[categoryIndex].category || "").toString();
                             let gradientBaseColorStart: string = categoryGradientBaseColorIdentities[categoryIndex].categoryStartColor;
                             let gradientBaseColorEnd: string = categoryGradientBaseColorIdentities[categoryIndex].categoryEndColor;

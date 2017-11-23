@@ -1488,9 +1488,9 @@ module powerbi.extensibility.visual {
             let legendSortSettings: MekkoLegendSortSettings = (<BaseColumnChart>this.layers[0]).getLegendSortSettings();
             if (legendSortSettings.enabled) {
                 if (legendSortSettings.groupByCategory) {
-                    let mappedLegends = legendData.dataPoints.map( (dataPoint: any) => {
-                        let maxVal = d3.max(dataPoint.categoryValues);
-                        let index = dataPoint.categoryValues.indexOf(maxVal);
+                    let mappedLegends = legendData.dataPoints.map( (dataPoint: MekkoLegendDataPoint) => {
+                        let maxVal = d3.max(dataPoint.categoryValues as Number[]);
+                        let index = dataPoint.categoryValues.indexOf(maxVal as PrimitiveValue);
                         return {
                             categoryIndex: index,
                             data: dataPoint,
@@ -1580,7 +1580,7 @@ module powerbi.extensibility.visual {
             });
 
             if (reducedLegends.length > 0) {
-                this.categoryLegends.forEach((legend, index) => {
+                this.categoryLegends.forEach((legend: ILegend, index: number) => {
                     (<ILegendGroup>legend).position = +d3.select((<ILegendGroup>legend).element).style("top").replace("px", "");
                 } );
                 this.categoryLegends = _.sortBy( this.categoryLegends, "position").reverse();
