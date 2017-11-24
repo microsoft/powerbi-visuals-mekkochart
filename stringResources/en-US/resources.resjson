@@ -47,5 +47,7 @@
 	"Visual_Default_Color": "Default color",
 	"Visual_Fill": "Fill",
 	"Visual_GradientStartColor": "Start color",
-	"Visual_GradientEndColor": "End color"
+	"Visual_GradientEndColor": "End color",
+	"Visual_CategoryDataColorsStart": "Categoty data colors start",
+	"Visual_CategoryDataColorsEnd": "Categoty data colors end"
 }
