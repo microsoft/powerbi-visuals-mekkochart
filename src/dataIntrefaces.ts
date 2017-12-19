@@ -80,6 +80,7 @@ module powerbi.extensibility.visual {
         index: number;
         data: MekkoLegendDataPoint[];
         dataValues: number;
+        categorySorting: PrimitiveValue;
     }
 
     export interface ILegendGroup extends ILegend {
@@ -394,6 +395,7 @@ module powerbi.extensibility.visual {
         fontSize?: number;
         valueSum?: number;
         categoryValues?: PrimitiveValue[];
+        categorySort?: PrimitiveValue;
         categoryIdentity?: powerbi.data.Selector;
         categoryStartColor?: string;
         categoryEndColor?: string;

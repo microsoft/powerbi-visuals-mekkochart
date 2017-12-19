@@ -1200,6 +1200,10 @@ module powerbi.extensibility.visual.columnChart {
                     this.enumerateSortLegend(enumeration);
                     break;
                 }
+                case "sortSeries": {
+                    this.enumerateSortSeries(enumeration);
+                    break;
+                }
                 case "categoryColorStart": {
                     this.enumerateCategoryColors(enumeration, "categoryColorStart", "Start color");
                     break;

@@ -1504,7 +1504,8 @@ module powerbi.extensibility.visual {
                             category: this.layers[0].getData().categories[element.categoryIndex],
                             index: element.categoryIndex,
                             data: [],
-                            dataValues: 0
+                            dataValues: 0,
+                            categorySorting: null
                         };
                         reducedLegends[element.categoryIndex].data.push(element.data);
                     });
@@ -1522,7 +1523,7 @@ module powerbi.extensibility.visual {
                         }
                     });
 
-                    reducedLegends = _.sortBy(reducedLegends, "dataValues");
+                    reducedLegends = _.sortBy(reducedLegends, "categorySort");
 
                     if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
                         reducedLegends = reducedLegends.reverse();
@@ -2397,6 +2398,7 @@ module powerbi.extensibility.visual {
                 }
 
                 let forceDisplay: boolean = (<MekkoChartLabelSettings>(<MekkoColumnChartData>layers[0].getData()).labelSettings).forceDisplay;
+
                 drawDefaultLabelsForDataPointChart(
                     resultsLabelDataPoints,
                     this.labelGraphicsContextScrollable,

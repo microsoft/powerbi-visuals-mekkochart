@@ -1,3 +1,8 @@
+## 1.9.4
+
+* Legend category sorts by category sort datafield
+* Fix sort series properties
+
 ## 1.9.3
 
 * Displaying the legend with specific dataset breaks the visual - fixed

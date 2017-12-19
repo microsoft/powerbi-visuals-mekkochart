@@ -247,7 +247,8 @@ module powerbi.extensibility.visual.converterStrategy {
                             category: category,
                             categoryStartColor: categoryGradientBaseColorIdentities[categoryIndex].categoryStartColor,
                             categoryEndColor: categoryGradientBaseColorIdentities[categoryIndex].categoryEndColor,
-                            categoryIdentity: categoryGradientBaseColorIdentities[categoryIndex].categorySelectionId
+                            categoryIdentity: categoryGradientBaseColorIdentities[categoryIndex].categorySelectionId,
+                            categorySort: this.dataView.categories[categoryFieldIndex].values[categoryIndex]
                         });
 
                         if (series.identity && source.groupName !== undefined) {
