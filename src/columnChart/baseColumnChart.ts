@@ -1216,7 +1216,7 @@ module powerbi.extensibility.visual.columnChart {
         }
 
         private enumerateCategoryColors(instances: VisualObjectInstance[], objectName: string, label: string) {
-            if (this.data.dataPointSettings && this.data.dataPointSettings.categoryGradient) {
+            if (this.data.dataPointSettings && this.data.dataPointSettings.categoryGradient && this.checkDataToFeatures()) {
                 this.data.categories.forEach( (category, index ) => {
                     let categoryLegends: MekkoLegendDataPoint[] = this.data.legendData.dataPoints.filter( legend => legend.category === category);
 
@@ -1343,13 +1343,15 @@ module powerbi.extensibility.visual.columnChart {
             }
 
             let properties: any = {};
-            properties["categoryGradient"] = this.data.dataPointSettings.categoryGradient;
+            if (this.checkDataToFeatures()) {
+                properties["categoryGradient"] = this.data.dataPointSettings.categoryGradient;
 
-            instances.push({
-                objectName: "dataPoint",
-                selector: null,
-                properties: properties
-            });
+                instances.push({
+                    objectName: "dataPoint",
+                    selector: null,
+                    properties: properties
+                });
+            }
 
             if (data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata) {
                 if (!this.data.dataPointSettings.categoryGradient) {

@@ -33,4 +33,5 @@ The options available only when each value belongs to only one category
 * Sort legend each category items by value
 
 ## 1.8.1
+
 * Fix for bug - X-axis label hided incorrectly
