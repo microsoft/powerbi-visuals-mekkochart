@@ -1,3 +1,7 @@
+## 2.0.0
+
+* Added Power BI bookmarks support
+
 ## 1.9.4
 
 * Legend category sorts by category sort datafield
