@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Phân phối màu theo giá trị",
 	"Visual_ColorGradientEndColor": "Màu kết thúc của chuyển màu",
 	"Visual_Default_Color": "Màu mặc định",
-	"Visual_Fill": "Điền"
+	"Visual_Fill": "Điền",
+	"Visual_GradientStartColor": "Màu bắt đầu",
+	"Visual_GradientEndColor": "Màu kết thúc"
 }

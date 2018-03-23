@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Rozloženie farieb podľa hodnoty",
 	"Visual_ColorGradientEndColor": "Koncová farba gradientu",
 	"Visual_Default_Color": "Predvolená farba",
-	"Visual_Fill": "Vyplniť"
+	"Visual_Fill": "Vyplniť",
+	"Visual_GradientStartColor": "Počiatočná farba",
+	"Visual_GradientEndColor": "Koncová farba"
 }

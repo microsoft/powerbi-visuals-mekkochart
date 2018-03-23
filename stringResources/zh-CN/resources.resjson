@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "按值的颜色分发",
 	"Visual_ColorGradientEndColor": "渐变的结束颜色",
 	"Visual_Default_Color": "默认颜色",
-	"Visual_Fill": "填充"
+	"Visual_Fill": "填充",
+	"Visual_GradientStartColor": "开始颜色",
+	"Visual_GradientEndColor": "结束颜色"
 }

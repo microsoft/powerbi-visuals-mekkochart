@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Distribució de color per valor",
 	"Visual_ColorGradientEndColor": "Color final del gradient",
 	"Visual_Default_Color": "Color per defecte",
-	"Visual_Fill": "Emplena"
+	"Visual_Fill": "Emplena",
+	"Visual_GradientStartColor": "Color d'inici",
+	"Visual_GradientEndColor": "Color final"
 }

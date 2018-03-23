@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Värvi jaotis väärtuse järgi",
 	"Visual_ColorGradientEndColor": "Astmiku lõpuvärv",
 	"Visual_Default_Color": "Vaikevärv",
-	"Visual_Fill": "Täida"
+	"Visual_Fill": "Täida",
+	"Visual_GradientStartColor": "Algusvärv",
+	"Visual_GradientEndColor": "Lõpuvärv"
 }

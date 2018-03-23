@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Дистрибуција боја по вредности",
 	"Visual_ColorGradientEndColor": "Крајња боја прелива",
 	"Visual_Default_Color": "Подразумевана боја",
-	"Visual_Fill": "Попуни"
+	"Visual_Fill": "Попуни",
+	"Visual_GradientStartColor": "Почетна боја",
+	"Visual_GradientEndColor": "Крајња боја"
 }

@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Распределение цветов по значению",
 	"Visual_ColorGradientEndColor": "Конечный цвет градиента",
 	"Visual_Default_Color": "Цвет по умолчанию",
-	"Visual_Fill": "Заливка"
+	"Visual_Fill": "Заливка",
+	"Visual_GradientStartColor": "Начальный цвет",
+	"Visual_GradientEndColor": "Конечный цвет"
 }

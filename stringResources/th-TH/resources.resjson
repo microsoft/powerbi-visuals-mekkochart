@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "การกระจายสีตามค่า",
 	"Visual_ColorGradientEndColor": "สีช่วงท้ายของการไล่ระดับสี",
 	"Visual_Default_Color": "สีตามค่าเริ่มต้น",
-	"Visual_Fill": "เติม"
+	"Visual_Fill": "เติม",
+	"Visual_GradientStartColor": "สีเริ่มต้น",
+	"Visual_GradientEndColor": "สีช่วงท้าย"
 }

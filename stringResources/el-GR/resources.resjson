@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Κατανομή χρωμάτων κατά τιμή",
 	"Visual_ColorGradientEndColor": "Τελικό χρώμα διαβάθμισης",
 	"Visual_Default_Color": "Προεπιλεγμένο χρώμα",
-	"Visual_Fill": "Συμπλήρωση"
+	"Visual_Fill": "Συμπλήρωση",
+	"Visual_GradientStartColor": "Αρχικό χρώμα",
+	"Visual_GradientEndColor": "Τελικό χρώμα"
 }

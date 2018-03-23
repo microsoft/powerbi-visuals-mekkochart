@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "値ごとの色分布",
 	"Visual_ColorGradientEndColor": "グラデーションの最後の色",
 	"Visual_Default_Color": "既定色",
-	"Visual_Fill": "フィル"
+	"Visual_Fill": "フィル",
+	"Visual_GradientStartColor": "最初の色",
+	"Visual_GradientEndColor": "最後の色"
 }

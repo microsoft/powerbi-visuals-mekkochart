@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "依值分佈色彩",
 	"Visual_ColorGradientEndColor": "漸層的結束色彩",
 	"Visual_Default_Color": "預設色彩",
-	"Visual_Fill": "填滿"
+	"Visual_Fill": "填滿",
+	"Visual_GradientStartColor": "開始色彩",
+	"Visual_GradientEndColor": "結束色彩"
 }

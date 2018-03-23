@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "توزيع اللون حسب القيمة",
 	"Visual_ColorGradientEndColor": "لون نهاية التدرج",
 	"Visual_Default_Color": "اللون الافتراضي",
-	"Visual_Fill": "تعبئة"
+	"Visual_Fill": "تعبئة",
+	"Visual_GradientStartColor": "لون البداية",
+	"Visual_GradientEndColor": "لون النهاية"
 }

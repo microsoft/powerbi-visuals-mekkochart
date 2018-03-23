@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Розподіл кольорів за значенням",
 	"Visual_ColorGradientEndColor": "Кінцевий колір градієнта",
 	"Visual_Default_Color": "Колір за замовчуванням",
-	"Visual_Fill": "Заповнити"
+	"Visual_Fill": "Заповнити",
+	"Visual_GradientStartColor": "Початковий колір",
+	"Visual_GradientEndColor": "Кінцевий колір"
 }

@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Distribuce barev podle hodnoty",
 	"Visual_ColorGradientEndColor": "Koncová barva postupného přechodu",
 	"Visual_Default_Color": "Výchozí barva",
-	"Visual_Fill": "Vyplnit"
+	"Visual_Fill": "Vyplnit",
+	"Visual_GradientStartColor": "Počáteční barva",
+	"Visual_GradientEndColor": "Koncová barva"
 }

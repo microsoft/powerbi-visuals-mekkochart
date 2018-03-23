@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Spalvų paskirstymas pagal reikšmę",
 	"Visual_ColorGradientEndColor": "Spalva gradiento pabaigoje",
 	"Visual_Default_Color": "Numatytoji spalva",
-	"Visual_Fill": "Užpildyti"
+	"Visual_Fill": "Užpildyti",
+	"Visual_GradientStartColor": "Spalva pradžioje",
+	"Visual_GradientEndColor": "Spalva pabaigoje"
 }

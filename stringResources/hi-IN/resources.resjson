@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "मान के आधार पर रंग वितरण",
 	"Visual_ColorGradientEndColor": "ग्रैडिएंट का अंत रंग",
 	"Visual_Default_Color": "डिफ़ॉल्‍ट रंग",
-	"Visual_Fill": "भरण"
+	"Visual_Fill": "भरण",
+	"Visual_GradientStartColor": "प्रारंभ रंग",
+	"Visual_GradientEndColor": "समाप्ति रंग"
 }

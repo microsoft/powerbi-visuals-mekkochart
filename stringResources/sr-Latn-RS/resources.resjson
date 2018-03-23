@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Distribucija boja po vrednosti",
 	"Visual_ColorGradientEndColor": "Krajnja boja preliva",
 	"Visual_Default_Color": "Podrazumevana boja",
-	"Visual_Fill": "Popuni"
+	"Visual_Fill": "Popuni",
+	"Visual_GradientStartColor": "Početna boja",
+	"Visual_GradientEndColor": "Krajnja boja"
 }

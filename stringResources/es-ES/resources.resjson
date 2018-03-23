@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Distribución de color por valor",
 	"Visual_ColorGradientEndColor": "Color final de degradado",
 	"Visual_Default_Color": "Color predeterminado",
-	"Visual_Fill": "Rellenar"
+	"Visual_Fill": "Rellenar",
+	"Visual_GradientStartColor": "Color inicial",
+	"Visual_GradientEndColor": "Color final"
 }

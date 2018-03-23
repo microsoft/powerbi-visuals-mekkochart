@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Raspored boje po vrijednosti",
 	"Visual_ColorGradientEndColor": "Zadnja boja gradijenta",
 	"Visual_Default_Color": "Zadana boja",
-	"Visual_Fill": "Ispuna"
+	"Visual_Fill": "Ispuna",
+	"Visual_GradientStartColor": "Prva boja",
+	"Visual_GradientEndColor": "Zadnja boja"
 }

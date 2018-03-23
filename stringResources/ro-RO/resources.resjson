@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Distribuire culori după valoare",
 	"Visual_ColorGradientEndColor": "Culoare de sfârșit gradient",
 	"Visual_Default_Color": "Culoare implicită",
-	"Visual_Fill": "Completare"
+	"Visual_Fill": "Completare",
+	"Visual_GradientStartColor": "Culoare de început",
+	"Visual_GradientEndColor": "Culoare de sfârșit"
 }

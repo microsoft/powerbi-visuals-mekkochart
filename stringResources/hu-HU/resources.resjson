@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Színeloszlás érték szerint",
 	"Visual_ColorGradientEndColor": "A színátmenetet záró szín",
 	"Visual_Default_Color": "Alapértelmezett szín",
-	"Visual_Fill": "Kitöltés"
+	"Visual_Fill": "Kitöltés",
+	"Visual_GradientStartColor": "Kezdőszín",
+	"Visual_GradientEndColor": "Zárószín"
 }

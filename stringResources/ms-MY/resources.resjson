@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Distribusi warna berdasarkan nilai",
 	"Visual_ColorGradientEndColor": "Akhiri warna gradien",
 	"Visual_Default_Color": "Warna lalai",
-	"Visual_Fill": "Isi"
+	"Visual_Fill": "Isi",
+	"Visual_GradientStartColor": "Warna mula",
+	"Visual_GradientEndColor": "Warna akhir"
 }

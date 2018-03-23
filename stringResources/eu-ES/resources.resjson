@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Koloreen banaketa balioaren arabera",
 	"Visual_ColorGradientEndColor": "Amaierako koloreen gradientea",
 	"Visual_Default_Color": "Kolore lehenetsia",
-	"Visual_Fill": "Bete"
+	"Visual_Fill": "Bete",
+	"Visual_GradientStartColor": "Hasierako kolorea",
+	"Visual_GradientEndColor": "Amaierako kolorea"
 }

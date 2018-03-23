@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Barva porasla z vrednostjo",
 	"Visual_ColorGradientEndColor": "Končna barva gradienta",
 	"Visual_Default_Color": "Privzeta barva",
-	"Visual_Fill": "Zapolni"
+	"Visual_Fill": "Zapolni",
+	"Visual_GradientStartColor": "Začetna barva",
+	"Visual_GradientEndColor": "Končna barva"
 }

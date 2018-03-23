@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Rozkład koloru według wartości",
 	"Visual_ColorGradientEndColor": "Kolor końcowy gradientu",
 	"Visual_Default_Color": "Domyślny kolor",
-	"Visual_Fill": "Wypełnienie"
+	"Visual_Fill": "Wypełnienie",
+	"Visual_GradientStartColor": "Kolor początkowy",
+	"Visual_GradientEndColor": "Kolor końcowy"
 }

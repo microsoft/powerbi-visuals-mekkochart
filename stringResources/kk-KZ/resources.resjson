@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Мән бойынша түс үлестірімі",
 	"Visual_ColorGradientEndColor": "Градиенттің соңғы түсі",
 	"Visual_Default_Color": "Әдепкі түс",
-	"Visual_Fill": "Толтыру"
+	"Visual_Fill": "Толтыру",
+	"Visual_GradientStartColor": "Бастапқы түс",
+	"Visual_GradientEndColor": "Соңғы түс"
 }

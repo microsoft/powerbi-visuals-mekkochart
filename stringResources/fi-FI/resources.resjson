@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Värin jakauma arvon mukaan",
 	"Visual_ColorGradientEndColor": "Liukuvärin lopun väri",
 	"Visual_Default_Color": "Oletusväri",
-	"Visual_Fill": "Täyttö"
+	"Visual_Fill": "Täyttö",
+	"Visual_GradientStartColor": "Alkuväri",
+	"Visual_GradientEndColor": "Loppuväri"
 }

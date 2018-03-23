@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Değere göre renk dağılımı",
 	"Visual_ColorGradientEndColor": "Geçişin bitiş rengi",
 	"Visual_Default_Color": "Varsayılan renk",
-	"Visual_Fill": "Doldur"
+	"Visual_Fill": "Doldur",
+	"Visual_GradientStartColor": "Başlangıç rengi",
+	"Visual_GradientEndColor": "Bitiş rengi"
 }

@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Distribuzione dei colori in base ai valori",
 	"Visual_ColorGradientEndColor": "Colore finale della sfumatura",
 	"Visual_Default_Color": "Colore predefinito",
-	"Visual_Fill": "Riempimento"
+	"Visual_Fill": "Riempimento",
+	"Visual_GradientStartColor": "Colore iniziale",
+	"Visual_GradientEndColor": "Colore finale"
 }

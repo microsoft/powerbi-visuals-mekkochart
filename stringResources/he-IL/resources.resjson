@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "התפלגות צבעים לפי ערך",
 	"Visual_ColorGradientEndColor": "צבע הסיום של המילוי ההדרגתי",
 	"Visual_Default_Color": "צבע ברירת מחדל",
-	"Visual_Fill": "מילוי"
+	"Visual_Fill": "מילוי",
+	"Visual_GradientStartColor": "צבע התחלה",
+	"Visual_GradientEndColor": "צבע סיום"
 }

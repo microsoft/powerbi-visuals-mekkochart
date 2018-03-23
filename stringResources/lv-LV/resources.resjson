@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Krāsu sadalījums pēc vērtības",
 	"Visual_ColorGradientEndColor": "Gradienta beigu krāsa",
 	"Visual_Default_Color": "Noklusējuma krāsa",
-	"Visual_Fill": "Aizpildīt"
+	"Visual_Fill": "Aizpildīt",
+	"Visual_GradientStartColor": "Sākuma krāsa",
+	"Visual_GradientEndColor": "Beigu krāsa"
 }

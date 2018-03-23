@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Fargedistribusjon etter verdi",
 	"Visual_ColorGradientEndColor": "Sluttfarge på graderingen",
 	"Visual_Default_Color": "Standard farge",
-	"Visual_Fill": "Fyll"
+	"Visual_Fill": "Fyll",
+	"Visual_GradientStartColor": "Startfarge",
+	"Visual_GradientEndColor": "Sluttfarge"
 }

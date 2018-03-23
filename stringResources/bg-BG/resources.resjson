@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Разпределение на цветовете по стойност",
 	"Visual_ColorGradientEndColor": "Цвят за края на преливането",
 	"Visual_Default_Color": "Цвят по подразбиране",
-	"Visual_Fill": "Запълни"
+	"Visual_Fill": "Запълни",
+	"Visual_GradientStartColor": "Цвят за начало",
+	"Visual_GradientEndColor": "Цвят за край"
 }

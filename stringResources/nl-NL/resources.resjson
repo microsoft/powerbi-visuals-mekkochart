@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Kleurdistributie op waarde",
 	"Visual_ColorGradientEndColor": "Eindkleur van een verloop",
 	"Visual_Default_Color": "Standaardkleur",
-	"Visual_Fill": "Opvullen"
+	"Visual_Fill": "Opvullen",
+	"Visual_GradientStartColor": "Beginkleur",
+	"Visual_GradientEndColor": "Eindkleur"
 }

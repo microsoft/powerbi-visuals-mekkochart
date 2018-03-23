@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Färgdistribution efter värde",
 	"Visual_ColorGradientEndColor": "Slutfärg för toningen",
 	"Visual_Default_Color": "Standardfärg",
-	"Visual_Fill": "Fyll"
+	"Visual_Fill": "Fyll",
+	"Visual_GradientStartColor": "Startfärg",
+	"Visual_GradientEndColor": "Slutfärg"
 }

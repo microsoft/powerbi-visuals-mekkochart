@@ -45,5 +45,7 @@
 	"Visual_ColorDistibution": "Verteilung der Farbe nach Wert",
 	"Visual_ColorGradientEndColor": "Endfarbe für Farbverlauf",
 	"Visual_Default_Color": "Standardfarbe",
-	"Visual_Fill": "Ausfüllen"
+	"Visual_Fill": "Ausfüllen",
+	"Visual_GradientStartColor": "Startfarbe",
+	"Visual_GradientEndColor": "Endfarbe"
 }
