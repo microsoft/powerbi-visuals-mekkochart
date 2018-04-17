@@ -122,6 +122,7 @@ module powerbi.extensibility.visual.columnChart {
 
         private colorPalette: IColorPalette;
         private visualHost: IVisualHost;
+        private localizationManager: ILocalizationManager;
 
         private chartType: MekkoVisualChartType;
 
@@ -161,6 +162,7 @@ module powerbi.extensibility.visual.columnChart {
                 .classed(BaseColumnChart.LabelGraphicsContextSelector.className, true);
 
             this.visualHost = options.host;
+            this.localizationManager = this.visualHost.createLocalizationManager();
             this.colorPalette = this.visualHost.colorPalette;
 
             this.cartesianVisualHost = options.cartesianHost;
@@ -243,6 +245,7 @@ module powerbi.extensibility.visual.columnChart {
             isScalar: boolean = false,
             supportsOverflow: boolean = false,
             dataViewMetadata: DataViewMetadata = null,
+            localizationManager: ILocalizationManager,
             chartType?: MekkoVisualChartType): MekkoColumnChartData {
 
             const xAxisCardProperties: DataViewObject = dataViewUtils.getCategoryAxisProperties(dataViewMetadata);
@@ -323,6 +326,7 @@ module powerbi.extensibility.visual.columnChart {
                 is100PercentStacked,
                 isScalar,
                 supportsOverflow,
+                localizationManager,
                 converterHelper.categoryIsAlsoSeriesRole(
                     categorical,
                     RoleNames.series,
@@ -527,6 +531,7 @@ module powerbi.extensibility.visual.columnChart {
             is100PercentStacked: boolean = false,
             isScalar: boolean = false,
             supportsOverflow: boolean = false,
+            localizationManager: ILocalizationManager,
             isCategoryAlsoSeries?: boolean,
             categoryObjectsList?: IDataViewObjects[],
             defaultDataPointColor?: string,
@@ -849,6 +854,7 @@ module powerbi.extensibility.visual.columnChart {
                     let tooltipInfo: VisualTooltipDataItem[] = tooltip.createTooltipInfo(
                         null,
                         rawCategoryValue,
+                        localizationManager,
                         originalValue,
                         [category],
                         seriesData,
@@ -939,6 +945,7 @@ module powerbi.extensibility.visual.columnChart {
                         tooltipInfo = tooltip.createTooltipInfo(
                             dataViewCat,
                             rawCategoryValue,
+                            localizationManager,
                             originalValue,
                             null,
                             null,
@@ -1146,6 +1153,7 @@ module powerbi.extensibility.visual.columnChart {
                         false,
                         this.supportsOverflow,
                         dataView.metadata,
+                        this.localizationManager,
                         this.chartType);
 
                     for (let currentSeries of this.data.series) {
