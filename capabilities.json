@@ -3,36 +3,42 @@
         {
             "name": "Category",
             "kind": "Grouping",
-            "displayName": "Category"
+            "displayName": "Category",
+            "displayNameKey": "Visual_Category"
         },
         {
             "name": "Series",
             "kind": "Grouping",
-            "displayName": "Series"
+            "displayName": "Series",
+            "displayNameKey": "Visual_Series"
         },
         {
             "name": "Y",
             "kind": "Measure",
-            "displayName": "YAxis"
+            "displayName": "YAxis",
+            "displayNameKey": "Visual_YAxis"
         },
         {
             "name": "Width",
             "kind": "Measure",
-            "displayName": "Axiswidth"
+            "displayName": "Axis width",
+            "displayNameKey": "Visual_Axiswidth"
         },
         {
             "name":"CategoryCustomSorting",
             "kind":"Grouping",
-            "displayName":"Category sorting"
+            "displayName":"Category sorting",
+            "displayNameKey": "Visual_Category_Sorting"
         }
     ],
     "objects": {
         "columnBorder": {
             "displayName": "Column Border",
-            "displayNameKey": "Visual_Show",
+            "displayNameKey": "Visual_ColumnBorder",
             "properties": {
                 "show": {
                     "displayName": "Show",
+                    "displayNameKey": "Visual_Show",
                     "type": {
                         "bool": true
                     }
@@ -41,6 +47,7 @@
                     "displayName": "Color",
                     "displayNameKey": "Visual_Color",
                     "description": "Select color for data labels",
+                    "descriptionKey": "Visual_Description_Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -62,6 +69,7 @@
             "displayName": "Data labels",
             "displayNameKey": "Visual_Data_Labels",
             "description": "Display data label options",
+            "descriptionKey": "Visual_Description_DataLabels",
             "properties": {
                 "show": {
                     "displayName": "Show",
@@ -81,6 +89,7 @@
                     "displayName": "Color",
                     "displayNameKey": "Visual_Color",
                     "description": "Select color for data labels",
+                    "descriptionKey": "Visual_Description_Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -93,6 +102,7 @@
                     "displayName": "Display units",
                     "displayNameKey": "Visual_Display_Units",
                     "description": "Select the units (millions, billions, etc.)",
+                    "descriptionKey": "Visual_Description_DisplayUnits",
                     "type": {
                         "formatting": {
                             "labelDisplayUnits": true
@@ -104,6 +114,7 @@
                     "displayName": "Decimal places",
                     "displayNameKey": "Visual_Decimal_Places",
                     "description": "Select the number of decimal places to display",
+                    "descriptionKey": "Visual_Description_DecimalPlaces",
                     "placeHolderText": "Auto",
                     "type": {
                         "numeric": true
@@ -170,7 +181,7 @@
             "properties": {
                 "enabled": {
                     "displayName": "Enabled",
-                    "displayNameKey": "Visual_Enbaled",
+                    "displayNameKey": "Visual_Enabled",
                     "type": {
                         "bool": true
                     }
@@ -226,7 +237,7 @@
             "properties": {
                 "enabled": {
                     "displayName": "Enabled",
-                    "displayNameKey": "Visual_Enbaled",
+                    "displayNameKey": "Visual_Enabled",
                     "type": {
                         "bool": true
                     }
@@ -274,8 +285,8 @@
             "displayNameKey": "Visual_XAxisLabelsRotation",
             "properties": {
                 "enableRotataion": {
-                    "displayName": "Enbaled",
-                    "displayNameKey": "Visual_Enbaled",
+                    "displayName": "Enabled",
+                    "displayNameKey": "Visual_Enabled",
                     "type": {
                         "bool": true
                     }
@@ -375,7 +386,7 @@
             "properties": {
                 "categoryGradient": {
                     "displayName": "Category gradient",
-                    "displayNameKey": "Visual_Enable",
+                    "displayNameKey": "Visual_CategoryGradient",
                     "type": {
                         "bool": true
                     }
