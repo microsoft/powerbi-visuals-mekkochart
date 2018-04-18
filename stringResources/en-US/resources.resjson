@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Column Border",
+	"Visual_Show": "Show",
 	"Visual_LabelsFill": "Color",
 	"Visual_General_Properties_Width": "Width",
 	"Visual_DataPointsLabels": "Data labels",
@@ -49,5 +49,10 @@
 	"Visual_GradientStartColor": "Start color",
 	"Visual_GradientEndColor": "End color",
 	"Visual_CategoryDataColorsStart": "Categoty data colors start",
-	"Visual_CategoryDataColorsEnd": "Categoty data colors end"
+	"Visual_CategoryDataColorsEnd": "Categoty data colors end",
+	"Visual_Axiswidth": "Axis width",
+	"Visual_Category_Sorting": "Category sorting",
+	"Visual_ColumnBorder": "Column Border",
+	"Visual_Enabled": "Enabled",
+	"Visual_CategoryGradient": "Category gradient"
 }
