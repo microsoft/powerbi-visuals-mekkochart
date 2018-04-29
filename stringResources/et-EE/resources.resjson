@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Veeru ääris",
+	"Visual_Show": "Kuva",
 	"Visual_LabelsFill": "Värv",
 	"Visual_General_Properties_Width": "Laius",
 	"Visual_DataPointsLabels": "Andmesildid",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Vaikevärv",
 	"Visual_Fill": "Täida",
 	"Visual_GradientStartColor": "Algusvärv",
-	"Visual_GradientEndColor": "Lõpuvärv"
+	"Visual_GradientEndColor": "Lõpuvärv",
+	"Visual_ColumnBorder": "Veeru ääris",
+	"Visual_Category_Sorting": "Kategooria sortimine",
+	"Visual_Enabled": "Lubatud",
+	"Visual_CategoryGradient": "Kategooria astmik",
+	"Visual_Axiswidth": "Telje laius",
+	"Visual_Description_Color": "Valige andmesiltide värv",
+	"Visual_Description_DataLabels": "Kuva andmesildi suvandid",
+	"Visual_Description_DisplayUnits": "Valige ühikud (miljonid, miljardid jne)",
+	"Visual_Description_DecimalPlaces": "Valige kuvatavate kümnendkohtade arv",
+	"Visual_CategoryDataColorsStart": "Kategooriaandmete värvide algus",
+	"Visual_CategoryDataColorsEnd": "Kategooriaandmete värvide lõpp",
+	"Visual_HighlightedValueDisplayName": "Esiletõstetud"
 }

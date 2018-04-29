@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Obrobo stolpca",
+	"Visual_Show": "Pokaži",
 	"Visual_LabelsFill": "Barva",
 	"Visual_General_Properties_Width": "Širina",
 	"Visual_DataPointsLabels": "Oznake podatkov",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Privzeta barva",
 	"Visual_Fill": "Zapolni",
 	"Visual_GradientStartColor": "Začetna barva",
-	"Visual_GradientEndColor": "Končna barva"
+	"Visual_GradientEndColor": "Končna barva",
+	"Visual_ColumnBorder": "Obrobo stolpca",
+	"Visual_Category_Sorting": "Razvrščanje kategorij",
+	"Visual_Enabled": "Omogočeno",
+	"Visual_CategoryGradient": "Kategorija preliv",
+	"Visual_Axiswidth": "Širina osi",
+	"Visual_Description_Color": "Izberite barvo za oznake podatkov",
+	"Visual_Description_DataLabels": "Prikaz možnosti oznak podatkov",
+	"Visual_Description_DisplayUnits": "Izberite enote (milijoni, milijarde itn.)",
+	"Visual_Description_DecimalPlaces": "Izberite število decimalnih mest za prikaz",
+	"Visual_CategoryDataColorsStart": "Začetna barva kategorije podatkov",
+	"Visual_CategoryDataColorsEnd": "Končna barva kategorije podatkov",
+	"Visual_HighlightedValueDisplayName": "Označeno"
 }

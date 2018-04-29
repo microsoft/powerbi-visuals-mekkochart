@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "列边框",
+	"Visual_Show": "显示",
 	"Visual_LabelsFill": "颜色",
 	"Visual_General_Properties_Width": "宽度",
 	"Visual_DataPointsLabels": "数据标签",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "默认颜色",
 	"Visual_Fill": "填充",
 	"Visual_GradientStartColor": "开始颜色",
-	"Visual_GradientEndColor": "结束颜色"
+	"Visual_GradientEndColor": "结束颜色",
+	"Visual_ColumnBorder": "列边框",
+	"Visual_Category_Sorting": "类别排序",
+	"Visual_Enabled": "已启用",
+	"Visual_CategoryGradient": "类别渐变",
+	"Visual_Axiswidth": "坐标轴宽度",
+	"Visual_Description_Color": "选择数据标签的颜色",
+	"Visual_Description_DataLabels": "显示数据标签选项",
+	"Visual_Description_DisplayUnits": "选择单位(百万、十亿等)",
+	"Visual_Description_DecimalPlaces": "选择要显示的小数位数",
+	"Visual_CategoryDataColorsStart": "类别数据颜色范围起始",
+	"Visual_CategoryDataColorsEnd": "类别数据颜色范围结束",
+	"Visual_HighlightedValueDisplayName": "已突出显示"
 }

@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Граница столбца",
+	"Visual_Show": "Показать",
 	"Visual_LabelsFill": "Цвет",
 	"Visual_General_Properties_Width": "Ширина",
 	"Visual_DataPointsLabels": "Метки данных",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Цвет по умолчанию",
 	"Visual_Fill": "Заливка",
 	"Visual_GradientStartColor": "Начальный цвет",
-	"Visual_GradientEndColor": "Конечный цвет"
+	"Visual_GradientEndColor": "Конечный цвет",
+	"Visual_ColumnBorder": "Граница столбца",
+	"Visual_Category_Sorting": "Сортировка категорий",
+	"Visual_Enabled": "Включено",
+	"Visual_CategoryGradient": "Градиент категории",
+	"Visual_Axiswidth": "Толщина линии оси",
+	"Visual_Description_Color": "Выбрать цвет для меток данных",
+	"Visual_Description_DataLabels": "Показывать параметры меток данных",
+	"Visual_Description_DisplayUnits": "Выбрать единицы измерения (миллионы, миллиарды и т. д.)",
+	"Visual_Description_DecimalPlaces": "Выбрать количество отображаемых десятичных знаков",
+	"Visual_CategoryDataColorsStart": "Начало категории цветов данных",
+	"Visual_CategoryDataColorsEnd": "Окончание категории цветов данных",
+	"Visual_HighlightedValueDisplayName": "Выделено"
 }

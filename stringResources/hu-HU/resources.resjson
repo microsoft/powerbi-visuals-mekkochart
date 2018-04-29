@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Oszlopszegély",
+	"Visual_Show": "Megjelenítés",
 	"Visual_LabelsFill": "Szín",
 	"Visual_General_Properties_Width": "Szélesség",
 	"Visual_DataPointsLabels": "Adatfeliratok",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Alapértelmezett szín",
 	"Visual_Fill": "Kitöltés",
 	"Visual_GradientStartColor": "Kezdőszín",
-	"Visual_GradientEndColor": "Zárószín"
+	"Visual_GradientEndColor": "Zárószín",
+	"Visual_ColumnBorder": "Oszlopszegély",
+	"Visual_Category_Sorting": "Kategóriák rendezése",
+	"Visual_Enabled": "Engedélyezve",
+	"Visual_CategoryGradient": "Kategória színátmenete",
+	"Visual_Axiswidth": "Tengely szélessége",
+	"Visual_Description_Color": "Szín kiválasztása az adatcímkékhez",
+	"Visual_Description_DataLabels": "Adatfeliratok beállításainak megjelentése",
+	"Visual_Description_DisplayUnits": "Egységek kiválasztása (milliók, milliárdok stb.)",
+	"Visual_Description_DecimalPlaces": "Megjelenítendő tizedesjegyek számának kiválasztása",
+	"Visual_CategoryDataColorsStart": "Kategóriaadatok színeinek kezdete",
+	"Visual_CategoryDataColorsEnd": "Kategóriaadatok színeinek vége",
+	"Visual_HighlightedValueDisplayName": "Kiemelt"
 }

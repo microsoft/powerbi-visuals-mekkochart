@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Bordure de la colonne",
+	"Visual_Show": "Afficher",
 	"Visual_LabelsFill": "Couleur",
 	"Visual_General_Properties_Width": "Largeur",
 	"Visual_DataPointsLabels": "Étiquettes de données",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Couleur par défaut",
 	"Visual_Fill": "Remplir",
 	"Visual_GradientStartColor": "Couleur de début",
-	"Visual_GradientEndColor": "Couleur de fin"
+	"Visual_GradientEndColor": "Couleur de fin",
+	"Visual_ColumnBorder": "Bordure de la colonne",
+	"Visual_Category_Sorting": "Tri de catégorie",
+	"Visual_Enabled": "Activé",
+	"Visual_CategoryGradient": "Dégradé de catégorie",
+	"Visual_Axiswidth": "Largeur de l'axe",
+	"Visual_Description_Color": "Sélectionner la couleur des étiquettes de données",
+	"Visual_Description_DataLabels": "Afficher les options d'étiquette de données",
+	"Visual_Description_DisplayUnits": "Sélectionner les unités (millions, milliards, etc.)",
+	"Visual_Description_DecimalPlaces": "Sélectionner le nombre de décimales à afficher",
+	"Visual_CategoryDataColorsStart": "Début des couleurs de données de catégorie",
+	"Visual_CategoryDataColorsEnd": "Fin des couleurs de données de catégorie",
+	"Visual_HighlightedValueDisplayName": "Mise en surbrillance"
 }

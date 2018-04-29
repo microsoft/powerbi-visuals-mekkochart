@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Zutabearen ertza",
+	"Visual_Show": "Erakutsi",
 	"Visual_LabelsFill": "Kolorea",
 	"Visual_General_Properties_Width": "Zabalera",
 	"Visual_DataPointsLabels": "Datuen etiketak",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Kolore lehenetsia",
 	"Visual_Fill": "Bete",
 	"Visual_GradientStartColor": "Hasierako kolorea",
-	"Visual_GradientEndColor": "Amaierako kolorea"
+	"Visual_GradientEndColor": "Amaierako kolorea",
+	"Visual_ColumnBorder": "Zutabearen ertza",
+	"Visual_Category_Sorting": "Kategorien ordena",
+	"Visual_Enabled": "Gaituta",
+	"Visual_CategoryGradient": "Kategorien gradientea",
+	"Visual_Axiswidth": "Ardatzaren zabalera",
+	"Visual_Description_Color": "Hautatu datu-etiketen kolorea",
+	"Visual_Description_DataLabels": "Bistaratu datuen etiketen aukerak",
+	"Visual_Description_DisplayUnits": "Hautatu unitateak (milioi, mila milioi, etab.)",
+	"Visual_Description_DecimalPlaces": "Hautatu bistaratu beharreko dezimal kopurua",
+	"Visual_CategoryDataColorsStart": "Kategoriaren datuen koloreen hasiera",
+	"Visual_CategoryDataColorsEnd": "Kategoriaren datuen koloreen amaiera",
+	"Visual_HighlightedValueDisplayName": "Nabarmendua"
 }

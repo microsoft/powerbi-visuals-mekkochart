@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Sütun Kenarlığı",
+	"Visual_Show": "Göster",
 	"Visual_LabelsFill": "Renk",
 	"Visual_General_Properties_Width": "Genişlik",
 	"Visual_DataPointsLabels": "Veri etiketleri",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Varsayılan renk",
 	"Visual_Fill": "Doldur",
 	"Visual_GradientStartColor": "Başlangıç rengi",
-	"Visual_GradientEndColor": "Bitiş rengi"
+	"Visual_GradientEndColor": "Bitiş rengi",
+	"Visual_ColumnBorder": "Sütun Kenarlığı",
+	"Visual_Category_Sorting": "Kategori sıralama",
+	"Visual_Enabled": "Etkin",
+	"Visual_CategoryGradient": "Kategori geçişi",
+	"Visual_Axiswidth": "Eksen genişliği",
+	"Visual_Description_Color": "Veri etiketlerine ilişkin rengi seçin",
+	"Visual_Description_DataLabels": "Veri etiketi seçeneklerini görüntüle",
+	"Visual_Description_DisplayUnits": "Birimleri (milyon, milyar vs.) seçin",
+	"Visual_Description_DecimalPlaces": "Görüntülenecek ondalık basamak sayısını seçin",
+	"Visual_CategoryDataColorsStart": "Kategori veri rengi başlangıcı",
+	"Visual_CategoryDataColorsEnd": "Kategori veri rengi sonu",
+	"Visual_HighlightedValueDisplayName": "Vurgulanmış"
 }

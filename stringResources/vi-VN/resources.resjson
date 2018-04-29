@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Viền cột",
+	"Visual_Show": "Hiện",
 	"Visual_LabelsFill": "Màu",
 	"Visual_General_Properties_Width": "Độ rộng",
 	"Visual_DataPointsLabels": "Các nhãn dữ liệu",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Màu mặc định",
 	"Visual_Fill": "Điền",
 	"Visual_GradientStartColor": "Màu bắt đầu",
-	"Visual_GradientEndColor": "Màu kết thúc"
+	"Visual_GradientEndColor": "Màu kết thúc",
+	"Visual_ColumnBorder": "Viền cột",
+	"Visual_Category_Sorting": "Sắp xếp danh mục",
+	"Visual_Enabled": "Đã kích hoạt",
+	"Visual_CategoryGradient": "Chuyển màu danh mục",
+	"Visual_Axiswidth": "Chiều rộng trục",
+	"Visual_Description_Color": "Chọn màu cho nhãn dữ liệu",
+	"Visual_Description_DataLabels": "Hiển thị tùy chọn nhãn dữ liệu",
+	"Visual_Description_DisplayUnits": "Chọn đơn vị (triệu, tỷ, v.v.)",
+	"Visual_Description_DecimalPlaces": "Chọn số vị trí thập phân để hiển thị",
+	"Visual_CategoryDataColorsStart": "Bắt đầu màu dữ liệu danh mục",
+	"Visual_CategoryDataColorsEnd": "Kết thúc màu dữ liệu danh mục",
+	"Visual_HighlightedValueDisplayName": "Được tô sáng"
 }

@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Баған жиегі",
+	"Visual_Show": "Көрсету",
 	"Visual_LabelsFill": "Түс",
 	"Visual_General_Properties_Width": "Ені",
 	"Visual_DataPointsLabels": "Деректер белгілері",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Әдепкі түс",
 	"Visual_Fill": "Толтыру",
 	"Visual_GradientStartColor": "Бастапқы түс",
-	"Visual_GradientEndColor": "Соңғы түс"
+	"Visual_GradientEndColor": "Соңғы түс",
+	"Visual_ColumnBorder": "Баған жиегі",
+	"Visual_Category_Sorting": "Санаттың сұрыпталуы",
+	"Visual_Enabled": "Қосылған",
+	"Visual_CategoryGradient": "Санат градиенті",
+	"Visual_Axiswidth": "Ось ені",
+	"Visual_Description_Color": "Деректер белгілері үшін түс таңдау",
+	"Visual_Description_DataLabels": "Деректер белгілері параметрлерін көрсету",
+	"Visual_Description_DisplayUnits": "Бірліктерді таңдау (миллион, миллиард, т.б.)",
+	"Visual_Description_DecimalPlaces": "Көрсетілетін ондық орын үшін санды таңдау",
+	"Visual_CategoryDataColorsStart": "Санат деректер түстерінің басы",
+	"Visual_CategoryDataColorsEnd": "Санат деректер түстерінің соңы",
+	"Visual_HighlightedValueDisplayName": "Бөлектелген"
 }

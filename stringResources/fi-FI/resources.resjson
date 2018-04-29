@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Sarakkeen reuna",
+	"Visual_Show": "Näytä",
 	"Visual_LabelsFill": "Väri",
 	"Visual_General_Properties_Width": "Leveys",
 	"Visual_DataPointsLabels": "Arvopisteiden otsikot",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Oletusväri",
 	"Visual_Fill": "Täyttö",
 	"Visual_GradientStartColor": "Alkuväri",
-	"Visual_GradientEndColor": "Loppuväri"
+	"Visual_GradientEndColor": "Loppuväri",
+	"Visual_ColumnBorder": "Sarakkeen reuna",
+	"Visual_Category_Sorting": "Luokan lajittelu",
+	"Visual_Enabled": "Käytössä",
+	"Visual_CategoryGradient": "Luokan liukuväri",
+	"Visual_Axiswidth": "Akselin leveys",
+	"Visual_Description_Color": "Valitse väri arvopisteiden otsikoille",
+	"Visual_Description_DataLabels": "Näytä arvopisteiden otsikkovaihtoehdot",
+	"Visual_Description_DisplayUnits": "Valitse yksiköt (miljoonat, miljardit ja niin edelleen)",
+	"Visual_Description_DecimalPlaces": "Valitse näytettävien desimaalien määrä",
+	"Visual_CategoryDataColorsStart": "Luokan tietojen värien alku",
+	"Visual_CategoryDataColorsEnd": "Luokan tietojen värien loppu",
+	"Visual_HighlightedValueDisplayName": "Korostettu"
 }

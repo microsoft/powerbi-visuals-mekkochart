@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Kolomrand",
+	"Visual_Show": "Weergeven",
 	"Visual_LabelsFill": "Kleur",
 	"Visual_General_Properties_Width": "Breedte",
 	"Visual_DataPointsLabels": "Gegevenslabels",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Standaardkleur",
 	"Visual_Fill": "Opvullen",
 	"Visual_GradientStartColor": "Beginkleur",
-	"Visual_GradientEndColor": "Eindkleur"
+	"Visual_GradientEndColor": "Eindkleur",
+	"Visual_ColumnBorder": "Kolomrand",
+	"Visual_Category_Sorting": "Categorie sorteren",
+	"Visual_Enabled": "Ingeschakeld",
+	"Visual_CategoryGradient": "Categorie verloop",
+	"Visual_Axiswidth": "As-breedte",
+	"Visual_Description_Color": "Kleur voor gegevenslabels selecteren",
+	"Visual_Description_DataLabels": "Opties voor gegevenslabels weergeven",
+	"Visual_Description_DisplayUnits": "De eenheden selecteren (miljoenen, miljarden, enzovoort)",
+	"Visual_Description_DecimalPlaces": "Het aantal weer te geven decimalen selecteren",
+	"Visual_CategoryDataColorsStart": "Gegevenskleuren begin categorie",
+	"Visual_CategoryDataColorsEnd": "Gegevenskleuren einde categorie",
+	"Visual_HighlightedValueDisplayName": "Gemarkeerd"
 }

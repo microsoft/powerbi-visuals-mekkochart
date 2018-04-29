@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Warna lalai",
 	"Visual_Fill": "Isi",
 	"Visual_GradientStartColor": "Warna mula",
-	"Visual_GradientEndColor": "Warna akhir"
+	"Visual_GradientEndColor": "Warna akhir",
+	"Visual_ColumnBorder": "Tunjukkan",
+	"Visual_Category_Sorting": "Pengisihan kategori",
+	"Visual_Enabled": "Didayakan",
+	"Visual_CategoryGradient": "Gradien kategori",
+	"Visual_Axiswidth": "Lebar paksi",
+	"Visual_Description_Color": "Pilih warna untuk label data",
+	"Visual_Description_DataLabels": "Paparkan opsyen label data",
+	"Visual_Description_DisplayUnits": "Pilih unit (juta, bilion dan sebagainya)",
+	"Visual_Description_DecimalPlaces": "Pilih bilangan tempat perpuluhan untuk dipaparkan",
+	"Visual_CategoryDataColorsStart": "Warna data kategori mula",
+	"Visual_CategoryDataColorsEnd": "Warna data kategori tamat",
+	"Visual_HighlightedValueDisplayName": "Diserlahkan"
 }

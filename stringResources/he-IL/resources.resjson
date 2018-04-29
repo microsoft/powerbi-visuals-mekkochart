@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "גבול העמודה",
+	"Visual_Show": "‏‏הצג",
 	"Visual_LabelsFill": "צבע",
 	"Visual_General_Properties_Width": "רוחב",
 	"Visual_DataPointsLabels": "תוויות נתונים",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "צבע ברירת מחדל",
 	"Visual_Fill": "מילוי",
 	"Visual_GradientStartColor": "צבע התחלה",
-	"Visual_GradientEndColor": "צבע סיום"
+	"Visual_GradientEndColor": "צבע סיום",
+	"Visual_ColumnBorder": "גבול העמודה",
+	"Visual_Category_Sorting": "מיון קטגוריות",
+	"Visual_Enabled": "זמין",
+	"Visual_CategoryGradient": "מילוי הדרגתי של קטגוריה",
+	"Visual_Axiswidth": "רוחב ציר",
+	"Visual_Description_Color": "בחר צבע לתוויות מידע",
+	"Visual_Description_DataLabels": "הצג אפשרויות תוויות מידע",
+	"Visual_Description_DisplayUnits": "בחר יחידות (מיליונים, מיליארדים, ועוד)",
+	"Visual_Description_DecimalPlaces": "בחר מספר מקומות עשרוניים להצגה",
+	"Visual_CategoryDataColorsStart": "צבעי ההתחלה של נתוני קטגוריה",
+	"Visual_CategoryDataColorsEnd": "צבעי הסיום של נתוני קטגוריה",
+	"Visual_HighlightedValueDisplayName": "מודגש"
 }

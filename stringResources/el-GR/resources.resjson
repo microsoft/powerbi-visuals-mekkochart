@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Περίγραμμα στήλης",
+	"Visual_Show": "Εμφάνιση",
 	"Visual_LabelsFill": "Χρώμα",
 	"Visual_General_Properties_Width": "Πλάτος",
 	"Visual_DataPointsLabels": "Ετικέτες δεδομένων",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Προεπιλεγμένο χρώμα",
 	"Visual_Fill": "Συμπλήρωση",
 	"Visual_GradientStartColor": "Αρχικό χρώμα",
-	"Visual_GradientEndColor": "Τελικό χρώμα"
+	"Visual_GradientEndColor": "Τελικό χρώμα",
+	"Visual_ColumnBorder": "Περίγραμμα στήλης",
+	"Visual_Category_Sorting": "Ταξινόμηση κατηγοριών",
+	"Visual_Enabled": "Ενεργοποιημένο",
+	"Visual_CategoryGradient": "Διαβάθμιση κατηγορίας",
+	"Visual_Axiswidth": "Πλάτος άξονα",
+	"Visual_Description_Color": "Επιλογή χρώματος για ετικέτες δεδομένων",
+	"Visual_Description_DataLabels": "Εμφάνιση επιλογών ετικετών δεδομένων",
+	"Visual_Description_DisplayUnits": "Επιλογή των μονάδων (εκατομμύρια, δισεκατομμύρια κ.λπ.)",
+	"Visual_Description_DecimalPlaces": "Επιλογή του αριθμού δεκαδικών ψηφίων για εμφάνιση",
+	"Visual_CategoryDataColorsStart": "Αρχή χρωμάτων δεδομένων κατηγοριών",
+	"Visual_CategoryDataColorsEnd": "Τέλος χρωμάτων δεδομένων κατηγοριών",
+	"Visual_HighlightedValueDisplayName": "Με επισήμανση"
 }

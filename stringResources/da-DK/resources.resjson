@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Kolonneramme",
+	"Visual_Show": "Vis",
 	"Visual_LabelsFill": "Farve",
 	"Visual_General_Properties_Width": "Bredde",
 	"Visual_DataPointsLabels": "Datanavne",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Standardfarve",
 	"Visual_Fill": "Udfyldning",
 	"Visual_GradientStartColor": "Startfarve",
-	"Visual_GradientEndColor": "Slutfarve"
+	"Visual_GradientEndColor": "Slutfarve",
+	"Visual_ColumnBorder": "Kolonneramme",
+	"Visual_Category_Sorting": "Kategorisortering",
+	"Visual_Enabled": "Aktiveret",
+	"Visual_CategoryGradient": "Kategorigraduering",
+	"Visual_Axiswidth": "Bredde for akse",
+	"Visual_Description_Color": "Vælg farve for datanavne",
+	"Visual_Description_DataLabels": "Vis datanavnindstillinger",
+	"Visual_Description_DisplayUnits": "Vælg enhederne (millioner, milliarder osv.)",
+	"Visual_Description_DecimalPlaces": "Vælg, hvor mange decimalpladser der skal vises",
+	"Visual_CategoryDataColorsStart": "Datafarver for kategori, start",
+	"Visual_CategoryDataColorsEnd": "Datafarver for kategori, slut",
+	"Visual_HighlightedValueDisplayName": "Fremhævet"
 }

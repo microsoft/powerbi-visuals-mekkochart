@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Borda da Coluna",
+	"Visual_Show": "Mostrar",
 	"Visual_LabelsFill": "Cor",
 	"Visual_General_Properties_Width": "Largura",
 	"Visual_DataPointsLabels": "Rótulos de dados",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Cor padrão",
 	"Visual_Fill": "Preencher",
 	"Visual_GradientStartColor": "Cor inicial",
-	"Visual_GradientEndColor": "Cor final"
+	"Visual_GradientEndColor": "Cor final",
+	"Visual_ColumnBorder": "Borda da Coluna",
+	"Visual_Category_Sorting": "Classificação de categoria",
+	"Visual_Enabled": "Habilitada",
+	"Visual_CategoryGradient": "Gradiente de categoria",
+	"Visual_Axiswidth": "Largura do eixo",
+	"Visual_Description_Color": "Selecionar a cor para os rótulos de dados",
+	"Visual_Description_DataLabels": "Exibir opções de rótulo de dados",
+	"Visual_Description_DisplayUnits": "Selecionar as unidades (milhões, bilhões etc.)",
+	"Visual_Description_DecimalPlaces": "Selecionar o número de casas decimais para mostrar",
+	"Visual_CategoryDataColorsStart": "Início das cores dos dados de categoria",
+	"Visual_CategoryDataColorsEnd": "Fim das cores dos dados de categoria",
+	"Visual_HighlightedValueDisplayName": "Realçado"
 }

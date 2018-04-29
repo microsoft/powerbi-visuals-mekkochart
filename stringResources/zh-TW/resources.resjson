@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "資料行框線",
+	"Visual_Show": "顯示",
 	"Visual_LabelsFill": "色彩",
 	"Visual_General_Properties_Width": "寬度",
 	"Visual_DataPointsLabels": "資料標籤",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "預設色彩",
 	"Visual_Fill": "填滿",
 	"Visual_GradientStartColor": "開始色彩",
-	"Visual_GradientEndColor": "結束色彩"
+	"Visual_GradientEndColor": "結束色彩",
+	"Visual_ColumnBorder": "資料行框線",
+	"Visual_Category_Sorting": "類別目錄排序",
+	"Visual_Enabled": "已啟用",
+	"Visual_CategoryGradient": "類別漸層",
+	"Visual_Axiswidth": "軸寬",
+	"Visual_Description_Color": "選取資料標籤的色彩",
+	"Visual_Description_DataLabels": "顯示資料標籤選項",
+	"Visual_Description_DisplayUnits": "選取單位 (百萬、十億等)",
+	"Visual_Description_DecimalPlaces": "選取要顯示的小數位數",
+	"Visual_CategoryDataColorsStart": "類別目錄資料色彩開始",
+	"Visual_CategoryDataColorsEnd": "類別目錄資料色彩結束",
+	"Visual_HighlightedValueDisplayName": "反白顯示"
 }

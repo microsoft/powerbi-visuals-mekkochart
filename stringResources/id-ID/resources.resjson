@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Batas Kolom",
+	"Visual_Show": "Tampilkan",
 	"Visual_LabelsFill": "Warna",
 	"Visual_General_Properties_Width": "Lebar",
 	"Visual_DataPointsLabels": "Label data",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Warna default",
 	"Visual_Fill": "Isi",
 	"Visual_GradientStartColor": "Mulai warna",
-	"Visual_GradientEndColor": "Warna akhir"
+	"Visual_GradientEndColor": "Warna akhir",
+	"Visual_ColumnBorder": "Batas Kolom",
+	"Visual_Category_Sorting": "Penyortiran kategori",
+	"Visual_Enabled": "Diaktifkan",
+	"Visual_CategoryGradient": "Gradien kategori",
+	"Visual_Axiswidth": "Lebar sumbu",
+	"Visual_Description_Color": "Pilih warna untuk label data",
+	"Visual_Description_DataLabels": "Tampilkan opsi label data",
+	"Visual_Description_DisplayUnits": "Pilih unit (juta, miliar, dsb.)",
+	"Visual_Description_DecimalPlaces": "Pilih jumlah tempat desimal untuk ditampilkan",
+	"Visual_CategoryDataColorsStart": "Warna data kategori awal",
+	"Visual_CategoryDataColorsEnd": "Warna data kategori akhir",
+	"Visual_HighlightedValueDisplayName": "Disorot"
 }

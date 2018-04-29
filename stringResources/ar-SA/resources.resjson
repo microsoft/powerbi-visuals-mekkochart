@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "حد العمود",
+	"Visual_Show": "‏‏إظهار",
 	"Visual_LabelsFill": "اللون",
 	"Visual_General_Properties_Width": "العرض",
 	"Visual_DataPointsLabels": "بطاقات البيانات",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "اللون الافتراضي",
 	"Visual_Fill": "تعبئة",
 	"Visual_GradientStartColor": "لون البداية",
-	"Visual_GradientEndColor": "لون النهاية"
+	"Visual_GradientEndColor": "لون النهاية",
+	"Visual_ColumnBorder": "حد العمود",
+	"Visual_Category_Sorting": "فرز الفئة",
+	"Visual_Enabled": "ممكّنة",
+	"Visual_CategoryGradient": "تدرج الفئة",
+	"Visual_Axiswidth": "عرض المحور",
+	"Visual_Description_Color": "تحديد لون بطاقات البيانات",
+	"Visual_Description_DataLabels": "عرض خيارات بطاقة البيانات",
+	"Visual_Description_DisplayUnits": "تحديد الوحدات (ملايين، مليارات، إلخ)",
+	"Visual_Description_DecimalPlaces": "تحديد عدد المنازل العشرية المطلوب عرضها",
+	"Visual_CategoryDataColorsStart": "بداية ألوان بيانات الفئة",
+	"Visual_CategoryDataColorsEnd": "نهاية ألوان بيانات الفئة",
+	"Visual_HighlightedValueDisplayName": "تمييز"
 }

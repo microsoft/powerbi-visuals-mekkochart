@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Spaltenrand",
+	"Visual_Show": "Anzeigen",
 	"Visual_LabelsFill": "Farbe",
 	"Visual_General_Properties_Width": "Breite",
 	"Visual_DataPointsLabels": "Datenbeschriftungen",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Standardfarbe",
 	"Visual_Fill": "Ausfüllen",
 	"Visual_GradientStartColor": "Startfarbe",
-	"Visual_GradientEndColor": "Endfarbe"
+	"Visual_GradientEndColor": "Endfarbe",
+	"Visual_ColumnBorder": "Spaltenrand",
+	"Visual_Category_Sorting": "Kategoriesortierung",
+	"Visual_Enabled": "Aktiviert",
+	"Visual_CategoryGradient": "Kategorieverlauf",
+	"Visual_Axiswidth": "Achsenbreite",
+	"Visual_Description_Color": "Farbe für Datenbeschriftungen auswählen",
+	"Visual_Description_DataLabels": "Optionen für Datenbeschriftungen anzeigen",
+	"Visual_Description_DisplayUnits": "Einheiten auswählen (Millionen, Milliarden usw.)",
+	"Visual_Description_DecimalPlaces": "Anzahl der anzuzeigenden Dezimalstellen auswählen",
+	"Visual_CategoryDataColorsStart": "Startfarbe für Kategoriedaten",
+	"Visual_CategoryDataColorsEnd": "Endfarbe für Kategoriedaten",
+	"Visual_HighlightedValueDisplayName": "Hervorgehoben"
 }

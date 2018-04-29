@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Borde de columna",
+	"Visual_Show": "Mostrar",
 	"Visual_LabelsFill": "Color",
 	"Visual_General_Properties_Width": "Ancho",
 	"Visual_DataPointsLabels": "Etiquetas de datos",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Color predeterminado",
 	"Visual_Fill": "Rellenar",
 	"Visual_GradientStartColor": "Color inicial",
-	"Visual_GradientEndColor": "Color final"
+	"Visual_GradientEndColor": "Color final",
+	"Visual_ColumnBorder": "Borde de columna",
+	"Visual_Category_Sorting": "Ordenación de categorías",
+	"Visual_Enabled": "Habilitado",
+	"Visual_CategoryGradient": "Degradado de categoría",
+	"Visual_Axiswidth": "Ancho de eje",
+	"Visual_Description_Color": "Seleccionar color para etiquetas de datos",
+	"Visual_Description_DataLabels": "Mostrar opciones de etiqueta de datos",
+	"Visual_Description_DisplayUnits": "Seleccionar las unidades (millones, miles de millones, etc.)",
+	"Visual_Description_DecimalPlaces": "Seleccionar número de posiciones decimales que se mostrarán",
+	"Visual_CategoryDataColorsStart": "Inicio de colores de datos de categoría",
+	"Visual_CategoryDataColorsEnd": "Fin de colores de datos de categoría",
+	"Visual_HighlightedValueDisplayName": "Resaltado"
 }

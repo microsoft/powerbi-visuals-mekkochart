@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Stulpelio kraštinė",
+	"Visual_Show": "Rodyti",
 	"Visual_LabelsFill": "Spalva",
 	"Visual_General_Properties_Width": "Plotis",
 	"Visual_DataPointsLabels": "Duomenų žymos",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Numatytoji spalva",
 	"Visual_Fill": "Užpildyti",
 	"Visual_GradientStartColor": "Spalva pradžioje",
-	"Visual_GradientEndColor": "Spalva pabaigoje"
+	"Visual_GradientEndColor": "Spalva pabaigoje",
+	"Visual_ColumnBorder": "Stulpelio kraštinė",
+	"Visual_Category_Sorting": "Kategorijų rūšiavimas",
+	"Visual_Enabled": "Įjungta",
+	"Visual_CategoryGradient": "Kategorijos gradientas",
+	"Visual_Axiswidth": "Ašies plotis",
+	"Visual_Description_Color": "Pasirinkite duomenų žymų spalvą",
+	"Visual_Description_DataLabels": "Rodyti duomenų žymų parinktis",
+	"Visual_Description_DisplayUnits": "Pasirinkite vienetus (milijonus, milijardus ir kt.)",
+	"Visual_Description_DecimalPlaces": "Pasirinkite rodytiną dešimtainių skaičių kiekį",
+	"Visual_CategoryDataColorsStart": "Kategorijų duomenų spalvos pradžioje",
+	"Visual_CategoryDataColorsEnd": "Kategorijų duomenų spalvos pabaigoje",
+	"Visual_HighlightedValueDisplayName": "Pažymėta"
 }

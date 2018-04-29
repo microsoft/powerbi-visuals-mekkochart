@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Bordură coloană",
+	"Visual_Show": "Afişare",
 	"Visual_LabelsFill": "Culoare",
 	"Visual_General_Properties_Width": "Lățime",
 	"Visual_DataPointsLabels": "Etichete de date",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Culoare implicită",
 	"Visual_Fill": "Completare",
 	"Visual_GradientStartColor": "Culoare de început",
-	"Visual_GradientEndColor": "Culoare de sfârșit"
+	"Visual_GradientEndColor": "Culoare de sfârșit",
+	"Visual_ColumnBorder": "Bordură coloană",
+	"Visual_Category_Sorting": "Sortare după categorie",
+	"Visual_Enabled": "Activat",
+	"Visual_CategoryGradient": "Gradient categorie",
+	"Visual_Axiswidth": "Lățimea axei",
+	"Visual_Description_Color": "Selectați culoarea pentru etichetele de date",
+	"Visual_Description_DataLabels": "Afișați opțiunile pentru etichete de date",
+	"Visual_Description_DisplayUnits": "Selectați unitățile (milioane, miliarde etc.)",
+	"Visual_Description_DecimalPlaces": "Selectați numărul de zecimale de afișat",
+	"Visual_CategoryDataColorsStart": "Început de culori date de categorie",
+	"Visual_CategoryDataColorsEnd": "Sfârșit de culori date de categorie",
+	"Visual_HighlightedValueDisplayName": "Evidenţiat"
 }

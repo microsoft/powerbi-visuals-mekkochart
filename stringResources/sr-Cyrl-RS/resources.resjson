@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Ивица колоне",
+	"Visual_Show": "Прикажи",
 	"Visual_LabelsFill": "Боја",
 	"Visual_General_Properties_Width": "Ширина",
 	"Visual_DataPointsLabels": "Ознаке података",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Подразумевана боја",
 	"Visual_Fill": "Попуни",
 	"Visual_GradientStartColor": "Почетна боја",
-	"Visual_GradientEndColor": "Крајња боја"
+	"Visual_GradientEndColor": "Крајња боја",
+	"Visual_ColumnBorder": "Ивица колоне",
+	"Visual_Category_Sorting": "Сортирање категорије",
+	"Visual_Enabled": "Омогућено",
+	"Visual_CategoryGradient": "Прелив за категорију",
+	"Visual_Axiswidth": "Ширина осе",
+	"Visual_Description_Color": "Изаберите боју за ознаке података",
+	"Visual_Description_DataLabels": "Прикажи опције ознака боја података",
+	"Visual_Description_DisplayUnits": "Изаберите јединице (милиони, милијарде итд.)",
+	"Visual_Description_DecimalPlaces": "Изаберите број децималних места за приказ",
+	"Visual_CategoryDataColorsStart": "Почетна боја података категорије",
+	"Visual_CategoryDataColorsEnd": "Завршна боја за податке категорије",
+	"Visual_HighlightedValueDisplayName": "Истакнуто"
 }

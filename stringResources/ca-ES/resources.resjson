@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Vora de columna",
+	"Visual_Show": "Mostra",
 	"Visual_LabelsFill": "Color",
 	"Visual_General_Properties_Width": "Amplària",
 	"Visual_DataPointsLabels": "Etiquetes de dades",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Color per defecte",
 	"Visual_Fill": "Emplena",
 	"Visual_GradientStartColor": "Color d'inici",
-	"Visual_GradientEndColor": "Color final"
+	"Visual_GradientEndColor": "Color final",
+	"Visual_ColumnBorder": "Vora de columna",
+	"Visual_Category_Sorting": "Ordenació de categories",
+	"Visual_Enabled": "Habilitat",
+	"Visual_CategoryGradient": "Gradient de categoria",
+	"Visual_Axiswidth": "Amplada de l'eix",
+	"Visual_Description_Color": "Seleccioneu el color de les etiquetes de dades",
+	"Visual_Description_DataLabels": "Mostra les opcions per a l'etiqueta de dades",
+	"Visual_Description_DisplayUnits": "Seleccioneu les unitats (milions, milers de milions, etc.)",
+	"Visual_Description_DecimalPlaces": "Seleccioneu el nombre de posicions decimals que cal mostrar",
+	"Visual_CategoryDataColorsStart": "Inici dels colors de dades de categories",
+	"Visual_CategoryDataColorsEnd": "Fi dels colors de dades de categories",
+	"Visual_HighlightedValueDisplayName": "Ressaltat"
 }

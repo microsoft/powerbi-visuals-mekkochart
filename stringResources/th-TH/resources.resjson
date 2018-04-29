@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "เส้นขอบคอลัมน์",
+	"Visual_Show": "แสดง",
 	"Visual_LabelsFill": "สี",
 	"Visual_General_Properties_Width": "ความกว้าง",
 	"Visual_DataPointsLabels": "ป้ายชื่อข้อมูล",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "สีตามค่าเริ่มต้น",
 	"Visual_Fill": "เติม",
 	"Visual_GradientStartColor": "สีเริ่มต้น",
-	"Visual_GradientEndColor": "สีช่วงท้าย"
+	"Visual_GradientEndColor": "สีช่วงท้าย",
+	"Visual_ColumnBorder": "เส้นขอบคอลัมน์",
+	"Visual_Category_Sorting": "การเรียงลำดับประเภท",
+	"Visual_Enabled": "เปิดใช้งานแล้ว",
+	"Visual_CategoryGradient": "การไล่ระดับสีประเภท",
+	"Visual_Axiswidth": "ความกว้างของแกน",
+	"Visual_Description_Color": "เลือกสีสำหรับป้ายข้อมูล",
+	"Visual_Description_DataLabels": "แสดงตัวเลือกป้ายสำหรับข้อมูล",
+	"Visual_Description_DisplayUnits": "เลือกหน่วย (ล้าน, พันล้าน เป็นต้น)",
+	"Visual_Description_DecimalPlaces": "เลือกจำนวนทศนิยมที่จะแสดง",
+	"Visual_CategoryDataColorsStart": "เริ่มต้นสีข้อมูลประเภท",
+	"Visual_CategoryDataColorsEnd": "สิ้นสุดสีข้อมูลประเภท",
+	"Visual_HighlightedValueDisplayName": "เน้น"
 }

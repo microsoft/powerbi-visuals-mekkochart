@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Граница на колона",
+	"Visual_Show": "Показване",
 	"Visual_LabelsFill": "Цвят",
 	"Visual_General_Properties_Width": "Широчина",
 	"Visual_DataPointsLabels": "Етикети на данни",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Цвят по подразбиране",
 	"Visual_Fill": "Запълни",
 	"Visual_GradientStartColor": "Цвят за начало",
-	"Visual_GradientEndColor": "Цвят за край"
+	"Visual_GradientEndColor": "Цвят за край",
+	"Visual_ColumnBorder": "Граница на колона",
+	"Visual_Category_Sorting": "Сортиране на категории",
+	"Visual_Enabled": "Активирано",
+	"Visual_CategoryGradient": "Преливане на категория",
+	"Visual_Axiswidth": "Ширина на оста",
+	"Visual_Description_Color": "Избор на цвят за етикетите за данни",
+	"Visual_Description_DataLabels": "Показване на опциите за етикети на данни",
+	"Visual_Description_DisplayUnits": "Избор на единиците (милиони, милиарди и т.н.)",
+	"Visual_Description_DecimalPlaces": "Избор на броя на цифрите след десетичния знак за показване",
+	"Visual_CategoryDataColorsStart": "Начало на цветовете на данните на категории",
+	"Visual_CategoryDataColorsEnd": "Край на цветовете на данните на категории",
+	"Visual_HighlightedValueDisplayName": "Осветляване"
 }

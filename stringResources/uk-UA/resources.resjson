@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Межа стовпця",
+	"Visual_Show": "Відображення",
 	"Visual_LabelsFill": "Колір",
 	"Visual_General_Properties_Width": "Ширина",
 	"Visual_DataPointsLabels": "Мітки даних",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Колір за замовчуванням",
 	"Visual_Fill": "Заповнити",
 	"Visual_GradientStartColor": "Початковий колір",
-	"Visual_GradientEndColor": "Кінцевий колір"
+	"Visual_GradientEndColor": "Кінцевий колір",
+	"Visual_ColumnBorder": "Межа стовпця",
+	"Visual_Category_Sorting": "Сортування за категоріями",
+	"Visual_Enabled": "Увімкнено",
+	"Visual_CategoryGradient": "Градієнт категорії",
+	"Visual_Axiswidth": "Ширина осі",
+	"Visual_Description_Color": "Виберіть колір для міток даних",
+	"Visual_Description_DataLabels": "Показати варіанти міток даних",
+	"Visual_Description_DisplayUnits": "Виберіть потрібну одиницю вимірювання (мільйон, мільярд тощо)",
+	"Visual_Description_DecimalPlaces": "Виберіть кількість десяткових знаків, які потрібно відображати",
+	"Visual_CategoryDataColorsStart": "Початок кольорів даних категорії",
+	"Visual_CategoryDataColorsEnd": "Кінець кольорів даних категорії",
+	"Visual_HighlightedValueDisplayName": "Виділено"
 }

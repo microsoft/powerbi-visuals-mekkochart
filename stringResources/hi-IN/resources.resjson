@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "स्तंभ बॉर्डर",
+	"Visual_Show": "दिखाएँ",
 	"Visual_LabelsFill": "रंग",
 	"Visual_General_Properties_Width": "चौड़ाई",
 	"Visual_DataPointsLabels": "डेटा लेबल",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "डिफ़ॉल्‍ट रंग",
 	"Visual_Fill": "भरण",
 	"Visual_GradientStartColor": "प्रारंभ रंग",
-	"Visual_GradientEndColor": "समाप्ति रंग"
+	"Visual_GradientEndColor": "समाप्ति रंग",
+	"Visual_ColumnBorder": "स्तंभ बॉर्डर",
+	"Visual_Category_Sorting": "श्रेणियों को छाँटना",
+	"Visual_Enabled": "सक्षम किया गया",
+	"Visual_CategoryGradient": "ग्रेडिएंट श्रेणी",
+	"Visual_Axiswidth": "अक्ष-रेखा की चौड़ाई",
+	"Visual_Description_Color": "डेटा लेबल के लिए रंग चुनें",
+	"Visual_Description_DataLabels": "डेटा लेबल विकल्प प्रदर्शित करें",
+	"Visual_Description_DisplayUnits": "इकाइयाँ चुनें (मिलियन, बिलियन आदि)",
+	"Visual_Description_DecimalPlaces": "प्रदर्शित करने के लिए दशमलव स्थानों की संख्या चुनें",
+	"Visual_CategoryDataColorsStart": "कैटेगरी डेटा रंगों का आरंभ होता है",
+	"Visual_CategoryDataColorsEnd": "कैटेगरी डेटा रंग समाप्त होते हैं",
+	"Visual_HighlightedValueDisplayName": "हाइलाइटेड"
 }

@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Kolonnas apmale",
+	"Visual_Show": "Rādīt",
 	"Visual_LabelsFill": "Krāsa",
 	"Visual_General_Properties_Width": "Platums",
 	"Visual_DataPointsLabels": "Datu etiķetes",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Noklusējuma krāsa",
 	"Visual_Fill": "Aizpildīt",
 	"Visual_GradientStartColor": "Sākuma krāsa",
-	"Visual_GradientEndColor": "Beigu krāsa"
+	"Visual_GradientEndColor": "Beigu krāsa",
+	"Visual_ColumnBorder": "Kolonnas apmale",
+	"Visual_Category_Sorting": "Kārtošana pēc kategorijas",
+	"Visual_Enabled": "Iespējots",
+	"Visual_CategoryGradient": "Kategorijas gradients",
+	"Visual_Axiswidth": "Ass platums",
+	"Visual_Description_Color": "Atlasīt krāsu datu etiķetēm",
+	"Visual_Description_DataLabels": "Rādīt datu etiķešu opcijas",
+	"Visual_Description_DisplayUnits": "Atlasiet vienības (miljoni, miljardi, utt.)",
+	"Visual_Description_DecimalPlaces": "Atlasīt rādāmo decimāldaļu skaitu",
+	"Visual_CategoryDataColorsStart": "Kategoriju datu krāsu sākums",
+	"Visual_CategoryDataColorsEnd": "Kategoriju datu krāsu beigas",
+	"Visual_HighlightedValueDisplayName": "Iezīmēts"
 }

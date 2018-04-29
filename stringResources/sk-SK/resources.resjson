@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Okraj stĺpca",
+	"Visual_Show": "Zobraziť",
 	"Visual_LabelsFill": "Farba",
 	"Visual_General_Properties_Width": "Šírka",
 	"Visual_DataPointsLabels": "Označenia údajov",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Predvolená farba",
 	"Visual_Fill": "Vyplniť",
 	"Visual_GradientStartColor": "Počiatočná farba",
-	"Visual_GradientEndColor": "Koncová farba"
+	"Visual_GradientEndColor": "Koncová farba",
+	"Visual_ColumnBorder": "Okraj stĺpca",
+	"Visual_Category_Sorting": "Zoradenie kategórií",
+	"Visual_Enabled": "Zapnuté",
+	"Visual_CategoryGradient": "Gradient kategórie",
+	"Visual_Axiswidth": "Šírka osi",
+	"Visual_Description_Color": "Vyberte farbu pre označenia údajov",
+	"Visual_Description_DataLabels": "Možnosti zobrazenia označenia údajov",
+	"Visual_Description_DisplayUnits": "Vyberte jednotky (milióny, miliardy atď.)",
+	"Visual_Description_DecimalPlaces": "Vyberte počet desatinných miest na zobrazenie",
+	"Visual_CategoryDataColorsStart": "Začiatok farieb údajov kategórie",
+	"Visual_CategoryDataColorsEnd": "Koniec farieb údajov kategórie",
+	"Visual_HighlightedValueDisplayName": "Zvýraznené"
 }

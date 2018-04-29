@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Kolumnens kantlinje",
+	"Visual_Show": "Visa",
 	"Visual_LabelsFill": "Färg",
 	"Visual_General_Properties_Width": "Bredd",
 	"Visual_DataPointsLabels": "Dataetiketter",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Standardfärg",
 	"Visual_Fill": "Fyll",
 	"Visual_GradientStartColor": "Startfärg",
-	"Visual_GradientEndColor": "Slutfärg"
+	"Visual_GradientEndColor": "Slutfärg",
+	"Visual_ColumnBorder": "Kolumnens kantlinje",
+	"Visual_Category_Sorting": "Kategorisortering",
+	"Visual_Enabled": "Aktiverad",
+	"Visual_CategoryGradient": "Kategori toning",
+	"Visual_Axiswidth": "Axelbredd",
+	"Visual_Description_Color": "Välj färg för dataetiketter",
+	"Visual_Description_DataLabels": "Visa dataetikettsalternativ",
+	"Visual_Description_DisplayUnits": "Välj enheterna (miljoner, miljarder osv)",
+	"Visual_Description_DecimalPlaces": "Välj det antal decimaler som ska visas",
+	"Visual_CategoryDataColorsStart": "Kategoridatafärger, start",
+	"Visual_CategoryDataColorsEnd": "Kategoridatafärger, slut",
+	"Visual_HighlightedValueDisplayName": "Markerad"
 }

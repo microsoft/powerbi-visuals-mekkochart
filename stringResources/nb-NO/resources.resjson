@@ -1,5 +1,5 @@
 {
-	"Visual_Show": "Kolonnekantlinje",
+	"Visual_Show": "Vis",
 	"Visual_LabelsFill": "Farge",
 	"Visual_General_Properties_Width": "Bredde",
 	"Visual_DataPointsLabels": "Dataetiketter",
@@ -47,5 +47,17 @@
 	"Visual_Default_Color": "Standard farge",
 	"Visual_Fill": "Fyll",
 	"Visual_GradientStartColor": "Startfarge",
-	"Visual_GradientEndColor": "Sluttfarge"
+	"Visual_GradientEndColor": "Sluttfarge",
+	"Visual_ColumnBorder": "Kolonnekantlinje",
+	"Visual_Category_Sorting": "Kategorisortering",
+	"Visual_Enabled": "Aktivert",
+	"Visual_CategoryGradient": "Kategorigradering",
+	"Visual_Axiswidth": "Aksebredde",
+	"Visual_Description_Color": "Velg farge for dataetiketter",
+	"Visual_Description_DataLabels": "Vis alternativer for dataetiketter",
+	"Visual_Description_DisplayUnits": "Velg enhetene (millioner, milliarder osv.)",
+	"Visual_Description_DecimalPlaces": "Velg antall desimaler som skal vises",
+	"Visual_CategoryDataColorsStart": "Farger for kategoridata starter",
+	"Visual_CategoryDataColorsEnd": "Farger for kategoridata slutter",
+	"Visual_HighlightedValueDisplayName": "Uthevet"
 }
