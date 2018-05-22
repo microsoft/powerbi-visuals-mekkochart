@@ -1,3 +1,7 @@
+## 2.1.0
+
+* Added localization for all supported languages
+
 ## 2.0.0
 
 * Added Power BI bookmarks support
