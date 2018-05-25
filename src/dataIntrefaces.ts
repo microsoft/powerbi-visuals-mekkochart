@@ -23,8 +23,65 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-tools";
 
-module powerbi.extensibility.visual {
+import PrimitiveValue = powerbi.PrimitiveValue;
+import NumberRange = powerbi.NumberRange;
+import Fill = powerbi.Fill;
+import IViewport = powerbi.IViewport;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import IColorPalette = powerbi.extensibility.IColorPalette;
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewMetadata = powerbi.DataViewMetadata;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewScopeIdentity = powerbi.DataViewScopeIdentity;
+import DataViewObject = powerbi.DataViewObject;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
+import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
+import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
+
+import {
+    IMargin,
+    CssConstants,
+    IRect,
+    shapes,
+    shapesInterfaces
+}
+from "powerbi-visuals-utils-svgutils";
+
+import ISize = shapesInterfaces.ISize;
+
+import {
+    axis as AxisHelper,
+    axisInterfaces,
+    legend,
+    legendInterfaces,
+    legendBehavior,
+    legendData,
+    legendPosition,
+    dataLabelUtils,
+    dataLabelInterfaces,
+    dataLabelManager
+}
+from "powerbi-visuals-utils-chartutils";
+
+
+import {
+    interactivityService,
+    interfaces as interactivityServiceInterfaces
+}
+from "powerbi-visuals-utils-interactivityutils";
+
+import { MekkoVisualChartType } from "./visualChartType";
+
+import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
+import { valueFormatter as vf, formatting,  } from "powerbi-visuals-utils-formattingutils";
+import valueFormatter = vf.valueFormatter;
+
     // d3
     import Selection = d3.Selection;
     import LinearScale = d3.scale.Linear;
@@ -37,32 +94,28 @@ module powerbi.extensibility.visual {
     import ISelectionId = powerbi.visuals.ISelectionId;
 
     // powerbi.extensibility.utils.svg
-    import IRect = powerbi.extensibility.utils.svg.IRect;
-    import IMargin = powerbi.extensibility.utils.svg.IMargin;
-    import ISize = powerbi.extensibility.utils.svg.shapes.ISize;
-    import ClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.ClassAndSelector;
+    import ClassAndSelector = CssConstants.ClassAndSelector;
 
     // powerbi.extensibility.utils.chart
-    import ILegendData = powerbi.extensibility.utils.chart.legend.LegendData;
-    import IAxisProperties = powerbi.extensibility.utils.chart.axis.IAxisProperties;
-    import LegendDataPoint = powerbi.extensibility.utils.chart.legend.LegendDataPoint;
-    import CreateAxisOptionsBase = powerbi.extensibility.utils.chart.axis.CreateAxisOptions;
-    import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
-    import LabelEnabledDataPoint = powerbi.extensibility.utils.chart.dataLabel.LabelEnabledDataPoint;
-    import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
-    import ILegend = powerbi.extensibility.utils.chart.legend.ILegend;
+    import ILegendData = legendInterfaces.LegendData;
+    import IAxisProperties = axisInterfaces.IAxisProperties;
+    import LegendDataPoint = legendInterfaces.LegendDataPoint;
+    import CreateAxisOptionsBase = axisInterfaces.CreateAxisOptions;
+    import IInteractivityService = interactivityService.IInteractivityService;
+    import LabelEnabledDataPoint = dataLabelInterfaces.LabelEnabledDataPoint;
+    import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
+    import ILegend = legendInterfaces.ILegend;
 
     // powerbi.extensibility.utils.interactivity
-    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
+    import SelectableDataPoint = interactivityService.SelectableDataPoint;
 
     // powerbi.extensibility.utils.tooltip
-    import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
 
     // powerbi.extensibility.utils.formatting
-    import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
+    import IValueFormatter = vf.IValueFormatter;
 
-    import VisualDataLabelsSettingsOptions = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettingsOptions;
-    import DataLabelObject = powerbi.extensibility.utils.chart.dataLabel.DataLabelObject;
+    import VisualDataLabelsSettingsOptions = dataLabelInterfaces.VisualDataLabelsSettingsOptions;
+    import DataLabelObject = dataLabelInterfaces.DataLabelObject;
 
     export interface ValueMultiplers {
         pos: number;
@@ -475,7 +528,7 @@ module powerbi.extensibility.visual {
         category: string;
         color: string;
         group: DataViewValueColumnGroup;
-        categorySelectionId: powerbi.extensibility.ISelectionId;
+        categorySelectionId: {};
         categoryStartColor?: string;
         categoryEndColor?: string;
     }
@@ -502,7 +555,6 @@ module powerbi.extensibility.visual {
     export class ICategoryValuesCollection extends Array<MekkoChartColumnDataPoint> {
         [index: number]: MekkoChartColumnDataPoint;
         categoryValue?: PrimitiveValue;
-        identity?: powerbi.extensibility.ISelectionId;
+        identity?: {};
         color?: string;
     }
-}

@@ -24,14 +24,23 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.behavior {
+import powerbi from "powerbi-visuals-tools";
+import {
+    interactivityService,
+} from "powerbi-visuals-utils-interactivityutils";
+import * as d3 from "d3";
+import { MekkoChartAxisOptions } from "./../dataIntrefaces";
+
+    // powerbi.extensibility.utils.interactivity
+    import ISelectionHandler = interactivityService.ISelectionHandler;
+    import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
+    import SelectableDataPoint = interactivityService.SelectableDataPoint;
+    import IViewport = powerbi.IViewport;
+
     // d3
     import Selection = d3.Selection;
 
-    // powerbi.extensibility.utils.interactivity
-    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
-
-    export interface VisualBehaviorOptions {
+    export default interface VisualBehaviorOptions {
         dataPoints: SelectableDataPoint[];
         bars: Selection<any>;
         eventGroup: Selection<any>;
@@ -41,4 +50,3 @@ module powerbi.extensibility.visual.behavior {
         axisOptions: MekkoChartAxisOptions;
         showLabel: boolean;
     }
-}

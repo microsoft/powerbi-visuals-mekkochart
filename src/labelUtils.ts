@@ -24,16 +24,32 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.labelUtils {
+import powerbi from "powerbi-visuals-tools";
+
+import IViewport = powerbi.IViewport;
+import {
+    formatting,
+    wordBreaker,
+    valueFormatter,
+    textMeasurementService
+} from "powerbi-visuals-utils-formattingutils"
+
+import {
+    MekkoChartAxisProperties
+} from "./dataIntrefaces";
+
+import {
+    axis as AxisHelper,
+    axisInterfaces
+} from "powerbi-visuals-utils-chartutils"
+
     // powerbi.extensibility.utils.formatting
-    import wordBreaker = powerbi.extensibility.utils.formatting.wordBreaker;
-    import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
-    import ITextAsSVGMeasurer = powerbi.extensibility.utils.formatting.ITextAsSVGMeasurer;
+    import TextProperties = textMeasurementService.TextProperties;
+    import ITextAsSVGMeasurer = textMeasurementService.ITextAsSVGMeasurer;
 
     // powerbi.extensibility.utils.chart
-    import AxisHelper = powerbi.extensibility.utils.chart.axis;
-    import IAxisProperties = AxisHelper.IAxisProperties;
-    import TickLabelMargins = AxisHelper.TickLabelMargins;
+    import IAxisProperties = axisInterfaces.IAxisProperties;
+    import TickLabelMargins = axisInterfaces.TickLabelMargins;
 
     const XLabelMaxAllowedOverflow: number = 35;
     const OffsetDelimiter: number = 2;
@@ -213,4 +229,3 @@ module powerbi.extensibility.visual.labelUtils {
             yRight: Math.ceil(rightMargin),
         };
     }
-}

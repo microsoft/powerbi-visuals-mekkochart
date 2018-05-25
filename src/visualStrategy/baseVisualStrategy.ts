@@ -24,7 +24,107 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.visualStrategy {
+import powerbi from "powerbi-visuals-tools";
+import * as d3 from "d3";
+
+import IViewport = powerbi.IViewport;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import IColorPalette = powerbi.extensibility.IColorPalette;
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewMetadata = powerbi.DataViewMetadata;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewScopeIdentity = powerbi.DataViewScopeIdentity;
+import PrimitiveValue = powerbi.PrimitiveValue;
+import DataViewObject = powerbi.DataViewObject;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import DataViewPropertyValue = powerbi.DataViewPropertyValue;
+import ValueRange = powerbi.ValueRange;
+
+import DataWrapper from "./../dataWrapper";
+import * as utils from "./../utils";
+
+import {
+    IMargin,
+    CssConstants,
+    IRect
+}
+from "powerbi-visuals-utils-svgutils";
+
+import {
+    interactivityService,
+    interfaces as interactivityServiceInterfaces
+}
+from "powerbi-visuals-utils-interactivityutils";
+
+import {
+    valueFormatter as vf,
+    displayUnitSystem,
+    displayUnitSystemType,
+    textMeasurementService
+}
+from "powerbi-visuals-utils-formattingutils";
+
+import {
+    axis as AxisHelper,
+    axisInterfaces,
+    legend,
+    legendInterfaces,
+    legendBehavior,
+    legendData,
+    legendPosition,
+    dataLabelUtils,
+    dataLabelInterfaces,
+    dataLabelManager
+}
+from "powerbi-visuals-utils-chartutils";
+
+import {
+    MekkoColumnChartData,
+    IMekkoChartVisualHost,
+    MekkoChartConstructorOptions,
+    MekkoChartVisualInitOptions,
+    MekkoCalculateScaleAndDomainOptions,
+    MekkoChartCategoryLayout,
+    MekkoBorderSettings,
+    MekkoSeriesSortSettings,
+    MekkoLegendSortSettings,
+    MekkoXAxisLabelsSettings,
+    MekkoCategoryColorSettings,
+    MekkoDataPointSettings,
+    LegendSeriesInfo,
+    MekkoLegendDataPoint,
+    MekkoDataPoints,
+    MekkoChartSeries,
+    ICategoryValuesCollection,
+    ValueMultiplers,
+    MekkoVisualRenderResult,
+    MekkoChartDrawInfo,
+    MekkoCategoryProperties,
+    MekkoChartLabelSettings,
+    MekkoChartLabelSettingsOptions,
+    MekkoChartColumnDataPoint,
+    MekkoColumnChartContext,
+    MekkoChartBaseData,
+    MekkoChartConstructorBaseOptions,
+    CreateAxisOptions,
+    MekkoColumnAxisOptions,
+    IMekkoColumnLayout,
+    MekkoCreateAxisOptions,
+    MekkoChartData,
+    LabelDataPoint
+} from "./../dataIntrefaces";
+
+import { IVisualStrategy } from "./visualStrategy";
+
+import * as columnChart from "./../columnChart/baseColumnChart";
+
+import MekkoChart from "./../visual";
+
+import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils"
+
     // d3
     import Axis = d3.svg.Axis;
     import Selection = d3.Selection;
@@ -35,33 +135,27 @@ module powerbi.extensibility.visual.visualStrategy {
     import ISelectionId = powerbi.visuals.ISelectionId;
 
     // powerbi.extensibility.utils.svg
-    import IRect = powerbi.extensibility.utils.svg.IRect;
-    import IMargin = powerbi.extensibility.utils.svg.IMargin;
-    import ClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.ClassAndSelector;
-    import createClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.createClassAndSelector;
+    import ClassAndSelector = CssConstants.ClassAndSelector;
+    import createClassAndSelector = CssConstants.createClassAndSelector;
 
     // powerbi.extensibility.utils.chart
-    import AxisHelper = powerbi.extensibility.utils.chart.axis;
-    import IAxisProperties = AxisHelper.IAxisProperties;
-    import CreateAxisOptionsBase = AxisHelper.CreateAxisOptions;
-    import getLabelPrecision = powerbi.extensibility.utils.chart.dataLabel.utils.getLabelPrecision;
-    import hundredPercentFormat = powerbi.extensibility.utils.chart.dataLabel.utils.hundredPercentFormat;
-    import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
-    import IColumnFormatterCacheManager = powerbi.extensibility.utils.chart.dataLabel.IColumnFormatterCacheManager;
-    import createColumnFormatterCacheManager = powerbi.extensibility.utils.chart.dataLabel.utils.createColumnFormatterCacheManager;
+    import IAxisProperties = axisInterfaces.IAxisProperties;
+    import getLabelPrecision = dataLabelUtils.getLabelPrecision;
+    import hundredPercentFormat = dataLabelUtils.hundredPercentFormat;
+    import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
+    import IColumnFormatterCacheManager = dataLabelInterfaces.IColumnFormatterCacheManager;
+    import createColumnFormatterCacheManager = dataLabelUtils.createColumnFormatterCacheManager;
 
     // powerbi.extensibility.utils.interactivity
-    import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
+    import IInteractivityService = interactivityService.IInteractivityService;
 
     // powerbi.extensibility.utils.formatting
-    import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
-    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
-    import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
-    import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
+    import TextProperties = textMeasurementService.TextProperties;
+    import valueFormatter = vf.valueFormatter;
+    import IValueFormatter = vf.IValueFormatter;
 
     // powerbi.extensibility.utils.type
-    import ValueType = powerbi.extensibility.utils.type.ValueType;
-    import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
+    import ValueType = valueType.ValueType;
 
     import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
 
@@ -811,4 +905,3 @@ module powerbi.extensibility.visual.visualStrategy {
 
         return null;
     }
-}

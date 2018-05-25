@@ -24,17 +24,45 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.converterStrategy {
-    // powerbi.extensibility.utils.color
-    import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
-    import createLinearColorScale = powerbi.extensibility.utils.color.createLinearColorScale;
+import powerbi from "powerbi-visuals-tools";
+import { formatting } from "powerbi-visuals-utils-formattingutils";
+import { ColorHelper, createLinearColorScale } from "powerbi-visuals-utils-colorutils";
+import { legendInterfaces } from "powerbi-visuals-utils-chartutils"
+import * as formattingUtils from "./../formattingUtils";
+import * as d3 from "d3";
+import * as _ from "lodash";
+
+import IColorPalette = powerbi.extensibility.IColorPalette;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewObjects = powerbi.DataViewObjects;
+import PrimitiveValue = powerbi.PrimitiveValue;
+import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
+import ISelectionId = powerbi.visuals.ISelectionId;
+import Fill = powerbi.Fill;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewValueColumns = powerbi.DataViewValueColumns;
+
+import MekkoChart from "./../visual";
+import {
+    MekkoLegendDataPoint,
+    ICategotyValuesStatsCollection,
+    IFilteredValueGroups,
+    BaseColorIdentity,
+    LegendSeriesInfo,
+    MekkoGradientSettings
+} from "./../dataIntrefaces";
 
     // powerbi.extensibility.utils.chart
-    import LegendIcon = powerbi.extensibility.utils.chart.legend.LegendIcon;
-    import ILegendData = powerbi.extensibility.utils.chart.legend.LegendData;
+    import LegendIcon = legendInterfaces.LegendIcon;
+    import ILegendData = legendInterfaces.LegendData;
 
     // formattingUtils
     import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
+
+    import { ConverterStrategy } from "./converterStrategy";
 
     export class BaseConverterStrategy implements ConverterStrategy {
         private static WidthColumnName: string = "Width";
@@ -295,4 +323,3 @@ module powerbi.extensibility.visual.converterStrategy {
             return this.dataView.values[series].highlights[category] as number;
         }
     }
-}

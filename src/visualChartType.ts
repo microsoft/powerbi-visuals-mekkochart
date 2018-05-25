@@ -24,7 +24,6 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
     export const flagBar: number = 1 << 1;
     export const flagColumn: number = 1 << 2;
     export const flagClustered: number = 1 << 3;
@@ -43,4 +42,3 @@ module powerbi.extensibility.visual {
     export enum MekkoChartType {
         HundredPercentStackedColumn,
     }
-}

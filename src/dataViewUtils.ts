@@ -24,7 +24,14 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.dataViewUtils {
+import powerbi from "powerbi-visuals-tools";
+
+import * as axisType from "./axis/type";
+
+import DataViewObject = powerbi.DataViewObject;
+import DataViewObjects = powerbi.DataViewObjects;
+import DataViewMetadata = powerbi.DataViewMetadata;
+
     export function getCategoryAxisProperties(
         dataViewMetadata: DataViewMetadata,
         axisTitleOnByDefault?: boolean): DataViewObject {
@@ -111,7 +118,7 @@ module powerbi.extensibility.visual.dataViewUtils {
     export function isScalar(isScalar: boolean, xAxisCardProperties: DataViewObject): boolean {
         if (isScalar) {
             isScalar = xAxisCardProperties && xAxisCardProperties["axisType"]
-                ? xAxisCardProperties["axisType"] === axis.type.scalar
+                ? xAxisCardProperties["axisType"] === axisType.scalar
                 : true;
         }
 
@@ -119,9 +126,9 @@ module powerbi.extensibility.visual.dataViewUtils {
     }
 
     export function getLayerData(
-        dataViews: DataView[],
+        dataViews: powerbi.DataView[],
         currentIdx: number,
-        totalLayers: number): DataView[] {
+        totalLayers: number): powerbi.DataView[] {
 
         if (totalLayers > 1) {
             if (dataViews && dataViews.length > currentIdx) {
@@ -133,4 +140,3 @@ module powerbi.extensibility.visual.dataViewUtils {
 
         return dataViews;
     }
-}

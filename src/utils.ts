@@ -23,21 +23,45 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import * as d3 from "d3";
 
-module powerbi.extensibility.visual.utils {
+import powerbi from "powerbi-visuals-tools";
+
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewPropertyValue = powerbi.DataViewPropertyValue;
+import PrimitiveValue = powerbi.PrimitiveValue;
+import DataViewObjects = powerbi.DataViewObjects;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
+import DataViewObject = powerbi.DataViewObject;
+import NumberRange = powerbi.NumberRange;
+import DataViewValueColumns = powerbi.DataViewValueColumns;
+
+import MekkoChart from "./visual";
+
+import {
+    double as Double,
+    prototype as Prototype,
+    numericSequenceRange
+} from "powerbi-visuals-utils-typeutils";
+
+import {
+    MekkoChartSeries,
+    MekkoChartColumnDataPoint,
+    MekkoChartAxisOptions,
+    MekkoChartData,
+
+} from "./dataIntrefaces";
+
+import {
+    axis as AxisHelper
+} from "powerbi-visuals-utils-chartutils";
+
     // d3
     import Selection = d3.Selection;
     import LinearScale = d3.scale.Linear;
     import UpdateSelection = d3.selection.Update;
-
-    // powerbi.extensibility.utils.chart
-    import AxisHelper = powerbi.extensibility.utils.chart.axis;
-
-    // powerbi.extensibility.utils.type
-    import Double = powerbi.extensibility.utils.type.Double;
-
-    // powerbi.extensibility.utils.type
-    import Prototype = powerbi.extensibility.utils.type.Prototype;
 
     const PctRoundingError: number = 0.0001;
     const RectName: string = "rect";
@@ -292,4 +316,3 @@ module powerbi.extensibility.visual.utils {
 
         return resultDataView;
     }
-}

@@ -24,14 +24,21 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
-    // powerbi.extensibility.utils.chart
-    import AxisHelper = powerbi.extensibility.utils.chart.axis;
+import powerbi from "powerbi-visuals-tools";
+import { axis as AxisHelper } from "powerbi-visuals-utils-chartutils";
+import { valueType } from "powerbi-visuals-utils-typeutils";
+
+import {
+    MekkoChartBaseSeries,
+    MekkoChartBaseData,
+    MekkoChartDataPoint
+} from "./dataIntrefaces";
+
 
     // powerbi.extensibility.utils.type
-    import ValueType = powerbi.extensibility.utils.type.ValueType;
+    import ValueType = valueType.ValueType;
 
-    export class DataWrapper {
+    export default class DataWrapper {
         private static HighlightedIndexFactor: number = 2;
 
         private data: MekkoChartBaseData;
@@ -78,4 +85,3 @@ module powerbi.extensibility.visual {
             return index;
         }
     }
-}

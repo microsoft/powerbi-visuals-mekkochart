@@ -24,8 +24,17 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.visualStrategy {
-    import IAxisProperties = powerbi.extensibility.utils.chart.axis.IAxisProperties;
+import { axisInterfaces } from "powerbi-visuals-utils-chartutils";
+import NumberRange = powerbi.NumberRange;
+
+import {
+    MekkoChartData,
+    MekkoChartContext,
+    MekkoChartDrawInfo
+} from "./../dataIntrefaces";
+
+    import IAxisProperties = axisInterfaces.IAxisProperties;
+import powerbi from "powerbi-visuals-tools";
 
     export interface IVisualStrategy {
         setData(data: MekkoChartData): void;
@@ -50,4 +59,3 @@ module powerbi.extensibility.visual.visualStrategy {
         selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void;
         getClosestColumnIndex(x: number): number;
     }
-}

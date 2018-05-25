@@ -23,13 +23,20 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-tools";
+import {
+    interfaces,
+    interactivityService,
+    interactivityUtils,
+    filtermanager
+} from "powerbi-visuals-utils-interactivityutils";
 
-module powerbi.extensibility.visual.behavior {
-    // interactivity
-    import ISelectionHandler = powerbi.extensibility.utils.interactivity.ISelectionHandler;
-    import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
+import CustomVisualBehaviorOptions from "./customVisualBehaviorOptions";
 
-    export class CustomVisualBehavior implements IInteractiveBehavior {
+import ISelectionHandler = interactivityService.ISelectionHandler;
+import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
+
+    export default class CustomVisualBehavior implements IInteractiveBehavior {
         private behaviors: IInteractiveBehavior[];
 
         constructor(behaviors: IInteractiveBehavior[] = []) {
@@ -57,4 +64,3 @@ module powerbi.extensibility.visual.behavior {
             });
         }
     }
-}

@@ -24,17 +24,29 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.behavior {
+import powerbi from "powerbi-visuals-tools";
+import {
+    interfaces,
+    interactivityService,
+    interactivityUtils,
+    filtermanager
+} from "powerbi-visuals-utils-interactivityutils";
+import * as d3 from "d3";
+import { MekkoChartColumnDataPoint } from "./../dataIntrefaces";
+
+import VisualBehaviorOptions from "./visualBehaviorOptions";
+
+import * as utils from "./../utils";
+
     // d3
     import Selection = d3.Selection;
 
     // powerbi.extensibility.utils.interactivity
-    import ISelectionHandler = powerbi.extensibility.utils.interactivity.ISelectionHandler;
-    import interactivityUtils = powerbi.extensibility.utils.interactivity.interactivityUtils;
-    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
-    import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
+    import ISelectionHandler = interactivityService.ISelectionHandler;
+    import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
+    import SelectableDataPoint = interactivityService.SelectableDataPoint;
 
-    export class VisualBehavior implements IInteractiveBehavior {
+    export default class VisualBehavior implements IInteractiveBehavior {
         private options: VisualBehaviorOptions;
 
         public bindEvents(
@@ -80,4 +92,3 @@ module powerbi.extensibility.visual.behavior {
             return d3.select(target).datum();
         }
     }
-}

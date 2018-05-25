@@ -23,65 +23,185 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-tools";
+import {
+    ColorHelper,
+    createLinearColorScale
+}
+from "powerbi-visuals-utils-colorutils";
+import {
+    converterHelper as ch,
+    dataViewObjects,
+    dataViewObject,
+    dataViewTransform
+}
+from "powerbi-visuals-utils-dataviewutils";
 
-module powerbi.extensibility.visual.columnChart {
+import converterHelper = ch.converterHelper;
+
+import DataViewObject = dataViewObject.DataViewObject;
+import DataViewObjects = dataViewObjects.DataViewObjects;
+
+import {
+    IMargin,
+    CssConstants,
+
+}
+from "powerbi-visuals-utils-svgutils";
+import {
+    axis as AxisHelper,
+    axisInterfaces,
+    axisScale,
+    legend,
+    legendInterfaces,
+    legendBehavior,
+    legendData,
+    legendPosition,
+    dataLabelUtils,
+    dataLabelInterfaces,
+    dataLabelManager
+}
+from "powerbi-visuals-utils-chartutils";
+
+import {
+    prototype as Prototype,
+    valueType,
+    enumExtensions,
+    arrayExtensions
+}
+from "powerbi-visuals-utils-typeutils";
+import {
+    interactivityService,
+    interfaces as interactivityServiceInterfaces
+}
+from "powerbi-visuals-utils-interactivityutils";
+import {
+    valueFormatter as vf,
+    displayUnitSystem,
+    displayUnitSystemType,
+    formattingService
+}
+from "powerbi-visuals-utils-formattingutils";
+
+import fs = formattingService.FormattingService;
+
+import {
+    TooltipEventArgs,
+    ITooltipServiceWrapper,
+    TooltipEnabledDataPoint,
+    createTooltipServiceWrapper
+}
+from "powerbi-visuals-utils-tooltiputils";
+
+import {
+    MekkoColumnChartData,
+    IMekkoChartVisualHost,
+    MekkoChartConstructorOptions,
+    MekkoChartVisualInitOptions,
+    MekkoCalculateScaleAndDomainOptions,
+    MekkoChartCategoryLayout,
+    MekkoBorderSettings,
+    MekkoSeriesSortSettings,
+    MekkoLegendSortSettings,
+    MekkoXAxisLabelsSettings,
+    MekkoCategoryColorSettings,
+    MekkoDataPointSettings,
+    LegendSeriesInfo,
+    MekkoLegendDataPoint,
+    MekkoDataPoints,
+    MekkoChartSeries,
+    ICategoryValuesCollection,
+    ValueMultiplers,
+    MekkoVisualRenderResult,
+    MekkoChartDrawInfo,
+    MekkoCategoryProperties,
+    MekkoChartLabelSettings,
+    MekkoChartLabelSettingsOptions,
+    MekkoChartColumnDataPoint,
+    MekkoColumnChartContext,
+    MekkoChartBaseData,
+    MekkoChartConstructorBaseOptions
+} from "./../dataIntrefaces";
+
+import * as axisUtils from "./../axis/utils";
+
+import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
+import DisplayUnitSystemType = displayUnitSystemType.DisplayUnitSystemType;
+
+import * as d3 from "d3";
+
+import * as _ from "lodash";
+
+import MekkoChart from "./../visual";
+
+import * as  formattingUtils from "./../formattingUtils";
+import * as behavior from "./../behavior/visualBehaviorOptions";
+import * as converterStrategy from "./../converterStrategy/baseConverterStrategy";
+import * as visualStrategy from "./../visualStrategy/visualStrategy";
+import * as baseVisualStrategy from "./../visualStrategy/baseVisualStrategy";
+import { IColumnChart,  } from "./columnChartVisual";
+
+import { MekkoVisualChartType, flagStacked, flagBar } from "./../visualChartType";
+
+import { RoleNames,  } from "./../roleNames"
+
+import * as dataViewUtils from "./../dataViewUtils";
+
+import * as utils from "./../utils";
+
+import * as tooltip from "./../tooltip";
+
+import * as axisType from "./../axis/type";
+
+import IViewport = powerbi.IViewport;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import IColorPalette = powerbi.extensibility.IColorPalette;
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewMetadata = powerbi.DataViewMetadata;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewScopeIdentity = powerbi.DataViewScopeIdentity;
+import PrimitiveValue = powerbi.PrimitiveValue;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
+import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
+
     // powerbi.visuals
     import ISelectionId = powerbi.visuals.ISelectionId;
-    import createLinearColorScale = powerbi.extensibility.utils.color.createLinearColorScale;
 
     // d3
     import Selection = d3.Selection;
     import LinearScale = d3.scale.Linear;
 
-    // powerbi
-    import IDataViewObjects = powerbi.DataViewObjects;
-
-    // powerbi.extensibility.utils.dataview
-    import converterHelper = powerbi.extensibility.utils.dataview.converterHelper;
-    import DataViewObjects = powerbi.extensibility.utils.dataview.DataViewObjects;
-
     // powerbi.extensibility.utils.svg
-    import IMargin = powerbi.extensibility.utils.svg.IMargin;
-    import ClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.ClassAndSelector;
-    import createClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.createClassAndSelector;
+    import ClassAndSelector = CssConstants.ClassAndSelector;
+    import createClassAndSelector = CssConstants.createClassAndSelector;
 
     // powerbi.extensibility.utils.chart
-    import AxisHelper = powerbi.extensibility.utils.chart.axis;
-    import IAxisProperties = AxisHelper.IAxisProperties;
+    import IAxisProperties = axisInterfaces.IAxisProperties;
 
     // powerbi.extensibility.utils.type
-    import Prototype = powerbi.extensibility.utils.type.Prototype;
-    import ValueType = powerbi.extensibility.utils.type.ValueType;
-    import EnumExtensions = powerbi.extensibility.utils.type.EnumExtensions;
-    import ArrayExtensions = powerbi.extensibility.utils.type.ArrayExtensions;
+    import ValueType = valueType.ValueType;
+    import EnumExtensions = enumExtensions.EnumExtensions;
+    import ArrayExtensions = arrayExtensions.ArrayExtensions;
 
     // powerbi.extensibility.utils.interactivity
-    import LegendIcon = powerbi.extensibility.utils.chart.legend.LegendIcon;
-    import ILegendData = powerbi.extensibility.utils.chart.legend.LegendData;
-    import dataLabelUtils = powerbi.extensibility.utils.chart.dataLabel.utils;
-    import LegendDataPoint = powerbi.extensibility.utils.chart.legend.LegendDataPoint;
-    import DataLabelObject = powerbi.extensibility.utils.chart.dataLabel.DataLabelObject;
-    import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
-    import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
-    import VisualDataLabelsSettingsOptions = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettingsOptions;
+    import LegendIcon = legendInterfaces.LegendIcon;
+    import ILegendData = legendInterfaces.LegendData;
+    import LegendDataPoint = legendInterfaces.LegendDataPoint;
+    import DataLabelObject = dataLabelInterfaces.DataLabelObject;
+    import IInteractivityService = interactivityService.IInteractivityService;
 
     // powerbi.extensibility.utils.formatting
-    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
-    import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
-    import DisplayUnitSystemType = powerbi.extensibility.utils.formatting.DisplayUnitSystemType;
-
-    // powerbi.extensibility.utils.tooltip
-    import TooltipEventArgs = powerbi.extensibility.utils.tooltip.TooltipEventArgs;
-    import ITooltipServiceWrapper = powerbi.extensibility.utils.tooltip.ITooltipServiceWrapper;
-    import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
-    import createTooltipServiceWrapper = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
-
-    // powerbi.extensibility.utils.color
-    import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
+    import valueFormatter = vf.valueFormatter;
+    import IValueFormatter = vf.IValueFormatter;
 
     // visualStrategy
     import IVisualStrategy = visualStrategy.IVisualStrategy;
-    import BaseVisualStrategy = visualStrategy.BaseVisualStrategy;
+    import BaseVisualStrategy = baseVisualStrategy.BaseVisualStrategy;
 
     // converterStrategy
     import BaseConverterStrategy = converterStrategy.BaseConverterStrategy;
@@ -90,7 +210,8 @@ module powerbi.extensibility.visual.columnChart {
     import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 
     // behavior
-    import VisualBehaviorOptions = behavior.VisualBehaviorOptions;
+    import VisualBehaviorOptions from "./../behavior/visualBehaviorOptions";
+    import CustomVisualBehaviorOptions from "./../behavior/customVisualBehaviorOptions";
 
     export class BaseColumnChart implements IColumnChart {
         private static ColumnChartClassName: string = "columnChart";
@@ -248,8 +369,8 @@ module powerbi.extensibility.visual.columnChart {
             localizationManager: ILocalizationManager,
             chartType?: MekkoVisualChartType): MekkoColumnChartData {
 
-            const xAxisCardProperties: DataViewObject = dataViewUtils.getCategoryAxisProperties(dataViewMetadata);
-            const valueAxisProperties: DataViewObject = dataViewUtils.getValueAxisProperties(dataViewMetadata);
+            const xAxisCardProperties: powerbi.DataViewObject = dataViewUtils.getCategoryAxisProperties(dataViewMetadata);
+            const valueAxisProperties: powerbi.DataViewObject = dataViewUtils.getValueAxisProperties(dataViewMetadata);
 
             isScalar = dataViewUtils.isScalar(isScalar, xAxisCardProperties);
             categorical = utils.applyUserMinMax(isScalar, categorical, xAxisCardProperties);
@@ -289,7 +410,7 @@ module powerbi.extensibility.visual.columnChart {
                 showAllDataPoints: boolean = undefined;
 
             if (dataViewMetadata && dataViewMetadata.objects) {
-                const objects: IDataViewObjects = dataViewMetadata.objects;
+                const objects: powerbi.DataViewObjects = dataViewMetadata.objects;
 
                 defaultDataPointColor = DataViewObjects.getFillColor(
                     objects,
@@ -347,7 +468,7 @@ module powerbi.extensibility.visual.columnChart {
                 valuesMetadata.push(seriesSources[j]);
             }
 
-            const labels: axis.utils.AxesLabels = axis.utils.createAxesLabels(
+            const labels: axisUtils.AxesLabels = axisUtils.createAxesLabels(
                 xAxisCardProperties,
                 valueAxisProperties,
                 categoryMetadata,
@@ -525,7 +646,7 @@ module powerbi.extensibility.visual.columnChart {
             categories: any[],
             categoryIdentities: DataViewScopeIdentity[],
             legend: MekkoLegendDataPoint[],
-            seriesObjectsList: IDataViewObjects[][],
+            seriesObjectsList: powerbi.DataViewObjects[][],
             converterStrategy: BaseConverterStrategy,
             defaultLabelSettings: VisualDataLabelsSettings,
             is100PercentStacked: boolean = false,
@@ -533,7 +654,7 @@ module powerbi.extensibility.visual.columnChart {
             supportsOverflow: boolean = false,
             localizationManager: ILocalizationManager,
             isCategoryAlsoSeries?: boolean,
-            categoryObjectsList?: IDataViewObjects[],
+            categoryObjectsList?: powerbi.DataViewObjects[],
             defaultDataPointColor?: string,
             chartType?: MekkoVisualChartType,
             categoryMetadata?: DataViewMetadataColumn): MekkoDataPoints {
@@ -684,7 +805,7 @@ module powerbi.extensibility.visual.columnChart {
                 columnWidth[seriesIndex] = linearScale(widthColumns[seriesIndex]);
             }
 
-            let dataPointObjects: IDataViewObjects[] = categoryObjectsList;
+            let dataPointObjects: powerbi.DataViewObjects[] = categoryObjectsList;
             let multipliersAllData: ValueMultiplers = BaseColumnChart.getStackedMultiplierForAllDataSet(rawValues, seriesCount, categoryCount);
 
             for (let seriesIndex: number = 0; seriesIndex < seriesCount; seriesIndex++) {
@@ -702,7 +823,7 @@ module powerbi.extensibility.visual.columnChart {
                     const labelObjects: DataLabelObject = labelsSeriesGroup
                         && labelsSeriesGroup.source
                         && labelsSeriesGroup.source.objects
-                        ? labelsSeriesGroup.source.objects["labels"] as DataLabelObject
+                        ? labelsSeriesGroup.source.objects["labels"] as any
                         : null;
 
                     if (labelObjects) {
@@ -1023,7 +1144,7 @@ module powerbi.extensibility.visual.columnChart {
         private static getDataPointColor(
             legendItem: MekkoLegendDataPoint,
             categoryIndex: number,
-            dataPointObjects?: IDataViewObjects[]): string {
+            dataPointObjects?: powerbi.DataViewObjects[]): string {
 
             if (dataPointObjects) {
                 let colorOverride: string = DataViewObjects.getFillColor(
@@ -1116,7 +1237,7 @@ module powerbi.extensibility.visual.columnChart {
             return this.data.xAxisLabelsSettings;
         }
 
-        public setData(dataViews: DataView[]): void {
+        public setData(dataViews: powerbi.DataView[]): void {
             this.data = {
                 categories: [],
                 categoriesWidth: [],
@@ -1141,7 +1262,7 @@ module powerbi.extensibility.visual.columnChart {
             };
 
             if (dataViews.length > 0) {
-                const dataView: DataView = dataViews[0];
+                const dataView: powerbi.DataView = dataViews[0];
 
                 if (dataView && dataView.categorical) {
                     this.dataViewCat = dataView.categorical;
@@ -1441,7 +1562,7 @@ module powerbi.extensibility.visual.columnChart {
                 };
 
             this.categoryAxisType = chartLayout.isScalar
-                ? axis.type.scalar
+                ? axisType.scalar
                 : null;
 
             this.columnChart.setData(data);
@@ -1699,8 +1820,8 @@ module powerbi.extensibility.visual.columnChart {
                 isOrdinal: boolean = AxisHelper.isOrdinal(valueType);
 
             return isOrdinal
-                ? axis.type.categorical
-                : axis.type.both;
+                ? axisType.categorical
+                : axisType.both;
         }
 
         public setFilteredData(startIndex: number, endIndex: number): MekkoChartBaseData {
@@ -1726,4 +1847,4 @@ module powerbi.extensibility.visual.columnChart {
 
         return new BaseColumnChart(options);
     }
-}
+
