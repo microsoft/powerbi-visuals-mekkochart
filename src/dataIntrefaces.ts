@@ -31,15 +31,8 @@ import Fill = powerbi.Fill;
 import IViewport = powerbi.IViewport;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import IColorPalette = powerbi.extensibility.IColorPalette;
-import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
-import DataViewCategorical = powerbi.DataViewCategorical;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
-import DataViewMetadata = powerbi.DataViewMetadata;
-import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import DataViewScopeIdentity = powerbi.DataViewScopeIdentity;
-import DataViewObject = powerbi.DataViewObject;
-import DataViewValueColumn = powerbi.DataViewValueColumn;
-import VisualObjectInstance = powerbi.VisualObjectInstance;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
 import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
@@ -48,7 +41,6 @@ import {
     IMargin,
     CssConstants,
     IRect,
-    shapes,
     shapesInterfaces
 }
 from "powerbi-visuals-utils-svgutils";
@@ -56,39 +48,26 @@ from "powerbi-visuals-utils-svgutils";
 import ISize = shapesInterfaces.ISize;
 
 import {
-    axis as AxisHelper,
     axisInterfaces,
-    legend,
     legendInterfaces,
-    legendBehavior,
-    legendData,
-    legendPosition,
-    dataLabelUtils,
-    dataLabelInterfaces,
-    dataLabelManager
+    dataLabelInterfaces
 }
 from "powerbi-visuals-utils-chartutils";
 
 
 import {
-    interactivityService,
-    interfaces as interactivityServiceInterfaces
+    interactivityService
 }
 from "powerbi-visuals-utils-interactivityutils";
 
 import { MekkoVisualChartType } from "./visualChartType";
 
 import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
-import { valueFormatter as vf, formatting,  } from "powerbi-visuals-utils-formattingutils";
-import valueFormatter = vf.valueFormatter;
+import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
 
     // d3
     import * as d3selection from "d3-selection";
-    import * as d3array from "d3-array";
-    import * as d3axes from "d3-axes";
-    import * as d3brush from "d3-brush";
     import * as d3scale from "d3-scale";
-    import * as d3svg from "d3-svg";
     import Selection = d3selection.Selection;
     import LinearScale = d3scale.Linear;
     import UpdateSelection = d3selection.Update;
@@ -455,7 +434,7 @@ import valueFormatter = vf.valueFormatter;
         valueSum?: number;
         categoryValues?: PrimitiveValue[];
         categorySort?: PrimitiveValue;
-        categoryIdentity?: powerbi.data.Selector;
+        categoryIdentity?: powerbi.visuals.ISelectionId;
         categoryStartColor?: string;
         categoryEndColor?: string;
     }
@@ -534,7 +513,7 @@ import valueFormatter = vf.valueFormatter;
         category: string;
         color: string;
         group: DataViewValueColumnGroup;
-        categorySelectionId: {};
+        categorySelectionId: powerbi.visuals.ISelectionId;
         categoryStartColor?: string;
         categoryEndColor?: string;
     }
@@ -561,6 +540,6 @@ import valueFormatter = vf.valueFormatter;
     export class ICategoryValuesCollection extends Array<MekkoChartColumnDataPoint> {
         [index: number]: MekkoChartColumnDataPoint;
         categoryValue?: PrimitiveValue;
-        identity?: {};
+        identity?: powerbi.visuals.ISelectionId;
         color?: string;
     }

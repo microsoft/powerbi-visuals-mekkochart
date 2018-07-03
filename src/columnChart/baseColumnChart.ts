@@ -497,7 +497,7 @@ import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
             let colsCount: number = d3.max(series.map( s => s.data.length));
 
             // define all cols 
-            series.some((value: MekkoChartSeries, index: number, arr: MekkoChartSeries[]): boolean => {
+            series.some((value: MekkoChartSeries): boolean => {
                 if (value.data.length === colsCount) {
                     value.data.forEach(data => {
                         columns[data.categoryIndex] = [];
@@ -515,7 +515,7 @@ import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
                         continue;
                     }
                     if (columns[series[row].data[col].categoryIndex].categoryValue === undefined) {
-                        columns[series[row].data[col].categoryIndex].identity = series[row].data[col].identity;
+                        columns[series[row].data[col].categoryIndex].identity = <any>series[row].data[col].identity;
                         columns[series[row].data[col].categoryIndex].categoryValue = series[row].data[col].categoryValue;
                         columns[series[row].data[col].categoryIndex].color = series[row].data[col].color;
                     }
@@ -1340,7 +1340,7 @@ import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
                     instances.push({
                         objectName: objectName,
                         displayName: `${label} -${category}`,
-                        selector: ColorHelper.normalizeSelector((categoryLegends[0].categoryIdentity as ISelectionId).getSelector(), true),
+                        selector: ColorHelper.normalizeSelector(categoryLegends[0].categoryIdentity.getSelector(), true),
                         properties: {
                             categoryGradient: {
                                 solid: {
