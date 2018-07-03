@@ -51,15 +51,9 @@ from "powerbi-visuals-utils-svgutils";
 import {
     axis as AxisHelper,
     axisInterfaces,
-    axisScale,
-    legend,
     legendInterfaces,
-    legendBehavior,
-    legendData,
-    legendPosition,
     dataLabelUtils,
-    dataLabelInterfaces,
-    dataLabelManager
+    dataLabelInterfaces
 }
 from "powerbi-visuals-utils-chartutils";
 
@@ -71,19 +65,14 @@ import {
 }
 from "powerbi-visuals-utils-typeutils";
 import {
-    interactivityService,
-    interfaces as interactivityServiceInterfaces
+    interactivityService
 }
 from "powerbi-visuals-utils-interactivityutils";
 import {
     valueFormatter as vf,
-    displayUnitSystem,
-    displayUnitSystemType,
-    formattingService
+    displayUnitSystemType
 }
 from "powerbi-visuals-utils-formattingutils";
-
-import fs = formattingService.FormattingService;
 
 import {
     TooltipEventArgs,
@@ -135,7 +124,6 @@ import * as _ from "lodash";
 import MekkoChart from "./../visual";
 
 import * as  formattingUtils from "./../formattingUtils";
-import * as behavior from "./../behavior/visualBehaviorOptions";
 import * as converterStrategy from "./../converterStrategy/baseConverterStrategy";
 import * as visualStrategy from "./../visualStrategy/visualStrategy";
 import * as baseVisualStrategy from "./../visualStrategy/baseVisualStrategy";
@@ -1760,10 +1748,8 @@ import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
                 height: number = viewport.height - (margin.top + margin.bottom),
                 width: number = viewport.width - (margin.left + margin.right);
 
-            this.mainGraphicsContext.attr({
-                height: height,
-                width: width
-            });
+            this.mainGraphicsContext.attr("height", height);
+            this.mainGraphicsContext.attr("width", width);
 
             this.tooltipServiceWrapper.addTooltip<TooltipEnabledDataPoint>(
                 chartDrawInfo.shapesSelection,

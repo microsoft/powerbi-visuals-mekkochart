@@ -28,7 +28,7 @@ import powerbi from "powerbi-visuals-tools";
 import {
     interactivityService,
 } from "powerbi-visuals-utils-interactivityutils";
-import * as d3 from "d3";
+import * as d3selection from "d3-selection";
 import { MekkoChartAxisOptions } from "./../dataIntrefaces";
 
     // powerbi.extensibility.utils.interactivity
@@ -38,7 +38,7 @@ import { MekkoChartAxisOptions } from "./../dataIntrefaces";
     import IViewport = powerbi.IViewport;
 
     // d3
-    import Selection = d3.Selection;
+    import Selection = d3selection.Selection;
 
     export default interface VisualBehaviorOptions {
         dataPoints: SelectableDataPoint[];

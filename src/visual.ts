@@ -24,24 +24,15 @@
  *  THE SOFTWARE.
  */
 import powerbi from "powerbi-visuals-tools";
-import * as d3 from "d3";
 import * as _ from "lodash";
 
 import IViewport = powerbi.IViewport;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-import IColorPalette = powerbi.extensibility.IColorPalette;
-import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
-import DataViewCategorical = powerbi.DataViewCategorical;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewMetadata = powerbi.DataViewMetadata;
-import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
-import DataViewScopeIdentity = powerbi.DataViewScopeIdentity;
 import PrimitiveValue = powerbi.PrimitiveValue;
-import DataViewValueColumn = powerbi.DataViewValueColumn;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
 import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
-import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
 import DataView = powerbi.DataView;
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
@@ -55,10 +46,7 @@ import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration
 
 import {
     MekkoColumnChartData,
-    IMekkoChartVisualHost,
-    MekkoChartConstructorOptions,
     MekkoChartVisualInitOptions,
-    MekkoCalculateScaleAndDomainOptions,
     MekkoChartCategoryLayout,
     MekkoBorderSettings,
     MekkoSeriesSortSettings,
@@ -66,20 +54,9 @@ import {
     MekkoXAxisLabelsSettings,
     MekkoCategoryColorSettings,
     MekkoDataPointSettings,
-    LegendSeriesInfo,
     MekkoLegendDataPoint,
-    MekkoDataPoints,
-    MekkoChartSeries,
-    ICategoryValuesCollection,
-    ValueMultiplers,
     MekkoVisualRenderResult,
-    MekkoChartDrawInfo,
-    MekkoCategoryProperties,
     MekkoChartLabelSettings,
-    MekkoChartLabelSettingsOptions,
-    MekkoChartColumnDataPoint,
-    MekkoColumnChartContext,
-    MekkoChartBaseData,
     MekkoChartConstructorBaseOptions,
     MekkoChartAxisProperties,
     MekkoChartSmallViewPortProperties,
@@ -118,14 +95,15 @@ from "powerbi-visuals-utils-dataviewutils";
 import DataViewObject = dataViewObject.DataViewObject;
 import DataViewObjects = dataViewObjects.DataViewObjects;
 
-    // powerbi.visuals
-    import ISelectionId = powerbi.visuals.ISelectionId;
-
+    import * as d3brush from "d3-brush";
+    import * as d3selection from "d3-selection";
+    import * as d3array from "d3-array";
+    import * as d3transform from "d3-transform";
+    import * as d3scale from "d3-scale";
     // d3
-    import Brush = d3.svg.Brush;
-    import Selection = d3.Selection;
-    import LinearScale = d3.scale.Linear;
-    import UpdateSelection = d3.selection.Update;
+    import Brush = d3brush.Brush;
+    import Selection = d3selection.Selection;
+    import LinearScale = d3scale.Linear;
 
     // powerbi.extensibility.utils.chart
     import {
@@ -134,17 +112,11 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
         axisScale,
         axisStyle,
         dataLabelInterfaces,
-        dataLabelArrangeGrid,
         dataLabelUtils,
         legendInterfaces,
         legendData as LegendData,
-        dataLabelManager,
         legend,
-        legendBehavior,
         legendPosition,
-        interactiveLegend,
-        locationConverter,
-        svgLegend
     } from "powerbi-visuals-utils-chartutils";
 
     import IAxisProperties = axisInterfaces.IAxisProperties;
@@ -212,12 +184,12 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
     import CustomVisualBehaviorOptions from "./behavior/customVisualBehaviorOptions";
 
     import * as columnChart from "./columnChart/columnChartVisual";
-    import * as baseColumnChart from "./columnChart/baseColumnChart";
+    import * as columnChartBaseColumnChart from "./columnChart/baseColumnChart";
 
     // columnChart
     import IColumnChart = columnChart.IColumnChart;
-    import BaseColumnChart = baseColumnChart.BaseColumnChart;
-    import createBaseColumnChartLayer = baseColumnChart.createBaseColumnChartLayer;
+    import BaseColumnChart = columnChartBaseColumnChart.BaseColumnChart;
+    import createBaseColumnChartLayer = columnChartBaseColumnChart.createBaseColumnChartLayer;
 
     // dataViewUtils
     import isScalar = dataViewUtils.isScalar;
@@ -472,17 +444,17 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
             this.visualInitOptions = options;
             this.visualHost = options.host;
 
-            d3.select("body").style({
-                "-webkit-tap-highlight-color": "transparent"
-            });
+            d3selection.select("body").style(
+                "-webkit-tap-highlight-color", "transparent"
+            );
 
-            this.rootElement = d3.select(options.element)
+            this.rootElement = d3selection.select(options.element)
                 .append("div")
                 .classed(MekkoChart.ClassName, true);
 
             this.behavior = new CustomVisualBehavior([new VisualBehavior()]);
 
-            this.brush = d3.svg.brush();
+            this.brush = d3brush.brushX();
             this.yAxisOrientation = axisPosition.left;
 
             this.svg = this.rootElement
@@ -533,7 +505,7 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
 
             this.interactivityService = createInteractivityService(this.visualHost);
 
-            let legendParent = d3.select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
+            let legendParent = d3selection.select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
 
             this.legend = createLegend(
                 <HTMLElement>legendParent.node(),
@@ -573,6 +545,16 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
             return requiredHeight;
         }
 
+        private static getTranslation(transform) {
+            let g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+            g.setAttributeNS(null, "transform", transform);
+
+            let matrix = g.transform.baseVal.consolidate().matrix;
+
+            return [matrix.e, matrix.f];
+        }
+
         private renderAxesLabels(options: MekkoAxisRenderingOptions, xFontSize: number): void {
             this.axisGraphicsContext
                 .selectAll(MekkoChart.XAxisLabelSelector.selectorName)
@@ -590,7 +572,7 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
             const showOnRight: boolean = this.yAxisOrientation === axisPosition.right;
 
             if (!options.hideXAxisTitle && (this.categoryAxisProperties["show"] === undefined || this.categoryAxisProperties["show"])) {
-                const xAxisYPosition: number = d3.transform(this.xAxisGraphicsContext.attr("transform")).translate[1]
+                const xAxisYPosition: number = MekkoChart.getTranslation(this.xAxisGraphicsContext.attr("transform"))[1]
                     - fontSize + xFontSize + MekkoChart.XAxisYPositionOffset;
 
                 const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
@@ -601,15 +583,17 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
                 }
 
                 const xAxisLabel: Selection<any> = this.axisGraphicsContext.append("text")
-                    .attr({
-                        x: width / MekkoChart.WidthDelimiter,
-                        y: xAxisYPosition + shiftTitle
-                    })
-                    .style({
-                        "fill": options.xLabelColor
+                    .attr(
+                        "x", width / MekkoChart.WidthDelimiter
+                    )
+                    .attr(
+                        "y", xAxisYPosition + shiftTitle
+                    )
+                    .style(
+                        "fill", options.xLabelColor
                             ? options.xLabelColor.solid.color
                             : null
-                    })
+                    )
                     .text(options.axisLabels.x)
                     .classed(MekkoChart.XAxisLabelSelector.className, true);
 
@@ -621,11 +605,11 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
 
             if (!options.hideYAxisTitle) {
                 const yAxisLabel: Selection<any> = this.axisGraphicsContext.append("text")
-                    .style({
-                        "fill": options.yLabelColor
+                    .style(
+                        "fill", options.yLabelColor
                             ? options.yLabelColor.solid.color
                             : null
-                    })
+                    )
                     .text(options.axisLabels.y)
                     .attr("transform", MekkoChart.TransformRotate)
                     .attr(
@@ -843,7 +827,6 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
         }
 
         public update(options: VisualUpdateOptions) {
-            debugger;
             this.dataViews = options.dataViews;
             this.currentViewport = options.viewport;
             if (!this.checkDataset()) {
@@ -1663,9 +1646,9 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
                 text: "AZ"
             });
 
-            d3.select(this.rootElement.node()).selectAll("div.legendParent").remove();
+            d3selection.select(this.rootElement.node()).selectAll("div.legendParent").remove();
             this.categoryLegends = [];
-            let legendParents = d3.select(this.rootElement.node()).selectAll("div.legendParent");
+            let legendParents = d3selection.select(this.rootElement.node()).selectAll("div.legendParent");
 
             let legendParentsWithData = legendParents.data(reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined));
             let legendParentsWithChilds = legendParentsWithData.enter().append("div");
@@ -1676,7 +1659,7 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
             let mekko = this;
             this.categoryLegends = this.categoryLegends || [];
             legendParentsWithChildsAttr.each( function(data, index) {
-                let legendSvg = d3.select(this);
+                let legendSvg = d3selection.select(this);
                 if (legendSvg.select("svg").node() === null) {
                     let legend: ILegend = createLegend(
                         this,
@@ -1690,7 +1673,7 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
 
             if (reducedLegends.length > 0) {
                 this.categoryLegends.forEach((legend: ILegend, index: number) => {
-                    (<ILegendGroup>legend).position = +d3.select((<ILegendGroup>legend).element).style("top").replace("px", "");
+                    (<ILegendGroup>legend).position = +d3selection.select((<ILegendGroup>legend).element).style("top").replace("px", "");
                 } );
                 this.categoryLegends = _.sortBy( this.categoryLegends, "position").reverse();
                 this.categoryLegends.forEach( (legend, index) => {
@@ -1718,7 +1701,7 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
                         if (legendParentsWithChildsAttr.node() === null) {
                             svgHeight = +legendParents.select("svg").attr("height").replace("px", "");
                         } else {
-                            svgHeight = +d3.select(legendParentsWithChildsAttr.node()).select("svg").attr("height").replace("px", "");
+                            svgHeight = +d3selection.select(legendParentsWithChildsAttr.node()).select("svg").attr("height").replace("px", "");
                         }
                     }
                 });
@@ -2183,7 +2166,7 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
                 let width: number,
                     allowedLength: number;
 
-                const node: Selection<any> = d3.select(this);
+                const node: Selection<any> = d3selection.select(this);
 
                 if (columnsWidth.length >= index) {
                     width = columnsWidth[index];
@@ -2314,13 +2297,13 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
                     .attr("transform", `rotate(-${MekkoChart.CategoryTextRotataionDegree})`);
 
                     // fix positions 
-                    let categoryLabels = xAxisGraphicsElement.selectAll<any, any>(".tick");
+                    let categoryLabels = xAxisGraphicsElement.selectAll(".tick");
                     categoryLabels.each( function(tick, index){
                         let shiftX: number = this.getBBox().width / Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
                         let shiftY: number = this.getBBox().width * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
                         let currTransform: string = this.attributes.transform.value;
-                        let translate: [number, number] = d3.transform(currTransform).translate;
-                        d3.select(<any>this)
+                        let translate: [number, number] = d3transform.transform(currTransform).translate;
+                        d3selection.select(<any>this)
                         .attr("transform", (value: number, index: number) => {
                             return manipulation.translate(+translate[0] - shiftX, +translate[1] + shiftY);
                         });
@@ -2562,7 +2545,7 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
                 .node();
 
             if (zeroTick) {
-                d3.select(zeroTick)
+                d3selection.select(zeroTick)
                     .select("line")
                     .classed(MekkoChart.ZeroLineSelector.className, true);
             }
@@ -2618,3 +2601,4 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
 
         return layers;
     }
+

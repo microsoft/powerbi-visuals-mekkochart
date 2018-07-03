@@ -23,12 +23,8 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-import powerbi from "powerbi-visuals-tools";
 import {
-    interfaces,
     interactivityService,
-    interactivityUtils,
-    filtermanager
 } from "powerbi-visuals-utils-interactivityutils";
 
 import CustomVisualBehaviorOptions from "./customVisualBehaviorOptions";

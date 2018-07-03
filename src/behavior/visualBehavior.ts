@@ -1,35 +1,31 @@
 /*
- *  Power BI Visualizations
- *
- *  Copyright (c) Microsoft Corporation
- *  All rights reserved.
- *  MIT License
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the ""Software""), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
+*  Power BI Visualizations
+*
+*  Copyright (c) Microsoft Corporation
+*  All rights reserved.
+*  MIT License
+*
+*  Permission is hereby granted, free of charge, to any person obtaining a copy
+*  of this software and associated documentation files (the ""Software""), to deal
+*  in the Software without restriction, including without limitation the rights
+*  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+*  copies of the Software, and to permit persons to whom the Software is
+*  furnished to do so, subject to the following conditions:
+*
+*  The above copyright notice and this permission notice shall be included in
+*  all copies or substantial portions of the Software.
+*
+*  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+*  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+*  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+*  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+*  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+*  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+*  THE SOFTWARE.
+*/
 
-import powerbi from "powerbi-visuals-tools";
 import {
-    interfaces,
-    interactivityService,
-    interactivityUtils,
-    filtermanager
+interactivityService,
 } from "powerbi-visuals-utils-interactivityutils";
 import * as d3 from "d3";
 import { MekkoChartColumnDataPoint } from "./../dataIntrefaces";
@@ -38,57 +34,58 @@ import VisualBehaviorOptions from "./visualBehaviorOptions";
 
 import * as utils from "./../utils";
 
-    // d3
-    import Selection = d3.Selection;
+// d3
+import Selection = d3.Selection;
 
-    // powerbi.extensibility.utils.interactivity
-    import ISelectionHandler = interactivityService.ISelectionHandler;
-    import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
-    import SelectableDataPoint = interactivityService.SelectableDataPoint;
+// powerbi.extensibility.utils.interactivity
+import ISelectionHandler = interactivityService.ISelectionHandler;
+import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
+import SelectableDataPoint = interactivityService.SelectableDataPoint;
 
-    export default class VisualBehavior implements IInteractiveBehavior {
-        private options: VisualBehaviorOptions;
+const getEvent = () => require("d3-selection").event;
 
-        public bindEvents(
-            options: VisualBehaviorOptions,
-            selectionHandler: ISelectionHandler): void {
+export default class VisualBehavior implements IInteractiveBehavior {
+    private options: VisualBehaviorOptions;
 
-            this.options = options;
+    public bindEvents(
+        options: VisualBehaviorOptions,
+        selectionHandler: ISelectionHandler): void {
 
-            const eventGroup: Selection<any> = options.eventGroup;
+        this.options = options;
 
-            eventGroup.on("click", () => {
-                const dataOfTheLastEvent: SelectableDataPoint = VisualBehavior.getDatumForLastInputEvent();
+        const eventGroup: Selection<any> = options.eventGroup;
 
-                selectionHandler.handleSelection(
-                    dataOfTheLastEvent,
-                    (d3.event as MouseEvent).ctrlKey);
-            });
+        eventGroup.on("click", function() {
+            const dataOfTheLastEvent: SelectableDataPoint = VisualBehavior.getDatumForLastInputEvent();
 
-            eventGroup.on("contextmenu", () => {
-                const mouseEvent: MouseEvent = d3.event as MouseEvent;
+            selectionHandler.handleSelection(
+                dataOfTheLastEvent,
+                (getEvent() as MouseEvent).ctrlKey);
+        });
 
-                if (mouseEvent.ctrlKey) {
-                    return;
-                }
+        eventGroup.on("contextmenu", function() {
+            const mouseEvent: MouseEvent = getEvent() as MouseEvent;
 
-                mouseEvent.preventDefault();
-            });
-        }
+            if (mouseEvent.ctrlKey) {
+                return;
+            }
 
-        public renderSelection(hasSelection: boolean): void {
-            this.options.bars.style("fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => {
-                return utils.getFillOpacity(
-                    dataPoint.selected,
-                    dataPoint.highlight,
-                    !dataPoint.highlight && hasSelection,
-                    !dataPoint.selected && this.options.hasHighlights);
-            });
-        }
-
-        private static getDatumForLastInputEvent(): SelectableDataPoint {
-            const target: EventTarget = (d3.event as MouseEvent).target;
-
-            return d3.select(target).datum();
-        }
+            mouseEvent.preventDefault();
+        });
     }
+
+    public renderSelection(hasSelection: boolean): void {
+        this.options.bars.style("fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => {
+            return utils.getFillOpacity(
+                dataPoint.selected,
+                dataPoint.highlight,
+                !dataPoint.highlight && hasSelection,
+                !dataPoint.selected && this.options.hasHighlights);
+        });
+    }
+
+    private static getDatumForLastInputEvent(): SelectableDataPoint {
+        const target: EventTarget = (getEvent() as MouseEvent).target;
+        return d3.select(target).datum();
+    }
+}

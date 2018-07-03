@@ -83,9 +83,15 @@ import { valueFormatter as vf, formatting,  } from "powerbi-visuals-utils-format
 import valueFormatter = vf.valueFormatter;
 
     // d3
-    import Selection = d3.Selection;
-    import LinearScale = d3.scale.Linear;
-    import UpdateSelection = d3.selection.Update;
+    import * as d3selection from "d3-selection";
+    import * as d3array from "d3-array";
+    import * as d3axes from "d3-axes";
+    import * as d3brush from "d3-brush";
+    import * as d3scale from "d3-scale";
+    import * as d3svg from "d3-svg";
+    import Selection = d3selection.Selection;
+    import LinearScale = d3scale.Linear;
+    import UpdateSelection = d3selection.Update;
 
     // powerbi
     import IDataViewObjects = powerbi.DataViewObjects;

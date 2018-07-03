@@ -126,10 +126,16 @@ import MekkoChart from "./../visual";
 import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils"
 
     // d3
-    import Axis = d3.svg.Axis;
-    import Selection = d3.Selection;
-    import LinearScale = d3.scale.Linear;
-    import UpdateSelection = d3.selection.Update;
+    import * as d3selection from "d3-selection";
+    import * as d3array from "d3-array";
+    import * as d3axes from "d3-axes";
+    import * as d3brush from "d3-brush";
+    import * as d3scale from "d3-scale";
+    import * as d3svg from "d3-svg";
+    import Axis = d3axes.Axis;
+    import Selection = d3selection.Selection;
+    import LinearScale = d3scale.LinearScale;
+    import UpdateSelection = d3selection.Update;
 
     // powerbi.visuals
     import ISelectionId = powerbi.visuals.ISelectionId;
@@ -337,7 +343,7 @@ import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-uti
                 formatString: string = valueFormatter.getFormatStringByColumn(metaDataColumn),
                 dataType: ValueType = AxisHelper.getCategoryValueType(metaDataColumn, isScalar),
                 isLogScaleAllowed: boolean = AxisHelper.isLogScalePossible(dataDomain, dataType),
-                scale: LinearScale<number, number> = d3.scale.linear(),
+                scale: LinearScale<number, number> = d3scale.scaleLinear(),
                 scaleDomain: number[] = [0, 1],
                 bestTickCount: number = dataDomain.length || 1,
                 borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(options.borderSettings);
@@ -602,33 +608,36 @@ import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-uti
             const dataSelector: (dataPoint: MekkoChartSeries) => any[] =
                 (dataPoint: MekkoChartSeries) => dataPoint.data;
 
-
             const shapeSelection: UpdateSelection<any> = series.selectAll(itemCS.selectorName),
                 shapes: UpdateSelection<MekkoChartColumnDataPoint> = shapeSelection.data(
                     dataSelector,
                     (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
 
-            shapes
+            let allShapes = shapes
                 .enter()
                 .append("rect")
                 .attr("class", (dataPoint: MekkoChartColumnDataPoint) => {
                     return itemCS.className.concat(dataPoint.highlight
                         ? " highlight"
                         : "");
-                });
-
-            shapes
-                .style({
-                    "fill": (dataPoint: MekkoChartColumnDataPoint) => data.showAllDataPoints
+                })
+                .merge(shapeSelection)
+                .style(
+                    "fill", (dataPoint: MekkoChartColumnDataPoint) => data.showAllDataPoints
                         ? dataPoint.color
-                        : data.defaultDataPointColor,
-                    "fill-opacity": (dataPoint: MekkoChartColumnDataPoint) => utils.getFillOpacity(
+                        : data.defaultDataPointColor
+                )
+                .style(
+                    "fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => utils.getFillOpacity(
                         dataPoint.selected,
                         dataPoint.highlight,
                         hasSelection,
                         data.hasHighlights)
-                })
-                .attr(layout.shapeLayout as any);
+                )
+                .attr("height", layout.shapeLayout.height)
+                .attr("width", layout.shapeLayout.width)
+                .attr("x", layout.shapeLayout.x)
+                .attr("y", layout.shapeLayout.y);
 
             shapes
                 .exit()
@@ -644,24 +653,30 @@ import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-uti
             borders
                 .enter()
                 .append("rect")
-                .classed(BaseVisualStrategy.BorderSelector.className, true);
-
-            borders
-                .style({
-                    "fill": borderColor,
-                    "fill-opacity": (dataPoint: MekkoChartColumnDataPoint) => {
+                .classed(BaseVisualStrategy.BorderSelector.className, true)
+                .merge(borders)
+                .style(
+                    "fill", borderColor
+                )
+                .style(
+                    "fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => {
                         return data.hasHighlights
                             ? utils.DimmedOpacity
                             : utils.DefaultOpacity;
                     }
-                })
-                .attr(layout.shapeBorder as any);
+                )
+                .attr("height", layout.shapeBorder.height)
+                .attr("width", layout.shapeBorder.width)
+                .attr("x", layout.shapeBorder.x)
+                .attr("y", layout.shapeBorder.y);
+
+
 
             borders
                 .exit()
                 .remove();
 
-            return shapes;
+            return allShapes;
         }
 
         public selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void {
@@ -722,20 +737,16 @@ import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-uti
                 handleSelection
                     .append("line")
                     .classed(BaseVisualStrategy.InteractiveHoverLineSelector.className, true)
-                    .attr({
-                        x1: x,
-                        x2: x,
-                        y1: 0,
-                        y2: this.height,
-                    });
+                    .attr("x1", x)
+                    .attr("x2", x)
+                    .attr("y1", 0)
+                    .attr("y2", this.height);
 
                 handleSelection
                     .append("circle")
-                    .attr({
-                        cx: x,
-                        cy: this.height,
-                        r: PixelConverter.toString(BaseVisualStrategy.CircleRadius)
-                    })
+                    .attr("cx", x)
+                    .attr("cy", this.height)
+                    .attr("r", PixelConverter.toString(BaseVisualStrategy.CircleRadius))
                     .classed(BaseVisualStrategy.DragHandleSelector.className, true);
             }
             else {
@@ -743,14 +754,12 @@ import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-uti
 
                 handleSelection
                     .select("line")
-                    .attr({
-                        x1: x,
-                        x2: x
-                    });
+                    .attr("x1", x)
+                    .attr("x2", x);
 
                 handleSelection
                     .select("circle")
-                    .attr({ cx: x });
+                    .attr( "cx", x );
             }
         }
 
