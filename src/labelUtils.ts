@@ -32,7 +32,7 @@ import {
     wordBreaker,
     valueFormatter,
     textMeasurementService
-} from "powerbi-visuals-utils-formattingutils"
+} from "powerbi-visuals-utils-formattingutils";
 
 import {
     MekkoChartAxisProperties
@@ -41,7 +41,7 @@ import {
 import {
     axis as AxisHelper,
     axisInterfaces
-} from "powerbi-visuals-utils-chartutils"
+} from "powerbi-visuals-utils-chartutils";
 
     // powerbi.extensibility.utils.formatting
     import TextProperties = textMeasurementService.TextProperties;

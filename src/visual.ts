@@ -2342,8 +2342,7 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
 
                 axes.y1.axis
                     .tickSize(-width)
-                    .tickPadding(MekkoChart.TickPaddingY)
-                    // .orient(yAxisOrientation.toLowerCase());
+                    .tickPadding(MekkoChart.TickPaddingY);
 
                 const y1AxisGraphicsElement: Selection<any> = this.y1AxisGraphicsContext;
 

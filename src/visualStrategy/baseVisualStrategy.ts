@@ -123,7 +123,7 @@ import * as columnChart from "./../columnChart/baseColumnChart";
 
 import MekkoChart from "./../visual";
 
-import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils"
+import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
 
     // d3
     import * as d3selection from "d3-selection";

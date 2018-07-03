@@ -131,7 +131,7 @@ import { IColumnChart,  } from "./columnChartVisual";
 
 import { MekkoVisualChartType, flagStacked, flagBar } from "./../visualChartType";
 
-import { RoleNames,  } from "./../roleNames"
+import { RoleNames,  } from "./../roleNames";
 
 import * as dataViewUtils from "./../dataViewUtils";
 

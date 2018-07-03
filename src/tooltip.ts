@@ -33,7 +33,7 @@ import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 
 import {
     valueFormatter as vf
-} from "powerbi-visuals-utils-formattingutils"
+} from "powerbi-visuals-utils-formattingutils";
 
     // powerbi.extensibility.utils.formatting
     import valueFormatter = vf.valueFormatter;
