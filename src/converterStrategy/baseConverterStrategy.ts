@@ -24,17 +24,45 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.converterStrategy {
-    // powerbi.extensibility.utils.color
-    import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
-    import createLinearColorScale = powerbi.extensibility.utils.color.createLinearColorScale;
+import powerbi from "powerbi-visuals-tools";
+import { formatting } from "powerbi-visuals-utils-formattingutils";
+import { ColorHelper, createLinearColorScale } from "powerbi-visuals-utils-colorutils";
+import { legendInterfaces } from "powerbi-visuals-utils-chartutils";
+import * as formattingUtils from "./../formattingUtils";
+import * as d3array from "d3-array";
+import * as _ from "lodash";
+
+import IColorPalette = powerbi.extensibility.IColorPalette;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewObjects = powerbi.DataViewObjects;
+import PrimitiveValue = powerbi.PrimitiveValue;
+import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
+import ISelectionId = powerbi.visuals.ISelectionId;
+import Fill = powerbi.Fill;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewValueColumns = powerbi.DataViewValueColumns;
+
+import MekkoChart from "./../visual";
+import {
+    MekkoLegendDataPoint,
+    ICategotyValuesStatsCollection,
+    IFilteredValueGroups,
+    BaseColorIdentity,
+    LegendSeriesInfo,
+    MekkoGradientSettings
+} from "./../dataIntrefaces";
 
     // powerbi.extensibility.utils.chart
-    import LegendIcon = powerbi.extensibility.utils.chart.legend.LegendIcon;
-    import ILegendData = powerbi.extensibility.utils.chart.legend.LegendData;
+    import LegendIcon = legendInterfaces.LegendIcon;
+    import ILegendData = legendInterfaces.LegendData;
 
     // formattingUtils
     import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
+
+    import { ConverterStrategy } from "./converterStrategy";
 
     export class BaseConverterStrategy implements ConverterStrategy {
         private static WidthColumnName: string = "Width";
@@ -73,9 +101,9 @@ module powerbi.extensibility.visual.converterStrategy {
             this.dataView.categories[categoryFieldIndex].values.forEach((category, index) => {
                 categoryMaxValues[index] = {
                     category: category,
-                    maxValueOfCategory: d3.max(this.dataView.values.map(v => <number>v.values[index])),
-                    maxItemOfCategory: d3.sum(this.dataView.values.map(v => <number>v.values[index] !== undefined ? 1 : 0)),
-                    minValueOfCategory: d3.min(this.dataView.values.map(v => <number>v.values[index]))
+                    maxValueOfCategory: d3array.max(this.dataView.values.map(v => <number>v.values[index])),
+                    maxItemOfCategory: d3array.sum(this.dataView.values.map(v => <number>v.values[index] !== undefined ? 1 : 0)),
+                    minValueOfCategory: d3array.min(this.dataView.values.map(v => <number>v.values[index]))
                 };
             });
 
@@ -217,7 +245,7 @@ module powerbi.extensibility.visual.converterStrategy {
                         let category: string;
 
                         let color: string;
-                        let categoryIndex: number = _.findIndex(series.values, value => value);
+                        let categoryIndex: number = _.findIndex<PrimitiveValue>(series.values, value => value === value);
 
                         if (!colorGradient) {
                             color = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
@@ -242,7 +270,7 @@ module powerbi.extensibility.visual.converterStrategy {
                             icon: LegendIcon.Box,
                             identity: selectionId,
                             selected: false,
-                            valueSum: d3.sum(<number[]>series.values),
+                            valueSum: d3array.sum(<number[]>series.values),
                             categoryValues: series.values,
                             category: category,
                             categoryStartColor: categoryGradientBaseColorIdentities[categoryIndex].categoryStartColor,
@@ -295,4 +323,3 @@ module powerbi.extensibility.visual.converterStrategy {
             return this.dataView.values[series].highlights[category] as number;
         }
     }
-}

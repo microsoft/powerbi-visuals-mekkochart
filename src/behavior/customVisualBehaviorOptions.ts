@@ -24,12 +24,10 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.behavior {
     // d3
     import Selection = d3.Selection;
 
-    export interface CustomVisualBehaviorOptions {
+    export default interface CustomVisualBehaviorOptions {
         layerOptions: any[];
         clearCatcher: Selection<any>;
     }
-}

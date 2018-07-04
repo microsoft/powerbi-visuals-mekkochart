@@ -23,21 +23,46 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-tools";
 
-module powerbi.extensibility.visual.utils {
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewPropertyValue = powerbi.DataViewPropertyValue;
+import PrimitiveValue = powerbi.PrimitiveValue;
+import DataViewObjects = powerbi.DataViewObjects;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
+import DataViewObject = powerbi.DataViewObject;
+import NumberRange = powerbi.NumberRange;
+import DataViewValueColumns = powerbi.DataViewValueColumns;
+
+import MekkoChart from "./visual";
+
+import {
+    double as Double,
+    prototype as Prototype,
+    numericSequenceRange
+} from "powerbi-visuals-utils-typeutils";
+
+import {
+    MekkoChartSeries,
+    MekkoChartColumnDataPoint,
+    MekkoChartAxisOptions,
+    MekkoChartData,
+
+} from "./dataIntrefaces";
+
+import {
+    axis as AxisHelper
+} from "powerbi-visuals-utils-chartutils";
+
     // d3
-    import Selection = d3.Selection;
-    import LinearScale = d3.scale.Linear;
-    import UpdateSelection = d3.selection.Update;
-
-    // powerbi.extensibility.utils.chart
-    import AxisHelper = powerbi.extensibility.utils.chart.axis;
-
-    // powerbi.extensibility.utils.type
-    import Double = powerbi.extensibility.utils.type.Double;
-
-    // powerbi.extensibility.utils.type
-    import Prototype = powerbi.extensibility.utils.type.Prototype;
+    import * as d3selection from "d3-selection";
+    import * as d3scale from "d3-scale";
+    import * as d3array from "d3-array";
+    import Selection = d3selection.Selection;
+    import LinearScale = d3scale.LinearScale;
+    import UpdateSelection = d3selection.Update;
 
     const PctRoundingError: number = 0.0001;
     const RectName: string = "rect";
@@ -62,20 +87,20 @@ module powerbi.extensibility.visual.utils {
             };
         }
 
-        let min: number = d3.min<MekkoChartSeries, number>(
+        let min: number = d3array.min<MekkoChartSeries, number>(
             data,
             (series: MekkoChartSeries) => {
-                return d3.min<MekkoChartColumnDataPoint, number>(
+                return d3array.min<MekkoChartColumnDataPoint, number>(
                     series.data,
                     (dataPoint: MekkoChartColumnDataPoint) => {
                         return dataPoint.position - dataPoint.valueAbsolute;
                     });
             });
 
-        let max: number = d3.max<MekkoChartSeries, number>(
+        let max: number = d3array.max<MekkoChartSeries, number>(
             data,
             (series: MekkoChartSeries) => {
-                return d3.max<MekkoChartColumnDataPoint, number>(
+                return d3array.max<MekkoChartColumnDataPoint, number>(
                     series.data,
                     (dataPoint: MekkoChartColumnDataPoint) => dataPoint.position);
             });
@@ -96,19 +121,18 @@ module powerbi.extensibility.visual.utils {
         graphicsContext: Selection<any>,
         axisOptions: MekkoChartAxisOptions): UpdateSelection<MekkoChartSeries> {
 
-        const series: UpdateSelection<MekkoChartSeries> = graphicsContext
+        let series: UpdateSelection<MekkoChartSeries> = graphicsContext
             .selectAll(MekkoChart.SeriesSelector.selectorName)
             .data(data.series, (series: MekkoChartSeries) => series.key);
 
-        series
+        series = series
             .enter()
             .append("g")
-            .classed(MekkoChart.SeriesSelector.className, true);
-
-        series
-            .style({
-                fill: (series: MekkoChartSeries) => series.color,
-            });
+            .classed(MekkoChart.SeriesSelector.className, true)
+            .merge(series)
+            .style(
+                "fill", (series: MekkoChartSeries) => series.color,
+            );
 
         series
             .exit()
@@ -292,4 +316,3 @@ module powerbi.extensibility.visual.utils {
 
         return resultDataView;
     }
-}

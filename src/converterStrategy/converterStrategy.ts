@@ -24,7 +24,10 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.converterStrategy {
+import powerbi from "powerbi-visuals-tools";
+import IColorPalette = powerbi.extensibility.IColorPalette;
+import { LegendSeriesInfo } from "./../dataIntrefaces";
+
     export interface ConverterStrategy {
         getLegend(
             colors: IColorPalette,
@@ -38,4 +41,3 @@ module powerbi.extensibility.visual.converterStrategy {
         hasHighlightValues(series: number): boolean;
         getHighlightBySeriesAndCategory(series: number, category: number): number;
     }
-}

@@ -6,7 +6,7 @@
     "target": "ES6",
     "sourceMap": true,
     "outDir": "./.tmp/build/",
-    "sourceRoot": "../src/",
+    "sourceRoot": "../../src/",
     "moduleResolution": "node",
     "declaration": true,
     "lib": [
@@ -15,6 +15,9 @@
     ]
   },
   "files": [
-    "./src/visual.ts"
+    "./test/visualTest.ts"
+  ],
+  "include": [
+      "src/*.ts"
   ]
 }

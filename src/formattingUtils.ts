@@ -24,9 +24,16 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.formattingUtils {
+import powerbi from "powerbi-visuals-tools";
+
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewValueColumns = powerbi.DataViewValueColumns;
+import PrimitiveValue = powerbi.PrimitiveValue;
+
+import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
+
     // powerbi.extensibility.utils.formatting
-    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+    import valueFormatter = vf.valueFormatter;
 
     export function getFormattedLegendLabel(
         source: DataViewMetadataColumn,
@@ -44,4 +51,3 @@ module powerbi.extensibility.visual.formattingUtils {
             formatName,
             valueFormatter.getFormatStringByColumn(sourceForFormat));
     }
-}

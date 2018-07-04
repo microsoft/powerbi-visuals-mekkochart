@@ -23,18 +23,31 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-tools";
+import { legendInterfaces, axisInterfaces } from "powerbi-visuals-utils-chartutils";
 
-module powerbi.extensibility.visual.columnChart {
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+import IViewport = powerbi.IViewport;
+
+import {
+    MekkoChartVisualInitOptions,
+    MekkoCalculateScaleAndDomainOptions,
+    MekkoDataPoints,
+    MekkoVisualRenderResult,
+    MekkoChartBaseData
+} from "./../dataIntrefaces";
+
     // powerbi.extensibility.utils.chart
-    import LegendData = powerbi.extensibility.utils.chart.legend.LegendData;
-    import IAxisProperties = powerbi.extensibility.utils.chart.axis.IAxisProperties;
+    import LegendData = legendInterfaces.LegendData;
+    import IAxisProperties = axisInterfaces.IAxisProperties;
 
     export interface IColumnChart {
         getColumnsWidth(): number[];
         getBorderWidth(): number;
 
         init(options: MekkoChartVisualInitOptions): void;
-        setData(dataViews: DataView[], resized?: boolean): void;
+        setData(dataViews: powerbi.DataView[], resized?: boolean): void;
         calculateAxesProperties(options: MekkoCalculateScaleAndDomainOptions): IAxisProperties[];
         overrideXScale(xProperties: IAxisProperties): void;
         render(suppressAnimations: boolean): MekkoVisualRenderResult;
@@ -54,4 +67,3 @@ module powerbi.extensibility.visual.columnChart {
 
         getData?(): MekkoChartBaseData;
     }
-}

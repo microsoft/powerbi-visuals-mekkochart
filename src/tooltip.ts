@@ -23,10 +23,20 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-tools";
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
+import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 
-module powerbi.extensibility.visual.tooltip {
+import {
+    valueFormatter as vf
+} from "powerbi-visuals-utils-formattingutils";
+
     // powerbi.extensibility.utils.formatting
-    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+    import valueFormatter = vf.valueFormatter;
 
     export const DisplayNameSeparator: string = "/";
 
@@ -234,4 +244,3 @@ module powerbi.extensibility.visual.tooltip {
 
         return formatString || column.format;
     }
-}

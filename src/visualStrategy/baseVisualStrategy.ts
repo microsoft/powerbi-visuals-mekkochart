@@ -24,44 +24,144 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.visualStrategy {
+import powerbi from "powerbi-visuals-tools";
+import * as d3 from "d3";
+
+import IViewport = powerbi.IViewport;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import IColorPalette = powerbi.extensibility.IColorPalette;
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
+import DataViewCategorical = powerbi.DataViewCategorical;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewMetadata = powerbi.DataViewMetadata;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewScopeIdentity = powerbi.DataViewScopeIdentity;
+import PrimitiveValue = powerbi.PrimitiveValue;
+import DataViewObject = powerbi.DataViewObject;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import DataViewPropertyValue = powerbi.DataViewPropertyValue;
+import ValueRange = powerbi.ValueRange;
+
+import DataWrapper from "./../dataWrapper";
+import * as utils from "./../utils";
+
+import {
+    IMargin,
+    CssConstants,
+    IRect
+}
+from "powerbi-visuals-utils-svgutils";
+
+import {
+    interactivityService,
+    interfaces as interactivityServiceInterfaces
+}
+from "powerbi-visuals-utils-interactivityutils";
+
+import {
+    valueFormatter as vf,
+    displayUnitSystem,
+    displayUnitSystemType,
+    textMeasurementService
+}
+from "powerbi-visuals-utils-formattingutils";
+
+import {
+    axis as AxisHelper,
+    axisInterfaces,
+    legend,
+    legendInterfaces,
+    legendBehavior,
+    legendData,
+    legendPosition,
+    dataLabelUtils,
+    dataLabelInterfaces,
+    dataLabelManager
+}
+from "powerbi-visuals-utils-chartutils";
+
+import {
+    MekkoColumnChartData,
+    IMekkoChartVisualHost,
+    MekkoChartConstructorOptions,
+    MekkoChartVisualInitOptions,
+    MekkoCalculateScaleAndDomainOptions,
+    MekkoChartCategoryLayout,
+    MekkoBorderSettings,
+    MekkoSeriesSortSettings,
+    MekkoLegendSortSettings,
+    MekkoXAxisLabelsSettings,
+    MekkoCategoryColorSettings,
+    MekkoDataPointSettings,
+    LegendSeriesInfo,
+    MekkoLegendDataPoint,
+    MekkoDataPoints,
+    MekkoChartSeries,
+    ICategoryValuesCollection,
+    ValueMultiplers,
+    MekkoVisualRenderResult,
+    MekkoChartDrawInfo,
+    MekkoCategoryProperties,
+    MekkoChartLabelSettings,
+    MekkoChartLabelSettingsOptions,
+    MekkoChartColumnDataPoint,
+    MekkoColumnChartContext,
+    MekkoChartBaseData,
+    MekkoChartConstructorBaseOptions,
+    CreateAxisOptions,
+    MekkoColumnAxisOptions,
+    IMekkoColumnLayout,
+    MekkoCreateAxisOptions,
+    MekkoChartData,
+    LabelDataPoint
+} from "./../dataIntrefaces";
+
+import { IVisualStrategy } from "./visualStrategy";
+
+import * as columnChart from "./../columnChart/baseColumnChart";
+
+import MekkoChart from "./../visual";
+
+import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
+
     // d3
-    import Axis = d3.svg.Axis;
-    import Selection = d3.Selection;
-    import LinearScale = d3.scale.Linear;
-    import UpdateSelection = d3.selection.Update;
+    import * as d3selection from "d3-selection";
+    import * as d3array from "d3-array";
+    import * as d3axes from "d3-axes";
+    import * as d3brush from "d3-brush";
+    import * as d3scale from "d3-scale";
+    import * as d3svg from "d3-svg";
+    import Axis = d3axes.Axis;
+    import Selection = d3selection.Selection;
+    import LinearScale = d3scale.LinearScale;
+    import UpdateSelection = d3selection.Update;
 
     // powerbi.visuals
     import ISelectionId = powerbi.visuals.ISelectionId;
 
     // powerbi.extensibility.utils.svg
-    import IRect = powerbi.extensibility.utils.svg.IRect;
-    import IMargin = powerbi.extensibility.utils.svg.IMargin;
-    import ClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.ClassAndSelector;
-    import createClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.createClassAndSelector;
+    import ClassAndSelector = CssConstants.ClassAndSelector;
+    import createClassAndSelector = CssConstants.createClassAndSelector;
 
     // powerbi.extensibility.utils.chart
-    import AxisHelper = powerbi.extensibility.utils.chart.axis;
-    import IAxisProperties = AxisHelper.IAxisProperties;
-    import CreateAxisOptionsBase = AxisHelper.CreateAxisOptions;
-    import getLabelPrecision = powerbi.extensibility.utils.chart.dataLabel.utils.getLabelPrecision;
-    import hundredPercentFormat = powerbi.extensibility.utils.chart.dataLabel.utils.hundredPercentFormat;
-    import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
-    import IColumnFormatterCacheManager = powerbi.extensibility.utils.chart.dataLabel.IColumnFormatterCacheManager;
-    import createColumnFormatterCacheManager = powerbi.extensibility.utils.chart.dataLabel.utils.createColumnFormatterCacheManager;
+    import IAxisProperties = axisInterfaces.IAxisProperties;
+    import getLabelPrecision = dataLabelUtils.getLabelPrecision;
+    import hundredPercentFormat = dataLabelUtils.hundredPercentFormat;
+    import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
+    import IColumnFormatterCacheManager = dataLabelInterfaces.IColumnFormatterCacheManager;
+    import createColumnFormatterCacheManager = dataLabelUtils.createColumnFormatterCacheManager;
 
     // powerbi.extensibility.utils.interactivity
-    import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
+    import IInteractivityService = interactivityService.IInteractivityService;
 
     // powerbi.extensibility.utils.formatting
-    import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
-    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
-    import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
-    import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
+    import TextProperties = textMeasurementService.TextProperties;
+    import valueFormatter = vf.valueFormatter;
+    import IValueFormatter = vf.IValueFormatter;
 
     // powerbi.extensibility.utils.type
-    import ValueType = powerbi.extensibility.utils.type.ValueType;
-    import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
+    import ValueType = valueType.ValueType;
 
     import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
 
@@ -243,7 +343,7 @@ module powerbi.extensibility.visual.visualStrategy {
                 formatString: string = valueFormatter.getFormatStringByColumn(metaDataColumn),
                 dataType: ValueType = AxisHelper.getCategoryValueType(metaDataColumn, isScalar),
                 isLogScaleAllowed: boolean = AxisHelper.isLogScalePossible(dataDomain, dataType),
-                scale: LinearScale<number, number> = d3.scale.linear(),
+                scale: LinearScale<number, number> = d3scale.scaleLinear(),
                 scaleDomain: number[] = [0, 1],
                 bestTickCount: number = dataDomain.length || 1,
                 borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(options.borderSettings);
@@ -508,33 +608,36 @@ module powerbi.extensibility.visual.visualStrategy {
             const dataSelector: (dataPoint: MekkoChartSeries) => any[] =
                 (dataPoint: MekkoChartSeries) => dataPoint.data;
 
-
             const shapeSelection: UpdateSelection<any> = series.selectAll(itemCS.selectorName),
                 shapes: UpdateSelection<MekkoChartColumnDataPoint> = shapeSelection.data(
                     dataSelector,
                     (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
 
-            shapes
+            let allShapes = shapes
                 .enter()
                 .append("rect")
                 .attr("class", (dataPoint: MekkoChartColumnDataPoint) => {
                     return itemCS.className.concat(dataPoint.highlight
                         ? " highlight"
                         : "");
-                });
-
-            shapes
-                .style({
-                    "fill": (dataPoint: MekkoChartColumnDataPoint) => data.showAllDataPoints
+                })
+                .merge(shapeSelection)
+                .style(
+                    "fill", (dataPoint: MekkoChartColumnDataPoint) => data.showAllDataPoints
                         ? dataPoint.color
-                        : data.defaultDataPointColor,
-                    "fill-opacity": (dataPoint: MekkoChartColumnDataPoint) => utils.getFillOpacity(
+                        : data.defaultDataPointColor
+                )
+                .style(
+                    "fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => utils.getFillOpacity(
                         dataPoint.selected,
                         dataPoint.highlight,
                         hasSelection,
                         data.hasHighlights)
-                })
-                .attr(layout.shapeLayout as any);
+                )
+                .attr("height", layout.shapeLayout.height)
+                .attr("width", layout.shapeLayout.width)
+                .attr("x", layout.shapeLayout.x)
+                .attr("y", layout.shapeLayout.y);
 
             shapes
                 .exit()
@@ -550,24 +653,30 @@ module powerbi.extensibility.visual.visualStrategy {
             borders
                 .enter()
                 .append("rect")
-                .classed(BaseVisualStrategy.BorderSelector.className, true);
-
-            borders
-                .style({
-                    "fill": borderColor,
-                    "fill-opacity": (dataPoint: MekkoChartColumnDataPoint) => {
+                .classed(BaseVisualStrategy.BorderSelector.className, true)
+                .merge(borders)
+                .style(
+                    "fill", borderColor
+                )
+                .style(
+                    "fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => {
                         return data.hasHighlights
                             ? utils.DimmedOpacity
                             : utils.DefaultOpacity;
                     }
-                })
-                .attr(layout.shapeBorder as any);
+                )
+                .attr("height", layout.shapeBorder.height)
+                .attr("width", layout.shapeBorder.width)
+                .attr("x", layout.shapeBorder.x)
+                .attr("y", layout.shapeBorder.y);
+
+
 
             borders
                 .exit()
                 .remove();
 
-            return shapes;
+            return allShapes;
         }
 
         public selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void {
@@ -628,20 +737,16 @@ module powerbi.extensibility.visual.visualStrategy {
                 handleSelection
                     .append("line")
                     .classed(BaseVisualStrategy.InteractiveHoverLineSelector.className, true)
-                    .attr({
-                        x1: x,
-                        x2: x,
-                        y1: 0,
-                        y2: this.height,
-                    });
+                    .attr("x1", x)
+                    .attr("x2", x)
+                    .attr("y1", 0)
+                    .attr("y2", this.height);
 
                 handleSelection
                     .append("circle")
-                    .attr({
-                        cx: x,
-                        cy: this.height,
-                        r: PixelConverter.toString(BaseVisualStrategy.CircleRadius)
-                    })
+                    .attr("cx", x)
+                    .attr("cy", this.height)
+                    .attr("r", PixelConverter.toString(BaseVisualStrategy.CircleRadius))
                     .classed(BaseVisualStrategy.DragHandleSelector.className, true);
             }
             else {
@@ -649,14 +754,12 @@ module powerbi.extensibility.visual.visualStrategy {
 
                 handleSelection
                     .select("line")
-                    .attr({
-                        x1: x,
-                        x2: x
-                    });
+                    .attr("x1", x)
+                    .attr("x2", x);
 
                 handleSelection
                     .select("circle")
-                    .attr({ cx: x });
+                    .attr( "cx", x );
             }
         }
 
@@ -811,4 +914,3 @@ module powerbi.extensibility.visual.visualStrategy {
 
         return null;
     }
-}

@@ -23,76 +23,173 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-tools";
+import * as _ from "lodash";
 
-module powerbi.extensibility.visual {
-    // powerbi
-    import IDataViewObjects = powerbi.DataViewObjects;
+import IViewport = powerbi.IViewport;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewMetadata = powerbi.DataViewMetadata;
+import PrimitiveValue = powerbi.PrimitiveValue;
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
+import DataView = powerbi.DataView;
+import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
+import Fill = powerbi.Fill;
+import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
+import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
+import DataViewPropertyValue = powerbi.DataViewPropertyValue;
+import SortDirection = powerbi.SortDirection;
+import IVisual = powerbi.extensibility.visual.IVisual;
+import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 
-    // powerbi.visuals
-    import ISelectionId = powerbi.visuals.ISelectionId;
+import {
+    MekkoColumnChartData,
+    MekkoChartVisualInitOptions,
+    MekkoChartCategoryLayout,
+    MekkoBorderSettings,
+    MekkoSeriesSortSettings,
+    MekkoLegendSortSettings,
+    MekkoXAxisLabelsSettings,
+    MekkoCategoryColorSettings,
+    MekkoDataPointSettings,
+    MekkoLegendDataPoint,
+    MekkoVisualRenderResult,
+    MekkoChartLabelSettings,
+    MekkoChartConstructorBaseOptions,
+    MekkoChartAxisProperties,
+    MekkoChartSmallViewPortProperties,
+    MekkoChartAxesLabels,
+    MekkoAxisRenderingOptions,
+    MekkoChartCategoryLayoutOptions,
+    MekkoChartData,
+    LabelDataPoint,
+    IGrouppedLegendData,
+    MekkoLabelSettings,
+    MekkoChartBaseSeries,
+    MekkoChartDataPoint,
+    ILegendGroup,
+    MekkoChartDataLabelObject
+} from "./dataIntrefaces";
 
+import {
+    MekkoChartType,
+    MekkoVisualChartType
+} from "./visualChartType";
+
+import * as dataViewUtils from "./dataViewUtils";
+
+import * as labelUtils from "./labelUtils";
+
+import * as axisType from "./axis/type";
+import * as axisPosition from "./axis/position";
+import * as axisUtils from "./axis/utils";
+
+import {
+    dataViewObjects,
+    dataViewObject
+}
+from "powerbi-visuals-utils-dataviewutils";
+
+import DataViewObject = dataViewObject.DataViewObject;
+import DataViewObjects = dataViewObjects.DataViewObjects;
+
+    import * as d3brush from "d3-brush";
+    import * as d3selection from "d3-selection";
+    import * as d3array from "d3-array";
+    import * as d3transform from "d3-transform";
+    import * as d3scale from "d3-scale";
     // d3
-    import Brush = d3.svg.Brush;
-    import Selection = d3.Selection;
-    import LinearScale = d3.scale.Linear;
-    import UpdateSelection = d3.selection.Update;
-
-    // powerbi.extensibility.utils.dataview
-    import DataViewObject = powerbi.extensibility.utils.dataview.DataViewObject;
-    import DataViewObjects = powerbi.extensibility.utils.dataview.DataViewObjects;
+    import Brush = d3brush.Brush;
+    import Selection = d3selection.Selection;
+    import LinearScale = d3scale.Linear;
 
     // powerbi.extensibility.utils.chart
-    import AxisHelper = powerbi.extensibility.utils.chart.axis;
-    import axisScale = AxisHelper.scale;
-    import axisStyle = AxisHelper.style;
-    import IAxisProperties = AxisHelper.IAxisProperties;
-    import TickLabelMargins = AxisHelper.TickLabelMargins;
-    import ILegend = powerbi.extensibility.utils.chart.legend.ILegend;
-    import LegendData = powerbi.extensibility.utils.chart.legend.data;
-    import ILegendData = powerbi.extensibility.utils.chart.legend.LegendData;
-    import legendPosition = powerbi.extensibility.utils.chart.legend.position;
-    import legendProps = powerbi.extensibility.utils.chart.legend.legendProps;
-    import dataLabelUtils = powerbi.extensibility.utils.chart.dataLabel.utils;
-    import createLegend = powerbi.extensibility.utils.chart.legend.createLegend;
-    import ILabelLayout = powerbi.extensibility.utils.chart.dataLabel.ILabelLayout;
-    import LegendPosition = powerbi.extensibility.utils.chart.legend.LegendPosition;
-    import DataLabelObject = powerbi.extensibility.utils.chart.dataLabel.DataLabelObject;
-    import VisualDataLabelsSettings = powerbi.extensibility.utils.chart.dataLabel.VisualDataLabelsSettings;
-    import drawDefaultLabelsForDataPointChart = powerbi.extensibility.utils.chart.dataLabel.utils.drawDefaultLabelsForDataPointChart;
+    import {
+        axis as AxisHelper,
+        axisInterfaces,
+        axisScale,
+        axisStyle,
+        dataLabelInterfaces,
+        dataLabelUtils,
+        legendInterfaces,
+        legendData as LegendData,
+        legend,
+        legendPosition,
+    } from "powerbi-visuals-utils-chartutils";
+
+    import IAxisProperties = axisInterfaces.IAxisProperties;
+    import TickLabelMargins = axisInterfaces.TickLabelMargins;
+    import ILegend = legendInterfaces.ILegend;
+    import ILegendData = legendInterfaces.LegendData;
+
+    import legendProps = legendInterfaces.legendProps;
+    import createLegend = legend.createLegend;
+    import ILabelLayout = dataLabelInterfaces.ILabelLayout;
+    import LegendPosition = legendInterfaces.LegendPosition;
+    import DataLabelObject = dataLabelInterfaces.DataLabelObject;
+    import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
+    import drawDefaultLabelsForDataPointChart = dataLabelUtils.drawDefaultLabelsForDataPointChart;
 
     // powerbi.extensibility.utils.svg
-    import SVGUtil = powerbi.extensibility.utils.svg;
-    import IMargin = SVGUtil.IMargin;
-    import ClassAndSelector = SVGUtil.CssConstants.ClassAndSelector;
-    import createClassAndSelector = SVGUtil.CssConstants.createClassAndSelector;
+    import {
+        IMargin,
+        manipulation,
+        CssConstants,
+        IRect,
+        Point,
+        Rect,
+        shapes,
+        shapesInterfaces
+    } from "powerbi-visuals-utils-svgutils";
+    import ClassAndSelector = CssConstants.ClassAndSelector;
+    import createClassAndSelector = CssConstants.createClassAndSelector;
 
     // powerbi.extensibility.utils.interactivity
-    import appendClearCatcher = powerbi.extensibility.utils.interactivity.appendClearCatcher;
-    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
-    import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
-    import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
-    import createInteractivityService = powerbi.extensibility.utils.interactivity.createInteractivityService;
+    import {
+        interactivityService,
+        interactivityUtils
+    } from "powerbi-visuals-utils-interactivityutils";
+
+    import appendClearCatcher = interactivityService.appendClearCatcher;
+    import SelectableDataPoint = interactivityService.SelectableDataPoint;
+    import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
+    import IInteractivityService = interactivityService.IInteractivityService;
+    import createInteractivityService = interactivityService.createInteractivityService;
 
     // powerbi.extensibility.utils.formatting
-    import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
-    import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
-    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+    import {
+        valueFormatter as vf,
+        textMeasurementService as tms
+    } from "powerbi-visuals-utils-formattingutils";
+    import TextProperties = tms.TextProperties;
+    import textMeasurementService = tms.textMeasurementService;
+    import valueFormatter = vf.valueFormatter;
 
     // powerbi.extensibility.utils.type
-    import Double = powerbi.extensibility.utils.type.Double;
-    import Prototype = powerbi.extensibility.utils.type.Prototype;
-    import ValueType = powerbi.extensibility.utils.type.ValueType;
-    import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
+
+    import {
+        double as Double,
+        prototype as Prototype,
+        valueType,
+        pixelConverter as PixelConverter
+    } from "powerbi-visuals-utils-typeutils";
+
+    import ValueType = valueType.ValueType;
 
     // behavior
-    import VisualBehavior = behavior.VisualBehavior;
-    import CustomVisualBehavior = behavior.CustomVisualBehavior;
-    import CustomVisualBehaviorOptions = behavior.CustomVisualBehaviorOptions;
+    import VisualBehavior from "./behavior/visualBehavior";
+    import CustomVisualBehavior from "./behavior/customVisualBehavior";
+    import CustomVisualBehaviorOptions from "./behavior/customVisualBehaviorOptions";
+
+    import * as columnChart from "./columnChart/columnChartVisual";
+    import * as columnChartBaseColumnChart from "./columnChart/baseColumnChart";
 
     // columnChart
     import IColumnChart = columnChart.IColumnChart;
-    import BaseColumnChart = columnChart.BaseColumnChart;
-    import createBaseColumnChartLayer = columnChart.createBaseColumnChartLayer;
+    import BaseColumnChart = columnChartBaseColumnChart.BaseColumnChart;
+    import createBaseColumnChartLayer = columnChartBaseColumnChart.createBaseColumnChartLayer;
 
     // dataViewUtils
     import isScalar = dataViewUtils.isScalar;
@@ -121,7 +218,7 @@ module powerbi.extensibility.visual {
     /**
      * Renders a data series as a cartesian visual.
      */
-    export class MekkoChart implements IVisual {
+    export default class MekkoChart implements IVisual {
         private static XAxisYPositionOffset: number = 33;
         private static WidthDelimiter: number = 2;
         private static XDelimiter: number = 2;
@@ -306,11 +403,11 @@ module powerbi.extensibility.visual {
         private hasSetData: boolean;
         private visualInitOptions: VisualConstructorOptions;
 
-        private borderObjectProperties: DataViewObject;
-        private legendObjectProperties: DataViewObject;
-        private categoryAxisProperties: DataViewObject;
+        private borderObjectProperties: powerbi.DataViewObject;
+        private legendObjectProperties: powerbi.DataViewObject;
+        private categoryAxisProperties: powerbi.DataViewObject;
 
-        private valueAxisProperties: DataViewObject;
+        private valueAxisProperties: powerbi.DataViewObject;
         private cartesianSmallViewPortProperties: MekkoChartSmallViewPortProperties;
         private interactivityService: IInteractivityService;
         private behavior: IInteractiveBehavior;
@@ -347,18 +444,18 @@ module powerbi.extensibility.visual {
             this.visualInitOptions = options;
             this.visualHost = options.host;
 
-            d3.select("body").style({
-                "-webkit-tap-highlight-color": "transparent"
-            });
+            d3selection.select("body").style(
+                "-webkit-tap-highlight-color", "transparent"
+            );
 
-            this.rootElement = d3.select(options.element)
+            this.rootElement = d3selection.select(options.element)
                 .append("div")
                 .classed(MekkoChart.ClassName, true);
 
             this.behavior = new CustomVisualBehavior([new VisualBehavior()]);
 
-            this.brush = d3.svg.brush();
-            this.yAxisOrientation = axis.position.left;
+            this.brush = d3brush.brushX();
+            this.yAxisOrientation = axisPosition.left;
 
             this.svg = this.rootElement
                 .append("svg")
@@ -408,7 +505,7 @@ module powerbi.extensibility.visual {
 
             this.interactivityService = createInteractivityService(this.visualHost);
 
-            let legendParent = d3.select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
+            let legendParent = d3selection.select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
 
             this.legend = createLegend(
                 <HTMLElement>legendParent.node(),
@@ -448,6 +545,16 @@ module powerbi.extensibility.visual {
             return requiredHeight;
         }
 
+        private static getTranslation(transform) {
+            let g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+            g.setAttributeNS(null, "transform", transform);
+
+            let matrix = g.transform.baseVal.consolidate().matrix;
+
+            return [matrix.e, matrix.f];
+        }
+
         private renderAxesLabels(options: MekkoAxisRenderingOptions, xFontSize: number): void {
             this.axisGraphicsContext
                 .selectAll(MekkoChart.XAxisLabelSelector.selectorName)
@@ -462,10 +569,10 @@ module powerbi.extensibility.visual {
                 height: number = options.viewport.height,
                 fontSize: number = MekkoChart.FontSize;
 
-            const showOnRight: boolean = this.yAxisOrientation === axis.position.right;
+            const showOnRight: boolean = this.yAxisOrientation === axisPosition.right;
 
             if (!options.hideXAxisTitle && (this.categoryAxisProperties["show"] === undefined || this.categoryAxisProperties["show"])) {
-                const xAxisYPosition: number = d3.transform(this.xAxisGraphicsContext.attr("transform")).translate[1]
+                const xAxisYPosition: number = MekkoChart.getTranslation(this.xAxisGraphicsContext.attr("transform"))[1]
                     - fontSize + xFontSize + MekkoChart.XAxisYPositionOffset;
 
                 const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
@@ -476,15 +583,17 @@ module powerbi.extensibility.visual {
                 }
 
                 const xAxisLabel: Selection<any> = this.axisGraphicsContext.append("text")
-                    .attr({
-                        x: width / MekkoChart.WidthDelimiter,
-                        y: xAxisYPosition + shiftTitle
-                    })
-                    .style({
-                        "fill": options.xLabelColor
+                    .attr(
+                        "x", width / MekkoChart.WidthDelimiter
+                    )
+                    .attr(
+                        "y", xAxisYPosition + shiftTitle
+                    )
+                    .style(
+                        "fill", options.xLabelColor
                             ? options.xLabelColor.solid.color
                             : null
-                    })
+                    )
                     .text(options.axisLabels.x)
                     .classed(MekkoChart.XAxisLabelSelector.className, true);
 
@@ -496,20 +605,20 @@ module powerbi.extensibility.visual {
 
             if (!options.hideYAxisTitle) {
                 const yAxisLabel: Selection<any> = this.axisGraphicsContext.append("text")
-                    .style({
-                        "fill": options.yLabelColor
+                    .style(
+                        "fill", options.yLabelColor
                             ? options.yLabelColor.solid.color
                             : null
-                    })
+                    )
                     .text(options.axisLabels.y)
-                    .attr({
-                        "transform": MekkoChart.TransformRotate,
-                        "y": showOnRight
+                    .attr("transform", MekkoChart.TransformRotate)
+                    .attr(
+                        "y", showOnRight
                             ? width + margin.right - fontSize
-                            : -margin.left,
-                        "x": -((height - margin.top - options.legendMargin) / MekkoChart.XDelimiter),
-                        "dy": MekkoChart.DefaultDy
-                    })
+                            : -margin.left
+                    )
+                    .attr("x", -((height - margin.top - options.legendMargin) / MekkoChart.XDelimiter))
+                    .attr("dy", MekkoChart.DefaultDy)
                     .classed(MekkoChart.YAxisLabelSelector.className, true);
 
                 yAxisLabel.call(AxisHelper.LabelLayoutStrategy.clip,
@@ -520,17 +629,15 @@ module powerbi.extensibility.visual {
             if (!options.hideY2AxisTitle && options.axisLabels.y2) {
                 const y2AxisLabel: Selection<any> = this.axisGraphicsContext.append("text")
                     .text(options.axisLabels.y2)
-                    .attr({
-                        "transform": MekkoChart.TransformRotate,
-                        "y": showOnRight ? -margin.left : width + margin.right - fontSize,
-                        "x": -((height - margin.top - options.legendMargin) / MekkoChart.XDelimiter),
-                        "dy": MekkoChart.DefaultDy
-                    })
-                    .style({
-                        "fill": options.y2LabelColor
+                    .attr("transform", MekkoChart.TransformRotate)
+                    .attr("y", showOnRight ? -margin.left : width + margin.right - fontSize)
+                    .attr("x", -((height - margin.top - options.legendMargin) / MekkoChart.XDelimiter))
+                    .attr("dy", MekkoChart.DefaultDy)
+                    .style(
+                        "fill", options.y2LabelColor
                             ? options.y2LabelColor.solid.color
                             : null
-                    })
+                    )
                     .classed(MekkoChart.YAxisLabelSelector.className, true);
 
                 y2AxisLabel.call(AxisHelper.LabelLayoutStrategy.clip,
@@ -568,74 +675,62 @@ module powerbi.extensibility.visual {
             const margin: IMargin = this.margin,
                 width: number = viewport.width - (margin.left + margin.right),
                 height: number = viewport.height - (margin.top + margin.bottom),
-                showY1OnRight: boolean = this.yAxisOrientation === axis.position.right;
+                showY1OnRight: boolean = this.yAxisOrientation === axisPosition.right;
 
             this.xAxisGraphicsContext
-                .attr("transform", SVGUtil.translate(0, height));
+                .attr("transform", manipulation.translate(0, height));
 
             this.y1AxisGraphicsContext
-                .attr("transform", SVGUtil.translate(showY1OnRight ? width : 0, 0));
+                .attr("transform", manipulation.translate(showY1OnRight ? width : 0, 0));
 
             this.y2AxisGraphicsContext
-                .attr("transform", SVGUtil.translate(showY1OnRight ? 0 : width, 0));
+                .attr("transform", manipulation.translate(showY1OnRight ? 0 : width, 0));
 
-            this.svg.attr({
-                "width": viewport.width,
-                "height": viewport.height
-            });
+            this.svg.attr("width", viewport.width);
+            this.svg.attr("height", viewport.height);
 
             this.svg.style("top", () => {
                     return this.legend.isVisible() || this.categoryLegends.length > 0 && this.categoryLegends[0].isVisible() ? PixelConverter.toString(this.legendMargins.height) : 0;
                 });
 
-            this.svgScrollable.attr({
-                "width": viewport.width,
-                "height": viewport.height
-            });
+            this.svgScrollable.attr("width", viewport.width);
+            this.svgScrollable.attr("height", viewport.height);
 
-            this.svgScrollable.attr({
-                "x": 0
-            });
+            this.svgScrollable.attr("x", 0);
 
             this.axisGraphicsContext.attr(
                 "transform",
-                SVGUtil.translate(margin.left, margin.top));
+                manipulation.translate(margin.left, margin.top));
 
             this.axisGraphicsContextScrollable.attr(
                 "transform",
-                SVGUtil.translate(margin.left, margin.top));
+                manipulation.translate(margin.left, margin.top));
 
             this.labelGraphicsContextScrollable.attr(
                 "transform",
-                SVGUtil.translate(margin.left, margin.top));
+                manipulation.translate(margin.left, margin.top));
 
             if (this.isXScrollBarVisible) {
-                this.svgScrollable.attr({
-                    "x": this.margin.left
-                });
+                this.svgScrollable.attr("x", this.margin.left);
 
                 this.axisGraphicsContextScrollable.attr(
                     "transform",
-                    SVGUtil.translate(0, margin.top));
+                    manipulation.translate(0, margin.top));
 
                 this.labelGraphicsContextScrollable.attr(
                     "transform",
-                    SVGUtil.translate(0, margin.top));
+                    manipulation.translate(0, margin.top));
 
                 this.svgScrollable.attr("width", width);
 
-                this.svg.attr({
-                    "width": viewport.width,
-                    "height": viewport.height + MekkoChart.ScrollBarWidth
-                });
+                this.svg.attr("width", viewport.width);
+                this.svg.attr("height", viewport.height + MekkoChart.ScrollBarWidth);
             }
             else if (this.isYScrollBarVisible) {
                 this.svgScrollable.attr("height", height + margin.top);
 
-                this.svg.attr({
-                    "height": viewport.height,
-                    "width": viewport.width + MekkoChart.ScrollBarWidth
-                });
+                this.svg.attr("height", viewport.height);
+                this.svg.attr("width", viewport.width + MekkoChart.ScrollBarWidth);
             }
         }
 
@@ -658,7 +753,7 @@ module powerbi.extensibility.visual {
         }
 
         public static getIsScalar(
-            objects: IDataViewObjects,
+            objects: powerbi.DataViewObjects,
             propertyId: DataViewObjectPropertyIdentifier,
             type: ValueType): boolean {
 
@@ -668,7 +763,7 @@ module powerbi.extensibility.visual {
                 return !AxisHelper.isOrdinal(type);
             }
 
-            return (axisTypeValue === axis.type.scalar) && !AxisHelper.isOrdinal(type);
+            return (axisTypeValue === axisType.scalar) && !AxisHelper.isOrdinal(type);
         }
 
         private populateObjectProperties(dataViews: DataView[]) {
@@ -696,8 +791,8 @@ module powerbi.extensibility.visual {
 
                 if (dataViewMetadata &&
                     dataViewMetadata.objects) {
-                    const categoryAxis: DataViewObject = dataViewMetadata.objects["categoryAxis"],
-                        valueAxis: DataViewObject = dataViewMetadata.objects["valueAxis"];
+                    const categoryAxis: powerbi.DataViewObject = dataViewMetadata.objects["categoryAxis"],
+                        valueAxis: powerbi.DataViewObject = dataViewMetadata.objects["valueAxis"];
 
                     if (categoryAxis) {
                         this.categoryAxisProperties["showBorder"] = categoryAxis["showBorder"];
@@ -709,11 +804,11 @@ module powerbi.extensibility.visual {
                     }
                 }
 
-                const axisPosition: DataViewPropertyValue = this.valueAxisProperties["position"];
+                const axisPos: DataViewPropertyValue = this.valueAxisProperties["position"];
 
-                this.yAxisOrientation = axisPosition
-                    ? axisPosition.toString()
-                    : axis.position.left;
+                this.yAxisOrientation = axisPos
+                    ? axisPos.toString()
+                    : axisPosition["left"];
             }
         }
 
@@ -908,9 +1003,9 @@ module powerbi.extensibility.visual {
             return minInterval;
         }
 
-        public static parseLabelSettings(objects: IDataViewObjects): VisualDataLabelsSettings {
+        public static parseLabelSettings(objects: powerbi.DataViewObjects): VisualDataLabelsSettings {
             const labelSettings: VisualDataLabelsSettings = dataLabelUtils.getDefaultColumnLabelSettings(true),
-                labelsObj: MekkoChartDataLabelObject = objects["labels"] as MekkoChartDataLabelObject,
+                labelsObj: MekkoChartDataLabelObject = objects["labels"] as any,
                 minPrecision: number = MekkoChart.DefaultSettings.labelSettings.minPrecision,
                 maxPrecision: number = MekkoChart.DefaultSettings.labelSettings.maxPrecision;
 
@@ -929,7 +1024,7 @@ module powerbi.extensibility.visual {
             return labelSettings;
         }
 
-        public static parseXAxisLabelsSettings(objects: IDataViewObjects): MekkoXAxisLabelsSettings {
+        public static parseXAxisLabelsSettings(objects: powerbi.DataViewObjects): MekkoXAxisLabelsSettings {
             const enableRotataion: boolean = DataViewObjects.getValue(
                 objects,
                 MekkoChart.Properties["xAxisLabels"]["enableRotataion"],
@@ -940,7 +1035,7 @@ module powerbi.extensibility.visual {
             };
         }
 
-        public static parseDataPointSettings(objects: IDataViewObjects): MekkoDataPointSettings {
+        public static parseDataPointSettings(objects: powerbi.DataViewObjects): MekkoDataPointSettings {
             const categoryGradient: boolean = DataViewObjects.getValue(
                 objects,
                 MekkoChart.Properties["dataPoint"]["categoryGradient"],
@@ -962,7 +1057,7 @@ module powerbi.extensibility.visual {
                 colorDistribution
             };
         }
-        public static parseSeriesSortSettings(objects: IDataViewObjects): MekkoSeriesSortSettings {
+        public static parseSeriesSortSettings(objects: powerbi.DataViewObjects): MekkoSeriesSortSettings {
             const enabled: boolean = DataViewObjects.getValue(
                 objects,
                 MekkoChart.Properties["sortSeries"]["enabled"],
@@ -985,7 +1080,7 @@ module powerbi.extensibility.visual {
             };
         }
 
-        public static parseLegendSortSettings(objects: IDataViewObjects): MekkoLegendSortSettings {
+        public static parseLegendSortSettings(objects: powerbi.DataViewObjects): MekkoLegendSortSettings {
             const enabled: boolean = DataViewObjects.getValue(
                 objects,
                 MekkoChart.Properties["sortLegend"]["enabled"],
@@ -1014,7 +1109,7 @@ module powerbi.extensibility.visual {
             };
         }
 
-        public static parseBorderSettings(objects: IDataViewObjects): MekkoBorderSettings {
+        public static parseBorderSettings(objects: powerbi.DataViewObjects): MekkoBorderSettings {
             const show: boolean = DataViewObjects.getValue(
                 objects,
                 MekkoChart.Properties["columnBorder"]["show"],
@@ -1050,7 +1145,7 @@ module powerbi.extensibility.visual {
         }
 
         private enumerateBorder(instances: VisualObjectInstance[]): void {
-            const objects: IDataViewObjects = {
+            const objects: powerbi.DataViewObjects = {
                 columnBorder: this.borderObjectProperties
             };
 
@@ -1208,7 +1303,7 @@ module powerbi.extensibility.visual {
         }
 
         private getCategoryAxisValues(instances: VisualObjectInstance[]): void {
-            let supportedType: string = axis.type.both,
+            let supportedType: string = axisType.both,
                 isValueScalar: boolean = false,
                 logPossible: boolean = !!this.axes.x.isLogScaleAllowed,
                 scaleOptions: string[] = [axisScale.log, axisScale.linear];
@@ -1216,12 +1311,12 @@ module powerbi.extensibility.visual {
             if (this.layers && this.layers[0].getSupportedCategoryAxisType) {
                 supportedType = this.layers[0].getSupportedCategoryAxisType();
 
-                if (supportedType === axis.type.scalar) {
+                if (supportedType === axisType.scalar) {
                     isValueScalar = true;
                 }
                 else {
                     isValueScalar = isScalar(
-                        supportedType === axis.type.both,
+                        supportedType === axisType.both,
                         this.categoryAxisProperties);
                 }
             }
@@ -1249,12 +1344,12 @@ module powerbi.extensibility.visual {
             if (this.yAxisIsCategorical)
                 instance.properties["position"] = this.valueAxisProperties && this.valueAxisProperties["position"] != null
                     ? this.valueAxisProperties["position"]
-                    : axis.position.left;
+                    : axisPosition.left;
 
-            if (supportedType === axis.type.both) {
+            if (supportedType === axisType.both) {
                 instance.properties["axisType"] = isValueScalar
-                    ? axis.type.scalar
-                    : axis.type.categorical;
+                    ? axisType.scalar
+                    : axisType.categorical;
             }
 
             if (isValueScalar) {
@@ -1331,7 +1426,7 @@ module powerbi.extensibility.visual {
             if (!this.yAxisIsCategorical) {
                 instance.properties["position"] = this.valueAxisProperties && this.valueAxisProperties["position"] != null
                     ? this.valueAxisProperties["position"]
-                    : axis.position.left;
+                    : axisPosition.left;
             }
 
             instance.properties["axisScale"] = (this.valueAxisProperties && this.valueAxisProperties["axisScale"] != null && logPossible)
@@ -1401,7 +1496,7 @@ module powerbi.extensibility.visual {
         }
 
         private createAndInitLayers(dataViews: DataView[]): IColumnChart[] {
-            let objects: IDataViewObjects;
+            let objects: powerbi.DataViewObjects;
 
             if (dataViews && dataViews.length > 0) {
                 const dataViewMetadata: DataViewMetadata = dataViews[0].metadata;
@@ -1461,7 +1556,7 @@ module powerbi.extensibility.visual {
                 }
             }
 
-            const legendProperties: DataViewObject = this.legendObjectProperties;
+            const legendProperties: powerbi.DataViewObject = this.legendObjectProperties;
 
             if (legendProperties) {
                 if (!legendProperties["fontSize"]) {
@@ -1489,7 +1584,7 @@ module powerbi.extensibility.visual {
             if (legendSortSettings.enabled) {
                 if (legendSortSettings.groupByCategory) {
                     let mappedLegends = legendData.dataPoints.map( (dataPoint: MekkoLegendDataPoint) => {
-                        let maxVal = d3.max(dataPoint.categoryValues as Number[]);
+                        let maxVal = d3array.max(dataPoint.categoryValues as Number[]);
                         let index = dataPoint.categoryValues.indexOf(maxVal as PrimitiveValue);
                         return {
                             categoryIndex: index,
@@ -1510,7 +1605,7 @@ module powerbi.extensibility.visual {
                         reducedLegends[element.categoryIndex].data.push(element.data);
                     });
                     reducedLegends.forEach(element => {
-                        element.dataValues = d3.sum(element.data.map((d) => d.valueSum));
+                        element.dataValues = d3array.sum(element.data.map((d) => d.valueSum));
                     });
 
                     reducedLegends.forEach(legend => {
@@ -1551,24 +1646,20 @@ module powerbi.extensibility.visual {
                 text: "AZ"
             });
 
-            d3.select(this.rootElement.node()).selectAll("div.legendParent").remove();
+            d3selection.select(this.rootElement.node()).selectAll("div.legendParent").remove();
             this.categoryLegends = [];
-            let legendParents = d3.select(this.rootElement.node()).selectAll("div.legendParent");
+            let legendParents = d3selection.select(this.rootElement.node()).selectAll("div.legendParent");
 
             let legendParentsWithData = legendParents.data(reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined));
             let legendParentsWithChilds = legendParentsWithData.enter().append("div");
             let legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
-            .style({
-                position: "absolute",
-                top: function (data) {
-                    return PixelConverter.toString(svgHeight * data.index);
-                }
-            });
+            .style("position", "absolute")
+            .style("top", (data) => PixelConverter.toString(svgHeight * data.index));
 
             let mekko = this;
             this.categoryLegends = this.categoryLegends || [];
             legendParentsWithChildsAttr.each( function(data, index) {
-                let legendSvg = d3.select(this);
+                let legendSvg = d3selection.select(this);
                 if (legendSvg.select("svg").node() === null) {
                     let legend: ILegend = createLegend(
                         this,
@@ -1582,7 +1673,7 @@ module powerbi.extensibility.visual {
 
             if (reducedLegends.length > 0) {
                 this.categoryLegends.forEach((legend: ILegend, index: number) => {
-                    (<ILegendGroup>legend).position = +d3.select((<ILegendGroup>legend).element).style("top").replace("px", "");
+                    (<ILegendGroup>legend).position = +d3selection.select((<ILegendGroup>legend).element).style("top").replace("px", "");
                 } );
                 this.categoryLegends = _.sortBy( this.categoryLegends, "position").reverse();
                 this.categoryLegends.forEach( (legend, index) => {
@@ -1610,7 +1701,7 @@ module powerbi.extensibility.visual {
                         if (legendParentsWithChildsAttr.node() === null) {
                             svgHeight = +legendParents.select("svg").attr("height").replace("px", "");
                         } else {
-                            svgHeight = +d3.select(legendParentsWithChildsAttr.node()).select("svg").attr("height").replace("px", "");
+                            svgHeight = +d3selection.select(legendParentsWithChildsAttr.node()).select("svg").attr("height").replace("px", "");
                         }
                     }
                 });
@@ -1798,7 +1889,7 @@ module powerbi.extensibility.visual {
             margin.bottom = MekkoChart.MinBottomMargin;
             margin.right = 0;
 
-            let axes: MekkoChartAxisProperties = this.axes = axis.utils.calculateAxes(
+            let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
                 this.layers,
                 viewport,
                 margin,
@@ -1826,7 +1917,7 @@ module powerbi.extensibility.visual {
             this.isYScrollBarVisible = false;
 
             const yAxisOrientation: string = this.yAxisOrientation,
-                showY1OnRight: boolean = yAxisOrientation === axis.position.right;
+                showY1OnRight: boolean = yAxisOrientation === axisPosition.right;
 
             if (this.layers) {
                 if (this.layers[0].getVisualCategoryAxisIsScalar) {
@@ -1885,7 +1976,7 @@ module powerbi.extensibility.visual {
             }
 
             // Recalculate axes now that scrollbar visible variables have been set
-            axes = axis.utils.calculateAxes(
+            axes = axisUtils.calculateAxes(
                 this.layers,
                 viewport,
                 margin,
@@ -1997,7 +2088,7 @@ module powerbi.extensibility.visual {
                 const previousTickCountY1: number = axes.y1.values.length,
                     previousTickCountY2: number = axes.y2 && axes.y2.values.length;
 
-                axes = axis.utils.calculateAxes(
+                axes = axisUtils.calculateAxes(
                     this.layers,
                     viewport,
                     margin,
@@ -2075,7 +2166,7 @@ module powerbi.extensibility.visual {
                 let width: number,
                     allowedLength: number;
 
-                const node: Selection<any> = d3.select(this);
+                const node: Selection<any> = d3selection.select(this);
 
                 if (columnsWidth.length >= index) {
                     width = columnsWidth[index];
@@ -2086,11 +2177,9 @@ module powerbi.extensibility.visual {
 
                 node
                     .classed(MekkoChart.LabelMiddleSelector.className, true)
-                    .attr({
-                        "dx": MekkoChart.DefaultLabelDx,
-                        "dy": MekkoChart.DefaultLabelDy,
-                        "transform": MekkoChart.DefaultLabelRotate
-                    });
+                    .attr("dx", MekkoChart.DefaultLabelDx)
+                    .attr("dy", MekkoChart.DefaultLabelDy)
+                    .attr("transform", MekkoChart.DefaultLabelRotate);
 
                 textMeasurementService.wordBreak(
                     this,
@@ -2203,11 +2292,9 @@ module powerbi.extensibility.visual {
                 else {
                     xAxisTextNodes
                     .classed(MekkoChart.LabelMiddleSelector.className, true)
-                    .attr({
-                        "dx": MekkoChart.DefaultLabelDx,
-                        "dy": MekkoChart.DefaultLabelDy,
-                        "transform": `rotate(-${MekkoChart.CategoryTextRotataionDegree})`
-                    });
+                    .attr("dx", MekkoChart.DefaultLabelDx)
+                    .attr("dy", MekkoChart.DefaultLabelDy)
+                    .attr("transform", `rotate(-${MekkoChart.CategoryTextRotataionDegree})`);
 
                     // fix positions 
                     let categoryLabels = xAxisGraphicsElement.selectAll(".tick");
@@ -2215,10 +2302,10 @@ module powerbi.extensibility.visual {
                         let shiftX: number = this.getBBox().width / Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
                         let shiftY: number = this.getBBox().width * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
                         let currTransform: string = this.attributes.transform.value;
-                        let translate: [number, number] = d3.transform(currTransform).translate;
-                        d3.select(<any>this)
+                        let translate: [number, number] = d3transform.transform(currTransform).translate;
+                        d3selection.select(<any>this)
                         .attr("transform", (value: number, index: number) => {
-                            return SVGUtil.translate(+translate[0] - shiftX, +translate[1] + shiftY);
+                            return manipulation.translate(+translate[0] - shiftX, +translate[1] + shiftY);
                         });
                     });
                 }
@@ -2251,12 +2338,11 @@ module powerbi.extensibility.visual {
                 yFontSize = PixelConverter.fromPointToPixel(yFontSize);
 
                 const yAxisOrientation: string = this.yAxisOrientation,
-                    showY1OnRight: boolean = yAxisOrientation === axis.position.right;
+                    showY1OnRight: boolean = yAxisOrientation === axisPosition.right;
 
                 axes.y1.axis
                     .tickSize(-width)
-                    .tickPadding(MekkoChart.TickPaddingY)
-                    .orient(yAxisOrientation.toLowerCase());
+                    .tickPadding(MekkoChart.TickPaddingY);
 
                 const y1AxisGraphicsElement: Selection<any> = this.y1AxisGraphicsContext;
 
@@ -2296,8 +2382,8 @@ module powerbi.extensibility.visual {
                     axes.y2.axis
                         .tickPadding(MekkoChart.TickPaddingY)
                         .orient(showY1OnRight
-                            ? axis.position.left.toLowerCase()
-                            : axis.position.right.toLowerCase());
+                            ? axisPosition.left.toLowerCase()
+                            : axisPosition.right.toLowerCase());
 
                     if (duration) {
                         this.y2AxisGraphicsContext
@@ -2453,12 +2539,12 @@ module powerbi.extensibility.visual {
          * "Classed" is undefined for transition selections
          */
         private static darkenZeroLine(selection: Selection<any>): void {
-            const zeroTick: Node = MekkoChart.getTicks(selection)
+            const zeroTick: any = MekkoChart.getTicks(selection)
                 .filter((data: any) => data === 0)
                 .node();
 
             if (zeroTick) {
-                d3.select(zeroTick)
+                d3selection.select(zeroTick)
                     .select("line")
                     .classed(MekkoChart.ZeroLineSelector.className, true);
             }
@@ -2490,14 +2576,14 @@ module powerbi.extensibility.visual {
 
             MekkoChart.getTicks(selection)
                 .attr("transform", (value: number, index: number) => {
-                    return SVGUtil.translate(scale(value) + (borderWidth * index), yOffset);
+                    return manipulation.translate(scale(value) + (borderWidth * index), yOffset);
                 });
         }
     }
 
     export function createLayers(
         type: MekkoChartType,
-        objects: IDataViewObjects,
+        objects: powerbi.DataViewObjects,
         interactivityService: IInteractivityService,
         isScrollable: boolean = true): IColumnChart[] {
 
@@ -2514,4 +2600,4 @@ module powerbi.extensibility.visual {
 
         return layers;
     }
-}
+
