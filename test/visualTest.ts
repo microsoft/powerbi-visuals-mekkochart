@@ -23,7 +23,7 @@
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
-import powerbi from "powerbi-visuals-tools";
+import powerbi from "powerbi-visuals-api";
 import DataView = powerbi.DataView;
 import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
@@ -60,14 +60,14 @@ import {
 import { MekkoChartBuilder } from "./visualBuilder";
 
 import {
-    isRectangleInOrOutRectangle,
     getSolidColorStructuralObject,
     isTextElementInOrOutElement
 } from "./helpers/helpers";
 
 import * as _ from "lodash";
-import * as d3 from "d3";
+import { select } from "d3";
 import { ClickEventType } from "powerbi-visuals-utils-testutils/lib/helpers/helpers";
+import MekkoChart from "../src/visual";
 
 describe("MekkoChart", () => {
     let visualBuilder: MekkoChartBuilder;
@@ -748,7 +748,7 @@ describe("MekkoChart", () => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 let expectedDegree: number = -45;
                 visualBuilder.xAxisTicks.children("text").each( (index, element) => {
-                    expect(d3.transform(d3.select(element).attr("transform")).rotate).toBe(expectedDegree);
+                    expect(MekkoChart.getTranslation(select(element).attr("transform"))[2]).toBeCloseTo(expectedDegree);
                 });
                 done();
             }, 300);

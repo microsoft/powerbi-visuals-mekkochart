@@ -24,7 +24,7 @@
  *  THE SOFTWARE.
  */
 
-import powerbi from "powerbi-visuals-tools";
+import powerbi from "powerbi-visuals-api";
 
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewValueColumns = powerbi.DataViewValueColumns;
@@ -32,22 +32,22 @@ import PrimitiveValue = powerbi.PrimitiveValue;
 
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
 
-    // powerbi.extensibility.utils.formatting
-    import valueFormatter = vf.valueFormatter;
+// powerbi.extensibility.utils.formatting
+import valueFormatter = vf.valueFormatter;
 
-    export function getFormattedLegendLabel(
-        source: DataViewMetadataColumn,
-        values: DataViewValueColumns): string {
+export function getFormattedLegendLabel(
+    source: DataViewMetadataColumn,
+    values: DataViewValueColumns): string {
 
-        let sourceForFormat: DataViewMetadataColumn = source,
-            formatName: PrimitiveValue = source.displayName;
+    let sourceForFormat: DataViewMetadataColumn = source,
+        formatName: PrimitiveValue = source.displayName;
 
-        if (source.groupName !== undefined) {
-            sourceForFormat = values.source;
-            formatName = source.groupName;
-        }
-
-        return valueFormatter.format(
-            formatName,
-            valueFormatter.getFormatStringByColumn(sourceForFormat));
+    if (source.groupName !== undefined) {
+        sourceForFormat = values.source;
+        formatName = source.groupName;
     }
+
+    return valueFormatter.format(
+        formatName,
+        valueFormatter.getFormatStringByColumn(sourceForFormat));
+}

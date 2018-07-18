@@ -24,10 +24,10 @@
  *  THE SOFTWARE.
  */
 
-    // d3
-    import Selection = d3.Selection;
+// d3
+import Selection = d3.Selection;
 
-    export default interface CustomVisualBehaviorOptions {
-        layerOptions: any[];
-        clearCatcher: Selection<any>;
-    }
+export default interface CustomVisualBehaviorOptions {
+    layerOptions: any[];
+    clearCatcher: Selection<any>;
+}
