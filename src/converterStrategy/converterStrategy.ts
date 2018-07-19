@@ -24,20 +24,20 @@
  *  THE SOFTWARE.
  */
 
-import powerbi from "powerbi-visuals-tools";
+import powerbi from "powerbi-visuals-api";
 import IColorPalette = powerbi.extensibility.IColorPalette;
 import { LegendSeriesInfo } from "./../dataIntrefaces";
 
-    export interface ConverterStrategy {
-        getLegend(
-            colors: IColorPalette,
-            defaultLegendLabelColor: string,
-            defaultColor?: string,
-            colorGradient?: boolean,
-            colorGradientEndColor?: string
-        ): LegendSeriesInfo;
-        getValueBySeriesAndCategory(series: number, category: number): number;
-        getMeasureNameByIndex(series: number, category: number): string;
-        hasHighlightValues(series: number): boolean;
-        getHighlightBySeriesAndCategory(series: number, category: number): number;
-    }
+export interface ConverterStrategy {
+    getLegend(
+        colors: IColorPalette,
+        defaultLegendLabelColor: string,
+        defaultColor?: string,
+        colorGradient?: boolean,
+        colorGradientEndColor?: string
+    ): LegendSeriesInfo;
+    getValueBySeriesAndCategory(series: number, category: number): number;
+    getMeasureNameByIndex(series: number, category: number): string;
+    hasHighlightValues(series: number): boolean;
+    getHighlightBySeriesAndCategory(series: number, category: number): number;
+}

@@ -24,7 +24,6 @@
  *  THE SOFTWARE.
  */
 
-import powerbi from "powerbi-visuals-tools";
 import { axis as AxisHelper } from "powerbi-visuals-utils-chartutils";
 import { valueType } from "powerbi-visuals-utils-typeutils";
 
@@ -35,53 +34,53 @@ import {
 } from "./dataIntrefaces";
 
 
-    // powerbi.extensibility.utils.type
-    import ValueType = valueType.ValueType;
+// powerbi.extensibility.utils.type
+import ValueType = valueType.ValueType;
 
-    export default class DataWrapper {
-        private static HighlightedIndexFactor: number = 2;
+export default class DataWrapper {
+    private static HighlightedIndexFactor: number = 2;
 
-        private data: MekkoChartBaseData;
-        private isScalar: boolean;
+    private data: MekkoChartBaseData;
+    private isScalar: boolean;
 
-        public constructor(columnChartData: MekkoChartBaseData, isScalar: boolean) {
-            this.data = columnChartData;
-            this.isScalar = isScalar;
+    public constructor(columnChartData: MekkoChartBaseData, isScalar: boolean) {
+        this.data = columnChartData;
+        this.isScalar = isScalar;
+    }
+
+    public lookupXValue(index: number, type: ValueType): any {
+        const isDateTime: boolean = AxisHelper.isDateTime(type);
+
+        if (isDateTime && this.isScalar) {
+            return new Date(index);
         }
 
-        public lookupXValue(index: number, type: ValueType): any {
-            const isDateTime: boolean = AxisHelper.isDateTime(type);
+        if (type.text) {
+            return this.data.categories[index];
+        }
 
-            if (isDateTime && this.isScalar) {
-                return new Date(index);
-            }
+        const firstSeries: MekkoChartBaseSeries = this.data.series[0];
 
-            if (type.text) {
-                return this.data.categories[index];
-            }
+        if (firstSeries) {
+            const dataPoints: MekkoChartDataPoint[] = firstSeries.data;
 
-            const firstSeries: MekkoChartBaseSeries = this.data.series[0];
+            if (dataPoints) {
+                if (this.data.hasHighlights) {
+                    index = index * DataWrapper.HighlightedIndexFactor;
+                }
 
-            if (firstSeries) {
-                const dataPoints: MekkoChartDataPoint[] = firstSeries.data;
+                const dataPoint: MekkoChartDataPoint = dataPoints[index];
 
-                if (dataPoints) {
-                    if (this.data.hasHighlights) {
-                        index = index * DataWrapper.HighlightedIndexFactor;
+                if (dataPoint) {
+                    if (isDateTime) {
+                        return new Date(dataPoint.categoryValue);
                     }
 
-                    const dataPoint: MekkoChartDataPoint = dataPoints[index];
-
-                    if (dataPoint) {
-                        if (isDateTime) {
-                            return new Date(dataPoint.categoryValue);
-                        }
-
-                        return dataPoint.categoryValue;
-                    }
+                    return dataPoint.categoryValue;
                 }
             }
-
-            return index;
         }
+
+        return index;
     }
+}
