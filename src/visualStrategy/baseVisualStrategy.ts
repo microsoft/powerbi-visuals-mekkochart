@@ -71,7 +71,7 @@ import {
     MekkoCreateAxisOptions,
     MekkoChartData,
     LabelDataPoint
-} from "./../dataIntrefaces";
+} from "./../dataInterfaces";
 
 import { IVisualStrategy } from "./visualStrategy";
 
@@ -84,7 +84,7 @@ import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-uti
 // d3
 import * as d3selection from "d3-selection";
 import * as d3scale from "d3-scale";
-import { ScaleLinear as LinearScale, Axis, svg, axisLeft, axisBottom } from "d3";
+import { axisLeft, axisBottom } from "d3-axis";
 import Selection = d3selection.Selection;
 
 // powerbi.extensibility.utils.svg
@@ -232,7 +232,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
      * Format the linear tick labels or the category labels.
      */
     private static formatAxisTickValues(
-        axis: Axis<any>,
+        axis: d3.Axis<any>,
         tickValues: any[],
         formatter: IValueFormatter,
         dataType: ValueType,
@@ -288,7 +288,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             formatString: string = valueFormatter.getFormatStringByColumn(metaDataColumn),
             dataType: ValueType = AxisHelper.getCategoryValueType(metaDataColumn, isScalar),
             isLogScaleAllowed: boolean = AxisHelper.isLogScalePossible(dataDomain, dataType),
-            scale: LinearScale<number, number> = d3scale.scaleLinear(),
+            scale: d3.ScaleLinear<number, number> = d3scale.scaleLinear(),
             scaleDomain: number[] = [0, 1],
             bestTickCount: number = dataDomain.length || 1,
             borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(options.borderSettings);
@@ -314,8 +314,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
             getValueFn,
             useTickIntervalForDisplayUnits);
 
-        let axisFn = isVertical ? axisLeft : axisBottom
-        const axis: Axis<any> = axisFn(scale)
+        let axisFn = isVertical ? axisLeft : axisBottom;
+        const axis: d3.Axis<any> = axisFn(scale)
             .tickSize(6)
             .ticks(bestTickCount)
             .tickValues(dataDomain);
@@ -709,8 +709,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
         data: MekkoColumnChartData,
         axisOptions: MekkoColumnAxisOptions): IMekkoColumnLayout {
 
-        const xScale: LinearScale<number, number> = axisOptions.xScale,
-            yScale: LinearScale<number, number> = axisOptions.yScale,
+        const xScale: d3.ScaleLinear<number, number> = axisOptions.xScale,
+            yScale: d3.ScaleLinear<number, number> = axisOptions.yScale,
             scaledY0: number = yScale(0),
             scaledX0: number = xScale(0),
             borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(data.borderSettings);

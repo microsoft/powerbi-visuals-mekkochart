@@ -27,7 +27,7 @@
 import {
 interactivityService,
 } from "powerbi-visuals-utils-interactivityutils";
-import { Selection, select } from "d3";
+import { Selection, select } from "d3-selection";
 import { MekkoChartColumnDataPoint } from "./../dataIntrefaces";
 
 import VisualBehaviorOptions from "./visualBehaviorOptions";

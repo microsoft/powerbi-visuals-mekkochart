@@ -26,8 +26,7 @@
 
 // powerbi.extensibility.utils.svg
 import { IRect } from "powerbi-visuals-utils-svgutils";
-import { VisualBuilderBase} from "powerbi-visuals-utils-testutils";
-import { mouse } from "d3";
+
 export type compareValues = (value1: number, value2) => boolean;
 
 export function isRectangleInOrOutRectangle(

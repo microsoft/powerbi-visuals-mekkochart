@@ -26,7 +26,7 @@
 
 import powerbi from "powerbi-visuals-api";
 import { interactivityService } from "powerbi-visuals-utils-interactivityutils";
-import { Selection } from "d3";
+import { Selection } from "d3-selection";
 import { MekkoChartAxisOptions } from "./../dataIntrefaces";
 
 // powerbi.extensibility.utils.interactivity
