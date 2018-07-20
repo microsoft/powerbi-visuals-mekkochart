@@ -106,7 +106,7 @@ import {
     MekkoColumnChartContext,
     MekkoChartBaseData,
     MekkoChartConstructorBaseOptions
-} from "./../dataIntrefaces";
+} from "./../dataInterfaces";
 
 import * as axisUtils from "./../axis/utils";
 

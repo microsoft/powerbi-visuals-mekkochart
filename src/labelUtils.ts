@@ -34,7 +34,7 @@ import {
 
 import {
     MekkoChartAxisProperties
-} from "./dataIntrefaces";
+} from "./dataInterfaces";
 
 import {
     axis as AxisHelper,

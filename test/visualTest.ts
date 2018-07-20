@@ -43,7 +43,7 @@ import {
 import {
     MekkoChartSeries,
     MekkoColumnChartData
-} from "./../src/dataIntrefaces";
+} from "./../src/dataInterfaces";
 
 import {
     MekkoChartData

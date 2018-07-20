@@ -31,7 +31,7 @@ import {
     MekkoChartBaseSeries,
     MekkoChartBaseData,
     MekkoChartDataPoint
-} from "./dataIntrefaces";
+} from "./dataInterfaces";
 
 
 // powerbi.extensibility.utils.type

@@ -52,7 +52,7 @@ import {
     BaseColorIdentity,
     LegendSeriesInfo,
     MekkoGradientSettings
-} from "./../dataIntrefaces";
+} from "./../dataInterfaces";
 
 // powerbi.extensibility.utils.chart
 import LegendIcon = legendInterfaces.LegendIcon;

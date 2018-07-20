@@ -31,7 +31,7 @@ import {
     MekkoChartData,
     MekkoChartContext,
     MekkoChartDrawInfo
-} from "./../dataIntrefaces";
+} from "./../dataInterfaces";
 
 import IAxisProperties = axisInterfaces.IAxisProperties;
 import powerbi from "powerbi-visuals-api";
