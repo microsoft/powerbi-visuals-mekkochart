@@ -15,7 +15,7 @@
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
     "cert": "pbiviz --create-cert",
-    "package": "pbiviz package",
+    "package": "pbiviz package --resources",
     "lint": "node node_modules/tslint/bin/tslint \"+(src|test)/**/*.ts\"",
     "pretest": "pbiviz package --resources --no-minify --no-pbiviz --no-plugin",
     "test": "karma start"
@@ -59,17 +59,16 @@
     "ts-node": "7.0.0",
     "lodash": "4.16.2",
     "powerbi-models": "1.0.3",
-    "powerbi-visuals-utils-chartutils": "2.0.3",
+    "powerbi-visuals-utils-chartutils": "2.0.4",
     "powerbi-visuals-utils-colorutils": "2.0.2",
     "powerbi-visuals-utils-dataviewutils": "2.0.1",
     "powerbi-visuals-utils-formattingutils": "4.0.2",
-    "powerbi-visuals-utils-interactivityutils": "4.0.4",
+    "powerbi-visuals-utils-interactivityutils": "4.0.6",
     "powerbi-visuals-utils-svgutils": "2.0.1",
     "powerbi-visuals-utils-testutils": "2.0.3",
-    "powerbi-visuals-utils-tooltiputils": "2.0.1",
+    "powerbi-visuals-utils-tooltiputils": "2.0.2",
     "powerbi-visuals-utils-typeutils": "2.0.1",
     "tslint": "4.0.2",
-    "globalize": "0.1.0-a2",
     "puppeteer": "1.5.0"
   }
 }

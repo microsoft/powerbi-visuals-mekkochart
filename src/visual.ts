@@ -95,7 +95,10 @@ import {
 import DataViewObject = dataViewObject.DataViewObject;
 import DataViewObjects = dataViewObjects.DataViewObjects;
 
-import { brushX, BrushBehavior, ScaleLinear as LinearScale, Selection, max, sum, select } from "d3";
+import { max, sum } from "d3-array";
+import { select } from "d3-selection";
+import { brushX, BrushBehavior } from "d3-brush";
+
 
 // powerbi.extensibility.utils.chart
 import {
@@ -362,14 +365,14 @@ export default class MekkoChart implements IVisual {
     public static InnerPaddingRatio: number = 0.2;
     public static TickLabelPadding: number = 2;
 
-    private rootElement: Selection<any, any, any, any>;
-    private legendParent: Selection<any, any, any, any>;
-    private axisGraphicsContext: Selection<any, any, any, any>;
-    private xAxisGraphicsContext: Selection<any, any, any, any>;
-    private y1AxisGraphicsContext: Selection<any, any, any, any>;
-    private y2AxisGraphicsContext: Selection<any, any, any, any>;
-    private svg: Selection<any, any, any, any>;
-    private clearCatcher: Selection<any, any, any, any>;
+    private rootElement: d3.Selection<any, any, any, any>;
+    private legendParent: d3.Selection<any, any, any, any>;
+    private axisGraphicsContext: d3.Selection<any, any, any, any>;
+    private xAxisGraphicsContext: d3.Selection<any, any, any, any>;
+    private y1AxisGraphicsContext: d3.Selection<any, any, any, any>;
+    private y2AxisGraphicsContext: d3.Selection<any, any, any, any>;
+    private svg: d3.Selection<any, any, any, any>;
+    private clearCatcher: d3.Selection<any, any, any, any>;
 
     private margin: IMargin = {
         top: 1,
@@ -412,10 +415,10 @@ export default class MekkoChart implements IVisual {
     private scrollX: boolean;
     private isXScrollBarVisible: boolean;
     private isYScrollBarVisible: boolean;
-    private svgScrollable: Selection<any, any, any, any>;
-    private axisGraphicsContextScrollable: Selection<any, any, any, any>;
-    private labelGraphicsContextScrollable: Selection<any, any, any, any>;
-    private brushGraphicsContext: Selection<any, any, any, any>;
+    private svgScrollable: d3.Selection<any, any, any, any>;
+    private axisGraphicsContextScrollable: d3.Selection<any, any, any, any>;
+    private labelGraphicsContextScrollable: d3.Selection<any, any, any, any>;
+    private brushGraphicsContext: d3.Selection<any, any, any, any>;
 
     private dataViews: DataView[];
     private currentViewport: IViewport;
@@ -568,7 +571,7 @@ export default class MekkoChart implements IVisual {
                 shiftTitle = this.calculateXAxisAdditionalHeight();
             }
 
-            const xAxisLabel: Selection<any, any, any, any> = this.axisGraphicsContext.append("text")
+            const xAxisLabel: d3.Selection<any, any, any, any> = this.axisGraphicsContext.append("text")
                 .attr(
                     "x", width / MekkoChart.WidthDelimiter
                 )
@@ -590,7 +593,7 @@ export default class MekkoChart implements IVisual {
         }
 
         if (!options.hideYAxisTitle) {
-            const yAxisLabel: Selection<any, any, any, any> = this.axisGraphicsContext.append("text")
+            const yAxisLabel: d3.Selection<any, any, any, any> = this.axisGraphicsContext.append("text")
                 .style(
                     "fill", options.yLabelColor
                         ? options.yLabelColor.solid.color
@@ -613,7 +616,7 @@ export default class MekkoChart implements IVisual {
         }
 
         if (!options.hideY2AxisTitle && options.axisLabels.y2) {
-            const y2AxisLabel: Selection<any, any, any, any> = this.axisGraphicsContext.append("text")
+            const y2AxisLabel: d3.Selection<any, any, any, any> = this.axisGraphicsContext.append("text")
                 .text(options.axisLabels.y2)
                 .attr("transform", MekkoChart.TransformRotate)
                 .attr("y", showOnRight ? -margin.left : width + margin.right - fontSize)
@@ -636,7 +639,7 @@ export default class MekkoChart implements IVisual {
         const width: number = viewport.width - (this.margin.left + this.margin.right),
             height: number = viewport.height - (this.margin.top + this.margin.bottom);
 
-        const xAxis: Selection<any, any, any, any> = this.rootElement
+        const xAxis: d3.Selection<any, any, any, any> = this.rootElement
             .selectAll(MekkoChart.BaseXAxisSelector.selectorName);
 
         if (<number>AxisHelper.getRecommendedNumberOfTicksForXAxis(width) === 0
@@ -2143,7 +2146,7 @@ export default class MekkoChart implements IVisual {
     }
 
     private static wordBreak(
-        text: Selection<any, any, any, any>,
+        text: d3.Selection<any, any, any, any>,
         axisProperties: IAxisProperties,
         columnsWidth: number[],
         maxHeight: number,
@@ -2153,7 +2156,7 @@ export default class MekkoChart implements IVisual {
             let width: number,
                 allowedLength: number;
 
-            const node: Selection<any, any, any, any> = select(this);
+            const node: d3.Selection<any, any, any, any> = select(this);
 
             if (columnsWidth.length >= index) {
                 width = columnsWidth[index];
@@ -2231,7 +2234,7 @@ export default class MekkoChart implements IVisual {
                 axes.x.axis.tickPadding(MekkoChart.TickPaddingRotatedX);
             }
 
-            const xAxisGraphicsElement: Selection<any, any, any, any> = this.xAxisGraphicsContext;
+            const xAxisGraphicsElement: d3.Selection<any, any, any, any> = this.xAxisGraphicsContext;
 
             if (duration) {
                 xAxisGraphicsElement
@@ -2249,7 +2252,7 @@ export default class MekkoChart implements IVisual {
                 .call(MekkoChart.setAxisLabelColor, xLabelColor)
                 .call(MekkoChart.setAxisLabelFontSize, xFontSize);
 
-            const xAxisTextNodes: Selection<any, any, any, any> = xAxisGraphicsElement.selectAll("text");
+            const xAxisTextNodes: d3.Selection<any, any, any, any> = xAxisGraphicsElement.selectAll("text");
 
             let columnWidth: number[] = [],
                 borderWidth: number = 0;
@@ -2331,7 +2334,7 @@ export default class MekkoChart implements IVisual {
                 .tickSize(-width)
                 .tickPadding(MekkoChart.TickPaddingY);
 
-            const y1AxisGraphicsElement: Selection<any, any, any, any> = this.y1AxisGraphicsContext;
+            const y1AxisGraphicsElement: d3.Selection<any, any, any, any> = this.y1AxisGraphicsContext;
 
             if (duration) {
                 y1AxisGraphicsElement
@@ -2367,7 +2370,7 @@ export default class MekkoChart implements IVisual {
                     : null;
 
                 axes.y2.axis
-                    .tickPadding(MekkoChart.TickPaddingY)
+                    .tickPadding(MekkoChart.TickPaddingY);
                     // .orient(showY1OnRight
                     //     ? axisPosition.left.toLowerCase()
                     //     : axisPosition.right.toLowerCase());
@@ -2525,7 +2528,7 @@ export default class MekkoChart implements IVisual {
      * the zero tick using the d3 attached datum of g.tick elements.
      * "Classed" is undefined for transition selections
      */
-    private static darkenZeroLine(selection: Selection<any, any, any, any>): void {
+    private static darkenZeroLine(selection: d3.Selection<any, any, any, any>): void {
         const zeroTick: any = MekkoChart.getTicks(selection)
             .filter((data: any) => data === 0)
             .node();
@@ -2537,27 +2540,27 @@ export default class MekkoChart implements IVisual {
         }
     }
 
-    private static getTicks(selection: Selection<any, any, any, any>): Selection<any, any, any, any> {
+    private static getTicks(selection: d3.Selection<any, any, any, any>): d3.Selection<any, any, any, any> {
         return selection.selectAll("g.tick");
     }
 
-    private static getTickText(selection: Selection<any, any, any, any>): Selection<any, any, any, any> {
+    private static getTickText(selection: d3.Selection<any, any, any, any>): d3.Selection<any, any, any, any> {
         return selection.selectAll("g.tick text");
     }
 
-    private static setAxisLabelColor(selection: Selection<any, any, any, any>, fill: Fill): void {
+    private static setAxisLabelColor(selection: d3.Selection<any, any, any, any>, fill: Fill): void {
         MekkoChart.getTickText(selection)
             .style("fill", fill ? fill.solid.color : null);
     }
 
-    private static setAxisLabelFontSize(selection: Selection<any, any, any, any>, fontSize: number): void {
+    private static setAxisLabelFontSize(selection: d3.Selection<any, any, any, any>, fontSize: number): void {
         MekkoChart.getTickText(selection)
             .attr("font-size", PixelConverter.toString(fontSize));
     }
 
     private static moveBorder(
-        selection: Selection<any, any, any, any>,
-        scale: LinearScale<number, number>,
+        selection: d3.Selection<any, any, any, any>,
+        scale: d3.ScaleLinear<number, number>,
         borderWidth: number,
         yOffset: number = 0): void {
 

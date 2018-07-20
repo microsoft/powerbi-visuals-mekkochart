@@ -113,7 +113,9 @@ import * as axisUtils from "./../axis/utils";
 import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
 import DisplayUnitSystemType = displayUnitSystemType.DisplayUnitSystemType;
 
-import { select, Selection, ScaleLinear as LinearScale, scaleLinear, max, sum } from "d3";
+import { max, sum } from "d3-array";
+import { ScaleLinear as LinearScale, scaleLinear } from "d3-scale";
+import { select, Selection} from "d3-selection";
 
 import * as _ from "lodash";
 

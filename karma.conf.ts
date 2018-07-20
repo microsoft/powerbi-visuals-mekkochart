@@ -26,7 +26,7 @@
 
 "use strict";
 
-const webpackConfig = require("./webpack.config.js");
+const webpackConfig = require("./test.webpack.config.js");
 const tsconfig = require("./test.tsconfig.json");
 
 const testRecursivePath = "test/visualTest.ts";

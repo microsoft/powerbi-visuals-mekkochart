@@ -28,7 +28,7 @@ import powerbi from "powerbi-visuals-api";
 import { ColorHelper, createLinearColorScale } from "powerbi-visuals-utils-colorutils";
 import { legendInterfaces } from "powerbi-visuals-utils-chartutils";
 import * as formattingUtils from "./../formattingUtils";
-import { max, sum, min } from "d3";
+import { max, sum, min } from "d3-array";
 import * as _ from "lodash";
 
 import IColorPalette = powerbi.extensibility.IColorPalette;

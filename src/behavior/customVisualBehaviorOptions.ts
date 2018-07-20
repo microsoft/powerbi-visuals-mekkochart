@@ -29,5 +29,5 @@ import Selection = d3.Selection;
 
 export default interface CustomVisualBehaviorOptions {
     layerOptions: any[];
-    clearCatcher: Selection<any>;
+    clearCatcher: Selection<any, any, any, any>;
 }

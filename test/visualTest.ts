@@ -65,7 +65,7 @@ import {
 } from "./helpers/helpers";
 
 import * as _ from "lodash";
-import { select } from "d3";
+import { select } from "d3-selection";
 import { ClickEventType } from "powerbi-visuals-utils-testutils/lib/helpers/helpers";
 import MekkoChart from "../src/visual";
 
