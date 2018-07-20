@@ -49,7 +49,7 @@ import {
     MekkoChartAxisOptions,
     MekkoChartData,
 
-} from "./dataIntrefaces";
+} from "./dataInterfaces";
 
 import {
     axis as AxisHelper

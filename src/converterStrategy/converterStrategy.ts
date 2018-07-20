@@ -26,7 +26,7 @@
 
 import powerbi from "powerbi-visuals-api";
 import IColorPalette = powerbi.extensibility.IColorPalette;
-import { LegendSeriesInfo } from "./../dataIntrefaces";
+import { LegendSeriesInfo } from "./../dataInterfaces";
 
 export interface ConverterStrategy {
     getLegend(

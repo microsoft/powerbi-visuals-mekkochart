@@ -43,7 +43,7 @@ import * as columnChart from "./../columnChart/columnChartVisual";
 import {
     MekkoCalculateScaleAndDomainOptions,
     MekkoChartAxisProperties,
-} from "./../dataIntrefaces";
+} from "./../dataInterfaces";
 
     export interface AxesLabels {
         xAxisLabel: string;

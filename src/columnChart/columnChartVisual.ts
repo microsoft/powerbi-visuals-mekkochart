@@ -35,7 +35,7 @@ import {
     MekkoCalculateScaleAndDomainOptions,
     MekkoVisualRenderResult,
     MekkoChartBaseData
-} from "./../dataIntrefaces";
+} from "./../dataInterfaces";
 
 // powerbi.extensibility.utils.chart
 import LegendData = legendInterfaces.LegendData;
