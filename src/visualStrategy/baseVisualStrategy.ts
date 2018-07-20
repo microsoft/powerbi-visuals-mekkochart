@@ -71,7 +71,7 @@ import {
     MekkoCreateAxisOptions,
     MekkoChartData,
     LabelDataPoint
-} from "./../dataIntrefaces";
+} from "./../dataInterfaces";
 
 import { IVisualStrategy } from "./visualStrategy";
 

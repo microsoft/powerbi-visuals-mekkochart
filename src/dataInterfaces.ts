@@ -65,6 +65,9 @@ import { MekkoVisualChartType } from "./visualChartType";
 import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
 
+// d3
+export type Selection = d3.Selection<any, any, any, any>;
+
 // powerbi
 import IDataViewObjects = powerbi.DataViewObjects;
 
@@ -127,15 +130,15 @@ export interface IMekkoChartVisualHost {
 
 export interface MekkoChartAnimationOptions {
     viewModel: MekkoChartData;
-    series: d3.Selection<any, any, any, any>;
+    series: Selection;
     layout: IMekkoChartLayout;
     itemCS: ClassAndSelector;
-    mainGraphicsContext: d3.Selection<any, any, any, any>;
+    mainGraphicsContext: Selection;
     viewPort: IViewport;
 }
 
 export interface MekkoChartAnimationResult {
-    shapes: d3.Selection<any, any, any, any>;
+    shapes: Selection;
 }
 
 export interface MekkoChartAxisOptions {
@@ -266,7 +269,7 @@ export interface LabelDataPoint {
 }
 
 export interface MekkoChartVisualInitOptions extends VisualConstructorOptions {
-    svg: d3.Selection<any, any, any, any>;
+    svg: Selection;
     cartesianHost: IMekkoChartVisualHost;
 }
 
@@ -452,8 +455,8 @@ export interface MekkoChartContext {
     duration: number;
     hostService: IVisualHost;
     margin: IMargin;
-    unclippedGraphicsContext: d3.Selection<any, any, any, any>;
-    mainGraphicsContext: d3.Selection<any, any, any, any>;
+    unclippedGraphicsContext: Selection;
+    mainGraphicsContext: Selection;
     layout: MekkoChartCategoryLayout;
     onDragStart?: (datum: MekkoChartColumnDataPoint) => void;
     interactivityService: IInteractivityService;
@@ -468,8 +471,9 @@ export interface MekkoColumnChartContext extends MekkoChartContext {
     width: number;
     duration: number;
     margin: IMargin;
-    mainGraphicsContext: d3.Selection<any, any, any, any>;
-    labelGraphicsContext: d3.Selection<any, any, any, any>;    layout: MekkoChartCategoryLayout;
+    mainGraphicsContext: Selection;
+    labelGraphicsContext: Selection;
+    layout: MekkoChartCategoryLayout;
     onDragStart?: (datum: MekkoChartColumnDataPoint) => void;
     interactivityService: IInteractivityService;
     viewportHeight: number;
@@ -493,7 +497,7 @@ export interface MekkoChartConstructorOptions extends MekkoChartConstructorBaseO
 }
 
 export interface MekkoChartDrawInfo {
-    eventGroup?: d3.Selection<any, any, any, any>;
+    eventGroup?: Selection;
     shapesSelection: d3.Selection<any, TooltipEnabledDataPoint, any, any>;
     viewport: IViewport;
     axisOptions: MekkoChartAxisOptions;
