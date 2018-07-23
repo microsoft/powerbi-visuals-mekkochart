@@ -175,7 +175,7 @@ module powerbi.extensibility.visual {
         private static FontSize: number = 11;
 
         private static MinWidth: number = 100;
-        private static MinHeight: number = 100;
+        private static MinHeight: number = 80;
 
         private static ScrollBarWidth: number = 10;
 
