@@ -1,3 +1,7 @@
+## 2.1.1
+
+* Minimal height was reduced from 100 to 80
+
 ## 2.1.0
 
 * Added localization for all supported languages
