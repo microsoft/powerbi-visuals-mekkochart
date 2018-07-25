@@ -117,7 +117,7 @@ import { max, sum } from "d3-array";
 import { ScaleLinear as LinearScale, scaleLinear } from "d3-scale";
 import { select, Selection} from "d3-selection";
 
-import * as _ from "lodash";
+import sortBy from "lodash.sortby";
 
 import MekkoChart from "./../visual";
 
@@ -523,7 +523,7 @@ export class BaseColumnChart implements IColumnChart {
             tmpObject["identity"] = columns[col].identity;
             tmpObject["categoryValue"] = columns[col].categoryValue;
             tmpObject["color"] = columns[col].color;
-            columns[col] = _.sortBy(columns[col], BaseColumnChart.ColumSortField);
+            columns[col] = sortBy(columns[col], BaseColumnChart.ColumSortField);
             if (descendingDirection) {
                 columns[col] = (columns[col]).reverse();
             }

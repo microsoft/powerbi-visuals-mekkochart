@@ -24,7 +24,7 @@
  *  THE SOFTWARE.
  */
 import powerbi from "powerbi-visuals-api";
-import * as _ from "lodash";
+import sortBy from "lodash.sortby";
 
 import IViewport = powerbi.IViewport;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
@@ -505,7 +505,7 @@ export default class MekkoChart implements IVisual {
 
     private calculateXAxisAdditionalHeight(): number {
         let categories: PrimitiveValue[] = this.dataViews[0].categorical.categories[0].values;
-        let sortedByLength: PrimitiveValue[] = _.sortBy(categories, "length");
+        let sortedByLength: PrimitiveValue[] = sortBy(categories, "length");
         let longestCategory: PrimitiveValue = sortedByLength[categories.length - 1] || "";
         let shortestCategory: PrimitiveValue = sortedByLength[0] || "";
 
@@ -1602,13 +1602,13 @@ export default class MekkoChart implements IVisual {
                     if (legend === undefined) {
                         return;
                     }
-                    legend.data = _.sortBy(legend.data, "valueSum");
+                    legend.data = sortBy(legend.data, "valueSum");
                     if (legendSortSettings.groupByCategoryDirection === MekkoChart.SortDirectionDescending) {
                         legend.data = legend.data.reverse();
                     }
                 });
 
-                reducedLegends = _.sortBy(reducedLegends, "categorySort");
+                reducedLegends = sortBy(reducedLegends, "categorySort");
 
                 if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
                     reducedLegends = reducedLegends.reverse();
@@ -1623,7 +1623,7 @@ export default class MekkoChart implements IVisual {
                 });
             }
             else {
-                legendData.dataPoints = _.sortBy(legendData.dataPoints, "valueSum");
+                legendData.dataPoints = sortBy(legendData.dataPoints, "valueSum");
                 if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
                     legendData.dataPoints = legendData.dataPoints.reverse();
                 }
@@ -1665,7 +1665,7 @@ export default class MekkoChart implements IVisual {
             this.categoryLegends.forEach((legend: ILegend, index: number) => {
                 (<ILegendGroup>legend).position = +select((<ILegendGroup>legend).element).style("top").replace("px", "");
             });
-            this.categoryLegends = _.sortBy(this.categoryLegends, "position").reverse();
+            this.categoryLegends = sortBy(this.categoryLegends, "position").reverse();
             this.categoryLegends.forEach((legend, index) => {
                 if (reducedLegends[index] === undefined) {
                     LegendData.update({

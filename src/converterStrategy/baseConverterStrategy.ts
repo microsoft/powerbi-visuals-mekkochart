@@ -29,7 +29,9 @@ import { ColorHelper, createLinearColorScale } from "powerbi-visuals-utils-color
 import { legendInterfaces } from "powerbi-visuals-utils-chartutils";
 import * as formattingUtils from "./../formattingUtils";
 import { max, sum, min } from "d3-array";
-import * as _ from "lodash";
+import minBy from "lodash.minby";
+import maxBy from "lodash.maxby";
+import sortBy from "lodash.sortby";
 
 import IColorPalette = powerbi.extensibility.IColorPalette;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
@@ -136,10 +138,10 @@ export class BaseConverterStrategy implements ConverterStrategy {
             categoryItemsCount[index] = mappedItems;
 
             if (colorGradient) {
-                categoryItemsCount[index] = _.sortBy(categoryItemsCount[index], BaseConverterStrategy.SortField);
+                categoryItemsCount[index] = sortBy(categoryItemsCount[index], BaseConverterStrategy.SortField);
             }
 
-            let baseStartColorIdentity: IFilteredValueGroups = _.maxBy(mappedItems, BaseConverterStrategy.SortField);
+            let baseStartColorIdentity: IFilteredValueGroups = maxBy(mappedItems, BaseConverterStrategy.SortField);
             if (baseStartColorIdentity === undefined) {
                 return;
             }
@@ -154,7 +156,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
             }
 
             // gradiend end color
-            let baseEndColorIdentity: IFilteredValueGroups = _.minBy(mappedItems, BaseConverterStrategy.SortField);
+            let baseEndColorIdentity: IFilteredValueGroups = minBy(mappedItems, BaseConverterStrategy.SortField);
 
             if (baseEndColorIdentity === undefined) {
                 return;
@@ -244,7 +246,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     let category: string;
 
                     let color: string;
-                    let categoryIndex: number = _.findIndex<PrimitiveValue>(series.values, value => value === value);
+                    let categoryIndex: number = series.values.findIndex(value => value === value);
 
                     if (!colorGradient) {
                         color = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
@@ -252,7 +254,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     }
                     else {
 
-                        let positionIndex: number = _.findIndex(<IFilteredValueGroups[]>categoryItemsCount[categoryIndex], ser => ser.identity === series.identity);
+                        let positionIndex: number = (<IFilteredValueGroups[]>categoryItemsCount[categoryIndex]).findIndex(ser => ser.identity === series.identity);
                         category = (categoryMaxValues[categoryIndex].category || "").toString();
                         let gradientBaseColorStart: string = categoryGradientBaseColorIdentities[categoryIndex].categoryStartColor;
                         let gradientBaseColorEnd: string = categoryGradientBaseColorIdentities[categoryIndex].categoryEndColor;
