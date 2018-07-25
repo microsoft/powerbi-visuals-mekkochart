@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Selezionare il numero di posizioni decimali da visualizzare",
 	"Visual_CategoryDataColorsStart": "Inizio colori dati della categoria",
 	"Visual_CategoryDataColorsEnd": "Fine colori dati della categoria",
-	"Visual_HighlightedValueDisplayName": "Evidenziato"
+	"Visual_HighlightedValueDisplayName": "Evidenziato",
+	"MekkoChart_Short_Description": "Istogramma a colonne in pila 100% e grafico a barre in pila 100% combinati in un'unica vista",
+	"MekkoChart_Long_Description": "Dal momento che acquisisce due dimensioni in un unico grafico, è possibile individuare rapidamente e a colpo d'occhio i segmenti di grandi dimensioni e quelli sottorappresentati. Si può usare la stessa misura per l'altezza e la larghezza della colonna o scegliere misure diverse a seconda delle esigenze.\nAnalogamente a una mappa ad albero, i valori dimensionali sono rappresentati dalla lunghezza e dalla larghezza di ogni rettangolo. La larghezza di una colonna è proporzionale al valore totale della colonna stessa.\nLa segmentazione e l'analisi dei modelli sono una parte essenziale dell'analisi business. Con i grafici tradizionali è necessario combinare più elementi nella propria mappa mentale per trarre delle conclusioni. Per affrontare analisi business complesse che coinvolgono più variabili/dimensioni, una delle soluzioni più comuni è il design iconico di Marimekko e con Mekko Chart è davvero semplicissimo raggiungere questo obiettivo in Power BI.\nL'oggetto visivo Mekko Chart consente anche di controllare le leggende, i colori dei dati e le etichette dati per una presentazione realmente personalizzata."
 }

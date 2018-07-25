@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Seleccionar número de posiciones decimales que se mostrarán",
 	"Visual_CategoryDataColorsStart": "Inicio de colores de datos de categoría",
 	"Visual_CategoryDataColorsEnd": "Fin de colores de datos de categoría",
-	"Visual_HighlightedValueDisplayName": "Resaltado"
+	"Visual_HighlightedValueDisplayName": "Resaltado",
+	"MekkoChart_Short_Description": "Combinación de un gráfico de columnas apiladas al 100 % y un gráfico de barras apiladas al 100 % en una misma vista.",
+	"MekkoChart_Long_Description": "Como captura dos dimensiones en un mismo gráfico, permite ver rápidamente los segmentos grandes, así como los que aparezcan subrepresentados a simple vista. Puede usar la misma medida para el alto y ancho de columna, o bien puede usar distintas medidas según sus necesidades.\nDe forma similar a un gráfico de rectángulos, los valores dimensionales se representan por la longitud y el ancho de cada rectángulo. El ancho de las columnas es proporcional al valor total de la columna.\nEl análisis de patrones y la segmentación son una parte importante del análisis empresarial y, con los gráficos tradicionales, necesita agrupar varios elementos individuales en un mapa mental para sacar conclusiones. Para trabajar con un análisis empresarial tan complejo donde se implican distintas variables o dimensiones, el emblemático diseño marimekko es muy atractivo y el gráfico Mekko permite alcanzar esto de forma muy fácil en Power BI.\nEl objeto visual del gráfico Mekko también le permite controlar las leyendas, los colores de datos y las etiquetas de datos para realizar una presentación realmente personalizada."
 }

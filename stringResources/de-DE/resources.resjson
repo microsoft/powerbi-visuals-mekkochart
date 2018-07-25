@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Anzahl der anzuzeigenden Dezimalstellen auswählen",
 	"Visual_CategoryDataColorsStart": "Startfarbe für Kategoriedaten",
 	"Visual_CategoryDataColorsEnd": "Endfarbe für Kategoriedaten",
-	"Visual_HighlightedValueDisplayName": "Hervorgehoben"
+	"Visual_HighlightedValueDisplayName": "Hervorgehoben",
+	"MekkoChart_Short_Description": "Eine Mischung aus einem zu 100% gestapelten Säulendiagramm und einem zu 100% gestapelten Balkendiagramm, die in einer Ansicht kombiniert werden.",
+	"MekkoChart_Long_Description": "Dieses Diagramm fasst zwei Dimensionen in einer Ansicht zusammen, sodass Sie sowohl große Segmente als auch unterrepräsentierte Bereiche auf einen Blick erfassen können. Je nach Anforderung können Sie für Spaltenhöhe und -breite den gleichen Messwert oder verschiedene Messwerte verwenden.\nÄhnlich wie bei einem Treemap-Diagramm werden die Dimensionswerte durch die Länge und Breite der Rechtecke dargestellt.\nSegmentierung und Musteranalyse sind wesentliche Bestandteile von Businessanalysen, und bei herkömmlichen Diagrammen müssen Sie in Ihrer eigenen Vorstellung mehrere einzelne Elemente zusammenfügen, um die richtigen Schlüsse zu ziehen. Zur Darstellung von komplexen Businessanalysen mit mehreren Variablen und Dimensionen bietet sich das Marimekkomuster an, ein Designkonzept mit Kultcharakter. In Power BI lassen sich solche Analysen ganz einfach mit Mekko-Diagrammen erreichen.\nDas Mekko-Diagrammvisual bietet auch die Möglichkeit, Legende, Datenfarben und Datenbezeichnungen zu steuern, um eine genau an die Anforderungen angepasste Darstellung zu erzielen."
 }

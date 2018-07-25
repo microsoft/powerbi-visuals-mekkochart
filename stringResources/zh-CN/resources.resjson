@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "选择要显示的小数位数",
 	"Visual_CategoryDataColorsStart": "类别数据颜色范围起始",
 	"Visual_CategoryDataColorsEnd": "类别数据颜色范围结束",
-	"Visual_HighlightedValueDisplayName": "已突出显示"
+	"Visual_HighlightedValueDisplayName": "已突出显示",
+	"MekkoChart_Short_Description": "将 100% 堆积柱形图和 100% 堆积条形图合并到一个视图中",
+	"MekkoChart_Long_Description": "由于它在一个图表中捕获两个维度，因此，可以快速注意到较大分段以及在快速流览时未受到足够关注的分段。可以对列高度和宽度使用相同的度量值，也可以使用不同的度量值，具体取决于自己的需求。\n与树状图相似，尺寸值由每个矩形的长度和宽度表示。列的宽度与列的总计值成正比。\n分段和模式分析是业务分析的重要组成部分，如果使用传统图表，需要在心象地图中将多个单独的项目拼凑在一起才能得出结论。对于处理涉及多个变量/维度的复杂业务分析，图标化的 marimekko 设计非常有吸引力，并且 Mekko 图表可非常轻松地在 Power BI 中实现这一目标。\n使用 Mekko 图表视觉对象，还可以控制图例、数据颜色和真正自定义表示形式的数据标签。"
 }

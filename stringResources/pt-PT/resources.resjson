@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Selecionar o número de casas decimais a apresentar",
 	"Visual_CategoryDataColorsStart": "Início das cores dos dados de categoria",
 	"Visual_CategoryDataColorsEnd": "Fim das cores dos dados de categoria",
-	"Visual_HighlightedValueDisplayName": "Realçado"
+	"Visual_HighlightedValueDisplayName": "Realçado",
+	"MekkoChart_Short_Description": "Uma combinação de gráfico de colunas empilhadas a 100% e gráfico de barras empilhadas a 100% combinados numa única vista",
+	"MekkoChart_Long_Description": "Uma vez que captura duas dimensões num só gráfico, pode detetar rapidamente os segmentos de grandes dimensões e também os que estão pouco representados de forma rápida. Pode utilizar a mesma medida em altura e largura de colunas ou utilizar outras, consoante as suas necessidades.\nSemelhante a um gráfico treemap, os valores dimensionais são representados pelo comprimento e largura de cada retângulo. A largura de uma coluna é proporcional ao valor total da coluna.\nA Segmentação e Análise de padrões são uma parte importante das análises de negócios e, com gráficos tradicionais, precisa de juntar vários itens individuais entre si no seu mapa mental para tirar conclusões. Para lidar com uma análise de negócios tão complexa, com múltiplas variáveis/dimensões, o icónico design marimekko é muito apelativo e o gráfico Mekko facilita bastante este trabalho no Power BI.\nO visual de gráfico Mekko também permite controlar as legendas, cores de dados e etiquetas de dados para uma apresentação verdadeiramente personalizada."
 }

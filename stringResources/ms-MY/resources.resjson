@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Pilih bilangan tempat perpuluhan untuk dipaparkan",
 	"Visual_CategoryDataColorsStart": "Warna data kategori mula",
 	"Visual_CategoryDataColorsEnd": "Warna data kategori tamat",
-	"Visual_HighlightedValueDisplayName": "Diserlahkan"
+	"Visual_HighlightedValueDisplayName": "Diserlahkan",
+	"MekkoChart_Short_Description": "Campuran 100% carta lajur bertumpuk dan carta bar 100% disusun digabungkan dalam satu pandangan",
+	"MekkoChart_Long_Description": "Memandangkan ia menangkap dua dimensi dalam satu carta, anda dengan cepat dapat melihat segmen yang besar serta yang kurang dikenali dalam satu pandangan pantas. Anda boleh menggunakan ukuran yang sama untuk ketinggian dan lebar lajur atau menggunakan yang berlainan bergantung pada keperluan anda.\nDimilar dengan treemap, nilai dimensi diwakili oleh panjang dan lebar setiap segiempat tepat. Lebar lajur adalah berkadar dengan jumlah nilai lajur.\nAnalisis Analisis dan Corak adalah sebahagian besar analisis perniagaan dan dengan carta tradisional yang anda perlukan untuk memotong beberapa item individu bersama-sama dalam peta mental anda untuk membuat kesimpulan. Untuk berurusan dengan analisis perniagaan yang rumit yang melibatkan pelbagai pembolehubah/dimensi, reka bentuk marimekko ikonik sangat menarik dan carta Mekko menjadikannya sangat mudah untuk mencapai ini di Power BI.\nThe visual chart Mekko juga membolehkan anda mengawal legenda, warna data, dan label data untuk pembentangan yang benar-benar disesuaikan."
 }

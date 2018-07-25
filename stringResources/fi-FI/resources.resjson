@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Valitse näytettävien desimaalien määrä",
 	"Visual_CategoryDataColorsStart": "Luokan tietojen värien alku",
 	"Visual_CategoryDataColorsEnd": "Luokan tietojen värien loppu",
-	"Visual_HighlightedValueDisplayName": "Korostettu"
+	"Visual_HighlightedValueDisplayName": "Korostettu",
+	"MekkoChart_Short_Description": "Sekoitus 100 %:n pinotusta pylväskaaviosta ja 100 %:n pinotusta palkkikaaviosta yhdistettynä yhdeksi näkymäksi",
+	"MekkoChart_Long_Description": "Koska se sieppaa kaksi dimensiota yhteen kaavioon, voit nopeasti havaita suuret segmentit sekä aliedustetut segmentit yhdellä nopealla vilkaisulla. Voit joko käyttää samaa mittaa sarakkeen korkeudelle ja leveydelle tai käyttää eri mittoja tarpeidesi mukaan.\nPuukartan tavoin dimensioarvoja edustetaan kunkin suorakulmion pituudella ja leveydellä. Sarakkeen leveys on suhteellinen sarakkeen kokonaisarvoon.\nSegmentointi- ja mallianalyysi ovat suuri osa liiketoiminta-analyysiä, ja perinteisen kaavioiden kanssa sinun on yhdistettävä useita yksittäisiä kohteita mentaalikartassasi johtopäätösten tekemistä varten. Näin monimutkaisten liiketoiminta-analyysien, joihin liittyy useita muuttujia/dimensioita, käsittelyssä ikoninen Marimekko-suunnittelu on hyvin houkutteleva, ja Mekko-kaavio helpottaa tämän saavuttamista Power BI:ssä suuresti.\nMekko-kaavion visualisoinnin avulla voit myös hallita selitteitä, tietojen värejä ja arvopisteiden otsikoita, jotta saat todella mukautetun esityksen."
 }

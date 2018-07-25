@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Chọn số vị trí thập phân để hiển thị",
 	"Visual_CategoryDataColorsStart": "Bắt đầu màu dữ liệu danh mục",
 	"Visual_CategoryDataColorsEnd": "Kết thúc màu dữ liệu danh mục",
-	"Visual_HighlightedValueDisplayName": "Được tô sáng"
+	"Visual_HighlightedValueDisplayName": "Được tô sáng",
+	"MekkoChart_Short_Description": "Sự kết hợp hoàn toàn của biểu đồ dạng cột xếp chồng và biểu đồ thanh xếp chồng thành duy nhất một chế độ xem",
+	"MekkoChart_Long_Description": "Vì sử dụng hai tham số trong một biểu đồ nên bạn có thể nhanh chóng xác định các phân đoạn lớn cũng như các phân đoạn được trình bày chưa đúng cách. Bạn có thể sử dụng cùng giá trị đo cho chiều rộng và chiều cao cột hoặc sử dụng các giá trị đo khác theo nhu cầu.\nTương tự như sơ đồ cây, các giá trị kích thước được trình bày theo chiều dài và chiều rộng của từng hình chữ nhật. Chiều rộng của cột tỷ lệ với tổng giá trị của cột.\nQuá trình phân tích mẫu và phân đoạn là những phần quan trọng của việc phân tích kinh doanh và với biểu đồ truyền thống thì bạn cần phân chia thành nhiều mục riêng cùng nhau trong đầu trước để đưa ra kết luận. Để xử lý loại hình phân tích kinh doanh phức tạp liên quan đến nhiều biến/tham số như thế này, thì thiết kế marimekko dạng biểu tượng sẽ là một mô hình lý tưởng và biểu đồ Mekko giúp bạn dễ dàng thực hiện được công việc phân tích này trong Power BI.\nHình ảnh trong biểu đồ Mekko cũng cho phép bạn kiểm soát các chú giải, màu dữ liệu và nhãn dữ liệu để có một bản trình bày được tùy chỉnh đích thực."
 }

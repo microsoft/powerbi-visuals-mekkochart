@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Het aantal weer te geven decimalen selecteren",
 	"Visual_CategoryDataColorsStart": "Gegevenskleuren begin categorie",
 	"Visual_CategoryDataColorsEnd": "Gegevenskleuren einde categorie",
-	"Visual_HighlightedValueDisplayName": "Gemarkeerd"
+	"Visual_HighlightedValueDisplayName": "Gemarkeerd",
+	"MekkoChart_Short_Description": "Een combinatie van een 100% gestapeld kolomdiagram en een 100% gestapeld staafdiagram die zijn samengevoegd tot één weergave",
+	"MekkoChart_Long_Description": "Omdat hiermee twee dimensies in één diagram worden vastgelegd, kunt u de grote segmenten, evenals de segmenten die minder voorkomen, snel en in één oogopslag waarnemen. U kunt afhankelijk van uw behoeften dezelfde meting of verschillende metingen gebruiken voor de kolomhoogte en -breedte.\nNet als bij een treemap staan de lengte en de breedte van elke rechthoek voor de dimensionele waarden. De breedte van een kolom verhoudt zich tot de totale waarde van de kolom.\nDe segmentatie- en patroonanalyse zijn een belangrijk onderdeel van bedrijfsanalyses en bij de traditionele diagrammen moet u meerdere afzonderlijke items samenbrengen op uw 'mentale kaart' om conclusies te trekken. Als u te maken krijgt met dergelijke complexe bedrijfsanalyses waarin meerdere variabelen/dimensies worden gehanteerd, is het marimekko-ontwerp een aantrekkelijke optie en met het Mekko-diagram is dit zeer eenvoudig te bewerkstelligen in Power BI.\nMet de visual voor het Mekko-diagram kunt u ook de legenda's, gegevenskleuren en gegevenslabels beheren voor een uitermate aangepaste weergave."
 }

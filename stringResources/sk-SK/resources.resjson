@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Vyberte počet desatinných miest na zobrazenie",
 	"Visual_CategoryDataColorsStart": "Začiatok farieb údajov kategórie",
 	"Visual_CategoryDataColorsEnd": "Koniec farieb údajov kategórie",
-	"Visual_HighlightedValueDisplayName": "Zvýraznené"
+	"Visual_HighlightedValueDisplayName": "Zvýraznené",
+	"MekkoChart_Short_Description": "100% skladaný stĺpcový graf a 100% skladaný pruhový graf skombinované v jednom zobrazení",
+	"MekkoChart_Long_Description": "Vzhľadom na to, že zachytáva dva rozmery v jednom grafe, na jeden pohľad rýchlo uvidíte veľké segmenty, ako aj tie, ktoré nie sú dostatočne zastúpené. Môžete buď použiť rovnakú mieru pre výšku a šírku stĺpca, alebo podľa potreby použiť rôznu mieru.\nPodobne ako v prípade stromovej mapy sú aj rozmerové hodnoty reprezentované dĺžkou a šírkou každého obdĺžnika. Šírka stĺpca je úmerná celkovej hodnote stĺpca.\nSegmentácia a analýza vzorov sú podstatnou súčasťou obchodnej analýzy a s tradičnými grafmi musíte vo svojej mentálnej mape zlúčiť viaceré individuálne položky, aby ste mohli vyvodiť príslušné závery. Na prácu s takýmito komplexnými obchodnými analýzami zahŕňajúcimi viacero premenných/dimenzií je ideálny ikonický dizajn marimekko. S grafom Mekko v službe Power BI sú takéto analýzy neuveriteľne jednoduché.\nVizuál s grafom Mekko tiež umožňuje riadiť legendy, farby údajov a označenia údajov, aby ste údaje prezentovali naozaj prispôsobeným spôsobom."
 }

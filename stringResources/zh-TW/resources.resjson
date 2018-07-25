@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "選取要顯示的小數位數",
 	"Visual_CategoryDataColorsStart": "類別目錄資料色彩開始",
 	"Visual_CategoryDataColorsEnd": "類別目錄資料色彩結束",
-	"Visual_HighlightedValueDisplayName": "反白顯示"
+	"Visual_HighlightedValueDisplayName": "反白顯示",
+	"MekkoChart_Short_Description": "100% 堆疊直條圖與 100% 堆疊橫條圖合併成一個檢視",
+	"MekkoChart_Long_Description": "由於一個圖表中使用了兩個維度，因此您只要看一眼就能快速找出大型區塊，以及比例極低的區塊。您可以對欄位的高度與寬度使用相同的量值，或依據需求使用不同的值。\n就像矩形式樹狀結構圖，維度值會以各個矩形的長度和寬度表示。欄位的寬度與闌尾的總值成正比。\n分割與模式分析佔商務分析的一大部份，在傳統圖表中，您必須在心智圖中將多個個別項目拼湊在一起，才能得出結論。為了處理這種涉及多個變項/維度的複雜商務分析，指標性的 marimekko 設計很引人注目，而 Mekko 圖表讓這個目標在 Power BI 中變得非常容易達成。\nMekko 圖表視覺效果也可讓您能夠控制圖例、資料色彩及資料標籤，以做出真正自訂的展示。"
 }

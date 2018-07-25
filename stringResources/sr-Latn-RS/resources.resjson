@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Izaberite broj decimalnih mesta za prikaz",
 	"Visual_CategoryDataColorsStart": "Početna boja podataka kategorije",
 	"Visual_CategoryDataColorsEnd": "Završna boja za podatke kategorije",
-	"Visual_HighlightedValueDisplayName": "Istaknuto"
+	"Visual_HighlightedValueDisplayName": "Istaknuto",
+	"MekkoChart_Short_Description": "Mešavina 100% naslaganog stubičastog grafikona i 100% naslaganog trakastog grafikona koji su kombinovani u jedan prikaz",
+	"MekkoChart_Long_Description": "Pošto hvata dve dimenzije u jednom grafikonu, za tren oka možete da uočite velike segmente, kao i one koji nisu u dovoljnoj meri predstavljeni. Možete da koristite istu meru za visinu i širinu kolone, odnosno da koristite različite, u zavisnosti od svojih potreba.\nSlično „treemap“ grafikonu, vrednosti dimenzija su predstavljene po dužini i širini svakog pravougaonika. Širina kolone je proporcionalna ukupnoj vrednosti kolone.\nSegmentacija i analiza obrazaca predstavljaju veliki deo poslovne analize, a uz tradicionalne grafikone morate da spajate više pojedinačnih stavki na mentalnoj mapi da biste došli do zaključka. Za rad sa tako složenom poslovnom analizom koja uključuje više promenljivih/dimenzija, čuveni marimekko dizajn je veoma privlačan, a Mekko grafikon u velikoj meri olakšava postizanje ovoga u usluzi Power BI.\nVizuelni element Mekko grafikona takođe vam omogućava da kontrolišete legende, boje podataka i oznake podataka kako biste imali zaista prilagođenu prezentaciju."
 }

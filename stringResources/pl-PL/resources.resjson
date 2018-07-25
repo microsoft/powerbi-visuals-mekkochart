@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Wybierz liczbę miejsc dziesiętnych do wyświetlenia",
 	"Visual_CategoryDataColorsStart": "Początek kolorów danych kategorii",
 	"Visual_CategoryDataColorsEnd": "Koniec kolorów danych kategorii",
-	"Visual_HighlightedValueDisplayName": "Wyróżnione"
+	"Visual_HighlightedValueDisplayName": "Wyróżnione",
+	"MekkoChart_Short_Description": "Połączenie 100% skumulowanego wykresu kolumnowego i 100% skumulowanego wykresu słupkowego w jednym widoku",
+	"MekkoChart_Long_Description": "Ponieważ na jednym wykresie są przechwytywane dwa wymiary, można szybko zauważyć duże segmenty, a także segmenty z niewystarczającą reprezentacją. W zależności od potrzeb można użyć tej samej miary dla wysokości i szerokości kolumny lub użyć innych miar.\nPodobnie jak w przypadku mapy drzewa, wartości wymiarów są reprezentowane przez długości i szerokości poszczególnych prostokątów. Szerokość kolumny jest proporcjonalna do całkowitej wartości kolumny.\nAnaliza segmentacji i wzorca to ważne elementy analizy biznesowej, a w przypadku tradycyjnych wykresów trzeba poskładać wiele pojedynczych elementów w ramach mentalnej mapy, aby wyciągnąć wnioski. Atrakcyjnym rozwiązaniem w przypadku tak złożonej analizy biznesowej, która obejmuje wiele zmiennych/wymiarów, jest kultowy projekt markimekko. Wykres Mekko bardzo ułatwia osiągnięcie tego celu w usłudze Power BI.\nWizualizacja wykresu Mekko umożliwia również kontrolowanie legend, kolorów danych i etykiet danych w celu uzyskania prawdziwie dostosowanej prezentacji."
 }

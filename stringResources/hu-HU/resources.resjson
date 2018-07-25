@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Megjelenítendő tizedesjegyek számának kiválasztása",
 	"Visual_CategoryDataColorsStart": "Kategóriaadatok színeinek kezdete",
 	"Visual_CategoryDataColorsEnd": "Kategóriaadatok színeinek vége",
-	"Visual_HighlightedValueDisplayName": "Kiemelt"
+	"Visual_HighlightedValueDisplayName": "Kiemelt",
+	"MekkoChart_Short_Description": "Egy 100%-ig halmozott oszlopdiagram és egy 100%-ig halmozott sávdiagram egyetlen nézetben",
+	"MekkoChart_Long_Description": "Mivel a vizualizáció két dimenziót jelenít meg egy diagramon, egyszerűen, egy pillantásra láthatók a nagy, illetve az alulreprezentált tartományok. Az oszlopok magasságához és szélességéhez igény szerint használhat azonos vagy eltérő mértékeket is.\nA fatérképekhez hasonlóan a dimenzióértékeket az egyes téglalapok hossza és szélessége jelképezi. Az oszlopok szélessége az adott oszlop teljes értékével arányos.\nA szegmentálás és a mintaelemzés az üzleti elemzés fontos része. A hagyományos diagramok esetén ilyenkor fejben kell több elemet számba venni a következtetések levonásához. A több változót és/vagy dimenziót magába foglaló komplex üzleti elemzéshez rendkívül hasznos a híres marimekko megjelenítési mód, amely a Mekko diagram révén ez egyszerűen elérhető a Power BI-ban.\nA Mekko diagramos megjelenítéssel vezérelhetők a jelmagyarázatok, az adatok színei és az adatcímkék, így ténylegesen testreszabott bemutatók hozhatók létre."
 }

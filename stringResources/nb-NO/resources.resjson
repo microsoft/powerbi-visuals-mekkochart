@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Velg antall desimaler som skal vises",
 	"Visual_CategoryDataColorsStart": "Farger for kategoridata starter",
 	"Visual_CategoryDataColorsEnd": "Farger for kategoridata slutter",
-	"Visual_HighlightedValueDisplayName": "Uthevet"
+	"Visual_HighlightedValueDisplayName": "Uthevet",
+	"MekkoChart_Short_Description": "En blanding av stablet stolpediagram og stablet liggende stolpediagram kombinert i én visning",
+	"MekkoChart_Long_Description": "Siden den fanger to dimensjoner i ett diagram, kan du raskt oppdage de store segmentene i tillegg til de som er underrepresentert, med ett blikk. Du kan enten bruke samme mål for høyde og bredde på kolonnen, eller bruke andre avhengig av hva du trenger.\nPå samme måte som i et trekart vil lengden og bredden på hvert rektangel representere dimensjonsverdiene. Kolonnebredden er proporsjonal med kolonnens totalverdi.\nSegmenterings- og mønsteranalyse er en viktig del av forretningsanalyser, og med tradisjonelle diagrammer må du samle flere enkeltelementer i det mentale kartet før du kan komme frem til en konklusjon. Når man skal håndtere slike komplekse forretningsanalyser som involverer flere variabler/dimensjoner, er det ikoniske Marimekko-designet nærliggende, og Mekko-diagrammet gjør det superenkelt å oppnå dette i Power BI.\nMed den visuelle effekten i Mekko-diagrammet kan du kontrollere forklaringer, datafarger og dataetiketter og slik få en helt tilpasset presentasjon."
 }

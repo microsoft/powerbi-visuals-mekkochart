@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Sélectionner le nombre de décimales à afficher",
 	"Visual_CategoryDataColorsStart": "Début des couleurs de données de catégorie",
 	"Visual_CategoryDataColorsEnd": "Fin des couleurs de données de catégorie",
-	"Visual_HighlightedValueDisplayName": "Mise en surbrillance"
+	"Visual_HighlightedValueDisplayName": "Mise en surbrillance",
+	"MekkoChart_Short_Description": "Combinaison d'un histogramme empilé et d'un graphique à barres empilées dans une seule et même vue",
+	"MekkoChart_Long_Description": "Dans la mesure où il capture deux dimensions dans un même graphique, vous pouvez repérer d'un rapide coup d'œil les grands segments et ceux qui sont sous-représentés. Vous pouvez utiliser la même mesure pour la largeur et la hauteur de la colonne, ou d'autres mesures selon vos besoins.\nComme dans un treemap, les valeurs dimensionnelles sont représentées par la longueur et la largeur de chaque rectangle. La largeur d'une colonne est proportionnelle à la valeur totale de la colonne.\nL'analyse de la segmentation et des modèles constituent une partie importante de l'analyse métier, mais les graphiques classiques vous obligent à assembler mentalement plusieurs éléments individuels pour tirer des conclusions. Pour mener à bien une analyse complexe impliquant plusieurs variables/dimensions, utilisez le graphique Mekko dans Power BI pour appliquer à vos données un style séduisant issu de la marque emblématique Marimekko.\nLe visuel graphique Mekko vous permet également de contrôler les légendes, les couleurs des données et les étiquettes de données pour obtenir une présentation sur mesure."
 }

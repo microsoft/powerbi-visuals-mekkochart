@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Seleccionar o número de posicións decimais que se van mostrar",
 	"Visual_CategoryDataColorsStart": "Inicio de cores de datos de categoría",
 	"Visual_CategoryDataColorsEnd": "Final de cores de datos de categorías",
-	"Visual_HighlightedValueDisplayName": "Realzado"
+	"Visual_HighlightedValueDisplayName": "Realzado",
+	"MekkoChart_Short_Description": "Unha combinación dunha gráfica de columnas 100 % amontoadas e unha gráfica de barras 100 % amontoadas nunha visualización.",
+	"MekkoChart_Long_Description": "Ao capturar dúas dimensións nunha gráfica, pode recoñecer rapidamente os segmentos grandes e os que están subrepresentados dunha ollada. Pode usar a mesma medida para a altura e largura da columna ou usar diferentes medidas en función do que precise.\nDe xeito similar a unha gráfica de rectángulos aniñados, os valores dimensionais represéntanse pola lonxitude e largura de cada rectángulo. A largura dunha columna é proporcional ao valor total da columna.\nA análise da segmentación e a trama é unha parte importante da análise empresarial e, coas gráficas tradicionais, ten que xuntar varios elementos individuais no mapa mental para extraer conclusións. Para tratar con análises empresariais tan complexas que implican varias variables ou dimensións, o deseño icónico de Marimekko é moi atractivo e Mekko Chart axúdalle a conseguilo en Power BI.\nO elemento visual de Mekko Chart tamén lle permite controlar as lendas, as cores dos datos e as etiquetas dos datos para conseguir unha presentación realmente personalizada."
 }

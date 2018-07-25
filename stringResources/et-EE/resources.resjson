@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Valige kuvatavate kümnendkohtade arv",
 	"Visual_CategoryDataColorsStart": "Kategooriaandmete värvide algus",
 	"Visual_CategoryDataColorsEnd": "Kategooriaandmete värvide lõpp",
-	"Visual_HighlightedValueDisplayName": "Esiletõstetud"
+	"Visual_HighlightedValueDisplayName": "Esiletõstetud",
+	"MekkoChart_Short_Description": "100% virntulpdiagramm ja 100% virnlintdiagramm kombineeritud ühte vaatesse",
+	"MekkoChart_Long_Description": "Kuna see hõlmab ühes diagrammis kaks dimensiooni, märkate kiiresti nii suuri segmente kui ka neid, mis kiire pilgu eest muidu varjatuks jäävad. Saate veeru kõrguse ja laiuse jaoks kasutada sama mõõtu või kasutada vajadusest olenevalt erinevaid mõõte.\nSarnaselt puukaardile on dimensiooniväärtused tähistatud iga ristküliku pikkuse ja laiusega. Veeru laius on proportsionaalne veeru koguväärtusega.\nSegmentatsioon ja mustri analüüs moodustavad ärianalüüsist olulise osa. Traditsiooniliste diagrammidega peate järelduste tegemiseks peas mitu üksikut üksust omavahel kokku sobitama. Selliste keeruliste, mitut muutujat ja dimensiooni hõlmavate ärianalüüsidega tegelemisel on ikooniline marimekko kujundus väga ahvatlev ning Mekko diagramm muudab selle saavutamise Power BI-s väga hõlpsaks.\nMekko diagrammi visuaal võimaldab teil juhtida ka legende, andmete värve ja silte, muutes teie esitluse tõeliselt omanäoliseks."
 }

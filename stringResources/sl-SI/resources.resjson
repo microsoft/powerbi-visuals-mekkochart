@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Izberite število decimalnih mest za prikaz",
 	"Visual_CategoryDataColorsStart": "Začetna barva kategorije podatkov",
 	"Visual_CategoryDataColorsEnd": "Končna barva kategorije podatkov",
-	"Visual_HighlightedValueDisplayName": "Označeno"
+	"Visual_HighlightedValueDisplayName": "Označeno",
+	"MekkoChart_Short_Description": "100-odstotno naložen stolpčni grafikon in 100-odstotno naložen palični grafikon, združena v en pogled",
+	"MekkoChart_Long_Description": "Ker ta grafikon vključuje dve dimenziji, lahko hitro opazite večje segmente in tudi tiste, manj vidne. Uporabite lahko enake ali različne mere za višino in širino stolpca, odvisno od tega, kaj potrebujete.\nPodobno kot pri drevesnem zemljevidu, so tudi tu vrednosti za dimenzije predstavljene z višino in dolžino posameznega pravokotnika. Širina stolpca je sorazmerna s skupno vrednostjo stolpca.\nSegmentacija in analiza vzorcev sta pomemben del poslovne analize – pri tradicionalnih grafikonih morate postaviti več posameznih elementov skupaj v miselnem zemljevidu, da ustvarite zaključke. Ko izvajate tako zapleteno poslovno analizo, ki vključuje več spremenljivk/dimenzij, lahko izberete privlačno zasnovo marimekko in v storitvi Power BI uporabite grafikon Mekko.\nS ponazoritvijo z grafikonom Mekko lahko nadzirate legende, barve podatkov in oznake podatkov ter ustvarite izjemno predstavitev po meri."
 }

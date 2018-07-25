@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Hautatu bistaratu beharreko dezimal kopurua",
 	"Visual_CategoryDataColorsStart": "Kategoriaren datuen koloreen hasiera",
 	"Visual_CategoryDataColorsEnd": "Kategoriaren datuen koloreen amaiera",
-	"Visual_HighlightedValueDisplayName": "Nabarmendua"
+	"Visual_HighlightedValueDisplayName": "Nabarmendua",
+	"MekkoChart_Short_Description": "% 100ean pilatutako zutabe-diagrama eta % 100ean pilatutako barra-diagrama ikuspegi batean konbinatuta",
+	"MekkoChart_Long_Description": "Diagrama bakarrean bi dimentsio irudikatzen dituenez, bizkor aurkitu ahal izango dituzu segmentu handiak eta txikiegiak. Neurri bera edo neurri ezberdinak erabil ditzakezu zutabeen altueran eta zabaleran, zure beharren arabera.\nLaukizuzen moduko diagrametan bezala, balio dimentsionalak laukizuzen bakoitzaren luzeraren eta zabaleraren bidez irudikatzen dira. Zutabe baten zabalera haren guztizko balioarekiko proportzionala da.\nEnpresen analisien zati garrantzitsua dira segmentazioa eta ereduen analisia, eta, ohiko diagramekin, banako elementu asko antolatu behar izaten dira buruz ondorioak ateratzeko. Hainbat aldagai eta dimentsio dituzten enpresa-analisi konplexuak egiteko, marimekko ikono-diseinua oso erakargarria da, eta Mekko diagramak asko errazten du lana Power BI zerbitzuan.\nHalaber, Mekko diagrama bisualaren bidez, legendak, datuen koloreak eta datuen etiketak kudeatu ahal izango dituzu, aurkezpen guztiz pertsonalizatuak egin ahal izateko."
 }

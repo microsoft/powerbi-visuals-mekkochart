@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Pasirinkite rodytiną dešimtainių skaičių kiekį",
 	"Visual_CategoryDataColorsStart": "Kategorijų duomenų spalvos pradžioje",
 	"Visual_CategoryDataColorsEnd": "Kategorijų duomenų spalvos pabaigoje",
-	"Visual_HighlightedValueDisplayName": "Pažymėta"
+	"Visual_HighlightedValueDisplayName": "Pažymėta",
+	"MekkoChart_Short_Description": "100 % sudėtinė stulpelinė diagrama ir 100 % sudėtinė juostinė diagrama, sujungtos į vieną rodinį",
+	"MekkoChart_Long_Description": "Kadangi vienoje diagramoje fiksuojamos dvi dimensijos, žvilgtelėję galite greitai pastebėti didelius segmentus bei segmentus, kurie atvaizduoti nepakankamai. Pagal poreikį stulpelio aukščiui ir pločiui galite naudoti tą patį matą arba skirtingus matus.\nPanašiai kaip medžio schemoje, dimensijų reikšmes perteikia kiekvieno stačiakampio ilgis ir plotis. Stulpelio plotis yra proporcingas bendrajai stulpelio reikšmei.\nSegmentacija ir modelių analizė yra svarbi verslo analizės dalis, ir, naudodami tradicines diagramas, kad galėtumėte daryti išvadas, savo minčių žemėlapyje turite sujungti kelis atskirus elementus. Naudojant tokią sudėtingą verslo analizę, apimančią kelis kintamuosius / kelias dimensijas, labai patrauklus legendinis „marimekko“ dizainas, kurį naudoti tarnyboje „Power BI“ labai lengva pasitelkus „Mekko“ diagramą.\n„Mekko“ diagramos vaizdinis elementas taip pat leidžia valdyti legendas, duomenų spalvas ir duomenų žymas bei duomenis pateikti visiškai pritaikytus."
 }

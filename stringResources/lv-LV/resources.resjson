@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Atlasīt rādāmo decimāldaļu skaitu",
 	"Visual_CategoryDataColorsStart": "Kategoriju datu krāsu sākums",
 	"Visual_CategoryDataColorsEnd": "Kategoriju datu krāsu beigas",
-	"Visual_HighlightedValueDisplayName": "Iezīmēts"
+	"Visual_HighlightedValueDisplayName": "Iezīmēts",
+	"MekkoChart_Short_Description": "100% stabiņu grēdu diagrammas un 100% joslu grēdu diagrammas apvienojums vienā skatā.",
+	"MekkoChart_Long_Description": "Tā kā vienā diagrammā tiek tvertas divas dimensijas, varat ātri pamanīt lielos segmentus, kā arī segmentus, kas ir nepietiekami attēloti. Atbilstoši savām vajadzībām varat izmantot vienu mēru kolonnas augstumam un platumam vai arī izmantot dažādus mērus.\nLīdzīgi kā koka kartē, dimensiju vērtības parāda katra taisnstūra garums un platums. Kolonnas platums ir proporcionāls attiecībā pret kopējo kolonnas vērtību.\nBiznesa analīzē liela loma ir segmentācijas un shēmas analīzei. Izmantojot tradicionālās diagrammas, prātā ir jāsavieto vairāki atsevišķi vienumi, lai gūtu secinājumus. Veicot sarežģītu biznesa analīzi, kurā ir iesaistīti vairāki mainīgie vai dimensijas, ļoti atbilstošs ir klasiskais Marimekko stils, un analīzi var ļoti viegli veikt ar Mekko diagrammu pakalpojumā Power BI.\nMekko diagrammas vizuālie dati sniedz iespēju arī kontrolēt apzīmējumus, datu krāsas un datu etiķetes, tādējādi nodrošinot patiesi individualizētu atveidojumu."
 }

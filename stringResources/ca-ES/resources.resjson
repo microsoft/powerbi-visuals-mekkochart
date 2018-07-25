@@ -59,5 +59,7 @@
 	"Visual_Description_DecimalPlaces": "Seleccioneu el nombre de posicions decimals que cal mostrar",
 	"Visual_CategoryDataColorsStart": "Inici dels colors de dades de categories",
 	"Visual_CategoryDataColorsEnd": "Fi dels colors de dades de categories",
-	"Visual_HighlightedValueDisplayName": "Ressaltat"
+	"Visual_HighlightedValueDisplayName": "Ressaltat",
+	"MekkoChart_Short_Description": "Combinació del 100 % d'un gràfic de columnes apilades i el 100 % d'un gràfic de barres apilades en una única visualització.",
+	"MekkoChart_Long_Description": "Com que permet capturar dues dimensions en un gràfic, podeu detectar ràpidament d'una ullada els segments grans i els que tenen una presència inferior. Podeu fer servir la mateixa mesura per a l'alçada i l'amplada de la columna, o bé utilitzar-ne de diferents, segons les vostres necessitats.\nDe manera similar al mapa d'arbre, els valors dimensionals es representen mitjançant la longitud i l'amplada de cada rectangle. L'amplada d'una columna és proporcional al valor total de la columna.\nLes anàlisis de segmentació i patró són un factor important de l'anàlisi empresarial, i amb els gràfics convencionals heu de dividir diversos elements concrets mentalment per tal d'obtenir les conclusions. A l'hora d'abordar aquestes anàlisis empresarials tan complexes i amb diverses variables i dimensions, l'emblemàtic disseny marimekko resulta molt atractiu. A més, el gràfic de Mekko fa que sigui molt fàcil aconseguir-ho al Power BI.\nL'element visual del gràfic de Mekko també permet controlar les llegendes, i els colors de les dades i de les etiquetes per obtenir una presentació totalment personalitzada."
 }
