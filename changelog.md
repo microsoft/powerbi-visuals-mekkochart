@@ -1,3 +1,8 @@
+## 2.1.2
+
+* Additional minimal height calculation now is applied only if rotation option is enabled
+* Length of X-axis labels now is calculated based on formatted labels
+
 ## 2.1.1
 
 * Minimal height was reduced from 100 to 80
