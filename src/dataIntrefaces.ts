@@ -375,6 +375,16 @@ module powerbi.extensibility.visual {
         y2LabelColor?: Fill;
     }
 
+    export interface MekkoChartRenderOptions {
+        axes: MekkoChartAxisProperties;
+        width: number;
+        tickLabelMargins: any;
+        chartHasAxisLabels: boolean;
+        axisLabels: MekkoChartAxesLabels;
+        viewport: IViewport;
+        suppressAnimations: boolean;
+    }
+
     export interface MekkoCategoryProperties {
         color?: string;
         identity?: ISelectionId;
