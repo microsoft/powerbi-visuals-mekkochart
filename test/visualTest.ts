@@ -677,8 +677,8 @@ module powerbi.extensibility.visual.test {
                 };
 
                 let data = dataView.categorical.values.grouped();
-                let catigoried = data.map(d => { return { name: d.name, values: d.values[0].values, category: _.findIndex(d.values[0].values, i => i !== null) }; });
-                catigoried = _.sortBy(catigoried, "values");
+                let categoried = data.map(d => { return { name: d.name, values: d.values[0].values, category: _.findIndex(d.values[0].values, i => i !== null) }; });
+                categoried = _.sortBy(categoried, "values");
 
                 interface CategoryLegendDom {
                     position: string;
@@ -697,7 +697,7 @@ module powerbi.extensibility.visual.test {
                     });
 
                     dataView.categorical.categories[0].values.forEach((category, index) => {
-                        let filteredByCategory = catigoried.filter(cat => cat.category === index);
+                        let filteredByCategory = categoried.filter(cat => cat.category === index);
                         filteredByCategory = _.sortBy(filteredByCategory, "values");
                         let categoryDOM: any = mappedCategoryLegendGroup.filter((val: any) => { return <any>$((<any>mappedCategoryLegendGroup[val]).dom).children("text.legendTitle").children("title").text() === category; });
                         let legentItem = $((categoryDOM[0].dom)).children("g").children("text");
