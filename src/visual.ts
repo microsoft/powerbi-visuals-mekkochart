@@ -761,18 +761,13 @@ module powerbi.extensibility.visual {
                 this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length));
             }
 
-            const viewport: IViewport = {
-                height: this.currentViewport.height,
-                width: this.currentViewport.width
-            };
-
             const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
             let additionHeight: number = 0;
 
             if (rotataionEnabled) {
                 let axes: MekkoChartAxisProperties = this.axes = axis.utils.calculateAxes(
                     this.layers,
-                    viewport,
+                    this.currentViewport,
                     this.margin,
                     this.categoryAxisProperties,
                     this.valueAxisProperties,
@@ -791,7 +786,7 @@ module powerbi.extensibility.visual {
             }
 
             this.renderLegend();
-            this.render(viewport);
+            this.render();
 
             this.hasSetData = this.hasSetData
                 || (this.dataViews && this.dataViews.length > 0);
@@ -1785,7 +1780,7 @@ module powerbi.extensibility.visual {
             return false;
         }
 
-        private render(viewport: IViewport, suppressAnimations: boolean = true): void {
+        private render(suppressAnimations: boolean = true): void {
             this.setVisibility(true);
 
             this.legendMargins = this.legend.getMargins();
@@ -1799,7 +1794,7 @@ module powerbi.extensibility.visual {
                 this.legendMargins = this.legend.getMargins();
             }
 
-            viewport = {
+            const viewport: IViewport = {
                 height: this.currentViewport.height - this.legendMargins.height,
                 width: this.currentViewport.width - this.legendMargins.width
             };
