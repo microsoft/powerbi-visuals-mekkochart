@@ -130,8 +130,42 @@ module powerbi.extensibility.visual.test {
 
             it("visual is hidden when chart height is less than minimum height", (done) => {
                 visualBuilder.viewport = {
-                    height: 49,
+                    height: 79,
                     width: 350
+                };
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
+                    expect(visualBuilder.mainElement[0]).toHaveCss({ display: "none" });
+
+                    done();
+                });
+            });
+
+            it("visual is visible when chart height is great or equal minimum height", (done) => {
+                visualBuilder.viewport = {
+                    height: 80,
+                    width: 350
+                };
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "block" });
+                    expect(visualBuilder.mainElement[0]).toHaveCss({ display: "block" });
+
+                    done();
+                }, 300);
+            });
+
+            it("visual is hidden when chart height greater than minimum height because of rotation", (done) => {
+                visualBuilder.viewport = {
+                    height: 90,
+                    width: 350
+                };
+
+                dataView.metadata.objects = {
+                    xAxisLabels: {
+                        enableRotataion: true
+                    }
                 };
 
                 visualBuilder.updateRenderTimeout(dataView, () => {
@@ -604,11 +638,11 @@ module powerbi.extensibility.visual.test {
                     }
                 };
 
-                let data = dataView.categorical.values.grouped().map( v => {return {key: v.name, data: _.sum(v.values[0].values)}; } );
+                let data = dataView.categorical.values.grouped().map(v => { return { key: v.name, data: _.sum(v.values[0].values) }; });
 
                 let reduced = {};
                 data.forEach(d => {
-                    reduced[d.key.toString()] = reduced[d.key.toString()] || { data: 0};
+                    reduced[d.key.toString()] = reduced[d.key.toString()] || { data: 0 };
                     reduced[d.key.toString()].data += d.data;
                 });
 
@@ -624,7 +658,7 @@ module powerbi.extensibility.visual.test {
                 array = _.sortBy(array, "data");
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     expect(visualBuilder.legendGroup).toBeInDOM();
-                    array.forEach( (element, index) => {
+                    array.forEach((element, index) => {
                         let textElements = visualBuilder.legendGroup.children("g").children("text");
                         expect(element.key).toEqual(textElements[index].textContent);
                     });
@@ -643,8 +677,8 @@ module powerbi.extensibility.visual.test {
                 };
 
                 let data = dataView.categorical.values.grouped();
-                let catigoried = data.map( d => { return {name: d.name, values: d.values[0].values, category: _.findIndex(d.values[0].values, i => i !== null) }; });
-                catigoried = _.sortBy(catigoried, "values");
+                let categorized = data.map(d => { return { name: d.name, values: d.values[0].values, category: _.findIndex(d.values[0].values, i => i !== null) }; });
+                categorized = _.sortBy(categorized, "values");
 
                 interface CategoryLegendDom {
                     position: string;
@@ -655,17 +689,17 @@ module powerbi.extensibility.visual.test {
                     expect(visualBuilder.categoryLegendGroup).toBeInDOM();
                     expect(visualBuilder.categoryLegendGroup.length).toEqual(dataView.categorical.categories[0].values.length);
 
-                    let mappedCategoryLegendGroup: JQuery = visualBuilder.categoryLegendGroup.map( (index, clg) => {
+                    let mappedCategoryLegendGroup: JQuery = visualBuilder.categoryLegendGroup.map((index, clg) => {
                         return <CategoryLegendDom>{
                             position: clg.parentElement.parentElement.style.top.replace("px", ""),
                             dom: clg
                         };
                     });
 
-                    dataView.categorical.categories[0].values.forEach( (category, index) => {
-                        let filteredByCategory = catigoried.filter(cat => cat.category === index);
+                    dataView.categorical.categories[0].values.forEach((category, index) => {
+                        let filteredByCategory = categorized.filter(cat => cat.category === index);
                         filteredByCategory = _.sortBy(filteredByCategory, "values");
-                        let categoryDOM: any = mappedCategoryLegendGroup.filter( (val: any) => { return <any>$((<any>mappedCategoryLegendGroup[val]).dom).children("text.legendTitle").children("title").text() === category; });
+                        let categoryDOM: any = mappedCategoryLegendGroup.filter((val: any) => { return <any>$((<any>mappedCategoryLegendGroup[val]).dom).children("text.legendTitle").children("title").text() === category; });
                         let legentItem = $((categoryDOM[0].dom)).children("g").children("text");
                         expect(filteredByCategory.length).toEqual(legentItem.length);
                         filteredByCategory.forEach((categoryItem, index) => {
@@ -725,7 +759,7 @@ module powerbi.extensibility.visual.test {
 
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     let expectedDegree: number = -45;
-                    visualBuilder.xAxisTicks.children("text").each( (index, element) => {
+                    visualBuilder.xAxisTicks.children("text").each((index, element) => {
                         expect(d3.transform(d3.select(element).attr("transform")).rotate).toBe(expectedDegree);
                     });
                     done();
@@ -776,10 +810,10 @@ module powerbi.extensibility.visual.test {
                     mappedSeries[thirdCtegory].push(seriesElements[7].children[seriesMainRectanglePositionIndex]);
                     mappedSeries[thirdCtegory].push(seriesElements[8].children[seriesMainRectanglePositionIndex]);
 
-                    mappedSeries.forEach( (element: any[]) => {
+                    mappedSeries.forEach((element: any[]) => {
                         let sortedByHeight = _.sortBy(element, "height");
                         let sortedByPosition = _.sortBy(element, "y");
-                        sortedByHeight.forEach( (el, index ) => expect(sortedByHeight[index] === sortedByPosition[index]).toBeTruthy());
+                        sortedByHeight.forEach((el, index) => expect(sortedByHeight[index] === sortedByPosition[index]).toBeTruthy());
                     });
                     done();
                 }, 300);
