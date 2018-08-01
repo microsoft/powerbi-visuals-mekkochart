@@ -10,8 +10,6 @@
     "powerbi-visuals"
   ],
   "scripts": {
-    "postinstall": "pbiviz update 1.13.0",
-    "typings": "typings",
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
     "cert": "pbiviz --create-cert",
@@ -34,12 +32,9 @@
     "@types/jasmine": "2.5.37",
     "@types/jasmine-jquery": "1.5.28",
     "@types/jquery": "2.0.41",
-    "@types/lodash": "4.14.109",
     "@types/karma": "1.7.3",
+    "@types/lodash": "4.14.109",
     "@types/webpack": "4.4.4",
-    "powerbi-visuals-tools": "git+https://github.com/Microsoft/powerbi-visuals-tools#dev/next",
-    "powerbi-visuals-api": "1.13.0",
-    "typescript": "2.8.4",
     "coveralls": "2.11.15",
     "d3": "5.5.0",
     "jasmine": "2.5.2",
@@ -54,13 +49,12 @@
     "karma-typescript": "3.0.12",
     "karma-typescript-preprocessor": "0.3.1",
     "karma-webpack": "3.0.0",
-    "webpack": "4.14.0",
-    "ts-loader": "4.4.2",
-    "ts-node": "7.0.0",
-    "lodash.sortby": "4.7.0",
     "lodash.maxby": "4.6.0",
     "lodash.minby": "4.6.0",
+    "lodash.sortby": "4.7.0",
     "powerbi-models": "1.0.3",
+    "powerbi-visuals-api": "1.13.0",
+    "powerbi-visuals-tools": "https://github.com/Microsoft/PowerBI-visuals-tools#dev/next",
     "powerbi-visuals-utils-chartutils": "2.0.4",
     "powerbi-visuals-utils-colorutils": "2.0.2",
     "powerbi-visuals-utils-dataviewutils": "2.0.1",
@@ -70,7 +64,11 @@
     "powerbi-visuals-utils-testutils": "2.0.3",
     "powerbi-visuals-utils-tooltiputils": "2.0.2",
     "powerbi-visuals-utils-typeutils": "2.0.1",
+    "puppeteer": "1.5.0",
+    "ts-loader": "4.4.2",
+    "ts-node": "7.0.0",
     "tslint": "4.0.2",
-    "puppeteer": "1.5.0"
+    "typescript": "3.0.1",
+    "webpack": "4.14.0"
   }
 }
