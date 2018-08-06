@@ -29,9 +29,6 @@ import { ColorHelper, createLinearColorScale } from "powerbi-visuals-utils-color
 import { legendInterfaces } from "powerbi-visuals-utils-chartutils";
 import * as formattingUtils from "./../formattingUtils";
 import { max, sum, min } from "d3-array";
-import minBy from "lodash.minby";
-import maxBy from "lodash.maxby";
-import sortBy from "lodash.sortby";
 
 import IColorPalette = powerbi.extensibility.IColorPalette;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
@@ -138,10 +135,12 @@ export class BaseConverterStrategy implements ConverterStrategy {
             categoryItemsCount[index] = mappedItems;
 
             if (colorGradient) {
-                categoryItemsCount[index] = sortBy(categoryItemsCount[index], BaseConverterStrategy.SortField);
+                categoryItemsCount[index] = categoryItemsCount[index].sort((a, b) => {
+                    return a[BaseConverterStrategy.SortField] > b[BaseConverterStrategy.SortField] ? 1 : -1;
+                });
             }
 
-            let baseStartColorIdentity: IFilteredValueGroups = maxBy(mappedItems, BaseConverterStrategy.SortField);
+            let baseStartColorIdentity: IFilteredValueGroups = mappedItems.sort( (a, b) => a[BaseConverterStrategy.SortField] > b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
             if (baseStartColorIdentity === undefined) {
                 return;
             }
@@ -156,7 +155,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
             }
 
             // gradiend end color
-            let baseEndColorIdentity: IFilteredValueGroups = minBy(mappedItems, BaseConverterStrategy.SortField);
+            let baseEndColorIdentity: IFilteredValueGroups = mappedItems.sort( (a, b) => a[BaseConverterStrategy.SortField] < b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
 
             if (baseEndColorIdentity === undefined) {
                 return;
