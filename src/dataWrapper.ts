@@ -37,7 +37,7 @@ import {
 // powerbi.extensibility.utils.type
 import ValueType = valueType.ValueType;
 
-export default class DataWrapper {
+export class DataWrapper {
     private static HighlightedIndexFactor: number = 2;
 
     private data: MekkoChartBaseData;

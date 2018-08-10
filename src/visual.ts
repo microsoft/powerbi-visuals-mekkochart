@@ -169,9 +169,9 @@ import {
 import ValueType = valueType.ValueType;
 
 // behavior
-import VisualBehavior from "./behavior/visualBehavior";
-import CustomVisualBehavior from "./behavior/customVisualBehavior";
-import CustomVisualBehaviorOptions from "./behavior/customVisualBehaviorOptions";
+import { VisualBehavior } from "./behavior/visualBehavior";
+import { CustomVisualBehavior } from "./behavior/customVisualBehavior";
+import { CustomVisualBehaviorOptions } from "./behavior/customVisualBehaviorOptions";
 
 import * as columnChart from "./columnChart/columnChartVisual";
 import * as columnChartBaseColumnChart from "./columnChart/baseColumnChart";
@@ -208,7 +208,7 @@ export interface MekkoChartSettings {
 /**
  * Renders a data series as a cartesian visual.
  */
-export default class MekkoChart implements IVisual {
+export class MekkoChart implements IVisual {
     private static XAxisYPositionOffset: number = 33;
     private static WidthDelimiter: number = 2;
     private static XDelimiter: number = 2;
@@ -507,7 +507,7 @@ export default class MekkoChart implements IVisual {
 
     private calculateXAxisAdditionalHeight(): number {
         let categories: PrimitiveValue[] = this.dataViews[0].categorical.categories[0].values;
-        let sortedByLength: PrimitiveValue[] = categories.sort( (a, b) => a["length"] > b["length"] ? 1 : -1);
+        let sortedByLength: PrimitiveValue[] = categories.sort((a, b) => a["length"] > b["length"] ? 1 : -1);
         let longestCategory: PrimitiveValue = sortedByLength[categories.length - 1] || "";
         let shortestCategory: PrimitiveValue = sortedByLength[0] || "";
 
@@ -1603,13 +1603,13 @@ export default class MekkoChart implements IVisual {
                     if (legend === undefined) {
                         return;
                     }
-                    legend.data = legend.data.sort( (a, b) => a["valueSum"] > b["valueSum"] ? 1 : -1);
+                    legend.data = legend.data.sort((a, b) => a["valueSum"] > b["valueSum"] ? 1 : -1);
                     if (legendSortSettings.groupByCategoryDirection === MekkoChart.SortDirectionDescending) {
                         legend.data = legend.data.reverse();
                     }
                 });
 
-                reducedLegends = reducedLegends.sort( (a, b) => a["categorySort"] > b["categorySort"] ? 1 : -1);
+                reducedLegends = reducedLegends.sort((a, b) => a["categorySort"] > b["categorySort"] ? 1 : -1);
 
                 if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
                     reducedLegends = reducedLegends.reverse();
@@ -1624,7 +1624,7 @@ export default class MekkoChart implements IVisual {
                 });
             }
             else {
-                legendData.dataPoints = legendData.dataPoints.sort( (a, b) => a["valueSum"] > b["valueSum"] ? 1 : -1);
+                legendData.dataPoints = legendData.dataPoints.sort((a, b) => a["valueSum"] > b["valueSum"] ? 1 : -1);
                 if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
                     legendData.dataPoints = legendData.dataPoints.reverse();
                 }
@@ -1666,7 +1666,7 @@ export default class MekkoChart implements IVisual {
             this.categoryLegends.forEach((legend: ILegend, index: number) => {
                 (<ILegendGroup>legend).position = +select((<ILegendGroup>legend).element).style("top").replace("px", "");
             });
-            this.categoryLegends = this.categoryLegends.sort(( a, b) => a["position"] > b["position"] ? 1 : -1).reverse();
+            this.categoryLegends = this.categoryLegends.sort((a, b) => a["position"] > b["position"] ? 1 : -1).reverse();
             this.categoryLegends.forEach((legend, index) => {
                 if (reducedLegends[index] === undefined) {
                     LegendData.update({
@@ -2372,9 +2372,9 @@ export default class MekkoChart implements IVisual {
 
                 axes.y2.axis
                     .tickPadding(MekkoChart.TickPaddingY);
-                    // .orient(showY1OnRight
-                    //     ? axisPosition.left.toLowerCase()
-                    //     : axisPosition.right.toLowerCase());
+                // .orient(showY1OnRight
+                //     ? axisPosition.left.toLowerCase()
+                //     : axisPosition.right.toLowerCase());
 
                 if (duration) {
                     this.y2AxisGraphicsContext
@@ -2591,5 +2591,3 @@ export function createLayers(
 
     return layers;
 }
-
-

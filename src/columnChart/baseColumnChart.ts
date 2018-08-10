@@ -115,9 +115,9 @@ import DisplayUnitSystemType = displayUnitSystemType.DisplayUnitSystemType;
 
 import { max, sum } from "d3-array";
 import { ScaleLinear as LinearScale, scaleLinear } from "d3-scale";
-import { select, Selection} from "d3-selection";
+import { select, Selection } from "d3-selection";
 
-import MekkoChart from "./../visual";
+import { MekkoChart } from "./../visual";
 
 import * as  formattingUtils from "./../formattingUtils";
 import * as converterStrategy from "./../converterStrategy/baseConverterStrategy";
@@ -190,7 +190,7 @@ import BaseConverterStrategy = converterStrategy.BaseConverterStrategy;
 import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 
 // behavior
-import VisualBehaviorOptions from "./../behavior/visualBehaviorOptions";
+import { VisualBehaviorOptions } from "./../behavior/visualBehaviorOptions";
 
 export class BaseColumnChart implements IColumnChart {
     private static ColumnChartClassName: string = "columnChart";
@@ -521,7 +521,7 @@ export class BaseColumnChart implements IColumnChart {
             tmpObject["identity"] = columns[col].identity;
             tmpObject["categoryValue"] = columns[col].categoryValue;
             tmpObject["color"] = columns[col].color;
-            columns[col] = columns[col].sort( (a, b) => a[BaseColumnChart.ColumSortField] > b[BaseColumnChart.ColumSortField] ? 1 : -1);
+            columns[col] = columns[col].sort((a, b) => a[BaseColumnChart.ColumSortField] > b[BaseColumnChart.ColumSortField] ? 1 : -1);
             if (descendingDirection) {
                 columns[col] = (columns[col]).reverse();
             }

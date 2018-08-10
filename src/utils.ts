@@ -36,7 +36,7 @@ import DataViewObject = powerbi.DataViewObject;
 import NumberRange = powerbi.NumberRange;
 import DataViewValueColumns = powerbi.DataViewValueColumns;
 
-import MekkoChart from "./visual";
+import { MekkoChart } from "./visual";
 
 import {
     double as Double,

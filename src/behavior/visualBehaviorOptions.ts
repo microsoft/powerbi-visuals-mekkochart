@@ -33,7 +33,7 @@ import { MekkoChartAxisOptions } from "./../dataInterfaces";
 import SelectableDataPoint = interactivityService.SelectableDataPoint;
 import IViewport = powerbi.IViewport;
 
-export default interface VisualBehaviorOptions {
+export interface VisualBehaviorOptions {
     dataPoints: SelectableDataPoint[];
     bars: Selection<any, any, any, any>;
     eventGroup: Selection<any, any, any, any>;
