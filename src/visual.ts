@@ -2372,9 +2372,6 @@ export class MekkoChart implements IVisual {
 
                 axes.y2.axis
                     .tickPadding(MekkoChart.TickPaddingY);
-                // .orient(showY1OnRight
-                //     ? axisPosition.left.toLowerCase()
-                //     : axisPosition.right.toLowerCase());
 
                 if (duration) {
                     this.y2AxisGraphicsContext
