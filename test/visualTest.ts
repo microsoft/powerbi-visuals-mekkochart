@@ -67,7 +67,7 @@ import {
 import * as _ from "lodash";
 import { select } from "d3-selection";
 import { ClickEventType } from "powerbi-visuals-utils-testutils/lib/helpers/helpers";
-import MekkoChart from "../src/visual";
+import { MekkoChart } from "../src/visual";
 
 describe("MekkoChart", () => {
     let visualBuilder: MekkoChartBuilder;
@@ -626,11 +626,11 @@ describe("MekkoChart", () => {
                 }
             };
 
-            let data = dataView.categorical.values.grouped().map( v => {return {key: v.name, data: _.sum(v.values[0].values)}; } );
+            let data = dataView.categorical.values.grouped().map(v => { return { key: v.name, data: _.sum(v.values[0].values) }; });
 
             let reduced = {};
             data.forEach(d => {
-                reduced[d.key.toString()] = reduced[d.key.toString()] || { data: 0};
+                reduced[d.key.toString()] = reduced[d.key.toString()] || { data: 0 };
                 reduced[d.key.toString()].data += d.data;
             });
 
@@ -646,7 +646,7 @@ describe("MekkoChart", () => {
             array = _.sortBy(array, "data");
             visualBuilder.updateRenderTimeout(dataView, () => {
                 expect(visualBuilder.legendGroup).toBeInDOM();
-                array.forEach( (element, index) => {
+                array.forEach((element, index) => {
                     let textElements = visualBuilder.legendGroup.children("g").children("text");
                     expect(element.key).toEqual(textElements[index].textContent);
                 });
@@ -665,7 +665,7 @@ describe("MekkoChart", () => {
             };
 
             let data = dataView.categorical.values.grouped();
-            let catigoried = data.map( d => { return {name: d.name, values: d.values[0].values, category: _.findIndex(d.values[0].values, i => i !== null) }; });
+            let catigoried = data.map(d => { return { name: d.name, values: d.values[0].values, category: _.findIndex(d.values[0].values, i => i !== null) }; });
             catigoried = _.sortBy(catigoried, "values");
 
             interface CategoryLegendDom {
@@ -677,17 +677,17 @@ describe("MekkoChart", () => {
                 expect(visualBuilder.categoryLegendGroup).toBeInDOM();
                 expect(visualBuilder.categoryLegendGroup.length).toEqual(dataView.categorical.categories[0].values.length);
 
-                let mappedCategoryLegendGroup: JQuery = visualBuilder.categoryLegendGroup.map( (index, clg) => {
+                let mappedCategoryLegendGroup: JQuery = visualBuilder.categoryLegendGroup.map((index, clg) => {
                     return <CategoryLegendDom>{
                         position: clg.parentElement.parentElement.style.top.replace("px", ""),
                         dom: clg
                     };
                 });
 
-                dataView.categorical.categories[0].values.forEach( (category, index) => {
+                dataView.categorical.categories[0].values.forEach((category, index) => {
                     let filteredByCategory = catigoried.filter(cat => cat.category === index);
                     filteredByCategory = _.sortBy(filteredByCategory, "values");
-                    let categoryDOM: any = mappedCategoryLegendGroup.filter( (val: any) => { return <any>$((<any>mappedCategoryLegendGroup[val]).dom).children("text.legendTitle").children("title").text() === category; });
+                    let categoryDOM: any = mappedCategoryLegendGroup.filter((val: any) => { return <any>$((<any>mappedCategoryLegendGroup[val]).dom).children("text.legendTitle").children("title").text() === category; });
                     let legentItem = $((categoryDOM[0].dom)).children("g").children("text");
                     expect(filteredByCategory.length).toEqual(legentItem.length);
                     filteredByCategory.forEach((categoryItem, index) => {
@@ -747,7 +747,7 @@ describe("MekkoChart", () => {
 
             visualBuilder.updateRenderTimeout(dataView, () => {
                 let expectedDegree: number = -45;
-                visualBuilder.xAxisTicks.children("text").each( (index, element) => {
+                visualBuilder.xAxisTicks.children("text").each((index, element) => {
                     expect(MekkoChart.getTranslation(select(element).attr("transform"))[2]).toBeCloseTo(expectedDegree);
                 });
                 done();
@@ -798,10 +798,10 @@ describe("MekkoChart", () => {
                 mappedSeries[thirdCtegory].push(seriesElements[7].children[seriesMainRectanglePositionIndex]);
                 mappedSeries[thirdCtegory].push(seriesElements[8].children[seriesMainRectanglePositionIndex]);
 
-                mappedSeries.forEach( (element: any[]) => {
+                mappedSeries.forEach((element: any[]) => {
                     let sortedByHeight = _.sortBy(element, "height");
                     let sortedByPosition = _.sortBy(element, "y");
-                    sortedByHeight.forEach( (el, index ) => expect(sortedByHeight[index] === sortedByPosition[index]).toBeTruthy());
+                    sortedByHeight.forEach((el, index) => expect(sortedByHeight[index] === sortedByPosition[index]).toBeTruthy());
                 });
                 done();
             }, 300);

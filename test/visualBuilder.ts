@@ -29,7 +29,7 @@ import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructor
 // powerbi.extensibility.utils.test
 import { VisualBuilderBase } from "powerbi-visuals-utils-testutils";
 // MekkoChart1449744733038
-import MekkoChart from "./../src/visual";
+import { MekkoChart } from "./../src/visual";
 export class MekkoChartBuilder extends VisualBuilderBase<MekkoChart> {
     constructor(width: number, height: number) {
         super(width, height, "MekkoChart1449744733038");
