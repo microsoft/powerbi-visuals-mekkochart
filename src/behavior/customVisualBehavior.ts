@@ -24,15 +24,15 @@
 *  THE SOFTWARE.
 */
 import {
-interactivityService,
+    interactivityService,
 } from "powerbi-visuals-utils-interactivityutils";
 
-import CustomVisualBehaviorOptions from "./customVisualBehaviorOptions";
+import { CustomVisualBehaviorOptions } from "./customVisualBehaviorOptions";
 
 import ISelectionHandler = interactivityService.ISelectionHandler;
 import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
 
-export default class CustomVisualBehavior implements IInteractiveBehavior {
+export class CustomVisualBehavior implements IInteractiveBehavior {
     private behaviors: IInteractiveBehavior[];
 
     constructor(behaviors: IInteractiveBehavior[] = []) {

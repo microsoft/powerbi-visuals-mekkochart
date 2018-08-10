@@ -43,7 +43,7 @@ import DataViewValueColumn = powerbi.DataViewValueColumn;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import DataViewValueColumns = powerbi.DataViewValueColumns;
 
-import MekkoChart from "./../visual";
+import { MekkoChart } from "./../visual";
 import {
     MekkoLegendDataPoint,
     ICategotyValuesStatsCollection,
@@ -140,7 +140,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                 });
             }
 
-            let baseStartColorIdentity: IFilteredValueGroups = mappedItems.sort( (a, b) => a[BaseConverterStrategy.SortField] > b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
+            let baseStartColorIdentity: IFilteredValueGroups = mappedItems.sort((a, b) => a[BaseConverterStrategy.SortField] > b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
             if (baseStartColorIdentity === undefined) {
                 return;
             }
@@ -155,7 +155,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
             }
 
             // gradiend end color
-            let baseEndColorIdentity: IFilteredValueGroups = mappedItems.sort( (a, b) => a[BaseConverterStrategy.SortField] < b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
+            let baseEndColorIdentity: IFilteredValueGroups = mappedItems.sort((a, b) => a[BaseConverterStrategy.SortField] < b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
 
             if (baseEndColorIdentity === undefined) {
                 return;

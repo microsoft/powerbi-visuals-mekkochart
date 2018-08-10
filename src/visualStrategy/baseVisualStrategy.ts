@@ -30,7 +30,7 @@ import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewPropertyValue = powerbi.DataViewPropertyValue;
 import ValueRange = powerbi.ValueRange;
 
-import DataWrapper from "./../dataWrapper";
+import { DataWrapper } from "./../dataWrapper";
 import * as utils from "./../utils";
 
 import {
@@ -77,7 +77,7 @@ import { IVisualStrategy } from "./visualStrategy";
 
 import * as columnChart from "./../columnChart/baseColumnChart";
 
-import MekkoChart from "./../visual";
+import { MekkoChart } from "./../visual";
 
 import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
 

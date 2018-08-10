@@ -7,13 +7,8 @@
     "target": "ES6",
     "sourceMap": true,
     "outDir": "./.tmp/build/",
-    "sourceRoot": "../src/",
     "moduleResolution": "node",
-    "declaration": true,
-    "lib": [
-        "es2015",
-        "dom"
-    ]
+    "declaration": true
   },
   "files": [
     "./src/visual.ts"
