@@ -145,7 +145,7 @@ import DataViewCategorical = powerbi.DataViewCategorical;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewMetadata = powerbi.DataViewMetadata;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
-import DataViewScopeIdentity = powerbi.DataViewScopeIdentity;
+import DataRepetitionSelector = powerbi.data.DataRepetitionSelector;
 import PrimitiveValue = powerbi.PrimitiveValue;
 import DataViewValueColumn = powerbi.DataViewValueColumn;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
@@ -363,7 +363,7 @@ export class BaseColumnChart implements IColumnChart {
             categories: PrimitiveValue[] = firstCategory
                 ? firstCategory.values
                 : [],
-            categoryIdentities: DataViewScopeIdentity[] = firstCategory
+            categoryIdentities: DataRepetitionSelector[] = firstCategory
                 ? firstCategory.identity
                 : [],
             categoryMetadata: DataViewMetadataColumn = firstCategory
@@ -623,7 +623,7 @@ export class BaseColumnChart implements IColumnChart {
         visualHost: IVisualHost,
         dataViewCat: DataViewCategorical,
         categories: any[],
-        categoryIdentities: DataViewScopeIdentity[],
+        categoryIdentities: DataRepetitionSelector[],
         legend: MekkoLegendDataPoint[],
         seriesObjectsList: powerbi.DataViewObjects[][],
         converterStrategy: BaseConverterStrategy,
