@@ -42,6 +42,7 @@ import Fill = powerbi.Fill;
 import DataViewValueColumn = powerbi.DataViewValueColumn;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import DataViewValueColumns = powerbi.DataViewValueColumns;
+import isEqual from "lodash.isequal";
 
 import { MekkoChart } from "./../visual";
 import {
@@ -245,15 +246,14 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     let category: string;
 
                     let color: string;
-                    let categoryIndex: number = series.values.findIndex(value => value === value);
+                    let categoryIndex: number = series.values.findIndex(value => typeof value !== undefined && value !== null);
 
                     if (!colorGradient) {
                         color = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
                             : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
                     }
                     else {
-
-                        let positionIndex: number = (<IFilteredValueGroups[]>categoryItemsCount[categoryIndex]).findIndex(ser => ser.identity === series.identity);
+                        let positionIndex: number = (<IFilteredValueGroups[]>categoryItemsCount[categoryIndex]).findIndex(ser => isEqual(ser.identity, series.identity));
                         category = (categoryMaxValues[categoryIndex].category || "").toString();
                         let gradientBaseColorStart: string = categoryGradientBaseColorIdentities[categoryIndex].categoryStartColor;
                         let gradientBaseColorEnd: string = categoryGradientBaseColorIdentities[categoryIndex].categoryEndColor;
