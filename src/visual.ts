@@ -203,6 +203,11 @@ export interface MekkoChartSettings {
     xAxisLabels: MekkoXAxisLabelsSettings;
     categoryColor: MekkoCategoryColorSettings;
     dataPoint: MekkoDataPointSettings;
+    categoryAxis: MekkoCategoryXAxisSettings;
+    valueAxis: MekkoCategoryXAxisSettings;
+}
+export interface MekkoCategoryXAxisSettings {
+    labelColor: Fill;
 }
 
 /**
@@ -346,6 +351,20 @@ export class MekkoChart implements IVisual {
         },
         xAxisLabels: {
             enableRotataion: false
+        },
+        categoryAxis: {
+            labelColor: {
+                solid: {
+                    color: "#000000"
+                }
+            }
+        },
+        valueAxis: {
+            labelColor: {
+                solid: {
+                    color: "#000000"
+                }
+            }
         },
         categoryColor: {
             color: "#ffffff",
@@ -1379,9 +1398,9 @@ export class MekkoChart implements IVisual {
                     axisStyle: this.categoryAxisProperties && this.categoryAxisProperties["axisStyle"]
                         ? this.categoryAxisProperties["axisStyle"]
                         : axisStyle.showTitleOnly,
-                    labelColor: this.categoryAxisProperties
+                    labelColor: this.categoryAxisProperties && this.categoryAxisProperties["labelColor"]
                         ? this.categoryAxisProperties["labelColor"]
-                        : null
+                        : MekkoChart.DefaultSettings.categoryAxis.labelColor
                 },
                 objectName: "categoryAxis",
                 validValues: {
@@ -1450,9 +1469,9 @@ export class MekkoChart implements IVisual {
                     axisStyle: this.valueAxisProperties && this.valueAxisProperties["axisStyle"] != null
                         ? this.valueAxisProperties["axisStyle"]
                         : axisStyle.showTitleOnly,
-                    labelColor: this.valueAxisProperties
+                    labelColor: this.valueAxisProperties && this.valueAxisProperties["labelColor"]
                         ? this.valueAxisProperties["labelColor"]
-                        : null
+                        : MekkoChart.DefaultSettings.valueAxis.labelColor
                 },
                 objectName: "valueAxis",
                 validValues: {
@@ -2210,7 +2229,7 @@ export class MekkoChart implements IVisual {
                 xLabelColor = this.categoryAxisProperties
                     && this.categoryAxisProperties["labelColor"]
                     ? <Fill>this.categoryAxisProperties["labelColor"]
-                    : null;
+                    : MekkoChart.DefaultSettings.categoryAxis.labelColor;
 
                 xFontSize = this.categoryAxisProperties
                     && this.categoryAxisProperties["fontSize"] != null
@@ -2220,7 +2239,7 @@ export class MekkoChart implements IVisual {
                 xLabelColor = this.valueAxisProperties
                     && this.valueAxisProperties["labelColor"]
                     ? <Fill>this.valueAxisProperties["labelColor"]
-                    : null;
+                    : MekkoChart.DefaultSettings.valueAxis.labelColor;
 
                 xFontSize = this.valueAxisProperties
                     && this.valueAxisProperties["fontSize"]
