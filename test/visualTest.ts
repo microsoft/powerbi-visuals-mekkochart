@@ -66,7 +66,7 @@ import {
 
 import * as _ from "lodash";
 import { select } from "d3-selection";
-import { ClickEventType } from "powerbi-visuals-utils-testutils/lib/helpers/helpers";
+import { ClickEventType } from "powerbi-visuals-utils-testutils";
 import { MekkoChart } from "../src/visual";
 
 describe("MekkoChart", () => {
@@ -227,6 +227,7 @@ describe("MekkoChart", () => {
                 (firstValue: number, secondValue: number) => firstValue >= secondValue)).toBeTruthy();
         }
 
+        // test case requires new powerbi-visuals-utils-testutils with API 2.1.0 support
         it("multi-selection test", () => {
             dataView = defaultDataViewBuilder.getDataView([
                 MekkoChartData.ColumnCategory,

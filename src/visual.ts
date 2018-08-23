@@ -203,6 +203,11 @@ export interface MekkoChartSettings {
     xAxisLabels: MekkoXAxisLabelsSettings;
     categoryColor: MekkoCategoryColorSettings;
     dataPoint: MekkoDataPointSettings;
+    categoryAxis: MekkoCategoryXAxisSettings;
+    valueAxis: MekkoCategoryXAxisSettings;
+}
+export interface MekkoCategoryXAxisSettings {
+    labelColor: Fill;
 }
 
 /**
@@ -346,6 +351,20 @@ export class MekkoChart implements IVisual {
         },
         xAxisLabels: {
             enableRotataion: false
+        },
+        categoryAxis: {
+            labelColor: {
+                solid: {
+                    color: "#000000"
+                }
+            }
+        },
+        valueAxis: {
+            labelColor: {
+                solid: {
+                    color: "#000000"
+                }
+            }
         },
         categoryColor: {
             color: "#ffffff",
@@ -505,8 +524,7 @@ export class MekkoChart implements IVisual {
             true);
     }
 
-    private calculateXAxisAdditionalHeight(): number {
-        let categories: PrimitiveValue[] = this.dataViews[0].categorical.categories[0].values;
+    private calculateXAxisAdditionalHeight(categories: PrimitiveValue[]): number {
         let sortedByLength: PrimitiveValue[] = categories.sort((a, b) => a["length"] > b["length"] ? 1 : -1);
         let longestCategory: PrimitiveValue = sortedByLength[categories.length - 1] || "";
         let shortestCategory: PrimitiveValue = sortedByLength[0] || "";
@@ -570,7 +588,15 @@ export class MekkoChart implements IVisual {
 
             let shiftTitle: number = 0;
             if (rotataionEnabled) {
-                shiftTitle = this.calculateXAxisAdditionalHeight();
+                let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
+                    this.layers,
+                    options.viewport,
+                    this.margin,
+                    this.categoryAxisProperties,
+                    this.valueAxisProperties,
+                    this.isXScrollBarVisible || this.isYScrollBarVisible,
+                    null);
+                 shiftTitle = this.calculateXAxisAdditionalHeight(axes.x.values);
             }
 
             const xAxisLabel: Selection = this.axisGraphicsContext.append("text")
@@ -825,14 +851,6 @@ export class MekkoChart implements IVisual {
             return;
         }
 
-        if ((this.currentViewport.width < MekkoChart.MinWidth)
-            || (this.currentViewport.height < MekkoChart.MinHeight + this.calculateXAxisAdditionalHeight())) {
-
-            this.clearViewport();
-
-            return;
-        }
-
         if (this.layers.length === 0) {
             this.layers = this.createAndInitLayers(this.dataViews);
         }
@@ -843,6 +861,26 @@ export class MekkoChart implements IVisual {
 
         for (let layerIndex: number = 0, length: number = this.layers.length; layerIndex < length; layerIndex++) {
             this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length));
+        }
+
+        const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
+        let additionHeight: number = 0;
+         if (rotataionEnabled) {
+            let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
+                this.layers,
+                this.currentViewport,
+                this.margin,
+                this.categoryAxisProperties,
+                this.valueAxisProperties,
+                this.isXScrollBarVisible || this.isYScrollBarVisible,
+                null);
+             additionHeight += this.calculateXAxisAdditionalHeight(axes.x.values);
+        }
+
+        if ((this.currentViewport.width < MekkoChart.MinWidth)
+            || (this.currentViewport.height < MekkoChart.MinHeight + additionHeight)) {
+            this.clearViewport();
+            return;
         }
 
         this.renderLegend();
@@ -1379,9 +1417,9 @@ export class MekkoChart implements IVisual {
                     axisStyle: this.categoryAxisProperties && this.categoryAxisProperties["axisStyle"]
                         ? this.categoryAxisProperties["axisStyle"]
                         : axisStyle.showTitleOnly,
-                    labelColor: this.categoryAxisProperties
+                    labelColor: this.categoryAxisProperties && this.categoryAxisProperties["labelColor"]
                         ? this.categoryAxisProperties["labelColor"]
-                        : null
+                        : MekkoChart.DefaultSettings.categoryAxis.labelColor
                 },
                 objectName: "categoryAxis",
                 validValues: {
@@ -1450,9 +1488,9 @@ export class MekkoChart implements IVisual {
                     axisStyle: this.valueAxisProperties && this.valueAxisProperties["axisStyle"] != null
                         ? this.valueAxisProperties["axisStyle"]
                         : axisStyle.showTitleOnly,
-                    labelColor: this.valueAxisProperties
+                    labelColor: this.valueAxisProperties && this.valueAxisProperties["labelColor"]
                         ? this.valueAxisProperties["labelColor"]
-                        : null
+                        : MekkoChart.DefaultSettings.valueAxis.labelColor
                 },
                 objectName: "valueAxis",
                 validValues: {
@@ -1641,11 +1679,12 @@ export class MekkoChart implements IVisual {
         this.categoryLegends = [];
         let legendParents = select(this.rootElement.node()).selectAll("div.legendParent");
 
-        let legendParentsWithData = legendParents.data(reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined));
+        reducedLegends = reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined);
+        let legendParentsWithData = legendParents.data(reducedLegends);
         let legendParentsWithChilds = legendParentsWithData.enter().append("div");
         let legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style("position", "absolute")
-            .style("top", (data) => PixelConverter.toString(svgHeight * data.index));
+            .style("top", (data, index) => PixelConverter.toString(svgHeight * index));
 
         let mekko = this;
         this.categoryLegends = this.categoryLegends || [];
@@ -1662,6 +1701,11 @@ export class MekkoChart implements IVisual {
             }
         });
 
+        if (reducedLegends.length) {
+            this.legendMargins = this.categoryLegends[0].getMargins();
+            this.legendMargins.height = this.legendMargins.height - MekkoChart.LegendBarHeightMargin;
+            this.legendMargins.height = this.legendMargins.height * reducedLegends.length;
+        }
         if (reducedLegends.length > 0) {
             this.categoryLegends.forEach((legend: ILegend, index: number) => {
                 (<ILegendGroup>legend).position = +select((<ILegendGroup>legend).element).style("top").replace("px", "");
@@ -1840,13 +1884,8 @@ export class MekkoChart implements IVisual {
     private render(suppressAnimations: boolean = true): void {
         this.setVisibility(true);
 
-        this.legendMargins = this.legend.getMargins();
+        this.legendMargins = this.legendMargins || this.legend.getMargins();
 
-        if (this.categoryLegends.length > 0 && this.categoryLegends[0].isVisible()) {
-            this.legendMargins = this.categoryLegends[0].getMargins();
-            this.legendMargins.height = this.legendMargins.height - MekkoChart.LegendBarHeightMargin;
-            this.legendMargins.height = this.legendMargins.height * this.dataViews[0].categorical.categories[0].values.length;
-        }
         if (this.legend.isVisible()) {
             this.legendMargins = this.legend.getMargins();
         }
@@ -2025,7 +2064,16 @@ export class MekkoChart implements IVisual {
             const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
 
             if (rotataionEnabled) {
-                xMax += this.calculateXAxisAdditionalHeight();
+                let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
+                    this.layers,
+                    this.currentViewport,
+                    this.margin,
+                    this.categoryAxisProperties,
+                    this.valueAxisProperties,
+                    this.isXScrollBarVisible || this.isYScrollBarVisible,
+                    null);
+
+                xMax += this.calculateXAxisAdditionalHeight(axes.x.values);
             }
 
             if (this.hideAxisLabels(this.legendMargins)) {
@@ -2210,7 +2258,7 @@ export class MekkoChart implements IVisual {
                 xLabelColor = this.categoryAxisProperties
                     && this.categoryAxisProperties["labelColor"]
                     ? <Fill>this.categoryAxisProperties["labelColor"]
-                    : null;
+                    : MekkoChart.DefaultSettings.categoryAxis.labelColor;
 
                 xFontSize = this.categoryAxisProperties
                     && this.categoryAxisProperties["fontSize"] != null
@@ -2220,7 +2268,7 @@ export class MekkoChart implements IVisual {
                 xLabelColor = this.valueAxisProperties
                     && this.valueAxisProperties["labelColor"]
                     ? <Fill>this.valueAxisProperties["labelColor"]
-                    : null;
+                    : MekkoChart.DefaultSettings.valueAxis.labelColor;
 
                 xFontSize = this.valueAxisProperties
                     && this.valueAxisProperties["fontSize"]
