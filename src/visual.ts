@@ -524,8 +524,7 @@ export class MekkoChart implements IVisual {
             true);
     }
 
-    private calculateXAxisAdditionalHeight(): number {
-        let categories: PrimitiveValue[] = this.dataViews[0].categorical.categories[0].values;
+    private calculateXAxisAdditionalHeight(categories: PrimitiveValue[]): number {
         let sortedByLength: PrimitiveValue[] = categories.sort((a, b) => a["length"] > b["length"] ? 1 : -1);
         let longestCategory: PrimitiveValue = sortedByLength[categories.length - 1] || "";
         let shortestCategory: PrimitiveValue = sortedByLength[0] || "";
@@ -589,7 +588,15 @@ export class MekkoChart implements IVisual {
 
             let shiftTitle: number = 0;
             if (rotataionEnabled) {
-                shiftTitle = this.calculateXAxisAdditionalHeight();
+                let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
+                    this.layers,
+                    options.viewport,
+                    this.margin,
+                    this.categoryAxisProperties,
+                    this.valueAxisProperties,
+                    this.isXScrollBarVisible || this.isYScrollBarVisible,
+                    null);
+                 shiftTitle = this.calculateXAxisAdditionalHeight(axes.x.values);
             }
 
             const xAxisLabel: Selection = this.axisGraphicsContext.append("text")
@@ -844,14 +851,6 @@ export class MekkoChart implements IVisual {
             return;
         }
 
-        if ((this.currentViewport.width < MekkoChart.MinWidth)
-            || (this.currentViewport.height < MekkoChart.MinHeight + this.calculateXAxisAdditionalHeight())) {
-
-            this.clearViewport();
-
-            return;
-        }
-
         if (this.layers.length === 0) {
             this.layers = this.createAndInitLayers(this.dataViews);
         }
@@ -862,6 +861,26 @@ export class MekkoChart implements IVisual {
 
         for (let layerIndex: number = 0, length: number = this.layers.length; layerIndex < length; layerIndex++) {
             this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length));
+        }
+
+        const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
+        let additionHeight: number = 0;
+         if (rotataionEnabled) {
+            let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
+                this.layers,
+                this.currentViewport,
+                this.margin,
+                this.categoryAxisProperties,
+                this.valueAxisProperties,
+                this.isXScrollBarVisible || this.isYScrollBarVisible,
+                null);
+             additionHeight += this.calculateXAxisAdditionalHeight(axes.x.values);
+        }
+
+        if ((this.currentViewport.width < MekkoChart.MinWidth)
+            || (this.currentViewport.height < MekkoChart.MinHeight + additionHeight)) {
+            this.clearViewport();
+            return;
         }
 
         this.renderLegend();
@@ -2044,7 +2063,16 @@ export class MekkoChart implements IVisual {
             const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
 
             if (rotataionEnabled) {
-                xMax += this.calculateXAxisAdditionalHeight();
+                let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
+                    this.layers,
+                    this.currentViewport,
+                    this.margin,
+                    this.categoryAxisProperties,
+                    this.valueAxisProperties,
+                    this.isXScrollBarVisible || this.isYScrollBarVisible,
+                    null);
+
+                xMax += this.calculateXAxisAdditionalHeight(axes.x.values);
             }
 
             if (this.hideAxisLabels(this.legendMargins)) {
