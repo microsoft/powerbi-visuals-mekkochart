@@ -227,7 +227,8 @@ describe("MekkoChart", () => {
                 (firstValue: number, secondValue: number) => firstValue >= secondValue)).toBeTruthy();
         }
 
-        it("multi-selection test", () => {
+        // test case requires new powerbi-visuals-utils-testutils with API 2.1.0 support
+        xit("multi-selection test", () => {
             dataView = defaultDataViewBuilder.getDataView([
                 MekkoChartData.ColumnCategory,
                 MekkoChartData.ColumnY
