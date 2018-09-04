@@ -29,6 +29,7 @@ import powerbi from "powerbi-visuals-api";
 // powerbi.extensibility.utils.type
 import { valueType } from "powerbi-visuals-utils-typeutils";
 import ValueType = valueType.ValueType;
+import ExtendedType = valueType.ExtendedType;
 
 import { getRandomNumbers, testDataViewBuilder } from "powerbi-visuals-utils-testutils";
 
@@ -107,7 +108,7 @@ export class MekkoChartData extends TestDataViewBuilder {
                 source: {
                     displayName: MekkoChartData.ColumnCategory,
                     roles: { Category: true },
-                    type: ValueType.fromDescriptor({ extendedType: 1 })
+                    type: ValueType.fromDescriptor({ extendedType: ExtendedType.Text })
                 },
                 values: this.valuesCategorySeries.map((values: string[]) => values[0])
             },
@@ -116,7 +117,7 @@ export class MekkoChartData extends TestDataViewBuilder {
                 source: {
                     displayName: MekkoChartData.ColumnSeries,
                     roles: { Series: true },
-                    type: ValueType.fromDescriptor({ extendedType: 1 })
+                    type: ValueType.fromDescriptor({ extendedType: ExtendedType.Text })
                 },
                 values: this.valuesCategorySeries.map((values: string[]) => values[1]),
             }
@@ -127,7 +128,7 @@ export class MekkoChartData extends TestDataViewBuilder {
                         format: MekkoChartData.DefaultFormat,
                         roles: { Y: true },
                         isMeasure: true,
-                        type: ValueType.fromDescriptor({ extendedType: 256 })
+                        type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
                     },
                     values: this.valuesY
                 },
@@ -137,7 +138,7 @@ export class MekkoChartData extends TestDataViewBuilder {
                         format: MekkoChartData.DefaultFormat,
                         roles: { Width: true },
                         isMeasure: true,
-                        type: ValueType.fromDescriptor({ extendedType: 256 })
+                        type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
                     },
                     values: this.valuesWidth
                 }], columnNames).build();
@@ -149,7 +150,7 @@ export class MekkoChartData extends TestDataViewBuilder {
                 source: {
                     displayName: MekkoChartData.ColumnCategory,
                     roles: { Category: true },
-                    type: ValueType.fromDescriptor({ extendedType: 256 })
+                    type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
                 },
                 values: this.specificValuesCategorySeries.map((values: string[]) => values[0])
             },
@@ -158,7 +159,7 @@ export class MekkoChartData extends TestDataViewBuilder {
                 source: {
                     displayName: MekkoChartData.ColumnSeries,
                     roles: { Series: true },
-                    type: ValueType.fromDescriptor({ extendedType: 256 })
+                    type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
                 },
                 values: this.specificValuesCategorySeries.map((values: string[]) => values[1]),
             }
@@ -169,7 +170,7 @@ export class MekkoChartData extends TestDataViewBuilder {
                         format: MekkoChartData.DefaultFormat,
                         roles: { Y: true },
                         isMeasure: true,
-                        type: ValueType.fromDescriptor({ extendedType: 256 })
+                        type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
                     },
                     values: this.specificValuesY
                 },
@@ -179,7 +180,7 @@ export class MekkoChartData extends TestDataViewBuilder {
                         format: MekkoChartData.DefaultFormat,
                         roles: { Width: true },
                         isMeasure: true,
-                        type: ValueType.fromDescriptor({ extendedType: 256 })
+                        type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
                     },
                     values: this.specificValuesWidth
                 }], columnNames).build();
