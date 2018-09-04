@@ -1679,11 +1679,12 @@ export class MekkoChart implements IVisual {
         this.categoryLegends = [];
         let legendParents = select(this.rootElement.node()).selectAll("div.legendParent");
 
-        let legendParentsWithData = legendParents.data(reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined));
+        reducedLegends = reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined);
+        let legendParentsWithData = legendParents.data(reducedLegends);
         let legendParentsWithChilds = legendParentsWithData.enter().append("div");
         let legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style("position", "absolute")
-            .style("top", (data) => PixelConverter.toString(svgHeight * data.index));
+            .style("top", (data, index) => PixelConverter.toString(svgHeight * index));
 
         let mekko = this;
         this.categoryLegends = this.categoryLegends || [];
@@ -1700,6 +1701,11 @@ export class MekkoChart implements IVisual {
             }
         });
 
+        if (reducedLegends.length) {
+            this.legendMargins = this.categoryLegends[0].getMargins();
+            this.legendMargins.height = this.legendMargins.height - MekkoChart.LegendBarHeightMargin;
+            this.legendMargins.height = this.legendMargins.height * reducedLegends.length;
+        }
         if (reducedLegends.length > 0) {
             this.categoryLegends.forEach((legend: ILegend, index: number) => {
                 (<ILegendGroup>legend).position = +select((<ILegendGroup>legend).element).style("top").replace("px", "");
@@ -1878,13 +1884,8 @@ export class MekkoChart implements IVisual {
     private render(suppressAnimations: boolean = true): void {
         this.setVisibility(true);
 
-        this.legendMargins = this.legend.getMargins();
+        this.legendMargins = this.legendMargins || this.legend.getMargins();
 
-        if (this.categoryLegends.length > 0 && this.categoryLegends[0].isVisible()) {
-            this.legendMargins = this.categoryLegends[0].getMargins();
-            this.legendMargins.height = this.legendMargins.height - MekkoChart.LegendBarHeightMargin;
-            this.legendMargins.height = this.legendMargins.height * this.dataViews[0].categorical.categories[0].values.length;
-        }
         if (this.legend.isVisible()) {
             this.legendMargins = this.legend.getMargins();
         }
