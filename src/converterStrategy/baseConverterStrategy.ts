@@ -107,7 +107,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
         });
 
         // find base color identity
-        // todo handle color change of 
+        // todo handle color change of
         let valueGroups: DataViewValueColumnGroup[] = this.dataView.values.grouped();
         let categoryGradientBaseColorIdentities: BaseColorIdentity[] = [];
         let categoryGradientEndBaseColorIdentities: BaseColorIdentity[] = [];

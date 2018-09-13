@@ -487,7 +487,7 @@ export class BaseColumnChart implements IColumnChart {
         let rowsCount: number = series.length;
         let colsCount: number = max(series.map(s => s.data.length));
 
-        // define all cols 
+        // define all cols
         series.some((value: MekkoChartSeries): boolean => {
             if (value.data.length === colsCount) {
                 value.data.forEach(data => {

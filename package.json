@@ -39,13 +39,13 @@
     "css-loader": "1.0.0",
     "d3": "5.5.0",
     "del-cli": "1.1.0",
+    "istanbul-reports": "2.0.0",
     "jasmine": "2.5.2",
     "jasmine-jquery": "2.1.1",
     "jquery": "3.2.1",
     "karma": "3.0.0",
     "karma-chrome-launcher": "2.2.0",
     "karma-coverage": "1.1.2",
-    "istanbul-reports": "2.0.0",
     "karma-coverage-istanbul-reporter": "^2.0.4",
     "karma-jasmine": "1.1.2",
     "karma-sourcemap-loader": "^0.3.7",
@@ -71,7 +71,7 @@
     "style-loader": "0.21.0",
     "ts-loader": "4.4.2",
     "ts-node": "7.0.0",
-    "tslint": "4.0.2",
+    "tslint": "^5.11.0",
     "typescript": "3.0.1",
     "webpack": "4.14.0"
   }
