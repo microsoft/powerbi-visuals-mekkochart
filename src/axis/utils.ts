@@ -23,18 +23,27 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-api";
+import { IMargin } from "powerbi-visuals-utils-svgutils";
+import {
+    axis as AxisHelper,
+    axisInterfaces,
+    axisScale,
+    axisStyle
+} from "powerbi-visuals-utils-chartutils";
+import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
+import valueFormatter = vf.valueFormatter;
 
-module powerbi.extensibility.visual.axis.utils {
-    // powerbi.extensibility.utils.svg
-    import IMargin = powerbi.extensibility.utils.svg.IMargin;
+import IAxisProperties = axisInterfaces.IAxisProperties;
+import DataViewObject = powerbi.DataViewObject;
+import IViewport = powerbi.IViewport;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 
-    // powerbi.extensibility.utils.chart
-    import AxisHelper = powerbi.extensibility.utils.chart.axis;
-    import axisScale = AxisHelper.scale;
-    import IAxisProperties = AxisHelper.IAxisProperties;
-
-    // powerbi.extensibility.utils.formatting
-    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import * as columnChart from "./../columnChart/columnChartVisual";
+import {
+    MekkoCalculateScaleAndDomainOptions,
+    MekkoChartAxisProperties,
+} from "./../dataInterfaces";
 
     export interface AxesLabels {
         xAxisLabel: string;
@@ -171,4 +180,3 @@ module powerbi.extensibility.visual.axis.utils {
             yAxisLabel
         };
     }
-}

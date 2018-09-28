@@ -24,7 +24,5 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.axis.position {
     export const left: string = "Left";
     export const right: string = "Right";
-}

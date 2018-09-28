@@ -24,11 +24,9 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
-    export const RoleNames = {
-        category: "Category",
-        series: "Series",
-        y: "Y",
-        width: "Width"
-    };
-}
+export const RoleNames = {
+    category: "Category",
+    series: "Series",
+    y: "Y",
+    width: "Width"
+};
