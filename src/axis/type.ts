@@ -24,8 +24,6 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual.axis.type {
     export const scalar: string = "Scalar";
     export const categorical: string = "Categorical";
     export const both: string = "Both";
-}

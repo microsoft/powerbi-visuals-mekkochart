@@ -1,3 +1,6 @@
+## 3.0.0
+* powerbi-visuals-tools@3.0.1 based visual
+
 ## 2.1.2
 
 * Additional minimal height calculation now is applied only if rotation option is enabled

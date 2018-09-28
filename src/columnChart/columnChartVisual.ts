@@ -23,35 +23,46 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-api";
+import { legendInterfaces, axisInterfaces } from "powerbi-visuals-utils-chartutils";
 
-module powerbi.extensibility.visual.columnChart {
-    // powerbi.extensibility.utils.chart
-    import LegendData = powerbi.extensibility.utils.chart.legend.LegendData;
-    import IAxisProperties = powerbi.extensibility.utils.chart.axis.IAxisProperties;
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+import IViewport = powerbi.IViewport;
 
-    export interface IColumnChart {
-        getColumnsWidth(): number[];
-        getBorderWidth(): number;
+import {
+    MekkoChartVisualInitOptions,
+    MekkoCalculateScaleAndDomainOptions,
+    MekkoVisualRenderResult,
+    MekkoChartBaseData
+} from "./../dataInterfaces";
 
-        init(options: MekkoChartVisualInitOptions): void;
-        setData(dataViews: DataView[], resized?: boolean): void;
-        calculateAxesProperties(options: MekkoCalculateScaleAndDomainOptions): IAxisProperties[];
-        overrideXScale(xProperties: IAxisProperties): void;
-        render(suppressAnimations: boolean): MekkoVisualRenderResult;
-        calculateLegend(): LegendData;
-        hasLegend(): boolean;
-        onClearSelection(): void;
-        enumerateObjectInstances?(
-            instances: VisualObjectInstance[],
-            options: EnumerateVisualObjectInstancesOptions): void;
-        getVisualCategoryAxisIsScalar?(): boolean;
-        getSupportedCategoryAxisType?(): string;
-        getPreferredPlotArea?(
-            isScalar: boolean,
-            categoryCount: number,
-            categoryThickness: number): IViewport;
-        setFilteredData?(startIndex: number, endIndex: number): MekkoChartBaseData;
+// powerbi.extensibility.utils.chart
+import LegendData = legendInterfaces.LegendData;
+import IAxisProperties = axisInterfaces.IAxisProperties;
 
-        getData?(): MekkoChartBaseData;
-    }
+export interface IColumnChart {
+    getColumnsWidth(): number[];
+    getBorderWidth(): number;
+
+    init(options: MekkoChartVisualInitOptions): void;
+    setData(dataViews: powerbi.DataView[], resized?: boolean): void;
+    calculateAxesProperties(options: MekkoCalculateScaleAndDomainOptions): IAxisProperties[];
+    overrideXScale(xProperties: IAxisProperties): void;
+    render(suppressAnimations: boolean): MekkoVisualRenderResult;
+    calculateLegend(): LegendData;
+    hasLegend(): boolean;
+    onClearSelection(): void;
+    enumerateObjectInstances?(
+        instances: VisualObjectInstance[],
+        options: EnumerateVisualObjectInstancesOptions): void;
+    getVisualCategoryAxisIsScalar?(): boolean;
+    getSupportedCategoryAxisType?(): string;
+    getPreferredPlotArea?(
+        isScalar: boolean,
+        categoryCount: number,
+        categoryThickness: number): IViewport;
+    setFilteredData?(startIndex: number, endIndex: number): MekkoChartBaseData;
+
+    getData?(): MekkoChartBaseData;
 }
