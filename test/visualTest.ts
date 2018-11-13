@@ -712,7 +712,7 @@ describe("MekkoChart", () => {
                 expect(visualBuilder.categoryLegendGroup).toBeInDOM();
                 expect(visualBuilder.categoryLegendGroup.length).toEqual(dataView.categorical.categories[0].values.length);
 
-                let mappedCategoryLegendGroup: JQuery = visualBuilder.categoryLegendGroup.map((index, clg) => {
+                let mappedCategoryLegendGroup: JQuery<CategoryLegendDom> = visualBuilder.categoryLegendGroup.map((index, clg) => {
                     return <CategoryLegendDom>{
                         position: clg.parentElement.parentElement.style.top.replace("px", ""),
                         dom: clg

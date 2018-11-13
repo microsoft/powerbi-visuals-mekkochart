@@ -1,3 +1,7 @@
+## 3.0.1
+* Azure Pipelines integration
+* Visual packages and powerbi utils update 
+
 ## 3.0.0
 * powerbi-visuals-tools@3.0.1 based visual
 
