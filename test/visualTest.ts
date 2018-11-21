@@ -152,42 +152,42 @@ describe("MekkoChart", () => {
         it("visual is hidden when chart height is less than minimum height", (done) => {
             visualBuilder.viewport = {
                 height: 49,
-                    width: 350
-                };
-
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
-                    expect(visualBuilder.mainElement[0]).toHaveCss({ display: "none" });
-
-                    done();
-                });
-            });
-
-            it("visual is visible when chart height is great or equal minimum height", (done) => {
-                visualBuilder.viewport = {
-                    height: 80,
-                    width: 350
-                };
-
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "block" });
-                    expect(visualBuilder.mainElement[0]).toHaveCss({ display: "block" });
-
-                    done();
-                }, 300);
-            });
-
-            it("visual is hidden when chart height greater than minimum height because of rotation", (done) => {
-                visualBuilder.viewport = {
-                    height: 90,
                 width: 350
             };
 
-                dataView.metadata.objects = {
-                    xAxisLabels: {
-                        enableRotataion: true
-                    }
-                };
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
+                expect(visualBuilder.mainElement[0]).toHaveCss({ display: "none" });
+
+                done();
+            });
+        });
+
+        it("visual is visible when chart height is great or equal minimum height", (done) => {
+            visualBuilder.viewport = {
+                height: 80,
+                width: 350
+            };
+
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "block" });
+                expect(visualBuilder.mainElement[0]).toHaveCss({ display: "block" });
+
+                done();
+            }, 300);
+        });
+
+        it("visual is hidden when chart height greater than minimum height because of rotation", (done) => {
+            visualBuilder.viewport = {
+                height: 90,
+                width: 350
+            };
+
+            dataView.metadata.objects = {
+                xAxisLabels: {
+                    enableRotataion: true
+                }
+            };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
                 expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
@@ -737,6 +737,7 @@ describe("MekkoChart", () => {
     describe("Mekko chart label features:", () => {
         beforeEach(() => {
             dataView = defaultDataViewBuilder.getSpecificDataView();
+            debugger;
         });
 
         it("force display", (done) => {
@@ -840,6 +841,48 @@ describe("MekkoChart", () => {
                 });
                 done();
             }, 300);
+        });
+    });
+
+    describe("Highlight test", () => {
+        let dataLabels: JQuery<any>[];
+        let columns: JQuery<any>[];
+        let dataViewWithHighLighted: DataView;
+
+        beforeAll(() => {
+            dataViewWithHighLighted = defaultDataViewBuilder.getDataView(undefined);
+            visualBuilder.update(dataViewWithHighLighted);
+            debugger;
+        });
+
+        it("bars rendering", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
+                columns = visualBuilder.columns.toArray().map($);
+                const allColumnsLength: number = columns.length;
+                let notHighligtedColumnsCount: number = 0;
+                columns.forEach(column => {
+                    if (Number(column.css("fill-opacity")) === 1)
+                        notHighligtedColumnsCount++;
+                });
+                expect(notHighligtedColumnsCount).toBe(allColumnsLength - 1);
+                done();
+            });
+        });
+
+        it("labels rendering", (done) => {
+            dataViewWithHighLighted.metadata.objects = {
+                labels: {
+                    show: true,
+                    forceDisplay: true
+                }
+            };
+            visualBuilder.update(dataViewWithHighLighted);
+
+            visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
+                dataLabels = visualBuilder.dataLabels.toArray().map($);
+                expect(dataLabels.length).toBe(1);
+                done();
+            });
         });
     });
 });

@@ -563,7 +563,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                     ? " highlight"
                     : "");
             })
-            .merge(shapeSelection)
+            .merge(shapes)
             .style(
                 "fill", (dataPoint: MekkoChartColumnDataPoint) => data.showAllDataPoints
                     ? dataPoint.color

@@ -31,10 +31,11 @@ import { valueType } from "powerbi-visuals-utils-typeutils";
 import ValueType = valueType.ValueType;
 import ExtendedType = valueType.ExtendedType;
 
-import { getRandomNumbers, testDataViewBuilder } from "powerbi-visuals-utils-testutils";
+import { getRandomNumbers, getRandomNumber, testDataViewBuilder } from "powerbi-visuals-utils-testutils";
 
 // powerbi.extensibility.utils.test
 import TestDataViewBuilder = testDataViewBuilder.TestDataViewBuilder;
+import { DataViewBuilderValuesColumnOptions } from "powerbi-visuals-utils-testutils/lib/dataViewBuilder/dataViewBuilder";
 
 export class MekkoChartData extends TestDataViewBuilder {
     private static DefaultFormat: string = "\"$\"#,##0;\\(\"$\"#,##0\\)";
@@ -47,7 +48,7 @@ export class MekkoChartData extends TestDataViewBuilder {
     public static ColumnY: string = "This Year Sales";
     public static ColumnWidth: string = "Sum Total Units This Year";
 
-    public valuesCategorySeries: string[][] = [
+    public static valuesCategorySeries: string[][] = [
         ["William", "DE"],
         ["James", "GA"],
         ["Harper", "KY"],
@@ -69,14 +70,30 @@ export class MekkoChartData extends TestDataViewBuilder {
     ];
 
     public valuesY: number[] = getRandomNumbers(
-        this.valuesCategorySeries.length,
+        MekkoChartData.valuesCategorySeries.length,
         MekkoChartData.MinValue,
         MekkoChartData.MaxValue);
 
     public valuesWidth: number[] = getRandomNumbers(
-        this.valuesCategorySeries.length,
+        MekkoChartData.valuesCategorySeries.length,
         MekkoChartData.MinValue,
         MekkoChartData.MaxValue);
+
+    public generateHightLightedValues(valuesArray: number[], hightlightedElementNumber?: number): number[] {
+        let array: number[] = [];
+        const lenght: number = valuesArray.length;
+        for (let i: number = 0; i < lenght; i++) {
+            array[i] = null;
+        }
+        if (!hightlightedElementNumber)
+            return array;
+        if (hightlightedElementNumber >= lenght || hightlightedElementNumber < 0) {
+            array[0] = valuesArray[0];
+        } else {
+            array[hightlightedElementNumber] = valuesArray[hightlightedElementNumber];
+        }
+        return array;
+    }
 
     // the data set with unique items in each category
     // one series value belongs to only one category
@@ -102,7 +119,37 @@ export class MekkoChartData extends TestDataViewBuilder {
         MekkoChartData.MinValue,
         MekkoChartData.MaxValue);
 
-    public getDataView(columnNames?: string[]): powerbi.DataView {
+    public getDataView(columnNames?: string[], withHighLights: boolean = false): powerbi.DataView {
+
+        let columns: DataViewBuilderValuesColumnOptions[] = [
+            {
+                source: {
+                    displayName: MekkoChartData.ColumnY,
+                    format: MekkoChartData.DefaultFormat,
+                    roles: { Y: true },
+                    isMeasure: true,
+                    type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
+                },
+                values: this.valuesY
+            },
+            {
+                source: {
+                    displayName: MekkoChartData.ColumnWidth,
+                    format: MekkoChartData.DefaultFormat,
+                    roles: { Width: true },
+                    isMeasure: true,
+                    type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
+                },
+                values: this.valuesWidth
+            }
+        ];
+
+        if (withHighLights) {
+            let highlightedElementNumber: number = Math.ceil(getRandomNumber(0, this.valuesY.length - 1));
+            columns[0].highlights = this.generateHightLightedValues(this.valuesY, highlightedElementNumber);
+            columns[1].highlights = this.generateHightLightedValues(this.valuesWidth, highlightedElementNumber);
+        }
+
         return this.createCategoricalDataViewBuilder([
             {
                 source: {
@@ -110,7 +157,7 @@ export class MekkoChartData extends TestDataViewBuilder {
                     roles: { Category: true },
                     type: ValueType.fromDescriptor({ extendedType: ExtendedType.Text })
                 },
-                values: this.valuesCategorySeries.map((values: string[]) => values[0])
+                values: MekkoChartData.valuesCategorySeries.map((values: string[]) => values[0])
             },
             {
                 isGroup: true,
@@ -119,29 +166,9 @@ export class MekkoChartData extends TestDataViewBuilder {
                     roles: { Series: true },
                     type: ValueType.fromDescriptor({ extendedType: ExtendedType.Text })
                 },
-                values: this.valuesCategorySeries.map((values: string[]) => values[1]),
+                values: MekkoChartData.valuesCategorySeries.map((values: string[]) => values[1]),
             }
-        ], [
-                {
-                    source: {
-                        displayName: MekkoChartData.ColumnY,
-                        format: MekkoChartData.DefaultFormat,
-                        roles: { Y: true },
-                        isMeasure: true,
-                        type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
-                    },
-                    values: this.valuesY
-                },
-                {
-                    source: {
-                        displayName: MekkoChartData.ColumnWidth,
-                        format: MekkoChartData.DefaultFormat,
-                        roles: { Width: true },
-                        isMeasure: true,
-                        type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
-                    },
-                    values: this.valuesWidth
-                }], columnNames).build();
+        ], columns, columnNames).build();
     }
 
     public getSpecificDataView(columnNames?: string[]): powerbi.DataView {

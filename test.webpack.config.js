@@ -3,6 +3,7 @@ const webpack = require("webpack");
 
 module.exports = {
     devtool: 'source-map',
+    mode: 'development',
     module: {
         rules: [
             {
@@ -37,7 +38,7 @@ module.exports = {
         "powerbi-visuals-api": '{}'
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js','.css']
+        extensions: ['.tsx', '.ts', '.js', '.css']
     },
     output: {
         path: path.resolve(__dirname, ".tmp/test")
@@ -45,6 +46,6 @@ module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
             'powerbi-visuals-api': null
-          })
+        })
     ]
 };

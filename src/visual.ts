@@ -596,7 +596,7 @@ export class MekkoChart implements IVisual {
                     this.valueAxisProperties,
                     this.isXScrollBarVisible || this.isYScrollBarVisible,
                     null);
-                 shiftTitle = this.calculateXAxisAdditionalHeight(axes.x.values);
+                shiftTitle = this.calculateXAxisAdditionalHeight(axes.x.values);
             }
 
             const xAxisLabel: Selection = this.axisGraphicsContext.append("text")
@@ -865,7 +865,7 @@ export class MekkoChart implements IVisual {
 
         const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
         let additionHeight: number = 0;
-         if (rotataionEnabled) {
+        if (rotataionEnabled) {
             let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
                 this.layers,
                 this.currentViewport,
@@ -874,7 +874,7 @@ export class MekkoChart implements IVisual {
                 this.valueAxisProperties,
                 this.isXScrollBarVisible || this.isYScrollBarVisible,
                 null);
-             additionHeight += this.calculateXAxisAdditionalHeight(axes.x.values);
+            additionHeight += this.calculateXAxisAdditionalHeight(axes.x.values);
         }
 
         if ((this.currentViewport.width < MekkoChart.MinWidth)
@@ -2520,7 +2520,6 @@ export class MekkoChart implements IVisual {
             }
 
             let forceDisplay: boolean = (<MekkoChartLabelSettings>(<MekkoColumnChartData>layers[0].getData()).labelSettings).forceDisplay;
-
             drawDefaultLabelsForDataPointChart(
                 resultsLabelDataPoints,
                 this.labelGraphicsContextScrollable,
