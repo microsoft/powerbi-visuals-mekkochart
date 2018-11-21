@@ -169,7 +169,7 @@ import EnumExtensions = enumExtensions.EnumExtensions;
 import ArrayExtensions = arrayExtensions.ArrayExtensions;
 
 // powerbi.extensibility.utils.interactivity
-import LegendIcon = legendInterfaces.LegendIcon;
+import LegendIcon = legendInterfaces.MarkerShape;
 import ILegendData = legendInterfaces.LegendData;
 import LegendDataPoint = legendInterfaces.LegendDataPoint;
 import DataLabelObject = dataLabelInterfaces.DataLabelObject;
@@ -1710,7 +1710,7 @@ export class BaseColumnChart implements IColumnChart {
 
             legendDataPoints.push({
                 color: dataPointColor,
-                icon: LegendIcon.Box,
+                markerShape: LegendIcon.circle,
                 label: formattedLabel,
                 category: data.categoryFormatter
                     ? data.categoryFormatter.format(category)

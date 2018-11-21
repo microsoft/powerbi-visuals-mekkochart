@@ -58,7 +58,7 @@
     "powerbi-models": "1.0.3",
     "powerbi-visuals-api": "^2.1.0",
     "powerbi-visuals-tools": "3.0.6",
-    "powerbi-visuals-utils-chartutils": "^2.1.0",
+    "powerbi-visuals-utils-chartutils": "^2.2.0",
     "powerbi-visuals-utils-colorutils": "^2.1.0",
     "powerbi-visuals-utils-dataviewutils": "^2.1.0",
     "powerbi-visuals-utils-formattingutils": "^4.1.0",

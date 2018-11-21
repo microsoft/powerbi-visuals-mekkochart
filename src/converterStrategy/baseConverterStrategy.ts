@@ -55,7 +55,7 @@ import {
 } from "./../dataInterfaces";
 
 // powerbi.extensibility.utils.chart
-import LegendIcon = legendInterfaces.LegendIcon;
+import LegendIcon = legendInterfaces.MarkerShape;
 import ILegendData = legendInterfaces.LegendData;
 
 // formattingUtils
@@ -267,7 +267,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     legend.push({
                         color,
                         label,
-                        icon: LegendIcon.Box,
+                        markerShape: LegendIcon.circle,
                         identity: selectionId,
                         selected: false,
                         valueSum: sum(<number[]>series.values),
