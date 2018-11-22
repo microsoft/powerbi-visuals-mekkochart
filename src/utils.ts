@@ -119,24 +119,23 @@ export function drawSeries(
     graphicsContext: Selection<any, any, any, any>,
     axisOptions: MekkoChartAxisOptions): Selection<any, MekkoChartSeries, any, any> {
 
-    let series: Selection<any, MekkoChartSeries, any, any> = graphicsContext
+    let seriesData: Selection<any, MekkoChartSeries, any, any> = graphicsContext
         .selectAll(MekkoChart.SeriesSelector.selectorName)
         .data(data.series, (series: MekkoChartSeries) => series.key);
 
-    series = series
+    let mergedSeries = seriesData
         .enter()
         .append("g")
         .classed(MekkoChart.SeriesSelector.className, true)
-        .merge(series)
-        .style(
-            "fill", (series: MekkoChartSeries) => series.color,
-    );
+        .merge(seriesData);
+    mergedSeries
+        .style("fill", (series: MekkoChartSeries) => series.color);
 
-    series
+    seriesData
         .exit()
         .remove();
 
-    return series;
+    return mergedSeries;
 }
 
 export function applyInteractivity(columns: Selection<any, any, any, any>, onDragStart): void {
