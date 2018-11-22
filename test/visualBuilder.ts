@@ -122,6 +122,14 @@ export class MekkoChartBuilder extends VisualBuilderBase<MekkoChart> {
             });
     }
 
+    public get columnsWithoutSize(): JQuery {
+        return this.series
+            .children("rect.column")
+            .filter((i, element: Element) => {
+                return parseFloat($(element).attr("height")) === 0;
+            });
+    }
+
     public get legendGroup(): JQuery {
         return this.rootElement
             .children(".legendParentDefault")

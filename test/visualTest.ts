@@ -737,7 +737,6 @@ describe("MekkoChart", () => {
     describe("Mekko chart label features:", () => {
         beforeEach(() => {
             dataView = defaultDataViewBuilder.getSpecificDataView();
-            debugger;
         });
 
         it("force display", (done) => {
@@ -847,24 +846,36 @@ describe("MekkoChart", () => {
     describe("Highlight test", () => {
         let dataLabels: JQuery<any>[];
         let columns: JQuery<any>[];
+        let columnsWithoutSize: JQuery<any>[];
         let dataViewWithHighLighted: DataView;
+        let highlightedColumnWithoutHeight: boolean = false;
 
         beforeAll(() => {
-            dataViewWithHighLighted = defaultDataViewBuilder.getDataView(undefined);
+            dataViewWithHighLighted = defaultDataViewBuilder.getDataView(undefined, true);
             visualBuilder.update(dataViewWithHighLighted);
-            debugger;
+
+            columns = visualBuilder.columnsWithSize.toArray().map($);
+            columnsWithoutSize = visualBuilder.columnsWithoutSize.toArray().map($);
         });
 
         it("bars rendering", (done) => {
             visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
-                columns = visualBuilder.columns.toArray().map($);
                 const allColumnsLength: number = columns.length;
                 let notHighligtedColumnsCount: number = 0;
+
+                columnsWithoutSize.forEach(column => {
+                    if (column.hasClass("highlight")) {
+                        highlightedColumnWithoutHeight = true;
+                        return;
+                    }
+                });
                 columns.forEach(column => {
-                    if (Number(column.css("fill-opacity")) === 1)
+                    if (Number(column.css("fill-opacity")) !== 1)
                         notHighligtedColumnsCount++;
                 });
-                expect(notHighligtedColumnsCount).toBe(allColumnsLength - 1);
+
+                const expectedNonHighlightedColumnsCount: number = highlightedColumnWithoutHeight ? allColumnsLength : allColumnsLength - 1;
+                expect(notHighligtedColumnsCount).toBe(expectedNonHighlightedColumnsCount);
                 done();
             });
         });
@@ -877,10 +888,17 @@ describe("MekkoChart", () => {
                 }
             };
             visualBuilder.update(dataViewWithHighLighted);
-
             visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
+                columnsWithoutSize.forEach(column => {
+                    if (column.hasClass("highlight")) {
+                        highlightedColumnWithoutHeight = true;
+                        return;
+                    }
+                });
                 dataLabels = visualBuilder.dataLabels.toArray().map($);
-                expect(dataLabels.length).toBe(1);
+
+                const expectedHighlightedDataLabelsCount: number = highlightedColumnWithoutHeight ? 0 : 1;
+                expect(dataLabels.length).toBe(expectedHighlightedDataLabelsCount);
                 done();
             });
         });

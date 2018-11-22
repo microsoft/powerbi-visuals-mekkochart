@@ -36,6 +36,7 @@ import { getRandomNumbers, getRandomNumber, testDataViewBuilder } from "powerbi-
 // powerbi.extensibility.utils.test
 import TestDataViewBuilder = testDataViewBuilder.TestDataViewBuilder;
 import { DataViewBuilderValuesColumnOptions } from "powerbi-visuals-utils-testutils/lib/dataViewBuilder/dataViewBuilder";
+import { Primitive } from "d3";
 
 export class MekkoChartData extends TestDataViewBuilder {
     private static DefaultFormat: string = "\"$\"#,##0;\\(\"$\"#,##0\\)";
@@ -48,7 +49,7 @@ export class MekkoChartData extends TestDataViewBuilder {
     public static ColumnY: string = "This Year Sales";
     public static ColumnWidth: string = "Sum Total Units This Year";
 
-    public static valuesCategorySeries: string[][] = [
+    public valuesCategorySeries: string[][] = [
         ["William", "DE"],
         ["James", "GA"],
         ["Harper", "KY"],
@@ -70,30 +71,14 @@ export class MekkoChartData extends TestDataViewBuilder {
     ];
 
     public valuesY: number[] = getRandomNumbers(
-        MekkoChartData.valuesCategorySeries.length,
+        this.valuesCategorySeries.length,
         MekkoChartData.MinValue,
         MekkoChartData.MaxValue);
 
     public valuesWidth: number[] = getRandomNumbers(
-        MekkoChartData.valuesCategorySeries.length,
+        this.valuesCategorySeries.length,
         MekkoChartData.MinValue,
         MekkoChartData.MaxValue);
-
-    public generateHightLightedValues(valuesArray: number[], hightlightedElementNumber?: number): number[] {
-        let array: number[] = [];
-        const lenght: number = valuesArray.length;
-        for (let i: number = 0; i < lenght; i++) {
-            array[i] = null;
-        }
-        if (!hightlightedElementNumber)
-            return array;
-        if (hightlightedElementNumber >= lenght || hightlightedElementNumber < 0) {
-            array[0] = valuesArray[0];
-        } else {
-            array[hightlightedElementNumber] = valuesArray[hightlightedElementNumber];
-        }
-        return array;
-    }
 
     // the data set with unique items in each category
     // one series value belongs to only one category
@@ -144,20 +129,14 @@ export class MekkoChartData extends TestDataViewBuilder {
             }
         ];
 
-        if (withHighLights) {
-            let highlightedElementNumber: number = Math.ceil(getRandomNumber(0, this.valuesY.length - 1));
-            columns[0].highlights = this.generateHightLightedValues(this.valuesY, highlightedElementNumber);
-            columns[1].highlights = this.generateHightLightedValues(this.valuesWidth, highlightedElementNumber);
-        }
-
-        return this.createCategoricalDataViewBuilder([
+        let dataView = this.createCategoricalDataViewBuilder([
             {
                 source: {
                     displayName: MekkoChartData.ColumnCategory,
                     roles: { Category: true },
                     type: ValueType.fromDescriptor({ extendedType: ExtendedType.Text })
                 },
-                values: MekkoChartData.valuesCategorySeries.map((values: string[]) => values[0])
+                values: this.valuesCategorySeries.map((values: string[]) => values[0])
             },
             {
                 isGroup: true,
@@ -166,9 +145,34 @@ export class MekkoChartData extends TestDataViewBuilder {
                     roles: { Series: true },
                     type: ValueType.fromDescriptor({ extendedType: ExtendedType.Text })
                 },
-                values: MekkoChartData.valuesCategorySeries.map((values: string[]) => values[1]),
+                values: this.valuesCategorySeries.map((values: string[]) => values[1]),
             }
         ], columns, columnNames).build();
+
+        if (withHighLights) {
+            const highlightedSeriesNumber: number = Math.ceil(getRandomNumber(0, dataView.categorical.values.length - 1));
+            const seriesLength: number = dataView.categorical.values[0].values.length;
+            const seriesCount: number = dataView.categorical.values.length;
+            const highlightedSeriesValues: Primitive[] = dataView.categorical.values[highlightedSeriesNumber].values;
+
+            let notNullableValuesIndexes: number[] = [];
+            for (let i = 0; i < seriesLength; i++) {
+                if (highlightedSeriesValues[i]) {
+                    notNullableValuesIndexes.push(i);
+                }
+            }
+
+            const highlightedElementNumber: number = notNullableValuesIndexes[Math.ceil(getRandomNumber(0, notNullableValuesIndexes.length - 1))];
+            for (let i = 0; i < seriesCount; i++) {
+                let highLights: Primitive[] = new Array(seriesLength).fill(null);
+                if (i === highlightedSeriesNumber) {
+                    highLights[highlightedElementNumber] = highlightedSeriesValues[highlightedElementNumber];
+                }
+                dataView.categorical.values[i].highlights = highLights;
+            }
+        }
+
+        return dataView;
     }
 
     public getSpecificDataView(columnNames?: string[]): powerbi.DataView {
