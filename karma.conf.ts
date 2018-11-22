@@ -51,7 +51,7 @@ module.exports = (config: Config) => {
             "coverage",
             "coverage-istanbul"
         ],
-        singleRun: false,
+        singleRun: true,
         plugins: [
             "karma-coverage",
             "karma-typescript",

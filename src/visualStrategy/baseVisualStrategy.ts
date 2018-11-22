@@ -612,8 +612,6 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .attr("x", layout.shapeBorder.x)
             .attr("y", layout.shapeBorder.y);
 
-
-
         borders
             .exit()
             .remove();
