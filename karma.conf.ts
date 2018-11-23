@@ -49,7 +49,12 @@ module.exports = (config: Config) => {
             "junit",
             "coverage-istanbul"
         ],
-        singleRun: false,
+        junitReporter: {
+            outputDir: path.join(__dirname, coverageFolder),
+            outputFile: "TESTS-report.xml",
+            useBrowserName: false
+        },
+        singleRun: true,
         plugins: [
             "karma-coverage",
             "karma-typescript",
