@@ -16,6 +16,14 @@ module.exports = {
                 loader: 'json-loader'
             },
             {
+                test: /\.tsx?$/i,
+                enforce: 'post',
+                include: /(src)/,
+                exclude: /(node_modules|resources\/js\/vendor)/,
+                loader: 'istanbul-instrumenter-loader',
+                options: { esModules: true }
+            },
+            {
                 test: /\.less$/,
                 use: [
                     {
