@@ -25,16 +25,16 @@
 */
 
 import powerbi from "powerbi-visuals-api";
-import { interactivityService } from "powerbi-visuals-utils-interactivityutils";
+import { interactivitySelectionService, interactivityBaseService } from "powerbi-visuals-utils-interactivityutils";
 import { Selection } from "d3-selection";
 import { MekkoChartAxisOptions } from "./../dataInterfaces";
 
 // powerbi.extensibility.utils.interactivity
-import SelectableDataPoint = interactivityService.SelectableDataPoint;
+import SelectionDataPoint = interactivitySelectionService.SelectableDataPoint;
+import IBehaviorOptions = interactivityBaseService.IBehaviorOptions;
 import IViewport = powerbi.IViewport;
 
-export interface VisualBehaviorOptions {
-    dataPoints: SelectableDataPoint[];
+export interface VisualBehaviorOptions extends IBehaviorOptions<SelectionDataPoint> {
     bars: Selection<any, any, any, any>;
     eventGroup: Selection<any, any, any, any>;
     mainGraphicsContext: Selection<any, any, any, any>;

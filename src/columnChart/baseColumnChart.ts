@@ -40,10 +40,10 @@ import DataViewObjects = dataViewObjects.DataViewObjects;
 
 import {
     IMargin,
-    CssConstants,
-
+    CssConstants
 }
-    from "powerbi-visuals-utils-svgutils";
+from "powerbi-visuals-utils-svgutils";
+
 import {
     axis as AxisHelper,
     axisInterfaces,
@@ -51,7 +51,7 @@ import {
     dataLabelUtils,
     dataLabelInterfaces
 }
-    from "powerbi-visuals-utils-chartutils";
+from "powerbi-visuals-utils-chartutils";
 
 import {
     prototype as Prototype,
@@ -59,16 +59,19 @@ import {
     enumExtensions,
     arrayExtensions
 }
-    from "powerbi-visuals-utils-typeutils";
+from "powerbi-visuals-utils-typeutils";
+
 import {
-    interactivityService
+    interactivitySelectionService,
+    interactivityBaseService
 }
-    from "powerbi-visuals-utils-interactivityutils";
+from "powerbi-visuals-utils-interactivityutils";
+
 import {
     valueFormatter as vf,
     displayUnitSystemType
 }
-    from "powerbi-visuals-utils-formattingutils";
+from "powerbi-visuals-utils-formattingutils";
 
 import {
     TooltipEventArgs,
@@ -76,7 +79,7 @@ import {
     TooltipEnabledDataPoint,
     createTooltipServiceWrapper
 }
-    from "powerbi-visuals-utils-tooltiputils";
+from "powerbi-visuals-utils-tooltiputils";
 
 import {
     MekkoColumnChartData,
@@ -106,7 +109,8 @@ import {
     MekkoColumnChartContext,
     MekkoChartBaseData,
     MekkoChartConstructorBaseOptions
-} from "./../dataInterfaces";
+}
+from "./../dataInterfaces";
 
 import * as axisUtils from "./../axis/utils";
 
@@ -173,7 +177,10 @@ import LegendIcon = legendInterfaces.MarkerShape;
 import ILegendData = legendInterfaces.LegendData;
 import LegendDataPoint = legendInterfaces.LegendDataPoint;
 import DataLabelObject = dataLabelInterfaces.DataLabelObject;
-import IInteractivityService = interactivityService.IInteractivityService;
+import IInteractivityServiceCommon = interactivityBaseService.IInteractivityService;
+import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
+
+type IInteractivityService = IInteractivityServiceCommon<SelectableDataPoint>;
 
 // powerbi.extensibility.utils.formatting
 import valueFormatter = vf.valueFormatter;
@@ -822,6 +829,7 @@ export class BaseColumnChart implements IColumnChart {
                 identity: legendItem.identity as ISelectionId,
                 color: legendItem.color,
                 labelSettings: seriesLabelSettings,
+                selected: false
             };
 
             if (seriesCount > 1) {
@@ -1748,8 +1756,8 @@ export class BaseColumnChart implements IColumnChart {
                 return tooltipEvent.data.tooltipInfo;
             });
 
-        let dataPoints: MekkoChartColumnDataPoint[] = [],
-            behaviorOptions: VisualBehaviorOptions = undefined;
+        let dataPoints: MekkoChartColumnDataPoint[] = [];
+        let behaviorOptions: VisualBehaviorOptions = undefined;
 
         if (this.interactivityService) {
             for (let dataPointIndex: number = 0; dataPointIndex < data.series.length; dataPointIndex++) {
@@ -1764,7 +1772,8 @@ export class BaseColumnChart implements IColumnChart {
                 mainGraphicsContext: this.mainGraphicsContext,
                 viewport: chartDrawInfo.viewport,
                 axisOptions: chartDrawInfo.axisOptions,
-                showLabel: data.labelSettings.show
+                showLabel: data.labelSettings.show,
+                behavior: null
             };
         }
 

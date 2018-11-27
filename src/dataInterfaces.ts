@@ -56,9 +56,10 @@ import {
 
 
 import {
-    interactivityService
+    interactivitySelectionService,
+    interactivityBaseService
 }
-    from "powerbi-visuals-utils-interactivityutils";
+from "powerbi-visuals-utils-interactivityutils";
 
 import { MekkoVisualChartType } from "./visualChartType";
 
@@ -82,13 +83,15 @@ import ILegendData = legendInterfaces.LegendData;
 import IAxisProperties = axisInterfaces.IAxisProperties;
 import LegendDataPoint = legendInterfaces.LegendDataPoint;
 import CreateAxisOptionsBase = axisInterfaces.CreateAxisOptions;
-import IInteractivityService = interactivityService.IInteractivityService;
+import IInteractivityServiceCommon = interactivityBaseService.IInteractivityService;
 import LabelEnabledDataPoint = dataLabelInterfaces.LabelEnabledDataPoint;
 import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
 import ILegend = legendInterfaces.ILegend;
 
 // powerbi.extensibility.utils.interactivity
-import SelectableDataPoint = interactivityService.SelectableDataPoint;
+import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
+
+type IInteractivityService = IInteractivityServiceCommon<SelectableDataPoint>;
 
 // powerbi.extensibility.utils.tooltip
 
@@ -159,7 +162,7 @@ export interface MekkoChartDataPoint {
     highlight?: boolean;
 }
 
-export interface MekkoChartBaseSeries {
+export interface MekkoChartBaseSeries extends SelectableDataPoint {
     data: MekkoChartDataPoint[];
 }
 
