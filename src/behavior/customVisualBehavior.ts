@@ -23,14 +23,16 @@
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
+// powerbi.extensibility.utils.interactivity
 import {
-    interactivityService,
+    interactivityBaseService
 } from "powerbi-visuals-utils-interactivityutils";
+
+import IInteractiveBehavior = interactivityBaseService.IInteractiveBehavior;
 
 import { CustomVisualBehaviorOptions } from "./customVisualBehaviorOptions";
 
-import ISelectionHandler = interactivityService.ISelectionHandler;
-import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
+import ISelectionHandler = interactivityBaseService.ISelectionHandler;
 
 export class CustomVisualBehavior implements IInteractiveBehavior {
     private behaviors: IInteractiveBehavior[];

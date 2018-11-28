@@ -139,14 +139,17 @@ import createClassAndSelector = CssConstants.createClassAndSelector;
 
 // powerbi.extensibility.utils.interactivity
 import {
-    interactivityService
+    interactivityBaseService,
+    interactivitySelectionService as interactivityService
 } from "powerbi-visuals-utils-interactivityutils";
 
-import appendClearCatcher = interactivityService.appendClearCatcher;
+import appendClearCatcher = interactivityBaseService.appendClearCatcher;
 import SelectableDataPoint = interactivityService.SelectableDataPoint;
-import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
-import IInteractivityService = interactivityService.IInteractivityService;
-import createInteractivityService = interactivityService.createInteractivityService;
+import IInteractiveBehavior = interactivityBaseService.IInteractiveBehavior;
+import IInteractivityServiceCommon = interactivityBaseService.IInteractivityService;
+import createInteractivityService = interactivityService.createInteractivitySelectionService;
+
+type IInteractivityService = IInteractivityServiceCommon<SelectableDataPoint>;
 
 // powerbi.extensibility.utils.formatting
 import {
@@ -2531,12 +2534,11 @@ export class MekkoChart implements IVisual {
                 const behaviorOptions: CustomVisualBehaviorOptions = {
                     layerOptions: layerBehaviorOptions,
                     clearCatcher: this.clearCatcher,
+                    dataPoints: dataPoints,
+                    behavior: this.behavior,
                 };
 
-                this.interactivityService.bind(
-                    dataPoints,
-                    this.behavior,
-                    behaviorOptions);
+                this.interactivityService.bind(behaviorOptions);
             }
         }
     }

@@ -25,7 +25,8 @@
 */
 
 import {
-    interactivityService,
+    interactivitySelectionService,
+    interactivityBaseService
 } from "powerbi-visuals-utils-interactivityutils";
 import { Selection, select } from "d3-selection";
 import { MekkoChartColumnDataPoint } from "./../dataInterfaces";
@@ -36,9 +37,9 @@ import * as utils from "./../utils";
 
 
 // powerbi.extensibility.utils.interactivity
-import ISelectionHandler = interactivityService.ISelectionHandler;
-import IInteractiveBehavior = interactivityService.IInteractiveBehavior;
-import SelectableDataPoint = interactivityService.SelectableDataPoint;
+import ISelectionHandler = interactivityBaseService.ISelectionHandler;
+import IInteractiveBehavior = interactivityBaseService.IInteractiveBehavior;
+import SelectionDataPoint = interactivitySelectionService.SelectableDataPoint;
 
 const getEvent = () => require("d3-selection").event;
 
@@ -54,7 +55,7 @@ export class VisualBehavior implements IInteractiveBehavior {
         const eventGroup: Selection<any, any, any, any> = options.eventGroup;
 
         eventGroup.on("click", function () {
-            const dataOfTheLastEvent: SelectableDataPoint = VisualBehavior.getDatumForLastInputEvent();
+            const dataOfTheLastEvent: SelectionDataPoint = VisualBehavior.getDatumForLastInputEvent();
 
             selectionHandler.handleSelection(
                 dataOfTheLastEvent,
@@ -82,7 +83,7 @@ export class VisualBehavior implements IInteractiveBehavior {
         });
     }
 
-    private static getDatumForLastInputEvent(): SelectableDataPoint {
+    private static getDatumForLastInputEvent(): SelectionDataPoint {
         const target: EventTarget = (getEvent() as MouseEvent).target;
         return select((<any>target)).datum() as any;
     }

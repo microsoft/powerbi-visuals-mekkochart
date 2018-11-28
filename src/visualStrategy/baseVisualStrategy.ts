@@ -41,7 +41,8 @@ import {
     from "powerbi-visuals-utils-svgutils";
 
 import {
-    interactivityService,
+    interactivityBaseService,
+    interactivitySelectionService,
 }
     from "powerbi-visuals-utils-interactivityutils";
 
@@ -99,7 +100,7 @@ import IColumnFormatterCacheManager = dataLabelInterfaces.IColumnFormatterCacheM
 import createColumnFormatterCacheManager = dataLabelUtils.createColumnFormatterCacheManager;
 
 // powerbi.extensibility.utils.interactivity
-import IInteractivityService = interactivityService.IInteractivityService;
+import IInteractivityService = interactivityBaseService.IInteractivityService;
 
 // powerbi.extensibility.utils.formatting
 import valueFormatter = vf.valueFormatter;
@@ -109,6 +110,7 @@ import IValueFormatter = vf.IValueFormatter;
 import ValueType = valueType.ValueType;
 
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
+import SelectionDataPoint = interactivitySelectionService.SelectableDataPoint;
 
 interface LayoutFunction {
     (dataPoint: MekkoChartColumnDataPoint): number;
@@ -145,7 +147,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
     private columnsCenters: number[];
     private columnSelectionLineHandle: Selection<any, any, any, any>;
 
-    private interactivityService: IInteractivityService;
+    private interactivityService: IInteractivityService<SelectionDataPoint>;
     private viewportHeight: number;
 
     private static validLabelPositions = [1];

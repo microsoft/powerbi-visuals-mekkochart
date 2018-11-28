@@ -27,7 +27,18 @@
 // d3
 import Selection = d3.Selection;
 
-export interface CustomVisualBehaviorOptions {
+// powerbi.extensibility.utils.interactivity
+import {
+    interactivityBaseService,
+    interactivitySelectionService as interactivityService
+} from "powerbi-visuals-utils-interactivityutils";
+
+import SelectableDataPoint = interactivityService.SelectableDataPoint;
+import IBehaviorOptionsCommon = interactivityBaseService.IBehaviorOptions;
+
+type IBehaviorOptions = IBehaviorOptionsCommon<SelectableDataPoint>;
+
+export interface CustomVisualBehaviorOptions extends IBehaviorOptions {
     layerOptions: any[];
     clearCatcher: Selection<any, any, any, any>;
 }
