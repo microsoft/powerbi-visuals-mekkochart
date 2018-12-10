@@ -224,7 +224,7 @@ describe("MekkoChart", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.xAxisLabel).not.toBeInDOM();
+                expect(visualBuilder.xAxisLabel[0]).not.toBeInDOM();
                 done();
             }, 300);
         });
@@ -334,7 +334,7 @@ describe("MekkoChart", () => {
 
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.dataLabels).not.toBeInDOM();
+                expect(visualBuilder.dataLabels[0]).not.toBeInDOM();
             });
 
             it("color", () => {
@@ -389,7 +389,7 @@ describe("MekkoChart", () => {
                 (dataView.metadata.objects as any).categoryAxis.show = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.xAxisTicks).not.toBeInDOM();
+                expect(visualBuilder.xAxisTicks[0]).not.toBeInDOM();
             });
 
             it("show title", () => {
@@ -401,7 +401,7 @@ describe("MekkoChart", () => {
                 (dataView.metadata.objects as any).categoryAxis.showAxisTitle = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.xAxisLabel).not.toBeInDOM();
+                expect(visualBuilder.xAxisLabel[0]).not.toBeInDOM();
             });
 
             it("color", () => {
@@ -436,7 +436,7 @@ describe("MekkoChart", () => {
                 (dataView.metadata.objects as any).valueAxis.show = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.yAxisTicks).not.toBeInDOM();
+                expect(visualBuilder.yAxisTicks[0]).not.toBeInDOM();
             });
 
             it("show title", () => {
@@ -447,7 +447,7 @@ describe("MekkoChart", () => {
 
                 (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    expect(visualBuilder.yAxisLabel).not.toBeInDOM();
+                    expect(visualBuilder.yAxisLabel[0]).not.toBeInDOM();
                 });
             });
 
@@ -850,7 +850,7 @@ describe("MekkoChart", () => {
         let dataViewWithHighLighted: DataView;
         let highlightedColumnWithoutHeight: boolean = false;
 
-        beforeAll(() => {
+        beforeEach(() => {
             dataViewWithHighLighted = defaultDataViewBuilder.getDataView(undefined, true);
             visualBuilder.update(dataViewWithHighLighted);
 

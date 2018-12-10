@@ -1,9 +1,9 @@
-## 3.0.1
+## 3.1.0
 * Fix selection rendering issue
 * Fix rendering of filtered series
-* Update powerbi-visuals-tools to 3.0.1
+* Update powerbi-visuals-tools to 3.0.7
 * Azure Pipelines integration
-* Visual packages and powerbi utils update 
+* Visual packages and powerbi utils update
 
 ## 3.0.0
 * powerbi-visuals-tools@3.0.1 based visual

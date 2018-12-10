@@ -40,6 +40,7 @@ import { Config, ConfigOptions } from "karma";
 
 module.exports = (config: Config) => {
     config.set(<ConfigOptions>{
+        mode: "development",
         browserNoActivityTimeout: 100000,
         browsers: ["ChromeHeadless"],
         colors: true,
