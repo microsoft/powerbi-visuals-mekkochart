@@ -438,15 +438,13 @@ describe("MekkoChart", () => {
             });
 
             it("show title", () => {
+                (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
+                visualBuilder.updateFlushAllD3Transitions(dataView);
+                expect(visualBuilder.yAxisLabel[0]).not.toBeInDOM();
+
                 (dataView.metadata.objects as any).valueAxis.showAxisTitle = true;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
-
                 expect(visualBuilder.yAxisLabel[0]).toBeInDOM();
-
-                (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    expect(visualBuilder.yAxisLabel[0]).not.toBeInDOM();
-                });
             });
 
             it("color", () => {
