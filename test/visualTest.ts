@@ -97,11 +97,11 @@ describe("MekkoChart", () => {
 
         it("update", (done) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.categoriesAxis).toBeInDOM();
+                expect(visualBuilder.categoriesAxis[0]).toBeInDOM();
                 expect(visualBuilder.categoriesAxis.children("g.tick").length)
                     .toBe(dataView.categorical.categories[0].values.length);
 
-                expect(visualBuilder.columnElement).toBeInDOM();
+                expect(visualBuilder.columnElement[0]).toBeInDOM();
 
                 let series: JQuery = visualBuilder.columnElement.children("g.series"),
                     grouped: DataViewValueColumnGroup[] = dataView.categorical.values.grouped();
@@ -328,12 +328,11 @@ describe("MekkoChart", () => {
             it("show", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.dataLabels).toBeInDOM();
+                expect(visualBuilder.dataLabels[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).labels.show = false;
 
                 visualBuilder.updateFlushAllD3Transitions(dataView);
-
                 expect(visualBuilder.dataLabels[0]).not.toBeInDOM();
             });
 
@@ -363,12 +362,12 @@ describe("MekkoChart", () => {
             it("show", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.legendGroup.children()).toBeInDOM();
+                expect(visualBuilder.legendGroup.children()[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).legend.show = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.legendGroup.children()).not.toBeInDOM();
+                expect(visualBuilder.legendGroup.children()[0]).not.toBeInDOM();
             });
         });
 
@@ -384,19 +383,18 @@ describe("MekkoChart", () => {
             it("show", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.xAxisTicks).toBeInDOM();
+                expect(visualBuilder.xAxisTicks[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).categoryAxis.show = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
-
-                expect(visualBuilder.xAxisTicks[0]).not.toBeInDOM();
+                expect(visualBuilder.xAxisTicks[0]).toBeUndefined();
             });
 
             it("show title", () => {
                 (dataView.metadata.objects as any).categoryAxis.showAxisTitle = true;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.xAxisLabel).toBeInDOM();
+                expect(visualBuilder.xAxisLabel[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).categoryAxis.showAxisTitle = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
@@ -431,7 +429,7 @@ describe("MekkoChart", () => {
             it("show", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.yAxisTicks).toBeInDOM();
+                expect(visualBuilder.yAxisTicks[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).valueAxis.show = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
@@ -443,7 +441,7 @@ describe("MekkoChart", () => {
                 (dataView.metadata.objects as any).valueAxis.showAxisTitle = true;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.yAxisLabel).toBeInDOM();
+                expect(visualBuilder.yAxisLabel[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
                 visualBuilder.updateRenderTimeout(dataView, () => {
@@ -680,7 +678,7 @@ describe("MekkoChart", () => {
 
             array = _.sortBy(array, "data");
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.legendGroup).toBeInDOM();
+                expect(visualBuilder.legendGroup[0]).toBeInDOM();
                 array.forEach((element, index) => {
                     let textElements = visualBuilder.legendGroup.children("g").children("text");
                     expect(element.key).toEqual(textElements[index].textContent);
@@ -709,7 +707,7 @@ describe("MekkoChart", () => {
             }
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.categoryLegendGroup).toBeInDOM();
+                expect(visualBuilder.categoryLegendGroup[0]).toBeInDOM();
                 expect(visualBuilder.categoryLegendGroup.length).toEqual(dataView.categorical.categories[0].values.length);
 
                 let mappedCategoryLegendGroup: JQuery<CategoryLegendDom> = visualBuilder.categoryLegendGroup.map((index, clg) => {
