@@ -97,11 +97,11 @@ describe("MekkoChart", () => {
 
         it("update", (done) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.categoriesAxis).toBeInDOM();
+                expect(visualBuilder.categoriesAxis[0]).toBeInDOM();
                 expect(visualBuilder.categoriesAxis.children("g.tick").length)
                     .toBe(dataView.categorical.categories[0].values.length);
 
-                expect(visualBuilder.columnElement).toBeInDOM();
+                expect(visualBuilder.columnElement[0]).toBeInDOM();
 
                 let series: JQuery = visualBuilder.columnElement.children("g.series"),
                     grouped: DataViewValueColumnGroup[] = dataView.categorical.values.grouped();
@@ -152,42 +152,42 @@ describe("MekkoChart", () => {
         it("visual is hidden when chart height is less than minimum height", (done) => {
             visualBuilder.viewport = {
                 height: 49,
-                    width: 350
-                };
-
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
-                    expect(visualBuilder.mainElement[0]).toHaveCss({ display: "none" });
-
-                    done();
-                });
-            });
-
-            it("visual is visible when chart height is great or equal minimum height", (done) => {
-                visualBuilder.viewport = {
-                    height: 80,
-                    width: 350
-                };
-
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "block" });
-                    expect(visualBuilder.mainElement[0]).toHaveCss({ display: "block" });
-
-                    done();
-                }, 300);
-            });
-
-            it("visual is hidden when chart height greater than minimum height because of rotation", (done) => {
-                visualBuilder.viewport = {
-                    height: 90,
                 width: 350
             };
 
-                dataView.metadata.objects = {
-                    xAxisLabels: {
-                        enableRotataion: true
-                    }
-                };
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
+                expect(visualBuilder.mainElement[0]).toHaveCss({ display: "none" });
+
+                done();
+            });
+        });
+
+        it("visual is visible when chart height is great or equal minimum height", (done) => {
+            visualBuilder.viewport = {
+                height: 80,
+                width: 350
+            };
+
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "block" });
+                expect(visualBuilder.mainElement[0]).toHaveCss({ display: "block" });
+
+                done();
+            }, 300);
+        });
+
+        it("visual is hidden when chart height greater than minimum height because of rotation", (done) => {
+            visualBuilder.viewport = {
+                height: 90,
+                width: 350
+            };
+
+            dataView.metadata.objects = {
+                xAxisLabels: {
+                    enableRotataion: true
+                }
+            };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
                 expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
@@ -224,7 +224,7 @@ describe("MekkoChart", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.xAxisLabel).not.toBeInDOM();
+                expect(visualBuilder.xAxisLabel[0]).not.toBeInDOM();
                 done();
             }, 300);
         });
@@ -328,13 +328,12 @@ describe("MekkoChart", () => {
             it("show", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.dataLabels).toBeInDOM();
+                expect(visualBuilder.dataLabels[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).labels.show = false;
 
                 visualBuilder.updateFlushAllD3Transitions(dataView);
-
-                expect(visualBuilder.dataLabels).not.toBeInDOM();
+                expect(visualBuilder.dataLabels[0]).not.toBeInDOM();
             });
 
             it("color", () => {
@@ -363,12 +362,12 @@ describe("MekkoChart", () => {
             it("show", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.legendGroup.children()).toBeInDOM();
+                expect(visualBuilder.legendGroup.children()[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).legend.show = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.legendGroup.children()).not.toBeInDOM();
+                expect(visualBuilder.legendGroup.children()[0]).not.toBeInDOM();
             });
         });
 
@@ -384,24 +383,23 @@ describe("MekkoChart", () => {
             it("show", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.xAxisTicks).toBeInDOM();
+                expect(visualBuilder.xAxisTicks[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).categoryAxis.show = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
-
-                expect(visualBuilder.xAxisTicks).not.toBeInDOM();
+                expect(visualBuilder.xAxisTicks[0]).toBeUndefined();
             });
 
             it("show title", () => {
                 (dataView.metadata.objects as any).categoryAxis.showAxisTitle = true;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.xAxisLabel).toBeInDOM();
+                expect(visualBuilder.xAxisLabel[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).categoryAxis.showAxisTitle = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.xAxisLabel).not.toBeInDOM();
+                expect(visualBuilder.xAxisLabel[0]).not.toBeInDOM();
             });
 
             it("color", () => {
@@ -431,24 +429,22 @@ describe("MekkoChart", () => {
             it("show", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.yAxisTicks).toBeInDOM();
+                expect(visualBuilder.yAxisTicks[0]).toBeInDOM();
 
                 (dataView.metadata.objects as any).valueAxis.show = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(visualBuilder.yAxisTicks).not.toBeInDOM();
+                expect(visualBuilder.yAxisTicks[0]).not.toBeInDOM();
             });
 
             it("show title", () => {
+                (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
+                visualBuilder.updateFlushAllD3Transitions(dataView);
+                expect(visualBuilder.yAxisLabel[0]).not.toBeInDOM();
+
                 (dataView.metadata.objects as any).valueAxis.showAxisTitle = true;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
-
-                expect(visualBuilder.yAxisLabel).toBeInDOM();
-
-                (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    expect(visualBuilder.yAxisLabel).not.toBeInDOM();
-                });
+                expect(visualBuilder.yAxisLabel[0]).toBeInDOM();
             });
 
             it("color", () => {
@@ -680,7 +676,7 @@ describe("MekkoChart", () => {
 
             array = _.sortBy(array, "data");
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.legendGroup).toBeInDOM();
+                expect(visualBuilder.legendGroup[0]).toBeInDOM();
                 array.forEach((element, index) => {
                     let textElements = visualBuilder.legendGroup.children("g").children("text");
                     expect(element.key).toEqual(textElements[index].textContent);
@@ -709,10 +705,10 @@ describe("MekkoChart", () => {
             }
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.categoryLegendGroup).toBeInDOM();
+                expect(visualBuilder.categoryLegendGroup[0]).toBeInDOM();
                 expect(visualBuilder.categoryLegendGroup.length).toEqual(dataView.categorical.categories[0].values.length);
 
-                let mappedCategoryLegendGroup: JQuery = visualBuilder.categoryLegendGroup.map((index, clg) => {
+                let mappedCategoryLegendGroup: JQuery<CategoryLegendDom> = visualBuilder.categoryLegendGroup.map((index, clg) => {
                     return <CategoryLegendDom>{
                         position: clg.parentElement.parentElement.style.top.replace("px", ""),
                         dom: clg
@@ -840,6 +836,69 @@ describe("MekkoChart", () => {
                 });
                 done();
             }, 300);
+        });
+    });
+
+    describe("Highlight test", () => {
+        let dataLabels: JQuery<any>[];
+        let columns: JQuery<any>[];
+        let columnsWithoutSize: JQuery<any>[];
+        let dataViewWithHighLighted: DataView;
+        let highlightedColumnWithoutHeight: boolean = false;
+
+        beforeEach(() => {
+            dataViewWithHighLighted = defaultDataViewBuilder.getDataView(undefined, true);
+            visualBuilder.update(dataViewWithHighLighted);
+
+            columns = visualBuilder.columnsWithSize.toArray().map($);
+            columnsWithoutSize = visualBuilder.columnsWithoutSize.toArray().map($);
+        });
+
+        it("bars rendering", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
+                const allColumnsLength: number = columns.length;
+                let notHighligtedColumnsCount: number = 0;
+
+                columnsWithoutSize.forEach(column => {
+                    if (column.hasClass("highlight")) {
+                        highlightedColumnWithoutHeight = true;
+                        return;
+                    }
+                });
+                columns.forEach(column => {
+                    if (Number(column.css("fill-opacity")) !== 1)
+                        notHighligtedColumnsCount++;
+                });
+
+                const expectedNonHighlightedColumnsCount: number = highlightedColumnWithoutHeight ? allColumnsLength : allColumnsLength - 1;
+                // for data with tiny values
+                expect(notHighligtedColumnsCount).toBeLessThanOrEqual(expectedNonHighlightedColumnsCount);
+                done();
+            });
+        });
+
+        it("labels rendering", (done) => {
+            dataViewWithHighLighted.metadata.objects = {
+                labels: {
+                    show: true,
+                    forceDisplay: true
+                }
+            };
+            visualBuilder.update(dataViewWithHighLighted);
+            visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
+                columnsWithoutSize.forEach(column => {
+                    if (column.hasClass("highlight")) {
+                        highlightedColumnWithoutHeight = true;
+                        return;
+                    }
+                });
+                dataLabels = visualBuilder.dataLabels.toArray().map($);
+
+                const expectedHighlightedDataLabelsCount: number = highlightedColumnWithoutHeight ? 0 : 1;
+                // for data with tiny values
+                expect(dataLabels.length).toBeGreaterThanOrEqual(expectedHighlightedDataLabelsCount);
+                done();
+            });
         });
     });
 });

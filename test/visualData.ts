@@ -31,10 +31,12 @@ import { valueType } from "powerbi-visuals-utils-typeutils";
 import ValueType = valueType.ValueType;
 import ExtendedType = valueType.ExtendedType;
 
-import { getRandomNumbers, testDataViewBuilder } from "powerbi-visuals-utils-testutils";
+import { getRandomNumbers, getRandomNumber, testDataViewBuilder } from "powerbi-visuals-utils-testutils";
 
 // powerbi.extensibility.utils.test
 import TestDataViewBuilder = testDataViewBuilder.TestDataViewBuilder;
+import { DataViewBuilderValuesColumnOptions } from "powerbi-visuals-utils-testutils/lib/dataViewBuilder/dataViewBuilder";
+import { Primitive } from "d3";
 
 export class MekkoChartData extends TestDataViewBuilder {
     private static DefaultFormat: string = "\"$\"#,##0;\\(\"$\"#,##0\\)";
@@ -102,8 +104,32 @@ export class MekkoChartData extends TestDataViewBuilder {
         MekkoChartData.MinValue,
         MekkoChartData.MaxValue);
 
-    public getDataView(columnNames?: string[]): powerbi.DataView {
-        return this.createCategoricalDataViewBuilder([
+    public getDataView(columnNames?: string[], withHighLights: boolean = false): powerbi.DataView {
+
+        let columns: DataViewBuilderValuesColumnOptions[] = [
+            {
+                source: {
+                    displayName: MekkoChartData.ColumnY,
+                    format: MekkoChartData.DefaultFormat,
+                    roles: { Y: true },
+                    isMeasure: true,
+                    type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
+                },
+                values: this.valuesY
+            },
+            {
+                source: {
+                    displayName: MekkoChartData.ColumnWidth,
+                    format: MekkoChartData.DefaultFormat,
+                    roles: { Width: true },
+                    isMeasure: true,
+                    type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
+                },
+                values: this.valuesWidth
+            }
+        ];
+
+        let dataView = this.createCategoricalDataViewBuilder([
             {
                 source: {
                     displayName: MekkoChartData.ColumnCategory,
@@ -121,27 +147,32 @@ export class MekkoChartData extends TestDataViewBuilder {
                 },
                 values: this.valuesCategorySeries.map((values: string[]) => values[1]),
             }
-        ], [
-                {
-                    source: {
-                        displayName: MekkoChartData.ColumnY,
-                        format: MekkoChartData.DefaultFormat,
-                        roles: { Y: true },
-                        isMeasure: true,
-                        type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
-                    },
-                    values: this.valuesY
-                },
-                {
-                    source: {
-                        displayName: MekkoChartData.ColumnWidth,
-                        format: MekkoChartData.DefaultFormat,
-                        roles: { Width: true },
-                        isMeasure: true,
-                        type: ValueType.fromDescriptor({ extendedType: ExtendedType.Numeric })
-                    },
-                    values: this.valuesWidth
-                }], columnNames).build();
+        ], columns, columnNames).build();
+
+        if (withHighLights) {
+            const highlightedSeriesNumber: number = Math.ceil(getRandomNumber(0, dataView.categorical.values.length - 1));
+            const seriesLength: number = dataView.categorical.values[0].values.length;
+            const seriesCount: number = dataView.categorical.values.length;
+            const highlightedSeriesValues: Primitive[] = dataView.categorical.values[highlightedSeriesNumber].values;
+
+            let notNullableValuesIndexes: number[] = [];
+            for (let i = 0; i < seriesLength; i++) {
+                if (highlightedSeriesValues[i]) {
+                    notNullableValuesIndexes.push(i);
+                }
+            }
+
+            const highlightedElementNumber: number = notNullableValuesIndexes[Math.ceil(getRandomNumber(0, notNullableValuesIndexes.length - 1))];
+            for (let i = 0; i < seriesCount; i++) {
+                let highLights: Primitive[] = new Array(seriesLength).fill(null);
+                if (i === highlightedSeriesNumber) {
+                    highLights[highlightedElementNumber] = highlightedSeriesValues[highlightedElementNumber];
+                }
+                dataView.categorical.values[i].highlights = highLights;
+            }
+        }
+
+        return dataView;
     }
 
     public getSpecificDataView(columnNames?: string[]): powerbi.DataView {

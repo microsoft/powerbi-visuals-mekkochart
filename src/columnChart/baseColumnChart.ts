@@ -1833,4 +1833,3 @@ export function createBaseColumnChartLayer(
 
     return new BaseColumnChart(options);
 }
-
