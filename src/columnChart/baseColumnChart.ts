@@ -36,8 +36,6 @@ import {
 
 import converterHelper = ch.converterHelper;
 
-import DataViewObjects = dataViewObjects.DataViewObjects;
-
 import {
     IMargin,
     CssConstants
@@ -149,7 +147,7 @@ import DataViewCategorical = powerbi.DataViewCategorical;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewMetadata = powerbi.DataViewMetadata;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
-import DataRepetitionSelector = powerbi.data.DataRepetitionSelector;
+import CustomVisualOpaqueIdentity = powerbi.visuals.CustomVisualOpaqueIdentity;
 import PrimitiveValue = powerbi.PrimitiveValue;
 import DataViewValueColumn = powerbi.DataViewValueColumn;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
@@ -370,7 +368,7 @@ export class BaseColumnChart implements IColumnChart {
             categories: PrimitiveValue[] = firstCategory
                 ? firstCategory.values
                 : [],
-            categoryIdentities: DataRepetitionSelector[] = firstCategory
+            categoryIdentities: CustomVisualOpaqueIdentity[] = firstCategory
                 ? firstCategory.identity
                 : [],
             categoryMetadata: DataViewMetadataColumn = firstCategory
@@ -398,11 +396,11 @@ export class BaseColumnChart implements IColumnChart {
         if (dataViewMetadata && dataViewMetadata.objects) {
             const objects: powerbi.DataViewObjects = dataViewMetadata.objects;
 
-            defaultDataPointColor = DataViewObjects.getFillColor(
+            defaultDataPointColor = dataViewObjects.getFillColor(
                 objects,
                 MekkoChart.Properties["dataPoint"]["defaultColor"]);
 
-            showAllDataPoints = DataViewObjects.getValue<boolean>(
+            showAllDataPoints = dataViewObjects.getValue<boolean>(
                 objects,
                 MekkoChart.Properties["dataPoint"]["showAllDataPoints"]);
 
@@ -630,7 +628,7 @@ export class BaseColumnChart implements IColumnChart {
         visualHost: IVisualHost,
         dataViewCat: DataViewCategorical,
         categories: any[],
-        categoryIdentities: DataRepetitionSelector[],
+        categoryIdentities: CustomVisualOpaqueIdentity[],
         legend: MekkoLegendDataPoint[],
         seriesObjectsList: powerbi.DataViewObjects[][],
         converterStrategy: BaseConverterStrategy,
@@ -1134,7 +1132,7 @@ export class BaseColumnChart implements IColumnChart {
         dataPointObjects?: powerbi.DataViewObjects[]): string {
 
         if (dataPointObjects) {
-            let colorOverride: string = DataViewObjects.getFillColor(
+            let colorOverride: string = dataViewObjects.getFillColor(
                 dataPointObjects[categoryIndex],
                 MekkoChart.Properties["dataPoint"]["fill"]);
 

@@ -95,9 +95,6 @@ import {
 }
     from "powerbi-visuals-utils-dataviewutils";
 
-import DataViewObject = dataViewObject.DataViewObject;
-import DataViewObjects = dataViewObjects.DataViewObjects;
-
 import { max, sum } from "d3-array";
 import { select } from "d3-selection";
 import { brushX, BrushBehavior } from "d3-brush";
@@ -777,7 +774,7 @@ export class MekkoChart implements IVisual {
         propertyId: DataViewObjectPropertyIdentifier,
         type: ValueType): boolean {
 
-        const axisTypeValue: any = DataViewObjects.getValue(objects, propertyId);
+        const axisTypeValue: any = dataViewObjects.getValue(objects, propertyId);
 
         if (!objects || axisTypeValue === undefined) {
             return !AxisHelper.isOrdinal(type);
@@ -791,12 +788,12 @@ export class MekkoChart implements IVisual {
             const dataViewMetadata: DataViewMetadata = dataViews[0].metadata;
 
             if (dataViewMetadata) {
-                this.legendObjectProperties = DataViewObjects.getObject(
+                this.legendObjectProperties = dataViewObjects.getObject(
                     dataViewMetadata.objects,
                     "legend",
                     {});
 
-                this.borderObjectProperties = DataViewObjects.getObject(
+                this.borderObjectProperties = dataViewObjects.getObject(
                     dataViewMetadata.objects,
                     "columnBorder",
                     {});
@@ -1057,7 +1054,7 @@ export class MekkoChart implements IVisual {
     }
 
     public static parseXAxisLabelsSettings(objects: powerbi.DataViewObjects): MekkoXAxisLabelsSettings {
-        const enableRotataion: boolean = DataViewObjects.getValue(
+        const enableRotataion: boolean = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["xAxisLabels"]["enableRotataion"],
             MekkoChart.DefaultSettings.xAxisLabels.enableRotataion);
@@ -1068,17 +1065,17 @@ export class MekkoChart implements IVisual {
     }
 
     public static parseDataPointSettings(objects: powerbi.DataViewObjects): MekkoDataPointSettings {
-        const categoryGradient: boolean = DataViewObjects.getValue(
+        const categoryGradient: boolean = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["dataPoint"]["categoryGradient"],
             MekkoChart.DefaultSettings.dataPoint.categoryGradient);
 
-        const colorGradientEndColor: string = DataViewObjects.getValue(
+        const colorGradientEndColor: string = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["dataPoint"]["colorGradientEndColor"],
             MekkoChart.DefaultSettings.dataPoint.colorGradientEndColor);
 
-        const colorDistribution: boolean = DataViewObjects.getValue(
+        const colorDistribution: boolean = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["dataPoint"]["colorDistribution"],
             MekkoChart.DefaultSettings.dataPoint.colorDistribution);
@@ -1090,17 +1087,17 @@ export class MekkoChart implements IVisual {
         };
     }
     public static parseSeriesSortSettings(objects: powerbi.DataViewObjects): MekkoSeriesSortSettings {
-        const enabled: boolean = DataViewObjects.getValue(
+        const enabled: boolean = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["sortSeries"]["enabled"],
             MekkoChart.DefaultSettings.sortSeries.enabled);
 
-        const direction: string = DataViewObjects.getValue(
+        const direction: string = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["sortSeries"]["direction"],
             MekkoChart.DefaultSettings.sortSeries.direction);
 
-        const displayPercents: string = DataViewObjects.getValue(
+        const displayPercents: string = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["sortSeries"]["displayPercents"],
             MekkoChart.DefaultSettings.sortSeries.displayPercents);
@@ -1113,22 +1110,22 @@ export class MekkoChart implements IVisual {
     }
 
     public static parseLegendSortSettings(objects: powerbi.DataViewObjects): MekkoLegendSortSettings {
-        const enabled: boolean = DataViewObjects.getValue(
+        const enabled: boolean = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["sortLegend"]["enabled"],
             MekkoChart.DefaultSettings.sortLegend.enabled);
 
-        const direction: string = DataViewObjects.getValue(
+        const direction: string = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["sortLegend"]["direction"],
             MekkoChart.DefaultSettings.sortLegend.direction);
 
-        const groupByCategory: boolean = DataViewObjects.getValue(
+        const groupByCategory: boolean = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["sortLegend"]["groupByCategory"],
             MekkoChart.DefaultSettings.sortLegend.groupByCategory);
 
-        const groupByCategoryDirection: string = DataViewObjects.getValue(
+        const groupByCategoryDirection: string = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["sortLegend"]["groupByCategoryDirection"],
             MekkoChart.DefaultSettings.sortLegend.groupByCategoryDirection);
@@ -1142,17 +1139,17 @@ export class MekkoChart implements IVisual {
     }
 
     public static parseBorderSettings(objects: powerbi.DataViewObjects): MekkoBorderSettings {
-        const show: boolean = DataViewObjects.getValue(
+        const show: boolean = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["columnBorder"]["show"],
             MekkoChart.DefaultSettings.columnBorder.show);
 
-        const color: string = DataViewObjects.getFillColor(
+        const color: string = dataViewObjects.getFillColor(
             objects,
             MekkoChart.Properties["columnBorder"]["color"],
             MekkoChart.DefaultSettings.columnBorder.color);
 
-        let width: number = DataViewObjects.getValue(
+        let width: number = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["columnBorder"]["width"],
             MekkoChart.DefaultSettings.columnBorder.width);
@@ -1181,17 +1178,17 @@ export class MekkoChart implements IVisual {
             columnBorder: this.borderObjectProperties
         };
 
-        const show: boolean = DataViewObjects.getValue(
+        const show: boolean = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["columnBorder"]["show"],
             MekkoChart.DefaultSettings.columnBorder.show);
 
-        const color: string = DataViewObjects.getFillColor(
+        const color: string = dataViewObjects.getFillColor(
             objects,
             MekkoChart.Properties["columnBorder"]["color"],
             MekkoChart.DefaultSettings.columnBorder.color);
 
-        let width: number = DataViewObjects.getValue(
+        let width: number = dataViewObjects.getValue(
             objects,
             MekkoChart.Properties["columnBorder"]["width"],
             MekkoChart.DefaultSettings.columnBorder.width);
@@ -1261,31 +1258,31 @@ export class MekkoChart implements IVisual {
             fontSize: number,
             position: string;
 
-        show = DataViewObject.getValue<boolean>(
+        show = dataViewObject.getValue<boolean>(
             this.legendObjectProperties,
             legendProps.show,
             this.legend.isVisible());
 
-        showTitle = DataViewObject.getValue<boolean>(
+        showTitle = dataViewObject.getValue<boolean>(
             this.legendObjectProperties,
             legendProps.showTitle,
             true);
 
-        titleText = DataViewObject.getValue<string>(
+        titleText = dataViewObject.getValue<string>(
             this.legendObjectProperties,
             legendProps.titleText,
             this.layerLegendData && this.layerLegendData.title
                 ? this.layerLegendData.title
                 : "");
 
-        fontSize = DataViewObject.getValue<number>(
+        fontSize = dataViewObject.getValue<number>(
             this.legendObjectProperties,
             legendProps.fontSize,
             this.layerLegendData && this.layerLegendData.fontSize
                 ? this.layerLegendData.fontSize
                 : MekkoChart.DefaultLabelFontSizeInPt);
 
-        position = DataViewObject.getValue<string>(
+        position = dataViewObject.getValue<string>(
             this.legendObjectProperties,
             legendProps.position,
             legendPosition.top);
