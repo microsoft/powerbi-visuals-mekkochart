@@ -25,6 +25,7 @@
  */
 
 import "./../style/visual.less";
+import "@babel/polyfill";
 
 import powerbi from "powerbi-visuals-api";
 
