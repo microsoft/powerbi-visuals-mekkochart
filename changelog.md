@@ -1,3 +1,7 @@
+## 3.2.2
+* Removed JQuery
+* Added context menu handle
+
 ## 3.1.0
 * Fix selection rendering issue
 * Fix rendering of filtered series
