@@ -75,7 +75,8 @@ import {
     MekkoChartDataPoint,
     ILegendGroup,
     MekkoChartDataLabelObject,
-    Selection
+    Selection,
+    MekkoChartColumnDataPoint
 } from "./dataInterfaces";
 
 import {
@@ -100,7 +101,6 @@ import {
 import { max, sum } from "d3-array";
 import { brushX, BrushBehavior } from "d3-brush";
 import { select } from "d3-selection";
-const getEvent = () => require("d3-selection").event;
 
 // powerbi.extensibility.utils.chart
 import {
@@ -457,13 +457,11 @@ export class MekkoChart implements IVisual {
     private handleContextMenu() {
         this.rootElement.on('contextmenu', (e) => {
 
-            // this.tooltipServiceWrapper.cancelTouchTimeoutEvents();
-
-            const mouseEvent: MouseEvent = getEvent();
+            const mouseEvent: MouseEvent = e;
             const eventTarget: EventTarget = mouseEvent.target;
 
-            let dataPoint: any = select(<d3.BaseType>eventTarget).datum();
-            this.selectionManager.showContextMenu(dataPoint ? dataPoint.selectionId : {}, {
+            let dataPoint: MekkoChartColumnDataPoint = <MekkoChartColumnDataPoint>select(<d3.BaseType>eventTarget).datum();
+            this.selectionManager.showContextMenu(dataPoint ? dataPoint.identity/*selectionId*/ : {}, {
                 x: mouseEvent.clientX,
                 y: mouseEvent.clientY
             });

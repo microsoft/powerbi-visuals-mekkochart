@@ -1,6 +1,7 @@
-## 3.2.2
+## 3.2.4
 * Removed JQuery
 * Added context menu handle
+* Updated "d3" dependencies
 
 ## 3.1.0
 * Fix selection rendering issue

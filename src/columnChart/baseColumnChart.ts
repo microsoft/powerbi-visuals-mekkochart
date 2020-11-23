@@ -1748,11 +1748,15 @@ export class BaseColumnChart implements IColumnChart {
         this.mainGraphicsContext.attr("height", height);
         this.mainGraphicsContext.attr("width", width);
 
-        this.tooltipServiceWrapper.addTooltip<TooltipEnabledDataPoint>(
+        this.tooltipServiceWrapper.addTooltip<MekkoChartColumnDataPoint>(
             chartDrawInfo.shapesSelection,
-            (tooltipEvent: TooltipEventArgs<TooltipEnabledDataPoint>) => {
-                return tooltipEvent.data.tooltipInfo;
-            });
+            (datapoint: MekkoChartColumnDataPoint): VisualTooltipDataItem[] => {
+                return datapoint.tooltipInfo;
+            },
+            (datapoint: MekkoChartColumnDataPoint) => {
+                return datapoint.identity;
+            }
+            );
 
         let dataPoints: MekkoChartColumnDataPoint[] = [];
         let behaviorOptions: VisualBehaviorOptions = undefined;
