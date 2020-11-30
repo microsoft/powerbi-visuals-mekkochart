@@ -390,6 +390,7 @@ export class MekkoChart implements IVisual {
     public static TickLabelPadding: number = 2;
 
     private rootElement: Selection;
+    private logTextArea: Selection;//!!!
     private legendParent: Selection;
     private axisGraphicsContext: Selection;
     private xAxisGraphicsContext: Selection;
@@ -454,21 +455,6 @@ export class MekkoChart implements IVisual {
         this.init(options);
     }
 
-    private handleContextMenu() {
-        this.rootElement.on('contextmenu', (e) => {
-
-            const mouseEvent: MouseEvent = e;
-            const eventTarget: EventTarget = mouseEvent.target;
-
-            let dataPoint: MekkoChartColumnDataPoint = <MekkoChartColumnDataPoint>select(<d3.BaseType>eventTarget).datum();
-            this.selectionManager.showContextMenu(dataPoint ? dataPoint.identity/*selectionId*/ : {}, {
-                x: mouseEvent.clientX,
-                y: mouseEvent.clientY
-            });
-            mouseEvent.preventDefault();
-        });
-    }
-
     public init(options: VisualConstructorOptions) {
         this.visualInitOptions = options;
         this.visualHost = options.host;
@@ -480,6 +466,12 @@ export class MekkoChart implements IVisual {
         this.rootElement = select(options.element)
             .append("div")
             .classed(MekkoChart.ClassName, true);
+
+        this.logTextArea = this.rootElement
+            .append('textarea').text("Test3!!!!!!!!!!");
+           
+        //this.chartArea = document.querySelector(".mekkoChart .columnChartUnclippedGraphicsContext")
+        //this.chartArea = this.rootElement.select(".columnChartUnclippedGraphicsContext")    
 
         this.behavior = new CustomVisualBehavior([new VisualBehavior()]);
 
@@ -535,7 +527,6 @@ export class MekkoChart implements IVisual {
         this.interactivityService = createInteractivityService(this.visualHost);
 
         this.selectionManager = options.host.createSelectionManager();
-        this.handleContextMenu();
 
         let legendParent = select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
 
@@ -866,8 +857,19 @@ export class MekkoChart implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
+        this.logTextArea
+        .style("position", "absolute")
+        .style("float", "left")
+        .style("left", "50%")
+        .style("width", "50%")
+        .style("height", "100%")
+
+
         this.dataViews = options.dataViews;
         this.currentViewport = options.viewport;
+
+        this.currentViewport.width /= 2;
+
         if (!this.checkDataset()) {
             this.clearViewport();
             return;
@@ -905,12 +907,59 @@ export class MekkoChart implements IVisual {
             return;
         }
 
+
+
+
+        let eventTypes = [
+            //"pointerover",
+            //"pointerenter",
+            "pointerdown",
+            //"pointermove",
+            "pointerup",
+            "pointercancel",
+            //"pointerout",
+            //"pointerleave",
+            "gotpointercapture",
+            "lostpointercapture",
+            "mousedown",
+            "mouseup",
+            //"mousemove",
+            "click",
+            "dblclick",
+            "mouseover",
+            //"mouseout",
+            //"mouseenter",
+            //"mouseleave",
+            "contextmenu",
+            "contextmenuCustom",
+            "touchcancel",
+            "touchend",
+            "touchmove",
+            "touchstart"]
+    
+            eventTypes.forEach((eventType) => {
+    
+                this.rootElement.select(".columnChartUnclippedGraphicsContext").on(eventType, (e: Event, d) => this.handleEvent(e.type, d));
+            })
+
+
+
+
         this.renderLegend();
 
         this.render();
 
         this.hasSetData = this.hasSetData
             || (this.dataViews && this.dataViews.length > 0);
+    }
+
+    private handleEvent(eventType: string, d: any) {
+        console.log(eventType);
+
+        let logs = this.logTextArea.text();
+        this.logTextArea.text(logs + eventType + "\r\n");
+        this.logTextArea.node().scrollTop = this.logTextArea.node().scrollHeight;
+
     }
 
     /**

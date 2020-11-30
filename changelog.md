@@ -1,4 +1,4 @@
-## 3.2.4
+## 3.2.5
 * Removed JQuery
 * Added context menu handle
 * Updated "d3" dependencies
