@@ -129,7 +129,7 @@ describe("MekkoChart", () => {
 
             visualBuilder.updateRenderTimeout(dataView, () => {
                 const xTicksElements: HTMLElement[] = Array.from(visualBuilder.mainElement
-                    .querySelectorAll(":scope > g.axisGraphicsContext > g.x.axis.showLinesOnAxis > g.tick > text"))
+                    .querySelectorAll(":scope > g.axisGraphicsContext > g.x.axis.showLinesOnAxis > g.tick > text"));
 
                 const columnsBottomPosition: number = visualBuilder.columnElement[0]
                     .getBoundingClientRect()
@@ -334,7 +334,7 @@ describe("MekkoChart", () => {
             });
 
             it("color", () => {
-                const color: string = "#ABCDEF";// !!! check if it is realy a hash expected?
+                const color: string = "#ABCDEF";
 
                 (dataView.metadata.objects as any).labels.color = getSolidColorStructuralObject(color);
                 visualBuilder.updateFlushAllD3Transitions(dataView);
@@ -356,7 +356,6 @@ describe("MekkoChart", () => {
             });
 
             it("show", () => {
-                
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
                 expect(visualBuilder.legendGroup).not.toBeEmpty();
@@ -530,9 +529,7 @@ describe("MekkoChart", () => {
 
                         visualBuilder.updateRenderTimeout(dataView, () => {
                             const fillColor: string = visualBuilder.borders[0].style.fill;
-                                
                             assertColorsMatch(fillColor, color);
-
                             done();
                         });
 
@@ -707,8 +704,8 @@ describe("MekkoChart", () => {
                     filteredByCategory = _.sortBy(filteredByCategory, "values");
                     let categoryDOM: any = mappedCategoryLegendGroup
                         .filter((val: CategoryLegendDom) => {
-                            return <boolean>(val.dom.querySelector(":scope > text.legendTitle > title") 
-                            && val.dom.querySelector(":scope > text.legendTitle > title").textContent === category); 
+                            return <boolean>(val.dom.querySelector(":scope > text.legendTitle > title")
+                            && val.dom.querySelector(":scope > text.legendTitle > title").textContent === category);
                         });
                     let legentItem = ((categoryDOM[0].dom)).querySelectorAll(":scope > g > text");
                     expect(filteredByCategory.length).toEqual(legentItem.length);

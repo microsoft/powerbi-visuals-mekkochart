@@ -1750,11 +1750,11 @@ export class BaseColumnChart implements IColumnChart {
 
         this.tooltipServiceWrapper.addTooltip<MekkoChartColumnDataPoint>(
             chartDrawInfo.shapesSelection,
-            (datapoint: MekkoChartColumnDataPoint): VisualTooltipDataItem[] => {
-                return datapoint.tooltipInfo;
+            (data: MekkoChartColumnDataPoint): VisualTooltipDataItem[] => {
+                return data.tooltipInfo;
             },
-            (datapoint: MekkoChartColumnDataPoint) => {
-                return datapoint.identity;
+            (data: MekkoChartColumnDataPoint) => {
+                return data.identity;
             }
             );
 
