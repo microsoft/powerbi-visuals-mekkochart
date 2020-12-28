@@ -99,7 +99,7 @@
     "powerbi-visuals-utils-interactivityutils": "5.5.0",
     "powerbi-visuals-utils-svgutils": "2.2.0",
     "powerbi-visuals-utils-testutils": "2.3.4",
-    "powerbi-visuals-utils-tooltiputils": "file:../powerbi-visuals-utils/powerbi-visuals-utils-tooltiputils",
+    "powerbi-visuals-utils-tooltiputils": "2.5.0",
     "powerbi-visuals-utils-typeutils": "2.2.0",
     "puppeteer": "1.17.0",
     "style-loader": "0.23.1",

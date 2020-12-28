@@ -390,7 +390,6 @@ export class MekkoChart implements IVisual {
     public static TickLabelPadding: number = 2;
 
     private rootElement: Selection;
-    private logTextArea: Selection;//!!!
     private legendParent: Selection;
     private axisGraphicsContext: Selection;
     private xAxisGraphicsContext: Selection;
@@ -466,7 +465,6 @@ export class MekkoChart implements IVisual {
                 x: mouseEvent.clientX,
                 y: mouseEvent.clientY
             });
-            this.handleEvent(e.type, `, showContextMenu exist: ${"showContextMenu" in this.selectionManager}, dataPoint: ${dataPoint}, (x: ${mouseEvent.clientX} y: ${mouseEvent.clientY})`)
             mouseEvent.preventDefault();
         });
     }
@@ -482,9 +480,6 @@ export class MekkoChart implements IVisual {
         this.rootElement = select(options.element)
             .append("div")
             .classed(MekkoChart.ClassName, true);
-
-        this.logTextArea = this.rootElement
-            .append('textarea').text("Test!10");
 
         this.behavior = new CustomVisualBehavior([new VisualBehavior()]);
 
@@ -874,14 +869,6 @@ export class MekkoChart implements IVisual {
         this.dataViews = options.dataViews;
         this.currentViewport = options.viewport;
 
-        this.currentViewport.width /= 2;
-        this.logTextArea
-        .style("position", "absolute")
-        .style("float", "left")
-        .style("left", "50%")
-        .style("width", "50%")
-        .style("height", "100%")
-
         if (!this.checkDataset()) {
             this.clearViewport();
             return;
@@ -919,53 +906,12 @@ export class MekkoChart implements IVisual {
             return;
         }
 
-        let eventTypes = [
-            //"pointerover",
-            //"pointerenter",
-            "pointerdown",
-            //"pointermove",
-            "pointerup",
-            "pointercancel",
-            //"pointerout",
-            //"pointerleave",
-            "gotpointercapture",
-            "lostpointercapture",
-            "mousedown",
-            "mouseup",
-            //"mousemove",
-            "click",
-            "dblclick",
-            "mouseover",
-            //"mouseout",
-            //"mouseenter",
-            //"mouseleave",
-            //"contextmenu",
-            "contextmenuCustom",
-            "touchcancel",
-            "touchend",
-            "touchmove",
-            "touchstart"]
-
-            eventTypes.forEach((eventType) => {
-
-                this.rootElement.select(".columnChartUnclippedGraphicsContext").on(eventType, (e: Event) => this.handleEvent(e.type));
-            })
-
         this.renderLegend();
 
         this.render();
 
         this.hasSetData = this.hasSetData
             || (this.dataViews && this.dataViews.length > 0);
-    }
-
-    private handleEvent(eventType: string, testLog?) {
-        console.log(eventType);
-
-        let logs = this.logTextArea.text();
-        this.logTextArea.text(`${logs}\r\n event-type: ${eventType}${testLog ? testLog : ""};\r\n`);
-        this.logTextArea.node().scrollTop = this.logTextArea.node().scrollHeight;
-
     }
 
     /**
