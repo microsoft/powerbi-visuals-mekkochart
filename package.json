@@ -39,7 +39,7 @@
     "@babel/runtime": "^7.4.5",
     "@babel/runtime-corejs2": "^7.4.5",
     "coveralls": "^3.0.2",
-    "css-loader": "1.0.1",
+    "css-loader": "6.7.3",
     "d3": "5.7.0",
     "del-cli": "1.1.0",
     "istanbul-instrumenter-loader": "3.0.1",
