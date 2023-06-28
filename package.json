@@ -60,7 +60,7 @@
     "less-loader": "5.0.0",
     "lodash.isequal": "4.5.0",
     "powerbi-models": "1.2.0",
-    "powerbi-visuals-api": "2.6.0",
+    "powerbi-visuals-api": "5.4.0",
     "powerbi-visuals-tools": "3.1.0",
     "powerbi-visuals-utils-chartutils": "2.4.0",
     "powerbi-visuals-utils-colorutils": "2.2.0",
