@@ -1214,7 +1214,6 @@ export class MekkoChart implements IVisual {
 
         instances.push(instance);
     }
-
     public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
         const instances: VisualObjectInstance[] = [];
         const layersLength: number = this.layers
@@ -1247,6 +1246,87 @@ export class MekkoChart implements IVisual {
         }
 
         return instances;
+    }
+
+    public getFormattingModel(): powerbi.visuals.FormattingModel  {
+        console.log("Format Pane Test Print");
+        let columnBorderCard : powerbi.visuals.FormattingCard = {
+            description: "Column Border",
+            displayName: "Column Border",
+            uid: "columnBorder_uid",
+            groups: [
+                {
+                    displayName: "Column Border Group",
+                    uid: "columnBorderCard_columnBorder_group_uid",
+                    slices : [
+                        {
+                            uid: "columnBorderCard_columnBorder_show_uid",
+                            displayName: "Show Column Borders",
+                            control: {
+                                type: powerbi.visuals.FormattingComponent.ToggleSwitch,
+                                properties: {
+                                    descriptor: {
+                                        objectName: "columnBorder",
+                                        propertyName: "show"
+                                    },
+                                    //value: MekkoChart.DefaultSettings.columnBorder.show
+                                    value: false
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+    
+        let labelsCard : powerbi.visuals.FormattingCard = {
+            description: "Labels",
+            displayName: "Labels",
+            uid: "labels_uid",
+            groups: []
+        };
+    
+        let legendCard : powerbi.visuals.FormattingCard = {
+            description: "Legend",
+            displayName: "Legend",
+            uid: "legend_uid",
+            groups: []
+        };
+    
+        let seriesCard : powerbi.visuals.FormattingCard = {
+            description: "Series",
+            displayName: "Series",
+            uid: "series_uid",
+            groups: []
+        };
+    
+        let axisCard : powerbi.visuals.FormattingCard = {
+            description: "Axis",
+            displayName: "Axis",
+            uid: "axis_uid",
+            groups: []
+        };
+    
+        let pointsCard : powerbi.visuals.FormattingCard = {
+            description: "Data Points",
+            displayName: "Data Points",
+            uid: "dataPoints_uid",
+            groups: []
+        };
+    
+        let categoriesCard : powerbi.visuals.FormattingCard = {
+            description: "Categories",
+            displayName: "Categories",
+            uid: "categories_uid",
+            groups: []
+        };
+        
+        //Create Column Border Group
+        
+        const formattingModel: powerbi.visuals.FormattingModel = { cards: [
+            columnBorderCard
+        ]};
+        return formattingModel;
     }
 
     private enumerateLegend(

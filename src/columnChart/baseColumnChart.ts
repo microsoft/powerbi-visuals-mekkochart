@@ -1293,41 +1293,7 @@ export class BaseColumnChart implements IColumnChart {
                 || (this.data.series && this.data.series.length > 1));
     }
 
-    public enumerateObjectInstances(
-        enumeration: VisualObjectInstance[],
-        options: EnumerateVisualObjectInstancesOptions): void {
-
-        switch (options.objectName) {
-            case "dataPoint": {
-                this.enumerateDataPoints(enumeration);
-                break;
-            }
-            case "labels": {
-                this.enumerateDataLabels(enumeration);
-                break;
-            }
-            case "xAxisLabels": {
-                this.enumerateXAxisLabels(enumeration);
-                break;
-            }
-            case "sortLegend": {
-                this.enumerateSortLegend(enumeration);
-                break;
-            }
-            case "sortSeries": {
-                this.enumerateSortSeries(enumeration);
-                break;
-            }
-            case "categoryColorStart": {
-                this.enumerateCategoryColors(enumeration, "categoryColorStart", "Start color");
-                break;
-            }
-            case "categoryColorEnd": {
-                this.enumerateCategoryColors(enumeration, "categoryColorEnd", "End color");
-                break;
-            }
-        }
-    }
+    
 
     private enumerateCategoryColors(instances: VisualObjectInstance[], objectName: string, label: string) {
         if (this.data.dataPointSettings && this.data.dataPointSettings.categoryGradient && this.checkDataToFeatures()) {
