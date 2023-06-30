@@ -550,5 +550,7 @@
         "roles": [
             "Category"
         ]
-    }
+    },
+    "privileges": []
+    
 }
