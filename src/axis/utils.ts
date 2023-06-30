@@ -31,8 +31,7 @@ import {
     axisScale,
     axisStyle
 } from "powerbi-visuals-utils-chartutils";
-import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
-import valueFormatter = vf.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 import IAxisProperties = axisInterfaces.IAxisProperties;
 import DataViewObject = powerbi.DataViewObject;

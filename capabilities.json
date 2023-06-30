@@ -172,6 +172,13 @@
                             "fontSize": true
                         }
                     }
+                },
+                "fontFamily": {
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
                 }
             }
         },
@@ -330,6 +337,28 @@
                             "fontSize": true
                         }
                     }
+                },
+                "fontFamily": {
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontBold": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontItalic": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontUnderline": {
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         },
@@ -377,6 +406,28 @@
                             "fontSize": true
                         }
                     }
+                },
+                "fontFamily": {
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontBold": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontItalic": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontUnderline": {
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         },
@@ -392,8 +443,8 @@
                     }
                 },
                 "colorDistribution": {
-                    "displayName": "Color distibution by value",
-                    "displayNameKey": "Visual_ColorDistibution",
+                    "displayName": "Color distribution by value",
+                    "displayNameKey": "Visual_ColorDistribution",
                     "type": {
                         "bool": true
                     }

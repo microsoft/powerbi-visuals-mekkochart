@@ -32,11 +32,10 @@ import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 
 import {
-    valueFormatter as vf
+    valueFormatter
 } from "powerbi-visuals-utils-formattingutils";
 
 // powerbi.extensibility.utils.formatting
-import valueFormatter = vf.valueFormatter;
 
 export const DisplayNameSeparator: string = "/";
 

@@ -47,7 +47,7 @@ import {
     from "powerbi-visuals-utils-interactivityutils";
 
 import {
-    valueFormatter as vf
+    valueFormatter
 }
     from "powerbi-visuals-utils-formattingutils";
 
@@ -103,8 +103,7 @@ import createColumnFormatterCacheManager = dataLabelUtils.createColumnFormatterC
 import IInteractivityService = interactivityBaseService.IInteractivityService;
 
 // powerbi.extensibility.utils.formatting
-import valueFormatter = vf.valueFormatter;
-import IValueFormatter = vf.IValueFormatter;
+import IValueFormatter = valueFormatter.IValueFormatter;
 
 // powerbi.extensibility.utils.type
 import ValueType = valueType.ValueType;

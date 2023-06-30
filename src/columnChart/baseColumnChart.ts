@@ -29,12 +29,10 @@ import {
 }
     from "powerbi-visuals-utils-colorutils";
 import {
-    converterHelper as ch,
+    converterHelper,
     dataViewObjects
 }
     from "powerbi-visuals-utils-dataviewutils";
-
-import converterHelper = ch.converterHelper;
 
 import {
     IMargin,
@@ -66,7 +64,7 @@ import {
 from "powerbi-visuals-utils-interactivityutils";
 
 import {
-    valueFormatter as vf,
+    valueFormatter,
     displayUnitSystemType
 }
 from "powerbi-visuals-utils-formattingutils";
@@ -167,8 +165,6 @@ import IAxisProperties = axisInterfaces.IAxisProperties;
 
 // powerbi.extensibility.utils.type
 import ValueType = valueType.ValueType;
-import EnumExtensions = enumExtensions.EnumExtensions;
-import ArrayExtensions = arrayExtensions.ArrayExtensions;
 
 // powerbi.extensibility.utils.interactivity
 import LegendIcon = legendInterfaces.MarkerShape;
@@ -181,8 +177,7 @@ import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
 type IInteractivityService = IInteractivityServiceCommon<SelectableDataPoint>;
 
 // powerbi.extensibility.utils.formatting
-import valueFormatter = vf.valueFormatter;
-import IValueFormatter = vf.IValueFormatter;
+import IValueFormatter = valueFormatter.IValueFormatter;
 
 // visualStrategy
 import IVisualStrategy = visualStrategy.IVisualStrategy;
@@ -271,7 +266,7 @@ export class BaseColumnChart implements IColumnChart {
         this.colorPalette = this.visualHost.colorPalette;
 
         this.cartesianVisualHost = options.cartesianHost;
-        this.supportsOverflow = !EnumExtensions.hasFlag(this.chartType, flagStacked);
+        this.supportsOverflow = !enumExtensions.hasFlag(this.chartType, flagStacked);
 
         select(options.element)
             .classed(BaseColumnChart.ColumnChartClassName, true);
@@ -975,7 +970,7 @@ export class BaseColumnChart implements IColumnChart {
                     lastValue: boolean = undefined;
 
                 // Stacked column/bar label color is white by default (except last series)
-                if ((EnumExtensions.hasFlag(chartType, flagStacked))) {
+                if ((enumExtensions.hasFlag(chartType, flagStacked))) {
                     lastValue = this.getStackedLabelColor(
                         isNegative,
                         seriesIndex,
@@ -1280,7 +1275,7 @@ export class BaseColumnChart implements IColumnChart {
             ? legendData.dataPoints
             : [];
 
-        if (ArrayExtensions.isUndefinedOrEmpty(dataPoints)) {
+        if (arrayExtensions.isUndefinedOrEmpty(dataPoints)) {
             return null;
         }
 
@@ -1437,7 +1432,7 @@ export class BaseColumnChart implements IColumnChart {
         return this.data;
     }
 
-    private checkDataToFeatures(): boolean {
+    public checkDataToFeatures(): boolean {
         return !this.data.legendData.dataPoints.some((value: MekkoLegendDataPoint) => {
             return value.categoryValues.filter(value => value).length > 1;
         });
@@ -1588,7 +1583,7 @@ export class BaseColumnChart implements IColumnChart {
 
         this.columnChart.setupVisualProps(chartContext);
 
-        const isBarChart: boolean = EnumExtensions.hasFlag(this.chartType, flagBar);
+        const isBarChart: boolean = enumExtensions.hasFlag(this.chartType, flagBar);
 
         if (isBarChart) {
             [options.forcedXDomain, options.forcedYDomain] = [options.forcedYDomain, options.forcedXDomain];
@@ -1652,7 +1647,7 @@ export class BaseColumnChart implements IColumnChart {
                 categoryCount,
                 categoryThickness);
 
-            if (EnumExtensions.hasFlag(this.chartType, flagBar)) {
+            if (enumExtensions.hasFlag(this.chartType, flagBar)) {
                 viewport.height = Math.max(preferredWidth, viewport.height);
             }
             else {
@@ -1685,7 +1680,7 @@ export class BaseColumnChart implements IColumnChart {
     private createInteractiveMekkoLegendDataPoints(columnIndex: number): ILegendData {
         const data: MekkoColumnChartData = this.data;
 
-        if (!data || ArrayExtensions.isUndefinedOrEmpty(data.series)) {
+        if (!data || arrayExtensions.isUndefinedOrEmpty(data.series)) {
             return { dataPoints: [] };
         }
 
@@ -1750,8 +1745,8 @@ export class BaseColumnChart implements IColumnChart {
 
         this.tooltipServiceWrapper.addTooltip<TooltipEnabledDataPoint>(
             chartDrawInfo.shapesSelection,
-            (tooltipEvent: TooltipEventArgs<TooltipEnabledDataPoint>) => {
-                return tooltipEvent.data.tooltipInfo;
+            (datapoint: TooltipEnabledDataPoint) => {
+                return datapoint.tooltipInfo;
             });
 
         let dataPoints: MekkoChartColumnDataPoint[] = [];

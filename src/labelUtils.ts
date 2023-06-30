@@ -29,7 +29,7 @@ import powerbi from "powerbi-visuals-api";
 import IViewport = powerbi.IViewport;
 import {
     wordBreaker,
-    textMeasurementService
+    interfaces as formattingInterfaces
 } from "powerbi-visuals-utils-formattingutils";
 
 import {
@@ -42,8 +42,8 @@ import {
 } from "powerbi-visuals-utils-chartutils";
 
 // powerbi.extensibility.utils.formatting
-import TextProperties = textMeasurementService.TextProperties;
-import ITextAsSVGMeasurer = textMeasurementService.ITextAsSVGMeasurer;
+import TextProperties = formattingInterfaces.TextProperties;
+import ITextAsSVGMeasurer = formattingInterfaces.ITextAsSVGMeasurer;
 
 // powerbi.extensibility.utils.chart
 import IAxisProperties = axisInterfaces.IAxisProperties;
