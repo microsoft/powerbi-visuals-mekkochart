@@ -148,7 +148,9 @@ export class BaseConverterStrategy implements ConverterStrategy {
 
             let colorStart: string = defaultLabelLegendColor;
 
-            if (baseStartColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
+            if (baseStartColorIdentity.gr.objects !== undefined &&
+                (<any>baseStartColorIdentity.gr.objects).dataPoint &&
+                (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
                 colorStart = (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid.color;
             }
             if (colorStart === undefined) {
@@ -164,7 +166,10 @@ export class BaseConverterStrategy implements ConverterStrategy {
 
             let colorEnd: string = defaultLabelLegendColor;
 
-            if (baseEndColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
+            if (baseEndColorIdentity.gr.objects &&
+                baseEndColorIdentity.gr.objects.data &&
+                (<any>baseEndColorIdentity.gr.objects).dataPoint &&
+                (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
                 colorEnd = (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid.color;
             }
 
