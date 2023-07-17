@@ -79,7 +79,7 @@
     "ts-loader": "6.0.1",
     "ts-node": "8.1.0",
     "tslint": "5.16.0",
-    "typescript": "5.1.6",
+    "typescript": "3.9.7",
     "webpack": "4.32.2"
   },
   "dependencies": {
