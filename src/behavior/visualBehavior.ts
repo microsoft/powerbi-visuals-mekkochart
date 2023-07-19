@@ -81,6 +81,9 @@ export class VisualBehavior implements IInteractiveBehavior {
                 !dataPoint.highlight && hasSelection,
                 !dataPoint.selected && this.options.hasHighlights);
         });
+        this.options.bars.attr("aria-selected", (dataPoint: MekkoChartColumnDataPoint) => {
+            return (hasSelection && dataPoint.selected);
+        });
     }
 
     private static getDatumForLastInputEvent(): SelectionDataPoint {

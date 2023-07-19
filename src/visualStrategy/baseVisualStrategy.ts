@@ -581,8 +581,10 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .attr("height", layout.shapeLayout.height)
             .attr("width", layout.shapeLayout.width)
             .attr("x", layout.shapeLayout.x)
-            .attr("y", layout.shapeLayout.y);
-
+            .attr("y", layout.shapeLayout.y)
+            .attr("aria-selected", (dataPoint: MekkoChartColumnDataPoint) => {
+                return (hasSelection && dataPoint.selected);
+            })
         shapes
             .exit()
             .remove();
@@ -622,6 +624,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
     }
 
     public selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void {
+        
         utils.setChosenColumnOpacity(
             this.graphicsContext.mainGraphicsContext,
             BaseVisualStrategy.ItemSelector.selectorName,
@@ -629,6 +632,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             lastSelectedColumnIndex);
 
         this.moveHandle(selectedColumnIndex);
+        
     }
 
     public getClosestColumnIndex(x: number): number {
