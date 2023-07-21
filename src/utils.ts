@@ -129,8 +129,9 @@ export function drawSeries(
         .classed(MekkoChart.SeriesSelector.className, true)
         .merge(seriesData);
     mergedSeries
-        .style("fill", (series: MekkoChartSeries) => series.color);
-
+        .style("fill", (series: MekkoChartSeries) => series.color)
+        .attr("role", "option")
+        .attr("aria-selected", false);
     seriesData
         .exit()
         .remove();

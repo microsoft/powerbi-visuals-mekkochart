@@ -581,10 +581,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .attr("height", layout.shapeLayout.height)
             .attr("width", layout.shapeLayout.width)
             .attr("x", layout.shapeLayout.x)
-            .attr("y", layout.shapeLayout.y)
-            .attr("aria-selected", (dataPoint: MekkoChartColumnDataPoint) => {
-                return (hasSelection && dataPoint.selected);
-            })
+            .attr("y", layout.shapeLayout.y);
+            
         shapes
             .exit()
             .remove();

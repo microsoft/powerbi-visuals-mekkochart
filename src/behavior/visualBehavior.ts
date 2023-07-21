@@ -29,7 +29,8 @@ import {
     interactivityBaseService
 } from "powerbi-visuals-utils-interactivityutils";
 import { Selection, select } from "d3-selection";
-import { MekkoChartColumnDataPoint } from "./../dataInterfaces";
+import { MekkoChartColumnDataPoint, MekkoChartSeries } from "./../dataInterfaces";
+import { MekkoChart } from "../visual";
 
 import { VisualBehaviorOptions } from "./visualBehaviorOptions";
 
@@ -81,9 +82,21 @@ export class VisualBehavior implements IInteractiveBehavior {
                 !dataPoint.highlight && hasSelection,
                 !dataPoint.selected && this.options.hasHighlights);
         });
-        this.options.bars.attr("aria-selected", (dataPoint: MekkoChartColumnDataPoint) => {
-            return (hasSelection && dataPoint.selected);
+        
+        const series: Selection<any, any, any, any> = this.options.mainGraphicsContext
+        .selectAll(MekkoChart.SeriesSelector.selectorName);        
+        
+        
+        series.attr("aria-selected", (dataPoint: MekkoChartSeries) => {
+            let selectedCategory: boolean = false;
+            dataPoint.data.forEach( (seriesDataPoint: MekkoChartColumnDataPoint) => {
+                if (seriesDataPoint.selected) {
+                    selectedCategory = true;
+                }
+            })
+            return (hasSelection && selectedCategory);
         });
+        
     }
 
     private static getDatumForLastInputEvent(): SelectionDataPoint {
