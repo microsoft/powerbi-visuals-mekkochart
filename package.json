@@ -77,8 +77,5 @@
     "tslint": "5.16.0",
     "typescript": "3.4.5",
     "webpack": "4.32.2"
-  },
-  "dependencies": {
-    "core-js": "^3.31.1"
   }
 }
