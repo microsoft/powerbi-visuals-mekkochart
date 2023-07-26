@@ -25,7 +25,6 @@
  */
 
 import "./../style/visual.less";
-import "core-js/stable";
 
 import powerbi from "powerbi-visuals-api";
 
