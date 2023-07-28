@@ -543,6 +543,7 @@
         }
     ],
     "supportsHighlight": true,
+    "supportsKeyboardFocus": true,
     "sorting": {
         "default": {}
     },

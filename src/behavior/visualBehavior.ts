@@ -72,6 +72,20 @@ export class VisualBehavior implements IInteractiveBehavior {
 
             mouseEvent.preventDefault();
         });
+
+        eventGroup.on("keydown", function() {
+            const dataOfTheLastEvent: SelectionDataPoint = VisualBehavior.getDatumForLastInputEvent();
+            const event: KeyboardEvent = getEvent() as KeyboardEvent;
+
+            if (event.code !== "Enter" && event.code !== "Space") {
+                return;
+            }
+            
+            selectionHandler.handleSelection(
+                dataOfTheLastEvent,
+                false
+            );
+        });
     }
 
     public renderSelection(hasSelection: boolean): void {
@@ -86,10 +100,9 @@ export class VisualBehavior implements IInteractiveBehavior {
         const series: Selection<any, any, any, any> = this.options.mainGraphicsContext
         .selectAll(MekkoChart.SeriesSelector.selectorName);        
         
-        
         series.attr("aria-selected", (dataPoint: MekkoChartSeries) => {
             let selectedCategory: boolean = false;
-            dataPoint.data.forEach( (seriesDataPoint: MekkoChartColumnDataPoint) => {
+            dataPoint.data.forEach((seriesDataPoint: MekkoChartColumnDataPoint) => {
                 if (seriesDataPoint.selected) {
                     selectedCategory = true;
                 }

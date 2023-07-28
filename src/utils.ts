@@ -131,7 +131,8 @@ export function drawSeries(
     mergedSeries
         .style("fill", (series: MekkoChartSeries) => series.color)
         .attr("role", "option")
-        .attr("aria-selected", false);
+        .attr("aria-selected", false)
+        .attr("tabindex", "0");
     seriesData
         .exit()
         .remove();
