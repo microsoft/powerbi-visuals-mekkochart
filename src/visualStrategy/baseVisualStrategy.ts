@@ -582,7 +582,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .attr("width", layout.shapeLayout.width)
             .attr("x", layout.shapeLayout.x)
             .attr("y", layout.shapeLayout.y);
-            
+
         shapes
             .exit()
             .remove();
@@ -622,7 +622,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
     }
 
     public selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void {
-        
+
         utils.setChosenColumnOpacity(
             this.graphicsContext.mainGraphicsContext,
             BaseVisualStrategy.ItemSelector.selectorName,
@@ -630,7 +630,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             lastSelectedColumnIndex);
 
         this.moveHandle(selectedColumnIndex);
-        
+
     }
 
     public getClosestColumnIndex(x: number): number {

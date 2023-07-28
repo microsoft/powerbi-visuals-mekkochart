@@ -80,7 +80,7 @@ export class VisualBehavior implements IInteractiveBehavior {
             if (event.code !== "Enter" && event.code !== "Space") {
                 return;
             }
-            
+
             selectionHandler.handleSelection(
                 dataOfTheLastEvent,
                 false
@@ -96,20 +96,20 @@ export class VisualBehavior implements IInteractiveBehavior {
                 !dataPoint.highlight && hasSelection,
                 !dataPoint.selected && this.options.hasHighlights);
         });
-        
+
         const series: Selection<any, any, any, any> = this.options.mainGraphicsContext
-        .selectAll(MekkoChart.SeriesSelector.selectorName);        
-        
+        .selectAll(MekkoChart.SeriesSelector.selectorName);
+
         series.attr("aria-selected", (dataPoint: MekkoChartSeries) => {
             let selectedCategory: boolean = false;
             dataPoint.data.forEach((seriesDataPoint: MekkoChartColumnDataPoint) => {
                 if (seriesDataPoint.selected) {
                     selectedCategory = true;
                 }
-            })
+            });
             return (hasSelection && selectedCategory);
         });
-        
+
     }
 
     private static getDatumForLastInputEvent(): SelectionDataPoint {

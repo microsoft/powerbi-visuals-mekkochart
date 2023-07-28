@@ -262,7 +262,7 @@ export class BaseColumnChart implements IColumnChart {
             .append("svg")
             .classed(BaseColumnChart.ColumnChartMainGraphicsContextSelector.className, true)
             .attr("role", "listbox");
-        
+
         this.labelGraphicsContext = this.svg
             .append("g")
             .classed(BaseColumnChart.LabelGraphicsContextSelector.className, true);
