@@ -583,7 +583,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .attr("x", layout.shapeLayout.x)
             .attr("y", layout.shapeLayout.y)
             .attr("role", "option")
-            .attr("aria-selected", "false");
+            .attr("aria-selected", "false")
+            .attr("tabindex", "0");
 
         shapes
             .exit()

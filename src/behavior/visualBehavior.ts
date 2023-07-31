@@ -72,20 +72,21 @@ export class VisualBehavior implements IInteractiveBehavior {
 
             mouseEvent.preventDefault();
         });
-
+        
         eventGroup.on("keydown", function() {
             const dataOfTheLastEvent: SelectionDataPoint = VisualBehavior.getDatumForLastInputEvent();
             const event: KeyboardEvent = getEvent() as KeyboardEvent;
-
+           
             if (event.code !== "Enter" && event.code !== "Space") {
                 return;
             }
-
+            
             selectionHandler.handleSelection(
                 dataOfTheLastEvent,
-                false
+                event.ctrlKey
             );
         });
+        
     }
 
     public renderSelection(hasSelection: boolean): void {
