@@ -130,10 +130,8 @@ export function drawSeries(
         .merge(seriesData);
     mergedSeries
         .style("fill", (series: MekkoChartSeries) => series.color)
-        .attr("role", "option")
         .attr("role", "listbox")
-        .attr("aria-selected", false)
-        .attr("tabindex", "0");
+        .attr("aria-selected", false);
     seriesData
         .exit()
         .remove();
