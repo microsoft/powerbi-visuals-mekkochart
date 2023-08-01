@@ -584,8 +584,11 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .attr("y", layout.shapeLayout.y)
             .attr("role", "option")
             .attr("aria-selected", "false")
+            .attr("aria-label", (dataPoint: MekkoChartColumnDataPoint) => utils.getAriaLabel(
+                dataPoint.tooltipInfo)
+            )
             .attr("tabindex", "0");
-
+                
         shapes
             .exit()
             .remove();
