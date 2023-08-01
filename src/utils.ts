@@ -168,7 +168,7 @@ export function getAriaLabel(
             labelval = labelval.concat(" : ");
             labelval = labelval.concat(element.value);
             labelval = labelval.concat("\n");
-        })
+        });
         return labelval;
 }
 
