@@ -588,7 +588,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 dataPoint.tooltipInfo)
             )
             .attr("tabindex", "0");
- 
+
         shapes
             .exit()
             .remove();
