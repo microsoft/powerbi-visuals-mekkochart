@@ -1,10 +1,19 @@
 import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
+import {
+    ColorHelper
+}
+    from "powerbi-visuals-utils-colorutils";
+import * as columnChart from "./columnChart/columnChartVisual";
+import * as columnChartBaseColumnChart from "./columnChart/baseColumnChart";
 
 import FormattingSettingsCard = formattingSettings.Card;
 import FormattingSettingsSlice = formattingSettings.Slice;
 import FormattingSettingsModel = formattingSettings.Model;
+import BaseColumnChart = columnChartBaseColumnChart.BaseColumnChart;
+import IColumnChart = columnChart.IColumnChart;
 
 import { MekkoChart } from "./visual";
+import { MekkoChartSeries, MekkoLegendDataPoint } from "./dataInterfaces";
 
 export class ColumnBorderSettings extends FormattingSettingsCard {
 
@@ -310,6 +319,33 @@ export class ValueAxisSettings extends FormattingSettingsCard {
     public slices: FormattingSettingsSlice[] = [this.show, this.showTitle, this.labelColor, this.fontControl];
 }
 
+export class DataPointSettings extends FormattingSettingsCard {
+    public name: string = "dataPoint";
+    public displayNameKey:string = "Visual_Data_Colors";
+
+    public categoryGradient = new formattingSettings.ToggleSwitch({
+        name: "categoryGradient",
+        displayNameKey: "Visual_CategoryGradient",
+        value: false
+    });
+
+    public slices: FormattingSettingsSlice[] = [this.categoryGradient];
+}
+
+export class CategoryColorStartSettings extends FormattingSettingsCard {
+    public name: string = "categoryColorStart";
+    public displayNameKey: string = "Visual_CategoryDataColorsStart";
+
+    public slices: FormattingSettingsSlice[] = [];
+}
+
+export class CategoryColorEndSettings extends FormattingSettingsCard {
+    public name: string = "categoryColorEnd";
+    public displayNameKey: string = "Visual_CategoryDataColorsEnd";
+
+    public slices: FormattingSettingsSlice[] = [];
+}
+
 export class VisualFormattingSettingsModel extends FormattingSettingsModel {
     public columnBorder: FormattingSettingsCard = new ColumnBorderSettings();
     public legend: FormattingSettingsCard = new LegendSettings();
@@ -319,15 +355,67 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
     public xAxisLabels: FormattingSettingsCard = new XAxisLabelsSettings();
     public categoryAxis: FormattingSettingsCard = new CategoryAxisSettings();
     public valueAxis: FormattingSettingsCard = new ValueAxisSettings();
+    public dataPoint: FormattingSettingsCard = new DataPointSettings();
+    public categoryColorStart: FormattingSettingsCard = new CategoryColorStartSettings();
+    public categoryColorEnd: FormattingSettingsCard = new CategoryColorEndSettings();
 
     public cards: FormattingSettingsCard[] = [
         this.columnBorder,
         this.legend,
         this.sortLegend,
-        this.labels, this.sortSeries,
+        this.labels, 
+        this.sortSeries,
         this.xAxisLabels,
         this.categoryAxis,
-        this.valueAxis
+        this.valueAxis,
+        this.dataPoint,
+        this.categoryColorStart,
+        this.categoryColorEnd
     ];
 
+    public setDataPointColorPickerSlices(layers: columnChart.IColumnChart[]) {
+        const categoryGradient: boolean = (<formattingSettings.ToggleSwitch>this.dataPoint.slices[0]).value;
+        if (categoryGradient) {
+            for (let i: number = 0; i < layers.length; i++) {
+                (<BaseColumnChart>layers[i]).getData().categories.forEach((category, index) => {
+                    let categoryLegends: MekkoLegendDataPoint[] = (<BaseColumnChart>layers[i]).getData().legendData.dataPoints.filter(legend => legend.category === category);
+                    if (categoryLegends[0] === undefined) {
+                        return;
+                    }
+
+                    this.categoryColorStart.slices.push(
+                        new formattingSettings.ColorPicker({
+                            name: "categoryGradient",
+                            displayNameKey: "Visual_GradientStartColor",
+                            selector: ColorHelper.normalizeSelector(categoryLegends[0].categoryIdentity.getSelector(), true),
+                            value: {value: categoryLegends[0].categoryStartColor}
+                        })
+                    );
+
+                    this.categoryColorEnd.slices.push(
+                        new formattingSettings.ColorPicker({
+                            name: "categoryGradient",
+                            displayNameKey: "Visual_CategoryDataColorsEnd",
+                            selector: ColorHelper.normalizeSelector(categoryLegends[0].categoryIdentity.getSelector(), true),
+                            value: {value: categoryLegends[0].categoryStartColor}
+                        })
+                    );
+                });
+            }
+        }
+        else {
+            for (let i: number = 0; i < layers.length; i++) {
+                for (let series of (<BaseColumnChart>layers[i]).getData().series) {
+                    this.dataPoint.slices.push(
+                        new formattingSettings.ColorPicker({
+                            name: "fill",
+                            displayNameKey: "Visual_Fill",
+                            selector: ColorHelper.normalizeSelector(series.identity.getSelector()),
+                            value: {value: series.color}
+                        })
+                    );
+                }
+            }
+        }
+    }
 }
