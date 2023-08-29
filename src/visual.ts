@@ -533,7 +533,7 @@ export class MekkoChart implements IVisual {
         this.localizationManager = this.visualHost.createLocalizationManager();
         this.formattingSettingsService = new FormattingSettingsService(this.localizationManager);
 
-        let legendParent = select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
+        const legendParent = select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
 
         this.legend = createLegend(
             <HTMLElement>legendParent.node(),
@@ -543,15 +543,15 @@ export class MekkoChart implements IVisual {
     }
 
     private calculateXAxisAdditionalHeight(categories: PrimitiveValue[]): number {
-        let sortedByLength: PrimitiveValue[] = categories.sort((a, b) => a["length"] > b["length"] ? 1 : -1);
+        const sortedByLength: PrimitiveValue[] = categories.sort((a, b) => a["length"] > b["length"] ? 1 : -1);
         let longestCategory: PrimitiveValue = sortedByLength[categories.length - 1] || "";
-        let shortestCategory: PrimitiveValue = sortedByLength[0] || "";
+        const shortestCategory: PrimitiveValue = sortedByLength[0] || "";
 
         if (longestCategory instanceof Date) {
-            let metadataColumn: DataViewMetadataColumn = this.dataViews[0].categorical.categories[0].source;
-            let formatString: string = valueFormatter.getFormatStringByColumn(metadataColumn);
+            const metadataColumn: DataViewMetadataColumn = this.dataViews[0].categorical.categories[0].source;
+            const formatString: string = valueFormatter.getFormatStringByColumn(metadataColumn);
 
-            let formatter = valueFormatter.create({
+            const formatter = valueFormatter.create({
                 format: formatString,
                 value: shortestCategory,
                 value2: longestCategory,
@@ -567,17 +567,17 @@ export class MekkoChart implements IVisual {
             && PixelConverter.fromPointToPixel(
                 parseFloat(<any>this.categoryAxisProperties["fontSize"])) || undefined);
 
-        let longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory.toString());
-        let requiredHeight = longestCategoryWidth * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180);
+        const longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory.toString());
+        const requiredHeight = longestCategoryWidth * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180);
         return requiredHeight;
     }
 
     public static getTranslation(transform): [number, number, number] {
-        let g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
         g.setAttributeNS(null, "transform", transform);
 
-        let matrix = g.transform.baseVal.consolidate().matrix;
+        const matrix = g.transform.baseVal.consolidate().matrix;
 
         return [matrix.e, matrix.f, -Math.asin(matrix.a) * 180 / Math.PI];
     }
@@ -606,7 +606,7 @@ export class MekkoChart implements IVisual {
 
             let shiftTitle: number = 0;
             if (rotataionEnabled) {
-                let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
+                const axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
                     this.layers,
                     options.viewport,
                     this.margin,
@@ -895,7 +895,7 @@ export class MekkoChart implements IVisual {
         const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
         let additionHeight: number = 0;
         if (rotataionEnabled) {
-            let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
+            const axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
                 this.layers,
                 this.currentViewport,
                 this.margin,
@@ -1210,7 +1210,7 @@ export class MekkoChart implements IVisual {
 
     public onClearSelection(): void {
         if (this.hasSetData) {
-            for (let layer of this.layers) {
+            for (const layer of this.layers) {
                 layer.onClearSelection();
                 layer.render(true);
             }
@@ -1234,7 +1234,7 @@ export class MekkoChart implements IVisual {
             this.interactivityService,
             this.isScrollable);
 
-        let cartesianOptions: MekkoChartVisualInitOptions
+        const cartesianOptions: MekkoChartVisualInitOptions
             = Prototype.inherit(this.visualInitOptions) as MekkoChartVisualInitOptions;
 
         cartesianOptions.svg = this.axisGraphicsContextScrollable;
@@ -1255,7 +1255,7 @@ export class MekkoChart implements IVisual {
     }
 
     private renderLegend(): void {
-        let layers: IColumnChart[] = this.layers,
+        const layers: IColumnChart[] = this.layers,
             legendData: ILegendData = {
                 title: "",
                 fontSize: <number>this.legendObjectProperties.fontSize,
@@ -1304,12 +1304,12 @@ export class MekkoChart implements IVisual {
         }
 
         let reducedLegends: IGrouppedLegendData[] = [];
-        let legendSortSettings: MekkoLegendSortSettings = (<BaseColumnChart>this.layers[0]).getLegendSortSettings();
+        const legendSortSettings: MekkoLegendSortSettings = (<BaseColumnChart>this.layers[0]).getLegendSortSettings();
         if (legendSortSettings.enabled) {
             if (legendSortSettings.groupByCategory) {
-                let mappedLegends = legendData.dataPoints.map((dataPoint: MekkoLegendDataPoint) => {
-                    let maxVal = max(dataPoint.categoryValues as Number[]);
-                    let index = dataPoint.categoryValues.indexOf(maxVal as PrimitiveValue);
+                const mappedLegends = legendData.dataPoints.map((dataPoint: MekkoLegendDataPoint) => {
+                    const maxVal = max(dataPoint.categoryValues as number[]);
+                    const index = dataPoint.categoryValues.indexOf(maxVal as PrimitiveValue);
                     return {
                         categoryIndex: index,
                         data: dataPoint,
@@ -1373,22 +1373,22 @@ export class MekkoChart implements IVisual {
 
         select(this.rootElement.node()).selectAll("div.legendParent").remove();
         this.categoryLegends = [];
-        let legendParents = select(this.rootElement.node()).selectAll("div.legendParent");
+        const legendParents = select(this.rootElement.node()).selectAll("div.legendParent");
 
         reducedLegends = reducedLegends.filter((l: IGrouppedLegendData) => l !== undefined);
-        let legendParentsWithData = legendParents.data(reducedLegends);
-        let legendParentsWithChilds = legendParentsWithData.enter().append("div");
-        let legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
+        const legendParentsWithData = legendParents.data(reducedLegends);
+        const legendParentsWithChilds = legendParentsWithData.enter().append("div");
+        const legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style("position", "absolute")
             .style("top", (data, index) => PixelConverter.toString(svgHeight * index));
 
-        let mekko = this;
+        const mekko = this;
         this.categoryLegends = this.categoryLegends || [];
         legendParentsWithChildsAttr.each(function (data, index) {
-            let legendSvg = select(this);
+            const legendSvg = select(this);
             legendSvg.style("font-family", <string>legendProperties["fontFamily"]);
             if (legendSvg.select("svg").node() === null) {
-                let legend: ILegend = createLegend(
+                const legend: ILegend = createLegend(
                     <any>this,
                     false,
                     mekko.interactivityService,
@@ -1421,7 +1421,7 @@ export class MekkoChart implements IVisual {
                     return;
                 }
 
-                let legendData: ILegendData = {
+                const legendData: ILegendData = {
                     title: reducedLegends[index].category,
                     dataPoints: reducedLegends[index].data
                 };
@@ -1521,7 +1521,7 @@ export class MekkoChart implements IVisual {
         }
 
         if (axes.y2) {
-            let unitType: string = MekkoChart.getUnitType(
+            const unitType: string = MekkoChart.getUnitType(
                 axes,
                 (axis: MekkoChartAxisProperties) => axis.y2);
 
@@ -1761,7 +1761,7 @@ export class MekkoChart implements IVisual {
             const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
 
             if (rotataionEnabled) {
-                let axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
+                const axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
                     this.layers,
                     this.currentViewport,
                     this.margin,
@@ -2064,7 +2064,7 @@ export class MekkoChart implements IVisual {
                     borderWidth,
                     xFontSize / MekkoChart.XFontSizeDelimiter - MekkoChart.XFontSizeOffset);
 
-            let xAxisLabelssettings: MekkoXAxisLabelsSettings = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings();
+            const xAxisLabelssettings: MekkoXAxisLabelsSettings = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings();
             if (!xAxisLabelssettings.enableRotataion) {
                 xAxisTextNodes
                     .call(
@@ -2082,12 +2082,12 @@ export class MekkoChart implements IVisual {
                     .attr("transform", `rotate(-${MekkoChart.CategoryTextRotataionDegree})`);
 
                 // fix positions
-                let categoryLabels = xAxisGraphicsElement.selectAll(".tick");
+                const categoryLabels = xAxisGraphicsElement.selectAll(".tick");
                 categoryLabels.each(function (tick, index) {
-                    let shiftX: number = (<any>this).getBBox().width / Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
-                    let shiftY: number = (<any>this).getBBox().width * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
-                    let currTransform: string = (<any>this).attributes.transform.value;
-                    let translate: [number, number, number] = MekkoChart.getTranslation(currTransform);
+                    const shiftX: number = (<any>this).getBBox().width / Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
+                    const shiftY: number = (<any>this).getBBox().width * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
+                    const currTransform: string = (<any>this).attributes.transform.value;
+                    const translate: [number, number, number] = MekkoChart.getTranslation(currTransform);
                     select(<any>this)
                         .attr("transform", (value: number, index: number) => {
                             return manipulation.translate(+translate[0] - shiftX, +translate[1] + shiftY);
@@ -2307,7 +2307,7 @@ export class MekkoChart implements IVisual {
                 }
             }
 
-            let forceDisplay: boolean = (<MekkoChartLabelSettings>(<MekkoColumnChartData>layers[0].getData()).labelSettings).forceDisplay;
+            const forceDisplay: boolean = (<MekkoChartLabelSettings>(<MekkoColumnChartData>layers[0].getData()).labelSettings).forceDisplay;
             drawDefaultLabelsForDataPointChart(
                 resultsLabelDataPoints,
                 this.labelGraphicsContextScrollable,

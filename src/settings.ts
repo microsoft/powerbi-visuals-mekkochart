@@ -378,7 +378,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         if (categoryGradient) {
             for (let i: number = 0; i < layers.length; i++) {
                 (<BaseColumnChart>layers[i]).getData().categories.forEach((category, index) => {
-                    let categoryLegends: MekkoLegendDataPoint[] = (<BaseColumnChart>layers[i]).getData().legendData.dataPoints.filter(legend => legend.category === category);
+                    const categoryLegends: MekkoLegendDataPoint[] = (<BaseColumnChart>layers[i]).getData().legendData.dataPoints.filter(legend => legend.category === category);
                     if (categoryLegends[0] === undefined) {
                         return;
                     }
@@ -405,7 +405,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         }
         else {
             for (let i: number = 0; i < layers.length; i++) {
-                for (let series of (<BaseColumnChart>layers[i]).getData().series) {
+                for (const series of (<BaseColumnChart>layers[i]).getData().series) {
                     this.dataPoint.slices.push(
                         new formattingSettings.ColorPicker({
                             name: "fill",

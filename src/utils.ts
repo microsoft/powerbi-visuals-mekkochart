@@ -119,11 +119,11 @@ export function drawSeries(
     graphicsContext: Selection<any, any, any, any>,
     axisOptions: MekkoChartAxisOptions): Selection<any, MekkoChartSeries, any, any> {
 
-    let seriesData: Selection<any, MekkoChartSeries, any, any> = graphicsContext
+    const seriesData: Selection<any, MekkoChartSeries, any, any> = graphicsContext
         .selectAll(MekkoChart.SeriesSelector.selectorName)
         .data(data.series, (series: MekkoChartSeries) => series.key);
 
-    let mergedSeries = seriesData
+    const mergedSeries = seriesData
         .enter()
         .append("g")
         .classed(MekkoChart.SeriesSelector.className, true)

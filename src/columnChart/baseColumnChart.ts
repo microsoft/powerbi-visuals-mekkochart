@@ -408,13 +408,13 @@ export class BaseColumnChart implements IColumnChart {
         }
 
         // Allocate colors
-        let legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, defaultDataPointColor, "", dataPointSettings.categoryGradient, dataPointSettings.colorGradientEndColor.solid.color);
-        let legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
+        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, defaultDataPointColor, "", dataPointSettings.categoryGradient, dataPointSettings.colorGradientEndColor.solid.color);
+        const legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
 
-        let seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
+        const seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
 
         // Determine data points
-        let result: MekkoDataPoints = BaseColumnChart.createDataPoints(
+        const result: MekkoDataPoints = BaseColumnChart.createDataPoints(
             visualHost,
             categorical,
             categories,
@@ -437,7 +437,7 @@ export class BaseColumnChart implements IColumnChart {
             categoryMetadata);
 
         if (sortSeriesSettings.enabled) {
-            let columns = BaseColumnChart.createAlternateStructure(result, sortSeriesSettings.direction === "des");
+            const columns = BaseColumnChart.createAlternateStructure(result, sortSeriesSettings.direction === "des");
             BaseColumnChart.reorderPositions(result, columns);
         }
 
@@ -482,10 +482,10 @@ export class BaseColumnChart implements IColumnChart {
     }
 
     private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): ICategoryValuesCollection[] {
-        let series: MekkoChartSeries[] = dataPoint.series;
-        let columns: ICategoryValuesCollection[] = [];
-        let rowsCount: number = series.length;
-        let colsCount: number = max(series.map(s => s.data.length));
+        const series: MekkoChartSeries[] = dataPoint.series;
+        const columns: ICategoryValuesCollection[] = [];
+        const rowsCount: number = series.length;
+        const colsCount: number = max(series.map(s => s.data.length));
 
         // define all cols
         series.some((value: MekkoChartSeries): boolean => {
@@ -517,7 +517,7 @@ export class BaseColumnChart implements IColumnChart {
 
         // copy array with specific fields
         for (let col = 0; col < colsCount; col++) {
-            let tmpObject = [];
+            const tmpObject = [];
             tmpObject["identity"] = columns[col].identity;
             tmpObject["categoryValue"] = columns[col].categoryValue;
             tmpObject["color"] = columns[col].color;
@@ -534,8 +534,8 @@ export class BaseColumnChart implements IColumnChart {
     }
 
     private static reorderPositions(dataPoint: MekkoDataPoints, columns: ICategoryValuesCollection[]) {
-        let series: MekkoChartSeries[] = dataPoint.series;
-        let colsCount: number = series[0].data.length;
+        const series: MekkoChartSeries[] = dataPoint.series;
+        const colsCount: number = series[0].data.length;
         for (let col = 0; col < colsCount; col++) {
             let columnAbsoluteValue: number = sum(columns[col].map((val) => {
                 if (val === undefined) {
@@ -543,8 +543,8 @@ export class BaseColumnChart implements IColumnChart {
                 }
                 return val.valueAbsolute;
             }));
-            let absValScale: LinearScale<number, number> = scaleLinear().domain([0, columnAbsoluteValue]).range([0, 1]);
-            let rowsCount: number = columns[col].length;
+            const absValScale: LinearScale<number, number> = scaleLinear().domain([0, columnAbsoluteValue]).range([0, 1]);
+            const rowsCount: number = columns[col].length;
             for (let row = 0; row < rowsCount; row++) {
                 if (columns[col][row] === undefined) {
                     continue;
@@ -785,7 +785,7 @@ export class BaseColumnChart implements IColumnChart {
         }
 
         let dataPointObjects: powerbi.DataViewObjects[] = categoryObjectsList;
-        let multipliersAllData: ValueMultiplers = BaseColumnChart.getStackedMultiplierForAllDataSet(rawValues, seriesCount, categoryCount);
+        const multipliersAllData: ValueMultiplers = BaseColumnChart.getStackedMultiplierForAllDataSet(rawValues, seriesCount, categoryCount);
 
         for (let seriesIndex: number = 0; seriesIndex < seriesCount; seriesIndex++) {
             let seriesDataPoints: MekkoChartColumnDataPoint[] = [],
@@ -865,7 +865,7 @@ export class BaseColumnChart implements IColumnChart {
                         categoryCount);
                 }
 
-                let unadjustedValue: number = value,
+                const unadjustedValue: number = value,
                     isNegative: boolean = value < 0;
 
                 if (multipliers) {
@@ -885,10 +885,10 @@ export class BaseColumnChart implements IColumnChart {
                     }
                 }
 
-                let valueAbsolute: number = Math.abs(value);
+                const valueAbsolute: number = Math.abs(value);
                 let position: number;
 
-                let valueAbsoluteByAllData: number = Math.abs(valueByAllData);
+                const valueAbsoluteByAllData: number = Math.abs(valueByAllData);
 
                 if (isNegative) {
                     position = baseValuesNeg[categoryIndex];
@@ -922,7 +922,7 @@ export class BaseColumnChart implements IColumnChart {
                     .withMeasure(converterStrategy.getMeasureNameByIndex(seriesIndex))
                     .createSelectionId();
 
-                let color: string = BaseColumnChart.getDataPointColor(
+                const color: string = BaseColumnChart.getDataPointColor(
                     legendItem,
                     categoryIndex,
                     dataPointObjects
@@ -985,7 +985,7 @@ export class BaseColumnChart implements IColumnChart {
 
                 value = columnWidth[categoryIndex];
 
-                let originalPosition: number = columnStartX[categoryIndex],
+                const originalPosition: number = columnStartX[categoryIndex],
                     dataPoint: MekkoChartColumnDataPoint = {
                         categoryValue,
                         value,
@@ -1039,7 +1039,7 @@ export class BaseColumnChart implements IColumnChart {
 
                     rawCategoryValue = categories[categoryIndex];
 
-                    let highlightedValue: number = highlightedTooltip
+                    const highlightedValue: number = highlightedTooltip
                         ? valueHighlight
                         : undefined;
 
@@ -1090,14 +1090,14 @@ export class BaseColumnChart implements IColumnChart {
             columnSeries.push(series);
         }
 
-        let result: MekkoDataPoints = {
+        const result: MekkoDataPoints = {
             series: columnSeries,
             categoriesWidth: columnWidth,
             hasHighlights: hasHighlights,
             hasDynamicSeries: hasDynamicSeries
         };
 
-        let categoryProperties: MekkoCategoryProperties[] = [];
+        const categoryProperties: MekkoCategoryProperties[] = [];
 
         result.series.forEach((series) => {
             if (series.data.length !== 1) {
@@ -1127,7 +1127,7 @@ export class BaseColumnChart implements IColumnChart {
         dataPointObjects?: powerbi.DataViewObjects[]): string {
 
         if (dataPointObjects) {
-            let colorOverride: string = dataViewObjects.getFillColor(
+            const colorOverride: string = dataViewObjects.getFillColor(
                 dataPointObjects[categoryIndex],
                 MekkoChart.Properties["dataPoint"]["fill"]);
 
@@ -1257,7 +1257,7 @@ export class BaseColumnChart implements IColumnChart {
                     this.localizationManager,
                     this.chartType);
 
-                for (let currentSeries of this.data.series) {
+                for (const currentSeries of this.data.series) {
                     if (this.interactivityService) {
                         this.interactivityService.applySelectionStateToData(currentSeries.data);
                     }
@@ -1327,7 +1327,7 @@ export class BaseColumnChart implements IColumnChart {
     private enumerateCategoryColors(instances: VisualObjectInstance[], objectName: string, label: string) {
         if (this.data.dataPointSettings && this.data.dataPointSettings.categoryGradient && this.checkDataToFeatures()) {
             this.data.categories.forEach((category, index) => {
-                let categoryLegends: MekkoLegendDataPoint[] = this.data.legendData.dataPoints.filter(legend => legend.category === category);
+                const categoryLegends: MekkoLegendDataPoint[] = this.data.legendData.dataPoints.filter(legend => legend.category === category);
 
                 instances.push({
                     objectName: objectName,
@@ -1451,7 +1451,7 @@ export class BaseColumnChart implements IColumnChart {
             return;
         }
 
-        let properties: any = {};
+        const properties: any = {};
         if (this.checkDataToFeatures()) {
             properties["categoryGradient"] = this.data.dataPointSettings.categoryGradient;
 
@@ -1464,7 +1464,7 @@ export class BaseColumnChart implements IColumnChart {
 
         if (data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata) {
             if (!this.data.dataPointSettings.categoryGradient) {
-                for (let series of data.series) {
+                for (const series of data.series) {
                     instances.push({
                         objectName: "dataPoint",
                         displayName: series.displayName,

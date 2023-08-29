@@ -67,7 +67,7 @@ export function createTooltipInfo(
 
     seriesIndex = seriesIndex | 0;
 
-    let categoriesData: DataViewCategoryColumn[] = dataViewCat
+    const categoriesData: DataViewCategoryColumn[] = dataViewCat
         ? dataViewCat.categories
         : categories;
 
@@ -139,7 +139,7 @@ export function createTooltipData(
     seriesValues: TooltipSeriesDataItem[],
     localizationManager: ILocalizationManager): VisualTooltipDataItem[] {
 
-    let items: VisualTooltipDataItem[] = [];
+    const items: VisualTooltipDataItem[] = [];
 
     if (categoryValue) {
         if (categoryValue.metadata.length > 1) {
@@ -228,7 +228,7 @@ export function createTooltipData(
 }
 
 export function getFormattedValue(column: DataViewMetadataColumn, value: any): string {
-    let formatString: string = getFormatStringFromColumn(column);
+    const formatString: string = getFormatStringFromColumn(column);
 
     return valueFormatter.format(value, formatString);
 }

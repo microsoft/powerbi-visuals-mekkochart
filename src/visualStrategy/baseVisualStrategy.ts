@@ -315,7 +315,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             getValueFn,
             useTickIntervalForDisplayUnits);
 
-        let axisFn = isVertical ? axisLeft : axisBottom;
+        const axisFn = isVertical ? axisLeft : axisBottom;
         const axis: d3.Axis<any> = axisFn(scale)
             .tickSize(6)
             .ticks(bestTickCount)
@@ -556,7 +556,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 dataSelector,
                 (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
 
-        let allShapes = shapes
+        const allShapes = shapes
             .enter()
             .append("rect")
             .attr("class", (dataPoint: MekkoChartColumnDataPoint) => {
@@ -785,7 +785,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             formattersCache: IColumnFormatterCacheManager = createColumnFormatterCacheManager(),
             shapeLayout = this.layout.shapeLayout;
 
-        for (let currentSeries of dataSeries) {
+        for (const currentSeries of dataSeries) {
             const labelSettings: VisualDataLabelsSettings = currentSeries.labelSettings
                 ? currentSeries.labelSettings
                 : data.labelSettings;
@@ -798,7 +798,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 this.yProps.formatter,
                 labelSettings);
 
-            for (let dataPoint of currentSeries.data) {
+            for (const dataPoint of currentSeries.data) {
                 if ((data.hasHighlights && !dataPoint.highlight)
                     || dataPoint.value == null) {
                     continue;
