@@ -14,7 +14,7 @@
     "start": "pbiviz start",
     "cert": "pbiviz --create-cert",
     "package": "pbiviz package --resources",
-    "lint": "node node_modules/tslint/bin/tslint \"+(src|test)/**/*.ts\"",
+    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "pretest": "pbiviz package --resources --no-minify --no-pbiviz",
     "test": "karma start"
   },
@@ -35,10 +35,13 @@
     "@types/karma": "6.3.4",
     "@types/lodash": "4.14.132",
     "@types/webpack": "5.28.2",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "coverage-istanbul-loader": "3.0.5",
     "css-loader": "6.8.1",
     "d3": "^7.8.5",
     "del-cli": "5.0.0",
-    "coverage-istanbul-loader": "3.0.5",
+    "eslint": "^8.45.0",
     "jasmine": "3.3.0",
     "jasmine-jquery": "2.1.1",
     "jquery": "3.7.0",
@@ -75,5 +78,8 @@
     "tslint": "5.16.0",
     "typescript": "4.9.5",
     "webpack": "5.88.2"
+  },
+  "dependencies": {
+    "eslint-plugin-powerbi-visuals": "^0.8.1"
   }
 }
