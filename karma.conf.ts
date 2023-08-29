@@ -47,7 +47,8 @@ module.exports = (config: Config) => {
         frameworks: ["jasmine"],
         reporters: [
             "progress",
-            "junit"
+            "junit",
+            "coverage-istanbul"
         ],
         junitReporter: {
             outputDir: path.join(__dirname, coverageFolder),
@@ -62,7 +63,8 @@ module.exports = (config: Config) => {
             "karma-jasmine",
             "karma-sourcemap-loader",
             "karma-chrome-launcher",
-            "karma-junit-reporter"
+            "karma-junit-reporter",
+            "karma-coverage-istanbul-reporter"
         ],
         files: [
             "node_modules/jquery/dist/jquery.min.js",

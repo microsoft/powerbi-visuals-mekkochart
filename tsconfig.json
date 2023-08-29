@@ -3,7 +3,7 @@
     "allowJs": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "es6",
+    "module": "CommonJS",
     "target": "ES6",
     "sourceMap": true,
     "outDir": "./.tmp/build/",

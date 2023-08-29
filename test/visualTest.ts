@@ -156,7 +156,7 @@ describe("MekkoChart", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
+                expect($(visualBuilder.element).find(".legend")).toHaveCss({ display: "none" });
                 expect(visualBuilder.mainElement[0]).toHaveCss({ display: "none" });
 
                 done();
@@ -170,7 +170,7 @@ describe("MekkoChart", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "block" });
+                expect($(visualBuilder.element).find(".legend")).toHaveCss({ display: "block" });
                 expect(visualBuilder.mainElement[0]).toHaveCss({ display: "block" });
 
                 done();
@@ -190,7 +190,7 @@ describe("MekkoChart", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
+                expect($(visualBuilder.element).find(".legend")).toHaveCss({ display: "none" });
                 expect(visualBuilder.mainElement[0]).toHaveCss({ display: "none" });
 
                 done();
@@ -205,7 +205,7 @@ describe("MekkoChart", () => {
 
             visualBuilder.updateRenderTimeout(dataView, () => {
                 expect($(visualBuilder.mainElement[0])).toHaveCss({ display: "none" });
-                expect(visualBuilder.element.find(".legend")).toHaveCss({ display: "none" });
+                expect($(visualBuilder.element).find(".legend")).toHaveCss({ display: "none" });
 
                 done();
             });
