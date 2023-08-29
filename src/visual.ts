@@ -611,9 +611,7 @@ export class MekkoChart implements IVisual {
                     options.viewport,
                     this.margin,
                     this.categoryAxisProperties,
-                    this.valueAxisProperties,
-                    this.isXScrollBarVisible || this.isYScrollBarVisible,
-                    null);
+                    this.valueAxisProperties);
                 shiftTitle = this.calculateXAxisAdditionalHeight(axes.x.values);
             }
 
@@ -900,9 +898,7 @@ export class MekkoChart implements IVisual {
                 this.currentViewport,
                 this.margin,
                 this.categoryAxisProperties,
-                this.valueAxisProperties,
-                this.isXScrollBarVisible || this.isYScrollBarVisible,
-                null);
+                this.valueAxisProperties);
             additionHeight += this.calculateXAxisAdditionalHeight(axes.x.values);
         }
 
@@ -1621,9 +1617,7 @@ export class MekkoChart implements IVisual {
             viewport,
             margin,
             this.categoryAxisProperties,
-            this.valueAxisProperties,
-            this.isXScrollBarVisible || this.isYScrollBarVisible,
-            null);
+            this.valueAxisProperties);
 
         this.yAxisIsCategorical = axes.y1.isCategoryAxis;
 
@@ -1708,9 +1702,7 @@ export class MekkoChart implements IVisual {
             viewport,
             margin,
             this.categoryAxisProperties,
-            this.valueAxisProperties,
-            this.isXScrollBarVisible || this.isYScrollBarVisible,
-            null);
+            this.valueAxisProperties);
 
         // we need to make two passes because the margin changes affect the chosen tick values, which then affect the margins again.
         // after the second pass the margins are correct.
@@ -1766,9 +1758,7 @@ export class MekkoChart implements IVisual {
                     this.currentViewport,
                     this.margin,
                     this.categoryAxisProperties,
-                    this.valueAxisProperties,
-                    this.isXScrollBarVisible || this.isYScrollBarVisible,
-                    null);
+                    this.valueAxisProperties);
 
                 xMax += this.calculateXAxisAdditionalHeight(axes.x.values);
             }
@@ -1829,9 +1819,7 @@ export class MekkoChart implements IVisual {
                 viewport,
                 margin,
                 this.categoryAxisProperties,
-                this.valueAxisProperties,
-                this.isXScrollBarVisible || this.isYScrollBarVisible,
-                axes);
+                this.valueAxisProperties);
 
             if (axes.y1.values.length === previousTickCountY1
                 && (!axes.y2 || axes.y2.values.length === previousTickCountY2)) {
