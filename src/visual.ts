@@ -33,8 +33,6 @@ import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewMetadata = powerbi.DataViewMetadata;
 import PrimitiveValue = powerbi.PrimitiveValue;
-import VisualObjectInstance = powerbi.VisualObjectInstance;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
 import DataView = powerbi.DataView;
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
@@ -44,7 +42,6 @@ import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import DataViewPropertyValue = powerbi.DataViewPropertyValue;
 import SortDirection = powerbi.SortDirection;
 import IVisual = powerbi.extensibility.visual.IVisual;
-import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
 import {
@@ -90,16 +87,7 @@ import * as axisType from "./axis/type";
 import * as axisPosition from "./axis/position";
 import * as axisUtils from "./axis/utils";
 
-import {
-    dataViewObjects,
-    dataViewObject
-}
-    from "powerbi-visuals-utils-dataviewutils";
-
-import {
-    ColorHelper
-}
-    from "powerbi-visuals-utils-colorutils";
+import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
 
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 import { VisualFormattingSettingsModel } from "./settings";
@@ -112,15 +100,12 @@ import { brushX, BrushBehavior } from "d3-brush";
 import {
     axis as AxisHelper,
     axisInterfaces,
-    axisScale,
     axisStyle,
     dataLabelInterfaces,
     dataLabelUtils,
     legendInterfaces,
     legendData as LegendData,
-    legend,
-    legendPosition,
-    axis,
+    legend
 } from "powerbi-visuals-utils-chartutils";
 
 import IAxisProperties = axisInterfaces.IAxisProperties;
@@ -190,10 +175,8 @@ import IColumnChart = columnChart.IColumnChart;
 import BaseColumnChart = columnChartBaseColumnChart.BaseColumnChart;
 
 // dataViewUtils
-import isScalar = dataViewUtils.isScalar;
 import getValueAxisProperties = dataViewUtils.getValueAxisProperties;
 import getCategoryAxisProperties = dataViewUtils.getCategoryAxisProperties;
-import { getFillColorByPropertyName } from "powerbi-visuals-utils-dataviewutils/lib/dataViewObject";
 
 
 export interface MekkoChartProperty {

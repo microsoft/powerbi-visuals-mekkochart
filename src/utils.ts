@@ -46,9 +46,7 @@ import {
 import {
     MekkoChartSeries,
     MekkoChartColumnDataPoint,
-    MekkoChartAxisOptions,
     MekkoChartData,
-
 } from "./dataInterfaces";
 
 import {
