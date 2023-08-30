@@ -70,7 +70,6 @@ import {
 from "powerbi-visuals-utils-formattingutils";
 
 import {
-    TooltipEventArgs,
     ITooltipServiceWrapper,
     TooltipEnabledDataPoint,
     createTooltipServiceWrapper
@@ -88,7 +87,6 @@ import {
     MekkoSeriesSortSettings,
     MekkoLegendSortSettings,
     MekkoXAxisLabelsSettings,
-    MekkoCategoryColorSettings,
     MekkoDataPointSettings,
     LegendSeriesInfo,
     MekkoLegendDataPoint,
@@ -381,7 +379,6 @@ export class BaseColumnChart implements IColumnChart {
             sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries,
             sortLegendSettings: MekkoLegendSortSettings = MekkoChart.DefaultSettings.sortLegend,
             xAxisLabelsSettings: MekkoXAxisLabelsSettings = MekkoChart.DefaultSettings.xAxisLabels,
-            categoryColumnSettings: MekkoCategoryColorSettings = MekkoChart.DefaultSettings.categoryColor,
             labelSettings: VisualDataLabelsSettings = dataLabelUtils.getDefaultColumnLabelSettings(true),
             dataPointSettings: MekkoDataPointSettings = MekkoChart.DefaultSettings.dataPoint;
 
@@ -558,8 +555,7 @@ export class BaseColumnChart implements IColumnChart {
     private static getStackedMultiplier(
         rawValues: number[][],
         rowIdx: number,
-        seriesCount: number,
-        categoryCount: number): ValueMultiplers {
+        seriesCount: number): ValueMultiplers {
 
         let pos: number = 0,
             neg: number = 0;
@@ -672,8 +668,7 @@ export class BaseColumnChart implements IColumnChart {
             hasDynamicSeries = !!(dataViewCat.values && dataViewCat.values.source),
             widthColumns: number[] = [];
 
-        let rawValues: number[][] = [],
-            widthIndex: number = -1;
+        let rawValues: number[][] = [];
 
         let highlightsOverflow: boolean = false,
             hasHighlights: boolean = converterStrategy.hasHighlightValues(0);
@@ -682,8 +677,6 @@ export class BaseColumnChart implements IColumnChart {
             if (dataViewCat.values[seriesIndex].source.roles
                 && dataViewCat.values[seriesIndex].source.roles[RoleNames.width]
                 && !dataViewCat.values[seriesIndex].source.roles[RoleNames.y]) {
-
-                widthIndex = seriesIndex;
 
                 const widthValues: number[] = dataViewCat.values[seriesIndex].values as number[];
 
@@ -741,8 +734,6 @@ export class BaseColumnChart implements IColumnChart {
                 if (dataViewCat.values[seriesIndex].source.roles
                     && dataViewCat.values[seriesIndex].source.roles[RoleNames.width]) {
 
-                    widthIndex = seriesIndex;
-
                     const widthValues: number[] = dataViewCat.values[seriesIndex].values as number[];
 
                     for (let i: number = 0; i < widthValues.length; i++) {
@@ -788,9 +779,10 @@ export class BaseColumnChart implements IColumnChart {
         const multipliersAllData: ValueMultiplers = BaseColumnChart.getStackedMultiplierForAllDataSet(rawValues, seriesCount, categoryCount);
 
         for (let seriesIndex: number = 0; seriesIndex < seriesCount; seriesIndex++) {
-            let seriesDataPoints: MekkoChartColumnDataPoint[] = [],
-                legendItem: MekkoLegendDataPoint = legend[seriesIndex],
-                seriesLabelSettings: VisualDataLabelsSettings;
+            const seriesDataPoints: MekkoChartColumnDataPoint[] = [],
+                legendItem: MekkoLegendDataPoint = legend[seriesIndex];
+            
+            let seriesLabelSettings: VisualDataLabelsSettings;
 
             if (!hasDynamicSeries) {
                 const labelsSeriesGroup: DataViewValueColumn = grouped
@@ -844,8 +836,8 @@ export class BaseColumnChart implements IColumnChart {
                     continue;
                 }
 
-                let originalValue: number = value,
-                    categoryValue: any = categories[categoryIndex];
+                const originalValue: number = value;
+                let categoryValue: any = categories[categoryIndex];
 
                 if (isDateTime && categoryValue) {
                     categoryValue = categoryValue.getTime();
@@ -861,8 +853,7 @@ export class BaseColumnChart implements IColumnChart {
                     multipliers = BaseColumnChart.getStackedMultiplier(
                         rawValues,
                         categoryIndex,
-                        seriesCount,
-                        categoryCount);
+                        seriesCount);
                 }
 
                 const unadjustedValue: number = value,
@@ -1013,8 +1004,8 @@ export class BaseColumnChart implements IColumnChart {
                 seriesDataPoints.push(dataPoint);
 
                 if (hasHighlights) {
-                    let valueHighlight: number = rawHighlightValues[seriesIndex][categoryIndex],
-                        unadjustedValueHighlight: number = valueHighlight;
+                    let valueHighlight: number = rawHighlightValues[seriesIndex][categoryIndex];
+                    const unadjustedValueHighlight: number = valueHighlight;
 
                     let highlightedTooltip: boolean = true;
 
@@ -1027,8 +1018,8 @@ export class BaseColumnChart implements IColumnChart {
                         valueHighlight *= multipliers.pos;
                     }
 
-                    let absoluteValueHighlight: number = Math.abs(valueHighlight),
-                        highlightPosition: number = position;
+                    const absoluteValueHighlight: number = Math.abs(valueHighlight);
+                    let highlightPosition: number = position;
 
                     if (valueHighlight > 0) {
                         highlightPosition -= valueAbsolute - absoluteValueHighlight;
@@ -1326,7 +1317,7 @@ export class BaseColumnChart implements IColumnChart {
 
     private enumerateCategoryColors(instances: VisualObjectInstance[], objectName: string, label: string) {
         if (this.data.dataPointSettings && this.data.dataPointSettings.categoryGradient && this.checkDataToFeatures()) {
-            this.data.categories.forEach((category, index) => {
+            this.data.categories.forEach((category) => {
                 const categoryLegends: MekkoLegendDataPoint[] = this.data.legendData.dataPoints.filter(legend => legend.category === category);
 
                 instances.push({
@@ -1692,10 +1683,10 @@ export class BaseColumnChart implements IColumnChart {
                 new BaseConverterStrategy(this.dataViewCat, this.visualHost);
 
         for (let i: number = 0, len = allSeries.length; i < len; i++) {
-            let measure: number = converterStrategy.getValueBySeriesAndCategory(i, columnIndex),
+            const measure: number = converterStrategy.getValueBySeriesAndCategory(i, columnIndex),
                 valueMetadata: DataViewMetadataColumn = data.valuesMetadata[i],
-                formattedLabel: string = getFormattedLegendLabel(valueMetadata, this.dataViewCat.values),
-                dataPointColor: string;
+                formattedLabel: string = getFormattedLegendLabel(valueMetadata, this.dataViewCat.values);
+            let dataPointColor: string;
 
             if (allSeries.length === 1) {
                 const series: MekkoChartSeries = allSeries[0];
