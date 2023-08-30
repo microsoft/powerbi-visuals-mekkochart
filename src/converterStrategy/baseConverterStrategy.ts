@@ -81,7 +81,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
         return column.roles && column.roles[name];
     }
 
-    public getLegend(colorPalette: IColorPalette, defaultLabelLegendColor?: string, defaultColor?: string, colorGradient?: boolean, colorGradientEndColor?: string): LegendSeriesInfo {
+    public getLegend(colorPalette: IColorPalette, defaultLabelLegendColor?: string, defaultColor?: string, colorGradient?: boolean): LegendSeriesInfo {
         const legend: MekkoLegendDataPoint[] = [];
         const seriesSources: DataViewMetadataColumn[] = [];
         const seriesObjects: DataViewObjects[][] = [];
@@ -110,10 +110,8 @@ export class BaseConverterStrategy implements ConverterStrategy {
         // todo handle color change of
         const valueGroups: DataViewValueColumnGroup[] = this.dataView.values.grouped();
         const categoryGradientBaseColorIdentities: BaseColorIdentity[] = [];
-        const categoryGradientEndBaseColorIdentities: BaseColorIdentity[] = [];
         const categoryItemsCount: Array<IFilteredValueGroups[]> = [];
 
-        let restoredColors: any;
         this.dataView.categories[categoryFieldIndex].values.forEach((category: PrimitiveValue, index: number) => {
 
             const categorySelectionId: ISelectionId = this.visualHost.createSelectionIdBuilder()
@@ -260,8 +258,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
 
                         color = createLinearColorScale(
                             [0, categoryItemsCount[categoryIndex].length],
-                            [gradientBaseColorEnd, gradientBaseColorStart], true)
-                            (positionIndex);
+                            [gradientBaseColorEnd, gradientBaseColorStart], true)(positionIndex);
                     }
 
                     legend.push({

@@ -405,7 +405,7 @@ export class BaseColumnChart implements IColumnChart {
         }
 
         // Allocate colors
-        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, defaultDataPointColor, "", dataPointSettings.categoryGradient, dataPointSettings.colorGradientEndColor.solid.color);
+        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, defaultDataPointColor, "", dataPointSettings.categoryGradient);
         const legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
 
         const seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;

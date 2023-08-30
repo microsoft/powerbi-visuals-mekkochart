@@ -209,8 +209,9 @@ export function getTickLabelMargins(
     }
 
     let rightMargin: number = 0,
-        leftMargin: number = 0,
-        bottomMargin: number = Math.min(Math.ceil(xMax), bottomMarginLimit);
+        leftMargin: number = 0;
+
+    const bottomMargin: number = Math.min(Math.ceil(xMax), bottomMarginLimit);
 
     if (showOnRight) {
         leftMargin = Math.min(Math.max(leftOverflow, maxWidthY2), yMarginLimit);
