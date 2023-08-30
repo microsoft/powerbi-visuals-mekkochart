@@ -10,10 +10,9 @@ import FormattingSettingsCard = formattingSettings.Card;
 import FormattingSettingsSlice = formattingSettings.Slice;
 import FormattingSettingsModel = formattingSettings.Model;
 import BaseColumnChart = columnChartBaseColumnChart.BaseColumnChart;
-import IColumnChart = columnChart.IColumnChart;
 
 import { MekkoChart } from "./visual";
-import { MekkoChartSeries, MekkoLegendDataPoint } from "./dataInterfaces";
+import { MekkoLegendDataPoint } from "./dataInterfaces";
 
 export class ColumnBorderSettings extends FormattingSettingsCard {
 
@@ -377,7 +376,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         const categoryGradient: boolean = (<formattingSettings.ToggleSwitch>this.dataPoint.slices[0]).value;
         if (categoryGradient) {
             for (let i: number = 0; i < layers.length; i++) {
-                (<BaseColumnChart>layers[i]).getData().categories.forEach((category, index) => {
+                (<BaseColumnChart>layers[i]).getData().categories.forEach((category) => {
                     const categoryLegends: MekkoLegendDataPoint[] = (<BaseColumnChart>layers[i]).getData().legendData.dataPoints.filter(legend => legend.category === category);
                     if (categoryLegends[0] === undefined) {
                         return;

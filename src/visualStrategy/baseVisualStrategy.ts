@@ -515,8 +515,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         const labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints(),
             series: Selection<any, MekkoChartSeries, any, any> = utils.drawSeries(
                 data,
-                this.graphicsContext.mainGraphicsContext,
-                axisOptions);
+                this.graphicsContext.mainGraphicsContext);
 
         let shapes: Selection<any, MekkoChartColumnDataPoint, any, any>;
 
@@ -602,7 +601,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 "fill", borderColor
             )
             .style(
-                "fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => {
+                "fill-opacity", () => {
                     return data.hasHighlights
                         ? utils.DimmedOpacity
                         : utils.DefaultOpacity;

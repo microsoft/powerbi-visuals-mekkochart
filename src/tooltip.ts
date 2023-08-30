@@ -62,9 +62,9 @@ export function createTooltipInfo(
     highlightedValue?: any): VisualTooltipDataItem[] {
 
     let categorySource: TooltipCategoryDataItem,
-        seriesSource: TooltipSeriesDataItem[] = [],
         valuesSource: DataViewMetadataColumn = undefined;
-
+    
+    const seriesSource: TooltipSeriesDataItem[] = [];
     seriesIndex = seriesIndex | 0;
 
     const categoriesData: DataViewCategoryColumn[] = dataViewCat
