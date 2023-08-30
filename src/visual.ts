@@ -1383,7 +1383,7 @@ export class MekkoChart implements IVisual {
             this.legendMargins.height = this.legendMargins.height * reducedLegends.length;
         }
         if (reducedLegends.length > 0) {
-            this.categoryLegends.forEach((legend: ILegend, index: number) => {
+            this.categoryLegends.forEach((legend: ILegend) => {
                 (<ILegendGroup>legend).position = +select((<ILegendGroup>legend).element).style("top").replace("px", "");
             });
             this.categoryLegends = this.categoryLegends.sort((a, b) => a["position"] > b["position"] ? 1 : -1).reverse();
@@ -1689,8 +1689,8 @@ export class MekkoChart implements IVisual {
 
         // we need to make two passes because the margin changes affect the chosen tick values, which then affect the margins again.
         // after the second pass the margins are correct.
+        const maxIterations: number = 2;
         let doneWithMargins: boolean = false,
-            maxIterations: number = 2,
             numIterations: number = 0,
             tickLabelMargins: TickLabelMargins = undefined,
             chartHasAxisLabels: boolean = undefined,
@@ -1866,8 +1866,7 @@ export class MekkoChart implements IVisual {
         text: Selection,
         axisProperties: IAxisProperties,
         columnsWidth: number[],
-        maxHeight: number,
-        borderWidth: number): void {
+        maxHeight: number): void {
 
         text.each(function (data: any, index: number) {
             let width: number,
@@ -1905,15 +1904,12 @@ export class MekkoChart implements IVisual {
         chartHasAxisLabels: boolean,
         axisLabels: MekkoChartAxesLabels,
         viewport: IViewport,
-        suppressAnimations: boolean,
-        scrollScale?: any,
-        extent?: number[]) {
+        suppressAnimations: boolean) {
 
         const bottomMarginLimit: number = this.bottomMarginLimit,
             leftRightMarginLimit: number = this.leftRightMarginLimit,
             layers: IColumnChart[] = this.layers,
-            duration: number = MekkoChart.AnimationDuration,
-            chartViewport: IViewport = MekkoChart.getChartViewport(viewport, this.margin);
+            duration: number = MekkoChart.AnimationDuration;
 
         let xLabelColor: Fill,
             yLabelColor: Fill,
@@ -2042,8 +2038,7 @@ export class MekkoChart implements IVisual {
                         MekkoChart.wordBreak,
                         axes.x,
                         columnWidth,
-                        bottomMarginLimit,
-                        borderWidth);
+                        bottomMarginLimit);
             }
             else {
                 xAxisTextNodes
@@ -2054,13 +2049,13 @@ export class MekkoChart implements IVisual {
 
                 // fix positions
                 const categoryLabels = xAxisGraphicsElement.selectAll(".tick");
-                categoryLabels.each(function (tick, index) {
+                categoryLabels.each(function () {
                     const shiftX: number = (<any>this).getBBox().width / Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
                     const shiftY: number = (<any>this).getBBox().width * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
                     const currTransform: string = (<any>this).attributes.transform.value;
                     const translate: [number, number, number] = MekkoChart.getTranslation(currTransform);
                     select(<any>this)
-                        .attr("transform", (value: number, index: number) => {
+                        .attr("transform", () => {
                             return manipulation.translate(+translate[0] - shiftX, +translate[1] + shiftY);
                         });
                 });
@@ -2133,8 +2128,7 @@ export class MekkoChart implements IVisual {
 
             yFontSize = PixelConverter.fromPointToPixel(yFontSize);
 
-            const yAxisOrientation: string = this.yAxisOrientation,
-                showY1OnRight: boolean = yAxisOrientation === axisPosition.right;
+            const yAxisOrientation: string = this.yAxisOrientation;
 
             axes.y1.axis
                 .tickSize(-width)
@@ -2261,8 +2255,8 @@ export class MekkoChart implements IVisual {
                 .remove();
         }
 
-        let dataPoints: SelectableDataPoint[] = [],
-            layerBehaviorOptions: any[] = [];
+        let dataPoints: SelectableDataPoint[] = [];
+        const layerBehaviorOptions: any[] = [];
 
         if (this.behavior) {
             let resultsLabelDataPoints: LabelDataPoint[] = [];
