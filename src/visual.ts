@@ -556,6 +556,8 @@ export class MekkoChart implements IVisual {
     }
 
     public static getTranslation(transform): [number, number, number] {
+        // Allow an http namespace as nothing is fetched (https not required)
+        // eslint-disable-next-line powerbi-visuals/no-http-string
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
         g.setAttributeNS(null, "transform", transform);
@@ -2127,8 +2129,6 @@ export class MekkoChart implements IVisual {
             }
 
             yFontSize = PixelConverter.fromPointToPixel(yFontSize);
-
-            const yAxisOrientation: string = this.yAxisOrientation;
 
             axes.y1.axis
                 .tickSize(-width)
