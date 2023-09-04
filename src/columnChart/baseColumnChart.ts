@@ -190,6 +190,17 @@ import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 // behavior
 import { VisualBehaviorOptions } from "./../behavior/visualBehaviorOptions";
 
+interface ConverterSettingsWrapper {
+    borderSettings: MekkoBorderSettings;
+    sortSeriesSettings: MekkoSeriesSortSettings;
+    sortLegendSettings: MekkoLegendSortSettings;
+    xAxisLabelsSettings: MekkoXAxisLabelsSettings;
+    labelSettings: VisualDataLabelsSettings;
+    dataPointSettings: MekkoDataPointSettings;
+    defaultDataPointColor: string;
+    showAllDataPoints: boolean;
+}
+
 export class BaseColumnChart implements IColumnChart {
     private static ColumnChartClassName: string = "columnChart";
 
@@ -352,8 +363,7 @@ export class BaseColumnChart implements IColumnChart {
         isScalar = dataViewUtils.isScalar(isScalar, xAxisCardProperties);
         categorical = utils.applyUserMinMax(isScalar, categorical, xAxisCardProperties);
 
-        const converterStrategy: BaseConverterStrategy =
-            new BaseConverterStrategy(categorical, visualHost);
+        const converterStrategy: BaseConverterStrategy = new BaseConverterStrategy(categorical, visualHost);
 
         const firstCategory: DataViewCategoryColumn = categorical
             && categorical.categories
@@ -375,6 +385,82 @@ export class BaseColumnChart implements IColumnChart {
             displayUnitSystemType: DisplayUnitSystemType.Verbose
         });
 
+        const settingsWrapper: ConverterSettingsWrapper = BaseColumnChart.getConverterSettings(dataViewMetadata);
+        // Allocate colors
+        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, settingsWrapper.defaultDataPointColor, "", settingsWrapper.dataPointSettings.categoryGradient);
+        const legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
+
+        const seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
+
+        // Determine data points
+        const result: MekkoDataPoints = BaseColumnChart.createDataPoints(
+            visualHost,
+            categorical,
+            categories,
+            categoryIdentities,
+            legend,
+            legendAndSeriesInfo.seriesObjects,
+            converterStrategy,
+            settingsWrapper.labelSettings,
+            is100PercentStacked,
+            isScalar,
+            supportsOverflow,
+            localizationManager,
+            converterHelper.categoryIsAlsoSeriesRole(
+                categorical,
+                RoleNames.series,
+                RoleNames.category),
+            firstCategory && firstCategory.objects,
+            settingsWrapper.defaultDataPointColor,
+            chartType,
+            categoryMetadata);
+
+        if (settingsWrapper.sortSeriesSettings.enabled) {
+            const columns = BaseColumnChart.createAlternateStructure(result, settingsWrapper.sortSeriesSettings.direction === "des");
+            BaseColumnChart.reorderPositions(result, columns);
+        }
+
+        const valuesMetadata: DataViewMetadataColumn[] = [];
+
+        for (let j: number = 0; j < legend.length; j++) {
+            valuesMetadata.push(seriesSources[j]);
+        }
+
+        const labels: axisUtils.AxesLabels = axisUtils.createAxesLabels(
+            xAxisCardProperties,
+            valueAxisProperties,
+            categoryMetadata,
+            valuesMetadata);
+
+        return {
+            categories,
+            categoryFormatter,
+            defaultDataPointColor: settingsWrapper.defaultDataPointColor,
+            showAllDataPoints: settingsWrapper.showAllDataPoints,
+            categoryMetadata,
+            categoriesWidth: result.categoriesWidth,
+            borderSettings: settingsWrapper.borderSettings,
+            sortlegend: settingsWrapper.sortLegendSettings,
+            sortSeries: settingsWrapper.sortSeriesSettings,
+            xAxisLabelsSettings: settingsWrapper.xAxisLabelsSettings,
+            labelSettings: settingsWrapper.labelSettings,
+            series: result.series,
+            valuesMetadata,
+            legendData: legendAndSeriesInfo.legend,
+            hasHighlights: result.hasHighlights,
+            scalarCategoryAxis: isScalar,
+            axesLabels: {
+                x: labels.xAxisLabel,
+                y: labels.yAxisLabel
+            },
+            hasDynamicSeries: result.hasDynamicSeries,
+            categoryProperties: result.categoryProperties,
+            isMultiMeasure: false,
+            dataPointSettings: settingsWrapper.dataPointSettings
+        };
+    }
+
+    private static getConverterSettings(dataViewMetadata: powerbi.DataViewMetadata): ConverterSettingsWrapper {
         let borderSettings: MekkoBorderSettings = MekkoChart.DefaultSettings.columnBorder,
             sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries,
             sortLegendSettings: MekkoLegendSortSettings = MekkoChart.DefaultSettings.sortLegend,
@@ -404,80 +490,17 @@ export class BaseColumnChart implements IColumnChart {
             dataPointSettings = MekkoChart.parseDataPointSettings(objects);
         }
 
-        // Allocate colors
-        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, defaultDataPointColor, "", dataPointSettings.categoryGradient);
-        const legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
-
-        const seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
-
-        // Determine data points
-        const result: MekkoDataPoints = BaseColumnChart.createDataPoints(
-            visualHost,
-            categorical,
-            categories,
-            categoryIdentities,
-            legend,
-            legendAndSeriesInfo.seriesObjects,
-            converterStrategy,
-            labelSettings,
-            is100PercentStacked,
-            isScalar,
-            supportsOverflow,
-            localizationManager,
-            converterHelper.categoryIsAlsoSeriesRole(
-                categorical,
-                RoleNames.series,
-                RoleNames.category),
-            firstCategory && firstCategory.objects,
-            defaultDataPointColor,
-            chartType,
-            categoryMetadata);
-
-        if (sortSeriesSettings.enabled) {
-            const columns = BaseColumnChart.createAlternateStructure(result, sortSeriesSettings.direction === "des");
-            BaseColumnChart.reorderPositions(result, columns);
-        }
-
-        const valuesMetadata: DataViewMetadataColumn[] = [];
-
-        for (let j: number = 0; j < legend.length; j++) {
-            valuesMetadata.push(seriesSources[j]);
-        }
-
-        const labels: axisUtils.AxesLabels = axisUtils.createAxesLabels(
-            xAxisCardProperties,
-            valueAxisProperties,
-            categoryMetadata,
-            valuesMetadata);
-
         return {
-            categories,
-            categoryFormatter,
-            defaultDataPointColor,
-            showAllDataPoints,
-            categoryMetadata,
-            categoriesWidth: result.categoriesWidth,
-            borderSettings,
-            sortlegend: sortLegendSettings,
-            sortSeries: sortSeriesSettings,
+            borderSettings: borderSettings,
+            sortSeriesSettings: sortSeriesSettings,
+            sortLegendSettings: sortLegendSettings,
             xAxisLabelsSettings: xAxisLabelsSettings,
-            labelSettings,
-            series: result.series,
-            valuesMetadata,
-            legendData: legendAndSeriesInfo.legend,
-            hasHighlights: result.hasHighlights,
-            scalarCategoryAxis: isScalar,
-            axesLabels: {
-                x: labels.xAxisLabel,
-                y: labels.yAxisLabel
-            },
-            hasDynamicSeries: result.hasDynamicSeries,
-            categoryProperties: result.categoryProperties,
-            isMultiMeasure: false,
-            dataPointSettings: dataPointSettings
+            labelSettings: labelSettings,
+            dataPointSettings: dataPointSettings,
+            defaultDataPointColor: defaultDataPointColor,
+            showAllDataPoints: showAllDataPoints
         };
     }
-
     private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): ICategoryValuesCollection[] {
         const series: MekkoChartSeries[] = dataPoint.series;
         const columns: ICategoryValuesCollection[] = [];
