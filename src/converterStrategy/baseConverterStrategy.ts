@@ -244,7 +244,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     let category: string;
 
                     let color: string;
-                    const categoryIndex: number = series.values.findIndex(value => typeof value !== undefined && value !== null);
+                    const categoryIndex: number = series.values.findIndex(value => typeof value !== "undefined" && value !== null);
 
                     if (!colorGradient) {
                         color = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
