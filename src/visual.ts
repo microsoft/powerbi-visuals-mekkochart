@@ -1235,6 +1235,7 @@ export class MekkoChart implements IVisual {
         return layers;
     }
 
+    // eslint-disable-next-line max-lines-per-function
     private renderLegend(): void {
         const layers: IColumnChart[] = this.layers,
             legendData: ILegendData = {
@@ -1363,6 +1364,8 @@ export class MekkoChart implements IVisual {
             .style("position", "absolute")
             .style("top", (data, index) => PixelConverter.toString(svgHeight * index));
 
+        // Disable linter rule for aliasing this to local variable as it is required in this instance
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const mekko = this;
         this.categoryLegends = this.categoryLegends || [];
         legendParentsWithChildsAttr.each(function (data, index) {
@@ -1559,6 +1562,7 @@ export class MekkoChart implements IVisual {
         return false;
     }
 
+    // eslint-disable-next-line max-lines-per-function
     private render(suppressAnimations: boolean = true): void {
         this.setVisibility(true);
 
@@ -1898,6 +1902,7 @@ export class MekkoChart implements IVisual {
         });
     }
 
+    // eslint-disable-next-line max-lines-per-function
     private renderChart(
         mainAxisScale: any,
         axes: MekkoChartAxisProperties,

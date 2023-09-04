@@ -81,6 +81,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
         return column.roles && column.roles[name];
     }
 
+    // eslint-disable-next-line max-lines-per-function
     public getLegend(colorPalette: IColorPalette, defaultLabelLegendColor?: string, defaultColor?: string, colorGradient?: boolean): LegendSeriesInfo {
         const legend: MekkoLegendDataPoint[] = [];
         const seriesSources: DataViewMetadataColumn[] = [];
