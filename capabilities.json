@@ -33,21 +33,13 @@
     ],
     "objects": {
         "columnBorder": {
-            "displayName": "Column Border",
-            "displayNameKey": "Visual_ColumnBorder",
             "properties": {
                 "show": {
-                    "displayName": "Show",
-                    "displayNameKey": "Visual_Show",
                     "type": {
                         "bool": true
                     }
                 },
                 "color": {
-                    "displayName": "Color",
-                    "displayNameKey": "Visual_Color",
-                    "description": "Select color for data labels",
-                    "descriptionKey": "Visual_Description_Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -57,8 +49,6 @@
                     }
                 },
                 "width": {
-                    "displayName": "Width",
-                    "displayNameKey": "Visual_Width",
                     "type": {
                         "numeric": true
                     }
@@ -66,30 +56,18 @@
             }
         },
         "labels": {
-            "displayName": "Data labels",
-            "displayNameKey": "Visual_Data_Labels",
-            "description": "Display data label options",
-            "descriptionKey": "Visual_Description_DataLabels",
             "properties": {
                 "show": {
-                    "displayName": "Show",
-                    "displayNameKey": "Visual_Show",
                     "type": {
                         "bool": true
                     }
                 },
                 "forceDisplay": {
-                    "displayName": "Force display",
-                    "displayNameKey": "Visual_Force_Display",
                     "type": {
                         "bool": true
                     }
                 },
                 "color": {
-                    "displayName": "Color",
-                    "displayNameKey": "Visual_Color",
-                    "description": "Select color for data labels",
-                    "descriptionKey": "Visual_Description_Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -99,10 +77,6 @@
                     }
                 },
                 "labelDisplayUnits": {
-                    "displayName": "Display units",
-                    "displayNameKey": "Visual_Display_Units",
-                    "description": "Select the units (millions, billions, etc.)",
-                    "descriptionKey": "Visual_Description_DisplayUnits",
                     "type": {
                         "formatting": {
                             "labelDisplayUnits": true
@@ -111,10 +85,6 @@
                     "suppressFormatPainterCopy": true
                 },
                 "labelPrecision": {
-                    "displayName": "Decimal places",
-                    "displayNameKey": "Visual_Decimal_Places",
-                    "description": "Select the number of decimal places to display",
-                    "descriptionKey": "Visual_Description_DecimalPlaces",
                     "placeHolderText": "Auto",
                     "type": {
                         "numeric": true
@@ -122,15 +92,11 @@
                     "suppressFormatPainterCopy": true
                 },
                 "showAll": {
-                    "displayName": "Show All",
-                    "displayNameKey": "Visual_Show_All",
                     "type": {
                         "bool": true
                     }
                 },
                 "fontSize": {
-                    "displayName": "Text Size",
-                    "displayNameKey": "Visual_Font_Size",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -140,33 +106,23 @@
             }
         },
         "legend": {
-            "displayName": "Legend",
-            "displayNameKey": "Visual_Legend",
             "properties": {
                 "show": {
-                    "displayName": "Show",
-                    "displayNameKey": "Visual_Show",
                     "type": {
                         "bool": true
                     }
                 },
                 "showTitle": {
-                    "displayName": "Title",
-                    "displayNameKey": "Visual_Title",
                     "type": {
                         "bool": true
                     }
                 },
                 "titleText": {
-                    "displayName": "Title text",
-                    "displayNameKey": "Visual_Text",
                     "type": {
                         "text": true
                     }
                 },
                 "fontSize": {
-                    "displayName": "Text size",
-                    "displayNameKey": "Visual_Font_Size",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -183,19 +139,13 @@
             }
         },
         "sortLegend": {
-            "displayName": "Sort legend",
-            "displayNameKey": "Visual_SortLegend",
             "properties": {
                 "enabled": {
-                    "displayName": "Enabled",
-                    "displayNameKey": "Visual_Enabled",
                     "type": {
                         "bool": true
                     }
                 },
                 "direction": {
-                    "displayName": "Direction",
-                    "displayNameKey": "Visual_Direction",
                     "type": {
                         "enumeration": [
                             {
@@ -212,15 +162,11 @@
                     }
                 },
                 "groupByCategory": {
-                    "displayName": "Group by category",
-                    "displayNameKey": "Visual_Group_Legend",
                     "type": {
                         "bool": true
                     }
                 },
                 "groupByCategoryDirection": {
-                    "displayName": "Group sort direction",
-                    "displayNameKey": "Visual_Group_Direction",
                     "type": {
                         "enumeration": [
                             {
@@ -239,19 +185,13 @@
             }
         },
         "sortSeries": {
-            "displayName": "Sort series",
-            "displayNameKey": "Visual_SortSeries",
             "properties": {
                 "enabled": {
-                    "displayName": "Enabled",
-                    "displayNameKey": "Visual_Enabled",
                     "type": {
                         "bool": true
                     }
                 },
                 "direction": {
-                    "displayName": "Direction",
-                    "displayNameKey": "Visual_Direction",
                     "type": {
                         "enumeration": [
                             {
@@ -268,8 +208,6 @@
                     }
                 },
                 "displayPercents": {
-                    "displayName": "Display percents",
-                    "displayNameKey": "Visual_DisplayPercents",
                     "type": {
                         "enumeration": [
                             {
@@ -288,12 +226,8 @@
             }
         },
         "xAxisLabels": {
-            "displayName": "X Axis labels rotation",
-            "displayNameKey": "Visual_XAxisLabelsRotation",
             "properties": {
                 "enableRotataion": {
-                    "displayName": "Enabled",
-                    "displayNameKey": "Visual_Enabled",
                     "type": {
                         "bool": true
                     }
@@ -301,26 +235,18 @@
             }
         },
         "categoryAxis": {
-            "displayName": "X-Axis",
-            "displayNameKey": "Visual_XAxis",
             "properties": {
                 "show": {
-                    "displayName": "Show",
-                    "displayNameKey": "Visual_Show",
                     "type": {
                         "bool": true
                     }
                 },
                 "showAxisTitle": {
-                    "displayName": "Title",
-                    "displayNameKey": "Visual_Title",
                     "type": {
                         "bool": true
                     }
                 },
                 "labelColor": {
-                    "displayName": "Color",
-                    "displayNameKey": "Visual_Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -330,8 +256,6 @@
                     }
                 },
                 "fontSize": {
-                    "displayName": "Text Size",
-                    "displayNameKey": "Visual_Font_Size",
                     "type": {
                         "formatting": {
                             "fontSize": true
@@ -363,33 +287,23 @@
             }
         },
         "valueAxis": {
-            "displayName": "Y-Axis",
-            "displayNameKey": "Visual_YAxis",
             "properties": {
                 "show": {
-                    "displayName": "Show",
-                    "displayNameKey": "Visual_Show",
                     "type": {
                         "bool": true
                     }
                 },
                 "intersection": {
-                    "displayName": "Intersection",
-                    "displayNameKey": "Visual_Intersection",
                     "type": {
                         "numeric": true
                     }
                 },
                 "showAxisTitle": {
-                    "displayName": "Title",
-                    "displayNameKey": "Visual_Title",
                     "type": {
                         "bool": true
                     }
                 },
                 "labelColor": {
-                    "displayName": "Color",
-                    "displayNameKey": "Visual_Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -399,8 +313,6 @@
                     }
                 },
                 "fontSize": {
-                    "displayName": "Text Size",
-                    "displayNameKey": "Visual_Font_Size",
                     "type": {
                         "formatting": {
                             "fontSize": true
