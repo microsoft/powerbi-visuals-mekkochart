@@ -344,26 +344,18 @@
             }
         },
         "dataPoint": {
-            "displayName": "Data colors",
-            "displayNameKey": "Visual_Data_Colors",
             "properties": {
                 "categoryGradient": {
-                    "displayName": "Category gradient",
-                    "displayNameKey": "Visual_CategoryGradient",
                     "type": {
                         "bool": true
                     }
                 },
                 "colorDistribution": {
-                    "displayName": "Color distribution by value",
-                    "displayNameKey": "Visual_ColorDistribution",
                     "type": {
                         "bool": true
                     }
                 },
                 "colorGradientEndColor": {
-                    "displayName": "End color of gradient",
-                    "displayNameKey": "Visual_ColorGradientEndColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -373,8 +365,6 @@
                     }
                 },
                 "defaultColor": {
-                    "displayName": "Default color",
-                    "displayNameKey": "Visual_Default_Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -384,15 +374,11 @@
                     }
                 },
                 "showAllDataPoints": {
-                    "displayName": "Show all",
-                    "displayNameKey": "Visual_Show_All",
                     "type": {
                         "bool": true
                     }
                 },
                 "fill": {
-                    "displayName": "Fill",
-                    "displayNameKey": "Visual_Fill",
                     "type": {
                         "fill": {
                             "solid": {
@@ -404,12 +390,8 @@
             }
         },
         "categoryColorStart": {
-            "displayName": "Categoty data colors start",
-            "displayNameKey": "Visual_CategoryDataColorsStart",
             "properties": {
                 "categoryGradient": {
-                    "displayName": "Start color",
-                    "displayNameKey": "Visual_GradientStartColor",
                     "type": {
                         "fill": {
                             "solid": {
@@ -421,12 +403,8 @@
             }
         },
         "categoryColorEnd": {
-            "displayName": "Categoty data colors end",
-            "displayNameKey": "Visual_CategoryDataColorsEnd",
             "properties": {
                 "categoryGradient": {
-                    "displayName": "End color",
-                    "displayNameKey": "Visual_GradientEndColor",
                     "type": {
                         "fill": {
                             "solid": {
