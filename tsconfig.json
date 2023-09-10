@@ -3,11 +3,11 @@
     "allowJs": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "CommonJS",
+    "module": "Node16",
     "target": "ES6",
     "sourceMap": true,
     "outDir": "./.tmp/build/",
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "declaration": true
   },
   "files": [
