@@ -36,7 +36,6 @@ import { VisualBehaviorOptions } from "./visualBehaviorOptions";
 
 import * as utils from "./../utils";
 
-
 // powerbi.extensibility.utils.interactivity
 import ISelectionHandler = interactivityBaseService.ISelectionHandler;
 import IInteractiveBehavior = interactivityBaseService.IInteractiveBehavior;
@@ -71,17 +70,16 @@ export class VisualBehavior implements IInteractiveBehavior {
             mouseEvent.preventDefault();
         });
 
-        eventGroup.on("keydown", function() {
-            const dataOfTheLastEvent: SelectionDataPoint = VisualBehavior.getDatumForLastInputEvent();
-            const event: KeyboardEvent = getEvent() as KeyboardEvent;
+        eventGroup.on("keydown", function(keyboardEvent: KeyboardEvent) {
+            const dataOfTheLastEvent: SelectionDataPoint = VisualBehavior.getDatumForLastInputEvent(keyboardEvent);
 
-            if (event.code !== "Enter" && event.code !== "Space") {
+            if (keyboardEvent.code !== "Enter" && keyboardEvent.code !== "Space") {
                 return;
             }
 
             selectionHandler.handleSelection(
                 dataOfTheLastEvent,
-                event.ctrlKey
+                keyboardEvent.ctrlKey
             );
         });
 
@@ -115,8 +113,8 @@ export class VisualBehavior implements IInteractiveBehavior {
 
     }
 
-    private static getDatumForLastInputEvent(mouseEvent: MouseEvent): SelectionDataPoint {
-        const target: EventTarget = mouseEvent.target;
+    private static getDatumForLastInputEvent(event: Event): SelectionDataPoint {
+        const target: EventTarget = event.target;
         return select((<any>target)).datum() as any;
     }
 }
