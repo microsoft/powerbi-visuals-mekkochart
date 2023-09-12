@@ -47,7 +47,7 @@ import {
     from "powerbi-visuals-utils-interactivityutils";
 
 import {
-    valueFormatter as vf
+    valueFormatter
 }
     from "powerbi-visuals-utils-formattingutils";
 
@@ -103,8 +103,7 @@ import createColumnFormatterCacheManager = dataLabelUtils.createColumnFormatterC
 import IInteractivityService = interactivityBaseService.IInteractivityService;
 
 // powerbi.extensibility.utils.formatting
-import valueFormatter = vf.valueFormatter;
-import IValueFormatter = vf.IValueFormatter;
+import IValueFormatter = valueFormatter.IValueFormatter;
 
 // powerbi.extensibility.utils.type
 import ValueType = valueType.ValueType;
@@ -316,7 +315,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             getValueFn,
             useTickIntervalForDisplayUnits);
 
-        let axisFn = isVertical ? axisLeft : axisBottom;
+        const axisFn = isVertical ? axisLeft : axisBottom;
         const axis: d3.Axis<any> = axisFn(scale)
             .tickSize(6)
             .ticks(bestTickCount)
@@ -516,8 +515,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         const labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints(),
             series: Selection<any, MekkoChartSeries, any, any> = utils.drawSeries(
                 data,
-                this.graphicsContext.mainGraphicsContext,
-                axisOptions);
+                this.graphicsContext.mainGraphicsContext);
 
         let shapes: Selection<any, MekkoChartColumnDataPoint, any, any>;
 
@@ -557,7 +555,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 dataSelector,
                 (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
 
-        let allShapes = shapes
+        const allShapes = shapes
             .enter()
             .append("rect")
             .attr("class", (dataPoint: MekkoChartColumnDataPoint) => {
@@ -603,7 +601,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 "fill", borderColor
             )
             .style(
-                "fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => {
+                "fill-opacity", () => {
                     return data.hasHighlights
                         ? utils.DimmedOpacity
                         : utils.DefaultOpacity;
@@ -786,7 +784,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             formattersCache: IColumnFormatterCacheManager = createColumnFormatterCacheManager(),
             shapeLayout = this.layout.shapeLayout;
 
-        for (let currentSeries of dataSeries) {
+        for (const currentSeries of dataSeries) {
             const labelSettings: VisualDataLabelsSettings = currentSeries.labelSettings
                 ? currentSeries.labelSettings
                 : data.labelSettings;
@@ -799,7 +797,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 this.yProps.formatter,
                 labelSettings);
 
-            for (let dataPoint of currentSeries.data) {
+            for (const dataPoint of currentSeries.data) {
                 if ((data.hasHighlights && !dataPoint.highlight)
                     || dataPoint.value == null) {
                     continue;

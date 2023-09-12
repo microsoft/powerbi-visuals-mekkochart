@@ -40,7 +40,7 @@ export class MekkoChartBuilder extends VisualBuilderBase<MekkoChart> {
     }
 
     public get rootElement(): JQuery {
-        return this.element.find(".mekkoChart");
+        return $(this.element).find(".mekkoChart");
     }
 
     public get mainElement(): JQuery {

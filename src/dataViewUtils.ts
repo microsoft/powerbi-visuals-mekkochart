@@ -62,6 +62,10 @@ export function getCategoryAxisProperties(
                 labelDisplayUnits: categoryAxisObject["labelDisplayUnits"],
                 labelPrecision: categoryAxisObject["labelPrecision"],
                 duration: categoryAxisObject["duration"],
+                fontFamily: categoryAxisObject["fontFamily"],
+                fontBold: categoryAxisObject["fontBold"],
+                fontItalic: categoryAxisObject["fontItalic"],
+                fontUnderline: categoryAxisObject["fontUnderline"]
             };
         }
     }
@@ -107,7 +111,11 @@ export function getValueAxisProperties(
                 secAxisStyle: valueAxisObject["secAxisStyle"],
                 secLabelColor: valueAxisObject["secLabelColor"],
                 secLabelDisplayUnits: valueAxisObject["secLabelDisplayUnits"],
-                secLabelPrecision: valueAxisObject["secLabelPrecision"]
+                secLabelPrecision: valueAxisObject["secLabelPrecision"],
+                fontFamily: valueAxisObject["fontFamily"],
+                fontBold: valueAxisObject["fontBold"],
+                fontItalic: valueAxisObject["fontItalic"],
+                fontUnderline: valueAxisObject["fontUnderline"]
             };
         }
     }

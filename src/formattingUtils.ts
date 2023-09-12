@@ -30,10 +30,9 @@ import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import DataViewValueColumns = powerbi.DataViewValueColumns;
 import PrimitiveValue = powerbi.PrimitiveValue;
 
-import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 // powerbi.extensibility.utils.formatting
-import valueFormatter = vf.valueFormatter;
 
 export function getFormattedLegendLabel(
     source: DataViewMetadataColumn,

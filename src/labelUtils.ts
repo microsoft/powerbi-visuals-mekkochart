@@ -29,7 +29,7 @@ import powerbi from "powerbi-visuals-api";
 import IViewport = powerbi.IViewport;
 import {
     wordBreaker,
-    textMeasurementService
+    interfaces as formattingInterfaces
 } from "powerbi-visuals-utils-formattingutils";
 
 import {
@@ -42,8 +42,8 @@ import {
 } from "powerbi-visuals-utils-chartutils";
 
 // powerbi.extensibility.utils.formatting
-import TextProperties = textMeasurementService.TextProperties;
-import ITextAsSVGMeasurer = textMeasurementService.ITextAsSVGMeasurer;
+import TextProperties = formattingInterfaces.TextProperties;
+import ITextAsSVGMeasurer = formattingInterfaces.ITextAsSVGMeasurer;
 
 // powerbi.extensibility.utils.chart
 import IAxisProperties = axisInterfaces.IAxisProperties;
@@ -56,6 +56,7 @@ const DefaultOverflow: number = 0;
 const HeightFactor: number = 1.4;
 const HeightOffset: number = 15;
 
+// eslint-disable-next-line max-lines-per-function
 export function getTickLabelMargins(
     viewport: IViewport,
     yMarginLimit: number,
@@ -105,7 +106,7 @@ export function getTickLabelMargins(
     if (<number>AxisHelper.getRecommendedNumberOfTicksForXAxis(viewport.width) !== 0
         || <number>AxisHelper.getRecommendedNumberOfTicksForYAxis(viewport.height) !== 0) {
 
-        let rotation: any = scrollbarVisible
+        const rotation: any = scrollbarVisible
             ? AxisHelper.LabelLayoutStrategy.DefaultRotationWithScrollbar
             : AxisHelper.LabelLayoutStrategy.DefaultRotation;
 
@@ -209,8 +210,9 @@ export function getTickLabelMargins(
     }
 
     let rightMargin: number = 0,
-        leftMargin: number = 0,
-        bottomMargin: number = Math.min(Math.ceil(xMax), bottomMarginLimit);
+        leftMargin: number = 0;
+
+    const bottomMargin: number = Math.min(Math.ceil(xMax), bottomMarginLimit);
 
     if (showOnRight) {
         leftMargin = Math.min(Math.max(leftOverflow, maxWidthY2), yMarginLimit);

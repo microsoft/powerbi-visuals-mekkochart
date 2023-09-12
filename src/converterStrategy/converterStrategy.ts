@@ -33,8 +33,7 @@ export interface ConverterStrategy {
         colors: IColorPalette,
         defaultLegendLabelColor: string,
         defaultColor?: string,
-        colorGradient?: boolean,
-        colorGradientEndColor?: string
+        colorGradient?: boolean
     ): LegendSeriesInfo;
     getValueBySeriesAndCategory(series: number, category: number): number;
     getMeasureNameByIndex(series: number, category: number): string;

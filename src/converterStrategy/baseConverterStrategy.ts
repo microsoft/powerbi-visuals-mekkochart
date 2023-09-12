@@ -81,7 +81,8 @@ export class BaseConverterStrategy implements ConverterStrategy {
         return column.roles && column.roles[name];
     }
 
-    public getLegend(colorPalette: IColorPalette, defaultLabelLegendColor?: string, defaultColor?: string, colorGradient?: boolean, colorGradientEndColor?: string): LegendSeriesInfo {
+    // eslint-disable-next-line max-lines-per-function
+    public getLegend(colorPalette: IColorPalette, defaultLabelLegendColor?: string, defaultColor?: string, colorGradient?: boolean): LegendSeriesInfo {
         const legend: MekkoLegendDataPoint[] = [];
         const seriesSources: DataViewMetadataColumn[] = [];
         const seriesObjects: DataViewObjects[][] = [];
@@ -96,7 +97,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
         );
 
         const categoryFieldIndex: number = 0;
-        let categoryMaxValues: ICategotyValuesStatsCollection = {};
+        const categoryMaxValues: ICategotyValuesStatsCollection = {};
         this.dataView.categories[categoryFieldIndex].values.forEach((category, index) => {
             categoryMaxValues[index] = {
                 category: category,
@@ -108,12 +109,10 @@ export class BaseConverterStrategy implements ConverterStrategy {
 
         // find base color identity
         // todo handle color change of
-        let valueGroups: DataViewValueColumnGroup[] = this.dataView.values.grouped();
-        let categoryGradientBaseColorIdentities: BaseColorIdentity[] = [];
-        let categoryGradientEndBaseColorIdentities: BaseColorIdentity[] = [];
-        let categoryItemsCount: Array<IFilteredValueGroups[]> = [];
+        const valueGroups: DataViewValueColumnGroup[] = this.dataView.values.grouped();
+        const categoryGradientBaseColorIdentities: BaseColorIdentity[] = [];
+        const categoryItemsCount: Array<IFilteredValueGroups[]> = [];
 
-        let restoredColors: any;
         this.dataView.categories[categoryFieldIndex].values.forEach((category: PrimitiveValue, index: number) => {
 
             const categorySelectionId: ISelectionId = this.visualHost.createSelectionIdBuilder()
@@ -121,7 +120,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                 .createSelectionId();
 
             // gradiend start color
-            let mappedItems: IFilteredValueGroups[] = [];
+            const mappedItems: IFilteredValueGroups[] = [];
             valueGroups.forEach(group => {
                 if (group.values[0].values[index] !== null) {
                     mappedItems.push(<IFilteredValueGroups>{
@@ -141,7 +140,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                 });
             }
 
-            let baseStartColorIdentity: IFilteredValueGroups = mappedItems.sort((a, b) => a[BaseConverterStrategy.SortField] > b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
+            const baseStartColorIdentity: IFilteredValueGroups = mappedItems.sort((a, b) => a[BaseConverterStrategy.SortField] > b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
             if (baseStartColorIdentity === undefined) {
                 return;
             }
@@ -156,7 +155,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
             }
 
             // gradiend end color
-            let baseEndColorIdentity: IFilteredValueGroups = mappedItems.sort((a, b) => a[BaseConverterStrategy.SortField] < b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
+            const baseEndColorIdentity: IFilteredValueGroups = mappedItems.sort((a, b) => a[BaseConverterStrategy.SortField] < b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
 
             if (baseEndColorIdentity === undefined) {
                 return;
@@ -172,7 +171,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                 colorEnd = colorHelper.getColorForSeriesValue(baseEndColorIdentity.gr.objects, baseEndColorIdentity.categoryValue);
             }
 
-            let categoryStartColor: string = ((
+            const categoryStartColor: string = ((
                 this.dataView.categories[categoryFieldIndex].objects &&
                 this.dataView.categories[categoryFieldIndex].objects[index] &&
                 this.dataView.categories[categoryFieldIndex].objects[index]["categoryColorStart"] ||
@@ -184,7 +183,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     }
                 }) as MekkoGradientSettings).categoryGradient.solid.color;
 
-            let categoryEndColor: string = ((
+            const categoryEndColor: string = ((
                 this.dataView.categories[categoryFieldIndex].objects &&
                 this.dataView.categories[categoryFieldIndex].objects[index] &&
                 this.dataView.categories[categoryFieldIndex].objects[index]["categoryColorEnd"] ||
@@ -246,22 +245,21 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     let category: string;
 
                     let color: string;
-                    let categoryIndex: number = series.values.findIndex(value => typeof value !== undefined && value !== null);
+                    const categoryIndex: number = series.values.findIndex(value => typeof value !== "undefined" && value !== null);
 
                     if (!colorGradient) {
                         color = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
                             : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
                     }
                     else {
-                        let positionIndex: number = (<IFilteredValueGroups[]>categoryItemsCount[categoryIndex]).findIndex(ser => isEqual(ser.identity, series.identity));
+                        const positionIndex: number = (<IFilteredValueGroups[]>categoryItemsCount[categoryIndex]).findIndex(ser => isEqual(ser.identity, series.identity));
                         category = (categoryMaxValues[categoryIndex].category || "").toString();
-                        let gradientBaseColorStart: string = categoryGradientBaseColorIdentities[categoryIndex].categoryStartColor;
-                        let gradientBaseColorEnd: string = categoryGradientBaseColorIdentities[categoryIndex].categoryEndColor;
+                        const gradientBaseColorStart: string = categoryGradientBaseColorIdentities[categoryIndex].categoryStartColor;
+                        const gradientBaseColorEnd: string = categoryGradientBaseColorIdentities[categoryIndex].categoryEndColor;
 
                         color = createLinearColorScale(
                             [0, categoryItemsCount[categoryIndex].length],
-                            [gradientBaseColorEnd, gradientBaseColorStart], true)
-                            (positionIndex);
+                            [gradientBaseColorEnd, gradientBaseColorStart], true)(positionIndex);
                     }
 
                     legend.push({
