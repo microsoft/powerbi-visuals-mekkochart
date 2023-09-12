@@ -29,10 +29,8 @@ import {
     axis as AxisHelper,
     axisInterfaces,
     axisScale,
-    axisStyle
 } from "powerbi-visuals-utils-chartutils";
-import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
-import valueFormatter = vf.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 import IAxisProperties = axisInterfaces.IAxisProperties;
 import DataViewObject = powerbi.DataViewObject;
@@ -77,9 +75,7 @@ import {
         viewport: IViewport,
         margin: IMargin,
         categoryAxisProperties: DataViewObject,
-        valueAxisProperties: DataViewObject,
-        scrollbarVisible: boolean,
-        existingAxisProperties: MekkoChartAxisProperties): MekkoChartAxisProperties {
+        valueAxisProperties: DataViewObject): MekkoChartAxisProperties {
 
         const visualOptions: MekkoCalculateScaleAndDomainOptions = {
             viewport,

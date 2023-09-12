@@ -2,6 +2,12 @@
 * Add aria-selected attribute, option role, and listbox role for screen readers
 * Add aria-label attribute for screen readers
 * Add keyboard navigation with Tab, Enter, and Space 
+## 3.3.0
+* Update powerbi-visuals-api to 5.4.0
+* Update powerbi-visuals-tools to 4.3.2
+* Implement new format pane using the updated powerbi-visuals-api 
+* Add font control to x and y axis settings
+* Add font picker for the legend
 
 ## 3.1.0
 * Fix selection rendering issue
