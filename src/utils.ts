@@ -126,8 +126,9 @@ export function drawSeries(
         .classed(MekkoChart.SeriesSelector.className, true)
         .merge(seriesData);
     mergedSeries
-        .style("fill", (series: MekkoChartSeries) => series.color);
-
+        .style("fill", (series: MekkoChartSeries) => series.color)
+        .attr("role", "listbox")
+        .attr("aria-selected", false);
     seriesData
         .exit()
         .remove();
@@ -154,6 +155,18 @@ export function getFillOpacity(
     }
 
     return DefaultOpacity;
+}
+
+export function getAriaLabel(
+    toolTipInfo: powerbi.extensibility.VisualTooltipDataItem[]): string {
+        let labelval: string = "";
+        toolTipInfo.forEach(element => {
+            labelval = labelval.concat(element.displayName);
+            labelval = labelval.concat(" : ");
+            labelval = labelval.concat(element.value);
+            labelval = labelval.concat("\n");
+        });
+        return labelval;
 }
 
 export function setChosenColumnOpacity(

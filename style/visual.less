@@ -41,6 +41,15 @@
 
     .root-svg-element {
         position: absolute;
+
+        &:focus {
+            outline: none;
+        }
+        
+        &:focus-visible {
+            outline: auto 1px;
+            outline-color: -webkit-focus-ring-color;
+        }
     }
 
     .labels .data-labels {

@@ -29,12 +29,12 @@ import {
     interactivityBaseService
 } from "powerbi-visuals-utils-interactivityutils";
 import { Selection, select } from "d3-selection";
-import { MekkoChartColumnDataPoint } from "./../dataInterfaces";
+import { MekkoChartColumnDataPoint, MekkoChartSeries } from "./../dataInterfaces";
+import { MekkoChart } from "../visual";
 
 import { VisualBehaviorOptions } from "./visualBehaviorOptions";
 
 import * as utils from "./../utils";
-
 
 // powerbi.extensibility.utils.interactivity
 import ISelectionHandler = interactivityBaseService.ISelectionHandler;
@@ -69,6 +69,20 @@ export class VisualBehavior implements IInteractiveBehavior {
 
             mouseEvent.preventDefault();
         });
+
+        eventGroup.on("keydown", function(keyboardEvent: KeyboardEvent) {
+            const dataOfTheLastEvent: SelectionDataPoint = VisualBehavior.getDatumForLastInputEvent(keyboardEvent);
+
+            if (keyboardEvent.code !== "Enter" && keyboardEvent.code !== "Space") {
+                return;
+            }
+
+            selectionHandler.handleSelection(
+                dataOfTheLastEvent,
+                keyboardEvent.ctrlKey
+            );
+        });
+
     }
 
     public renderSelection(hasSelection: boolean): void {
@@ -79,10 +93,28 @@ export class VisualBehavior implements IInteractiveBehavior {
                 !dataPoint.highlight && hasSelection,
                 !dataPoint.selected && this.options.hasHighlights);
         });
+
+        const series: Selection<any, any, any, any> = this.options.mainGraphicsContext
+        .selectAll(MekkoChart.SeriesSelector.selectorName);
+
+        series.attr("aria-selected", (dataPoint: MekkoChartSeries) => {
+            let selectedCategory: boolean = false;
+            dataPoint.data.forEach((seriesDataPoint: MekkoChartColumnDataPoint) => {
+                if (seriesDataPoint.selected) {
+                    selectedCategory = true;
+                }
+            });
+            return (hasSelection && selectedCategory);
+        });
+
+        this.options.bars.attr("aria-selected", (dataPoint: MekkoChartColumnDataPoint) => {
+            return (hasSelection && dataPoint.selected);
+        });
+
     }
 
-    private static getDatumForLastInputEvent(mouseEvent: MouseEvent): SelectionDataPoint {
-        const target: EventTarget = mouseEvent.target;
+    private static getDatumForLastInputEvent(event: Event): SelectionDataPoint {
+        const target: EventTarget = event.target;
         return select((<any>target)).datum() as any;
     }
 }
