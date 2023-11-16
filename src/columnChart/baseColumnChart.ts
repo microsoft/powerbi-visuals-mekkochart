@@ -24,10 +24,7 @@
  *  THE SOFTWARE.
  */
 import powerbi from "powerbi-visuals-api";
-import {
-    ColorHelper
-}
-    from "powerbi-visuals-utils-colorutils";
+
 import {
     converterHelper,
     dataViewObjects
@@ -97,8 +94,6 @@ import {
     MekkoVisualRenderResult,
     MekkoChartDrawInfo,
     MekkoCategoryProperties,
-    MekkoChartLabelSettings,
-    MekkoChartLabelSettingsOptions,
     MekkoChartColumnDataPoint,
     MekkoColumnChartContext,
     MekkoChartBaseData,
@@ -117,7 +112,6 @@ import { select, Selection } from "d3-selection";
 
 import { MekkoChart } from "./../visual";
 
-import * as  formattingUtils from "./../formattingUtils";
 import * as converterStrategy from "./../converterStrategy/baseConverterStrategy";
 import * as visualStrategy from "./../visualStrategy/visualStrategy";
 import * as baseVisualStrategy from "./../visualStrategy/baseVisualStrategy";
@@ -146,8 +140,6 @@ import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import CustomVisualOpaqueIdentity = powerbi.visuals.CustomVisualOpaqueIdentity;
 import PrimitiveValue = powerbi.PrimitiveValue;
 import DataViewValueColumn = powerbi.DataViewValueColumn;
-import VisualObjectInstance = powerbi.VisualObjectInstance;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
 import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 
@@ -165,7 +157,6 @@ import IAxisProperties = axisInterfaces.IAxisProperties;
 import ValueType = valueType.ValueType;
 
 // powerbi.extensibility.utils.interactivity
-import LegendIcon = legendInterfaces.MarkerShape;
 import ILegendData = legendInterfaces.LegendData;
 import LegendDataPoint = legendInterfaces.LegendDataPoint;
 import DataLabelObject = dataLabelInterfaces.DataLabelObject;
@@ -183,9 +174,6 @@ import BaseVisualStrategy = baseVisualStrategy.BaseVisualStrategy;
 
 // converterStrategy
 import BaseConverterStrategy = converterStrategy.BaseConverterStrategy;
-
-// formattingUtils
-import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 
 // behavior
 import { VisualBehaviorOptions } from "./../behavior/visualBehaviorOptions";
@@ -1302,146 +1290,6 @@ export class BaseColumnChart implements IColumnChart {
                 || (this.data.series && this.data.series.length > 1));
     }
 
-    public enumerateObjectInstances(
-        enumeration: VisualObjectInstance[],
-        options: EnumerateVisualObjectInstancesOptions): void {
-
-        switch (options.objectName) {
-            case "dataPoint": {
-                this.enumerateDataPoints(enumeration);
-                break;
-            }
-            case "labels": {
-                this.enumerateDataLabels(enumeration);
-                break;
-            }
-            case "xAxisLabels": {
-                this.enumerateXAxisLabels(enumeration);
-                break;
-            }
-            case "sortLegend": {
-                this.enumerateSortLegend(enumeration);
-                break;
-            }
-            case "sortSeries": {
-                this.enumerateSortSeries(enumeration);
-                break;
-            }
-            case "categoryColorStart": {
-                this.enumerateCategoryColors(enumeration, "categoryColorStart", "Start color");
-                break;
-            }
-            case "categoryColorEnd": {
-                this.enumerateCategoryColors(enumeration, "categoryColorEnd", "End color");
-                break;
-            }
-        }
-    }
-
-    private enumerateCategoryColors(instances: VisualObjectInstance[], objectName: string, label: string) {
-        if (this.data.dataPointSettings && this.data.dataPointSettings.categoryGradient && this.checkDataToFeatures()) {
-            this.data.categories.forEach((category) => {
-                const categoryLegends: MekkoLegendDataPoint[] = this.data.legendData.dataPoints.filter(legend => legend.category === category);
-
-                instances.push({
-                    objectName: objectName,
-                    displayName: `${label} -${category}`,
-                    selector: ColorHelper.normalizeSelector(categoryLegends[0].categoryIdentity.getSelector(), true),
-                    properties: {
-                        categoryGradient: {
-                            solid: {
-                                color: objectName === "categoryColorStart" ? categoryLegends[0].categoryStartColor : categoryLegends[0].categoryEndColor
-                            }
-                        }
-                    },
-                });
-            });
-        }
-    }
-
-    private enumerateXAxisLabels(instances: VisualObjectInstance[]): void {
-        instances[0] = <VisualObjectInstance>{
-            objectName: "xAxisLabels",
-            properties: {}
-        };
-        instances[0].properties["enableRotataion"] = this.data.xAxisLabelsSettings.enableRotataion;
-    }
-
-    private enumerateSortLegend(instances: VisualObjectInstance[]): void {
-        instances[0] = <VisualObjectInstance>{
-            objectName: "sortLegend",
-            properties: {}
-        };
-        instances[0].properties["enabled"] = this.data.sortlegend.enabled;
-        instances[0].properties["direction"] = this.data.sortlegend.direction;
-
-        instances[0].properties["groupByCategory"] = this.data.sortlegend.groupByCategory;
-        instances[0].properties["groupByCategoryDirection"] = this.data.sortlegend.groupByCategoryDirection;
-    }
-
-    private enumerateSortSeries(instances: VisualObjectInstance[]): void {
-        instances[0] = <VisualObjectInstance>{
-            objectName: "sortSeries",
-            properties: {}
-        };
-        instances[0].properties["enabled"] = this.data.sortSeries.enabled;
-        instances[0].properties["direction"] = this.data.sortSeries.direction;
-        instances[0].properties["displayPercents"] = this.data.sortSeries.displayPercents;
-    }
-
-    private enumerateDataLabels(instances: VisualObjectInstance[]): void {
-        const data: MekkoColumnChartData = this.data,
-            seriesCount: number = data.series.length;
-
-        // Draw default settings
-        dataLabelUtils.enumerateDataLabels(this.getLabelSettingsOptions(
-            instances,
-            this.data.labelSettings,
-            false));
-
-        (<any>instances[0].properties).forceDisplay = (<MekkoChartLabelSettings>this.data.labelSettings).forceDisplay;
-
-        if (seriesCount === 0) {
-            return;
-        }
-
-        if (!data.hasDynamicSeries && (seriesCount > 1 || !data.categoryMetadata)) {
-            for (let i: number = 0; i < seriesCount; i++) {
-                const series: MekkoChartSeries = data.series[i],
-                    labelSettings: VisualDataLabelsSettings = (series.labelSettings)
-                        ? series.labelSettings
-                        : this.data.labelSettings;
-
-                dataLabelUtils.enumerateDataLabels(
-                    this.getLabelSettingsOptions(
-                        instances,
-                        labelSettings,
-                        true,
-                        series));
-            }
-        }
-    }
-
-    private getLabelSettingsOptions(
-        instances: VisualObjectInstance[],
-        labelSettings: VisualDataLabelsSettings,
-        isSeries: boolean,
-        series?: MekkoChartSeries): MekkoChartLabelSettingsOptions {
-
-        return {
-            instances: instances,
-            dataLabelsSettings: labelSettings,
-            show: !isSeries,
-            displayUnits: true,
-            precision: true,
-            forceDisplay: true,
-            fontSize: false,
-            selector: series && series.identity
-                ? series.identity.getSelector()
-                : null
-        };
-    }
-
     public getData() {
         return this.data;
     }
@@ -1450,90 +1298,6 @@ export class BaseColumnChart implements IColumnChart {
         return !this.data.legendData.dataPoints.some((value: MekkoLegendDataPoint) => {
             return value.categoryValues.filter(value => value).length > 1;
         });
-    }
-
-    private enumerateDataPoints(instances: VisualObjectInstance[]): void {
-        const data: MekkoColumnChartData = this.data;
-
-        if (!data || !data.series) {
-            return;
-        }
-
-        const seriesCount: number = data.series.length;
-
-        if (seriesCount === 0) {
-            return;
-        }
-
-        const properties: any = {};
-        if (this.checkDataToFeatures()) {
-            properties["categoryGradient"] = this.data.dataPointSettings.categoryGradient;
-
-            instances.push({
-                objectName: "dataPoint",
-                selector: null,
-                properties: properties
-            });
-        }
-
-        if (data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata) {
-            if (!this.data.dataPointSettings.categoryGradient) {
-                for (const series of data.series) {
-                    instances.push({
-                        objectName: "dataPoint",
-                        displayName: series.displayName,
-                        selector: ColorHelper.normalizeSelector(series.identity.getSelector()),
-                        properties: {
-                            fill: { solid: { color: series.color } }
-                        },
-                    });
-                }
-            }
-        }
-        else {
-            // For single-category, single-measure column charts, the user can color the individual bars.
-            const singleSeriesData: MekkoChartColumnDataPoint[] = data.series[0].data,
-                categoryFormatter: IValueFormatter = data.categoryFormatter;
-
-            // Add default color and show all slices
-            instances.push({
-                objectName: "dataPoint",
-                selector: null,
-                properties: {
-                    defaultColor: {
-                        solid: {
-                            color: data.defaultDataPointColor || this.colorPalette.getColor("0").value
-                        }
-                    }
-                }
-            });
-
-            instances.push({
-                objectName: "dataPoint",
-                selector: null,
-                properties: {
-                    showAllDataPoints: !!data.showAllDataPoints
-                }
-            });
-
-            for (let i: number = 0; i < singleSeriesData.length && data.showAllDataPoints; i++) {
-                const singleSeriesDataPoints = singleSeriesData[i],
-                    categoryValue: any = data.categories[i];
-
-                instances.push({
-                    objectName: "dataPoint",
-                    displayName: categoryFormatter
-                        ? categoryFormatter.format(categoryValue)
-                        : categoryValue,
-                    selector: ColorHelper.normalizeSelector(
-                        (singleSeriesDataPoints.identity as ISelectionId).getSelector(),
-                        true),
-                    properties: {
-                        fill: { solid: { color: singleSeriesDataPoints.color } }
-                    },
-                });
-            }
-        }
     }
 
     public calculateAxesProperties(options: MekkoCalculateScaleAndDomainOptions): IAxisProperties[] {
@@ -1670,75 +1434,6 @@ export class BaseColumnChart implements IColumnChart {
         }
 
         return viewport;
-    }
-
-    private selectColumn(indexOfColumnSelected: number, force: boolean = false): void {
-        if (!force && this.lastInteractiveSelectedColumnIndex === indexOfColumnSelected) { // same column, nothing to do here
-            return;
-        }
-
-        const legendData: ILegendData = this.createInteractiveMekkoLegendDataPoints(indexOfColumnSelected),
-            MekkoLegendDataPoints: MekkoLegendDataPoint[] = legendData.dataPoints;
-
-        this.cartesianVisualHost.updateLegend(legendData);
-
-        if (MekkoLegendDataPoints.length > 0) {
-            this.columnChart.selectColumn(
-                indexOfColumnSelected,
-                this.lastInteractiveSelectedColumnIndex);
-        }
-
-        this.lastInteractiveSelectedColumnIndex = indexOfColumnSelected;
-    }
-
-    private createInteractiveMekkoLegendDataPoints(columnIndex: number): ILegendData {
-        const data: MekkoColumnChartData = this.data;
-
-        if (!data || arrayExtensions.isUndefinedOrEmpty(data.series)) {
-            return { dataPoints: [] };
-        }
-
-        const legendDataPoints: MekkoLegendDataPoint[] = [],
-            category: any = data.categories && data.categories[columnIndex],
-            allSeries: MekkoChartSeries[] = data.series,
-            dataPoints: LegendDataPoint[] = data.legendData && data.legendData.dataPoints,
-            converterStrategy: BaseConverterStrategy =
-                new BaseConverterStrategy(this.dataViewCat, this.visualHost);
-
-        for (let i: number = 0, len = allSeries.length; i < len; i++) {
-            const measure: number = converterStrategy.getValueBySeriesAndCategory(i, columnIndex),
-                valueMetadata: DataViewMetadataColumn = data.valuesMetadata[i],
-                formattedLabel: string = getFormattedLegendLabel(valueMetadata, this.dataViewCat.values);
-            let dataPointColor: string;
-
-            if (allSeries.length === 1) {
-                const series: MekkoChartSeries = allSeries[0];
-
-                dataPointColor = series.data.length > columnIndex && series.data[columnIndex].color;
-            } else {
-                dataPointColor = dataPoints.length > i && dataPoints[i].color;
-            }
-
-            const emptyIdentity: ISelectionId = this.visualHost
-                .createSelectionIdBuilder()
-                .createSelectionId();
-
-            legendDataPoints.push({
-                color: dataPointColor,
-                markerShape: LegendIcon.circle,
-                label: formattedLabel,
-                category: data.categoryFormatter
-                    ? data.categoryFormatter.format(category)
-                    : category,
-                measure: valueFormatter.format(
-                    measure,
-                    valueFormatter.getFormatStringByColumn(valueMetadata)),
-                identity: emptyIdentity,
-                selected: false
-            });
-        }
-
-        return { dataPoints: legendDataPoints };
     }
 
     public overrideXScale(xProperties: IAxisProperties): void {
