@@ -67,7 +67,11 @@ import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
 
 // d3
-export type Selection = d3.Selection<any, any, any, any>;
+import { Selection as d3Selection} from "d3-selection";
+import { ScaleLinear as d3ScaleLinear} from "d3-scale";
+export type Selection = d3Selection<any, any, any, any>;
+export type GenericSelection<T> = d3Selection<any, T, any, any>;
+export type ScaleLinear = d3ScaleLinear<any, any, never>;
 
 // powerbi
 import IDataViewObjects = powerbi.DataViewObjects;
@@ -145,9 +149,9 @@ export interface MekkoChartAnimationResult {
 }
 
 export interface MekkoChartAxisOptions {
-    xScale: d3.ScaleLinear<any, any>;
-    yScale: d3.ScaleLinear<any, any>;
-    seriesOffsetScale?: d3.ScaleLinear<any, any>;
+    xScale: ScaleLinear;
+    yScale: ScaleLinear;
+    seriesOffsetScale?: ScaleLinear;
     columnWidth: number;
     categoryWidth?: number;
     isScalar: boolean;
@@ -501,7 +505,7 @@ export interface MekkoChartConstructorOptions extends MekkoChartConstructorBaseO
 
 export interface MekkoChartDrawInfo {
     eventGroup?: Selection;
-    shapesSelection: d3.Selection<any, TooltipEnabledDataPoint, any, any>;
+    shapesSelection: d3Selection<any, TooltipEnabledDataPoint, any, any>;
     viewport: IViewport;
     axisOptions: MekkoChartAxisOptions;
     labelDataPoints: LabelDataPoint[];

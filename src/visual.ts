@@ -95,6 +95,8 @@ import { VisualFormattingSettingsModel } from "./settings";
 import { max, sum } from "d3-array";
 import { select } from "d3-selection";
 import { brushX, BrushBehavior } from "d3-brush";
+import { ScaleLinear as d3ScaleLinear } from "d3-scale";
+type ScaleLinear<T> = d3ScaleLinear<T, T, never>;
 
 // powerbi.extensibility.utils.chart
 import {
@@ -2278,7 +2280,7 @@ export class MekkoChart implements IVisual {
     }
     private static moveBorder(
         selection: Selection,
-        scale: d3.ScaleLinear<number, number>,
+        scale: ScaleLinear<number>,
         borderWidth: number,
         yOffset: number = 0): void {
 

@@ -83,10 +83,12 @@ import { MekkoChart } from "./../visual";
 import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
 
 // d3
-import * as d3selection from "d3-selection";
-import * as d3scale from "d3-scale";
-import { axisLeft, axisBottom } from "d3-axis";
-import Selection = d3selection.Selection;
+import { Selection as d3Selection } from "d3-selection";
+import { ScaleLinear as d3ScaleLinear, scaleLinear as scaleLinear } from "d3-scale";
+import { axisLeft, axisBottom, Axis as d3Axis} from "d3-axis";
+type Selection<T> = d3Selection<any, T, any, any>;
+type ScaleLinear<T> = d3ScaleLinear<T, T, never>;
+type Axis = d3Axis<any>;
 
 // powerbi.extensibility.utils.svg
 import ClassAndSelector = CssConstants.ClassAndSelector;
@@ -144,7 +146,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
     private yProps: IAxisProperties;
     private categoryLayout: MekkoChartCategoryLayout;
     private columnsCenters: number[];
-    private columnSelectionLineHandle: Selection<any, any, any, any>;
+    private columnSelectionLineHandle: Selection<any>;
 
     private interactivityService: IInteractivityService<SelectionDataPoint>;
     private viewportHeight: number;
@@ -233,7 +235,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
      * Format the linear tick labels or the category labels.
      */
     private static formatAxisTickValues(
-        axis: d3.Axis<any>,
+        axis: Axis,
         tickValues: any[],
         formatter: IValueFormatter,
         dataType: ValueType,
@@ -289,7 +291,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             formatString: string = valueFormatter.getFormatStringByColumn(metaDataColumn),
             dataType: ValueType = AxisHelper.getCategoryValueType(metaDataColumn, isScalar),
             isLogScaleAllowed: boolean = AxisHelper.isLogScalePossible(dataDomain, dataType),
-            scale: d3.ScaleLinear<number, number> = d3scale.scaleLinear(),
+            scale: ScaleLinear<number> = scaleLinear(),
             scaleDomain: number[] = [0, 1],
             bestTickCount: number = dataDomain.length || 1,
             borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(options.borderSettings);
@@ -316,7 +318,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             useTickIntervalForDisplayUnits);
 
         const axisFn = isVertical ? axisLeft : axisBottom;
-        const axis: d3.Axis<any> = axisFn(scale)
+        const axis: Axis = axisFn(scale)
             .tickSize(6)
             .ticks(bestTickCount)
             .tickValues(dataDomain);
@@ -513,11 +515,11 @@ export class BaseVisualStrategy implements IVisualStrategy {
         this.layout = stackedColumnLayout;
 
         const labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints(),
-            series: Selection<any, MekkoChartSeries, any, any> = utils.drawSeries(
+            series: Selection<MekkoChartSeries> = utils.drawSeries(
                 data,
                 this.graphicsContext.mainGraphicsContext);
 
-        let shapes: Selection<any, MekkoChartColumnDataPoint, any, any>;
+        let shapes: Selection<MekkoChartColumnDataPoint>;
 
         if (!useAnimation) {
             shapes = BaseVisualStrategy.drawDefaultShapes(data,
@@ -542,16 +544,16 @@ export class BaseVisualStrategy implements IVisualStrategy {
 
     private static drawDefaultShapes(
         data: MekkoColumnChartData,
-        series: Selection<any, any, any, any>,
+        series: Selection<any>,
         layout: IMekkoColumnLayout,
         itemCS: ClassAndSelector,
-        hasSelection: boolean): Selection<any, MekkoChartColumnDataPoint, any, any> {
+        hasSelection: boolean): Selection<MekkoChartColumnDataPoint> {
 
         const dataSelector: (dataPoint: MekkoChartSeries) => any[] =
             (dataPoint: MekkoChartSeries) => dataPoint.data;
 
-        const shapeSelection: Selection<any, any, any, any> = series.selectAll(itemCS.selectorName),
-            shapes: Selection<any, MekkoChartColumnDataPoint, any, any> = shapeSelection.data(
+        const shapeSelection: Selection<any> = series.selectAll(itemCS.selectorName),
+            shapes: Selection<MekkoChartColumnDataPoint> = shapeSelection.data(
                 dataSelector,
                 (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
 
@@ -591,8 +593,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .exit()
             .remove();
 
-        const borderSelection: Selection<any, any, any, any> = series.selectAll(BaseVisualStrategy.BorderSelector.selectorName),
-            borders: Selection<any, MekkoChartColumnDataPoint, any, any> = borderSelection.data(
+        const borderSelection: Selection<any> = series.selectAll(BaseVisualStrategy.BorderSelector.selectorName),
+            borders: Selection<MekkoChartColumnDataPoint> = borderSelection.data(
                 dataSelector,
                 (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
 
@@ -678,7 +680,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             x: number = columnCenters[selectedColumnIndex];
 
         if (!this.columnSelectionLineHandle) {
-            const handleSelection: Selection<any, any, any, any> = this.graphicsContext.mainGraphicsContext.append("g");
+            const handleSelection: Selection<any> = this.graphicsContext.mainGraphicsContext.append("g");
 
             this.columnSelectionLineHandle = handleSelection;
 
@@ -698,7 +700,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 .classed(BaseVisualStrategy.DragHandleSelector.className, true);
         }
         else {
-            const handleSelection: Selection<any, any, any, any> = this.columnSelectionLineHandle;
+            const handleSelection: Selection<any> = this.columnSelectionLineHandle;
 
             handleSelection
                 .select("line")
@@ -715,8 +717,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
         data: MekkoColumnChartData,
         axisOptions: MekkoColumnAxisOptions): IMekkoColumnLayout {
 
-        const xScale: d3.ScaleLinear<number, number> = axisOptions.xScale,
-            yScale: d3.ScaleLinear<number, number> = axisOptions.yScale,
+        const xScale: ScaleLinear<number> = axisOptions.xScale,
+            yScale: ScaleLinear<number> = axisOptions.yScale,
             scaledY0: number = yScale(0),
             scaledX0: number = xScale(0),
             borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(data.borderSettings);
