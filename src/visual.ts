@@ -178,7 +178,6 @@ import BaseColumnChart = columnChartBaseColumnChart.BaseColumnChart;
 import getValueAxisProperties = dataViewUtils.getValueAxisProperties;
 import getCategoryAxisProperties = dataViewUtils.getCategoryAxisProperties;
 
-
 export interface MekkoChartProperty {
     [propertyName: string]: DataViewObjectPropertyIdentifier;
 }
@@ -291,10 +290,7 @@ export class MekkoChart implements IVisual {
         dataPoint: {
             defaultColor: { objectName: "dataPoint", propertyName: "defaultColor" },
             fill: { objectName: "dataPoint", propertyName: "fill" },
-            showAllDataPoints: { objectName: "dataPoint", propertyName: "showAllDataPoints" },
-            categoryGradient: { objectName: "dataPoint", propertyName: "categoryGradient" },
-            colorGradientEndColor: { objectName: "dataPoint", propertyName: "colorGradientEndColor" },
-            colorDistribution: { objectName: "dataPoint", propertyName: "colorDistribution" }
+            showAllDataPoints: { objectName: "dataPoint", propertyName: "showAllDataPoints" }
         },
         columnBorder: {
             show: { objectName: "columnBorder", propertyName: "show", },
@@ -546,9 +542,7 @@ export class MekkoChart implements IVisual {
             longestCategory = formatter.format(longestCategory);
         }
 
-        const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.categoryAxisProperties
-            && PixelConverter.fromPointToPixel(
-                parseFloat(<any>this.categoryAxisProperties["fontSize"])) || undefined);
+        const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.categoryAxis.fontControl.fontSize.value);
 
         const longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory.toString());
         const requiredHeight = longestCategoryWidth * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180);
@@ -583,7 +577,7 @@ export class MekkoChart implements IVisual {
 
         const showOnRight: boolean = this.yAxisOrientation === axisPosition.right;
 
-        if (!options.hideXAxisTitle && (this.categoryAxisProperties["show"] === undefined || this.categoryAxisProperties["show"])) {
+        if (!options.hideXAxisTitle && (this.settingsModel.categoryAxis.topLevelSlice.value)) {
             const xAxisYPosition: number = MekkoChart.getTranslation(this.xAxisGraphicsContext.attr("transform"))[1]
                 - fontSize + xFontSize + MekkoChart.XAxisYPositionOffset;
 
@@ -595,8 +589,8 @@ export class MekkoChart implements IVisual {
                     this.layers,
                     options.viewport,
                     this.margin,
-                    this.categoryAxisProperties,
-                    this.valueAxisProperties);
+                    this.settingsModel.categoryAxis,
+                    this.settingsModel.valueAxis);
                 shiftTitle = this.calculateXAxisAdditionalHeight(axes.x.values);
             }
 
@@ -609,14 +603,12 @@ export class MekkoChart implements IVisual {
                 )
                 .style(
                     "fill", options.xLabelColor
-                    ? options.xLabelColor.solid.color
-                    : null
                 )
-                .style("font-family", <string>(this.categoryAxisProperties["fontFamily"]) ?? "Arial")
+                .style("font-family", this.settingsModel.categoryAxis.fontControl.fontFamily.value)
                 .style("font-size", xFontSize)
-                .style("font-weight", <boolean>(this.categoryAxisProperties["fontBold"]) ? "bold" : "normal")
-                .style("font-style", <boolean>(this.categoryAxisProperties["fontItalic"]) ? "italic" : "normal")
-                .style("text-decoration", <boolean>(this.categoryAxisProperties["fontUnderline"]) ? "underline" : "none")
+                .style("font-weight", this.settingsModel.categoryAxis.fontControl.bold.value)
+                .style("font-style", this.settingsModel.categoryAxis.fontControl.italic.value)
+                .style("text-decoration", this.settingsModel.categoryAxis.fontControl.underline.value)
                 .text(options.axisLabels.x)
                 .classed(MekkoChart.XAxisLabelSelector.className, true);
 
@@ -630,8 +622,6 @@ export class MekkoChart implements IVisual {
             const yAxisLabel: Selection = this.axisGraphicsContext.append("text")
                 .style(
                     "fill", options.yLabelColor
-                    ? options.yLabelColor.solid.color
-                    : null
                 )
                 .text(options.axisLabels.y)
                 .attr("transform", MekkoChart.TransformRotate)
@@ -642,11 +632,11 @@ export class MekkoChart implements IVisual {
                 )
                 .attr("x", -((height - margin.top - options.legendMargin) / MekkoChart.XDelimiter))
                 .attr("dy", MekkoChart.DefaultDy)
-                .style("font-family", <string>(this.valueAxisProperties["fontFamily"]) ?? "Arial")
+                .style("font-family", this.settingsModel.valueAxis.fontControl.fontFamily.value)
                 .style("font-size", yFontSize)
-                .style("font-weight", <boolean>(this.valueAxisProperties["fontBold"]) ? "bold" : "normal")
-                .style("font-style", <boolean>(this.valueAxisProperties["fontItalic"]) ? "italic" : "normal")
-                .style("text-decoration", <boolean>(this.valueAxisProperties["fontUnderline"]) ? "underline" : "none")
+                .style("font-weight", this.settingsModel.valueAxis.fontControl.bold.value)
+                .style("font-style", this.settingsModel.valueAxis.fontControl.italic.value)
+                .style("text-decoration", this.settingsModel.valueAxis.fontControl.underline.value)
                 .classed(MekkoChart.YAxisLabelSelector.className, true);
 
             yAxisLabel.call(AxisHelper.LabelLayoutStrategy.clip,
@@ -868,7 +858,7 @@ export class MekkoChart implements IVisual {
 
         if (this.dataViews && this.dataViews.length > 0) {
             this.populateObjectProperties(this.dataViews);
-            this.settingsModel = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, this.dataViews);
+            this.settingsModel = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, this.dataViews[0]);
         }
 
         for (let layerIndex: number = 0, length: number = this.layers.length; layerIndex < length; layerIndex++) {
@@ -882,8 +872,8 @@ export class MekkoChart implements IVisual {
                 this.layers,
                 this.currentViewport,
                 this.margin,
-                this.categoryAxisProperties,
-                this.valueAxisProperties);
+                this.settingsModel.categoryAxis,
+                this.settingsModel.valueAxis);
             additionHeight += this.calculateXAxisAdditionalHeight(axes.x.values);
         }
 
@@ -1096,6 +1086,7 @@ export class MekkoChart implements IVisual {
             colorDistribution
         };
     }
+
     public static parseSeriesSortSettings(objects: powerbi.DataViewObjects): MekkoSeriesSortSettings {
         const enabled: boolean = dataViewObjects.getValue(
             objects,
@@ -1184,7 +1175,19 @@ export class MekkoChart implements IVisual {
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {
-        this.settingsModel.setDataPointColorPickerSlices(this.layers);
+        const data: MekkoColumnChartData = (<BaseColumnChart>this.layers[0]).getData();
+        const seriesCount: number = data.series.length;
+
+        this.settingsModel.setVisibilityOfFileds(data);
+
+        if (data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata) {
+            this.settingsModel.setDataPointColorPickerSlices(this.layers);
+        }
+        else {
+            // For single-category, single-measure column charts, the user can color the individual bars
+            this.settingsModel.setDataPointColorPickerSlicesSingleSeries(data);
+        }
+
         const formattingModel = this.formattingSettingsService.buildFormattingModel(this.settingsModel);
         return formattingModel;
     }
@@ -1537,22 +1540,15 @@ export class MekkoChart implements IVisual {
     }
 
     private shouldRenderAxis(
-        axisProperties: IAxisProperties,
-        propertyName: string = "show"): boolean {
+        axisProperties: IAxisProperties): boolean {
 
         if (axisProperties) {
-            if (axisProperties.isCategoryAxis
-                && (!this.categoryAxisProperties
-                    || this.categoryAxisProperties[propertyName] == null
-                    || this.categoryAxisProperties[propertyName])) {
+            if (axisProperties.isCategoryAxis && this.settingsModel.categoryAxis.topLevelSlice.value){
 
                 return axisProperties.values
                     && axisProperties.values.length > 0;
             }
-            else if (!axisProperties.isCategoryAxis
-                && (!this.valueAxisProperties
-                    || this.valueAxisProperties[propertyName] == null
-                    || this.valueAxisProperties[propertyName])) {
+            else if (!axisProperties.isCategoryAxis && this.settingsModel.valueAxis.topLevelSlice.value) {
 
                 return axisProperties.values
                     && axisProperties.values.length > 0;
@@ -1586,13 +1582,9 @@ export class MekkoChart implements IVisual {
             MekkoChart.MinBottomMargin,
             Math.ceil(viewport.height * maxMarginFactor));
 
-        const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.categoryAxisProperties
-            && PixelConverter.fromPointToPixel(
-                parseFloat(<any>this.categoryAxisProperties["fontSize"])) || undefined);
+        const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.categoryAxis.fontControl.fontSize.value);
 
-        const y1AxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.valueAxisProperties
-            && PixelConverter.fromPointToPixel(
-                parseFloat(<any>this.valueAxisProperties["fontSize"])) || undefined);
+        const y1AxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.valueAxis.fontControl.fontSize.value);
 
         const margin: IMargin = this.margin;
 
@@ -1605,8 +1597,8 @@ export class MekkoChart implements IVisual {
             this.layers,
             viewport,
             margin,
-            this.categoryAxisProperties,
-            this.valueAxisProperties);
+            this.settingsModel.categoryAxis,
+            this.settingsModel.valueAxis);
 
         this.yAxisIsCategorical = axes.y1.isCategoryAxis;
 
@@ -1690,8 +1682,8 @@ export class MekkoChart implements IVisual {
             this.layers,
             viewport,
             margin,
-            this.categoryAxisProperties,
-            this.valueAxisProperties);
+            this.settingsModel.categoryAxis,
+            this.settingsModel.valueAxis);
 
         // we need to make two passes because the margin changes affect the chosen tick values, which then affect the margins again.
         // after the second pass the margins are correct.
@@ -1746,8 +1738,8 @@ export class MekkoChart implements IVisual {
                     this.layers,
                     this.currentViewport,
                     this.margin,
-                    this.categoryAxisProperties,
-                    this.valueAxisProperties);
+                    this.settingsModel.categoryAxis,
+                    this.settingsModel.valueAxis);
 
                 xMax += this.calculateXAxisAdditionalHeight(axes.x.values);
             }
@@ -1807,8 +1799,8 @@ export class MekkoChart implements IVisual {
                 this.layers,
                 viewport,
                 margin,
-                this.categoryAxisProperties,
-                this.valueAxisProperties);
+                this.settingsModel.categoryAxis,
+                this.settingsModel.valueAxis);
 
             if (axes.y1.values.length === previousTickCountY1
                 && (!axes.y2 || axes.y2.values.length === previousTickCountY2)) {
@@ -1918,80 +1910,34 @@ export class MekkoChart implements IVisual {
             layers: IColumnChart[] = this.layers,
             duration: number = MekkoChart.AnimationDuration;
 
-        let xLabelColor: Fill,
-            yLabelColor: Fill,
-            y2LabelColor: Fill,
-            xFontSize: any,
-            yFontSize: any,
-            xFontFamily: any,
-            yFontFamily: any,
-            xFontBold: any,
-            yFontBold: any,
-            xFontItalic: any,
-            yFontItalic: any,
-            xFontUnderline: any,
-            yFontUnderline: any;
+        let xLabelColor: string,
+            yLabelColor: string,
+            y2LabelColor: any,
+            xFontSize: number,
+            yFontSize: number,
+            xFontFamily: string,
+            yFontFamily: string,
+            xFontBold: boolean,
+            yFontBold: boolean,
+            xFontItalic: boolean,
+            yFontItalic: boolean,
+            xFontUnderline: boolean,
+            yFontUnderline: boolean;
         if (this.shouldRenderAxis(axes.x)) {
             if (axes.x.isCategoryAxis) {
-                xLabelColor = this.categoryAxisProperties
-                    && this.categoryAxisProperties["labelColor"]
-                    ? <Fill>this.categoryAxisProperties["labelColor"]
-                    : MekkoChart.DefaultSettings.categoryAxis.labelColor;
-
-                xFontSize = this.categoryAxisProperties
-                    && this.categoryAxisProperties["fontSize"] != null
-                    ? <Fill>this.categoryAxisProperties["fontSize"]
-                    : MekkoChart.DefaultLabelFontSizeInPt;
-
-                xFontFamily = this.categoryAxisProperties
-                    && this.categoryAxisProperties["fontFamily"] != null
-                    ? <string>this.categoryAxisProperties["fontFamily"]
-                    : "Arial";
-
-                xFontBold = this.categoryAxisProperties
-                    && this.categoryAxisProperties["fontBold"] != null
-                    ? <boolean>this.categoryAxisProperties["fontBold"]
-                    : false;
-
-                xFontItalic = this.categoryAxisProperties
-                    && this.categoryAxisProperties["fontItalic"] != null
-                    ? <boolean>this.categoryAxisProperties["fontItalic"]
-                    : false;
-
-                xFontUnderline = this.categoryAxisProperties
-                    && this.categoryAxisProperties["fontUnderline"] != null
-                    ? <boolean>this.categoryAxisProperties["fontUnderline"]
-                    : false;
+                xLabelColor = this.settingsModel.categoryAxis.labelColor.value.value;
+                xFontSize = this.settingsModel.categoryAxis.fontControl.fontSize.value;
+                xFontFamily = this.settingsModel.categoryAxis.fontControl.fontFamily.value;
+                xFontBold = this.settingsModel.categoryAxis.fontControl.bold.value;
+                xFontItalic = this.settingsModel.categoryAxis.fontControl.italic.value;
+                xFontUnderline = this.settingsModel.categoryAxis.fontControl.underline.value;
             } else {
-                xLabelColor = this.valueAxisProperties
-                    && this.valueAxisProperties["labelColor"]
-                    ? <Fill>this.valueAxisProperties["labelColor"]
-                    : MekkoChart.DefaultSettings.valueAxis.labelColor;
-
-                xFontSize = this.valueAxisProperties
-                    && this.valueAxisProperties["fontSize"]
-                    ? this.valueAxisProperties["fontSize"]
-                    : MekkoChart.DefaultLabelFontSizeInPt;
-
-                xFontFamily = this.valueAxisProperties
-                    && this.valueAxisProperties["fontFamily"] != null
-                    ? <string>this.valueAxisProperties["fontFamily"]
-                    : "Arial";
-
-                xFontBold = this.valueAxisProperties
-                    && this.valueAxisProperties["fontBold"] != null
-                    ? <boolean>this.valueAxisProperties["fontBold"]
-                    : false;
-
-                xFontItalic = this.valueAxisProperties
-                    && this.valueAxisProperties["fontItalic"] != null
-                    ? <boolean>this.valueAxisProperties["fontItalic"]
-                    : false;
-
-                xFontUnderline = this.valueAxisProperties
-                    && this.valueAxisProperties["fontUnderline"] != null
-                    ? <boolean>this.valueAxisProperties["fontUnderline"]
-                    : false;
+                xLabelColor = this.settingsModel.valueAxis.labelColor.value.value;
+                xFontSize = this.settingsModel.valueAxis.fontControl.fontSize.value;
+                xFontFamily = this.settingsModel.valueAxis.fontControl.fontFamily.value;
+                xFontBold = this.settingsModel.valueAxis.fontControl.bold.value;
+                xFontItalic = this.settingsModel.valueAxis.fontControl.italic.value;
+                xFontUnderline = this.settingsModel.valueAxis.fontControl.underline.value;
             }
 
             xFontSize = PixelConverter.fromPointToPixel(xFontSize);
@@ -2076,61 +2022,19 @@ export class MekkoChart implements IVisual {
 
         if (this.shouldRenderAxis(axes.y1)) {
             if (axes.y1.isCategoryAxis) {
-                yLabelColor = this.categoryAxisProperties && this.categoryAxisProperties["labelColor"]
-                    ? <Fill>this.categoryAxisProperties["labelColor"]
-                    : null;
-
-                yFontSize = this.categoryAxisProperties && this.categoryAxisProperties["fontSize"] != null
-                    ? this.categoryAxisProperties["fontSize"]
-                    : MekkoChart.DefaultLabelFontSizeInPt;
-
-                yFontFamily = this.categoryAxisProperties
-                    && this.categoryAxisProperties["fontFamily"] != null
-                    ? <string>this.categoryAxisProperties["fontFamily"]
-                    : "Arial";
-
-                yFontBold = this.categoryAxisProperties
-                    && this.categoryAxisProperties["fontBold"] != null
-                    ? <boolean>this.categoryAxisProperties["fontBold"]
-                    : false;
-
-                yFontItalic = this.categoryAxisProperties
-                    && this.categoryAxisProperties["fontItalic"] != null
-                    ? <boolean>this.categoryAxisProperties["fontItalic"]
-                    : false;
-
-                yFontUnderline = this.categoryAxisProperties
-                    && this.categoryAxisProperties["fontUnderline"] != null
-                    ? <boolean>this.categoryAxisProperties["fontUnderline"]
-                    : false;
+                yLabelColor = this.settingsModel.categoryAxis.labelColor.value.value;
+                yFontSize = this.settingsModel.categoryAxis.fontControl.fontSize.value;
+                yFontFamily = this.settingsModel.categoryAxis.fontControl.fontFamily.value;
+                yFontBold = this.settingsModel.categoryAxis.fontControl.bold.value;
+                yFontItalic = this.settingsModel.categoryAxis.fontControl.italic.value;
+                yFontUnderline = this.settingsModel.categoryAxis.fontControl.underline.value; 
             } else {
-                yLabelColor = this.valueAxisProperties && this.valueAxisProperties["labelColor"]
-                    ? <Fill>this.valueAxisProperties["labelColor"]
-                    : null;
-
-                yFontSize = this.valueAxisProperties && this.valueAxisProperties["fontSize"] != null
-                    ? this.valueAxisProperties["fontSize"]
-                    : MekkoChart.DefaultLabelFontSizeInPt;
-
-                yFontFamily = this.valueAxisProperties
-                    && this.valueAxisProperties["fontFamily"] != null
-                    ? <string>this.valueAxisProperties["fontFamily"]
-                    : "Arial";
-
-                yFontBold = this.valueAxisProperties
-                    && this.valueAxisProperties["fontBold"] != null
-                    ? <boolean>this.valueAxisProperties["fontBold"]
-                    : false;
-
-                yFontItalic = this.valueAxisProperties
-                    && this.valueAxisProperties["fontItalic"] != null
-                    ? <boolean>this.valueAxisProperties["fontItalic"]
-                    : false;
-
-                yFontUnderline = this.valueAxisProperties
-                    && this.valueAxisProperties["fontUnderline"] != null
-                    ? <boolean>this.valueAxisProperties["fontUnderline"]
-                    : false;
+                yLabelColor = this.settingsModel.valueAxis.labelColor.value.value;
+                yFontSize = this.settingsModel.valueAxis.fontControl.fontSize.value;
+                yFontFamily = this.settingsModel.valueAxis.fontControl.fontFamily.value;
+                yFontBold = this.settingsModel.valueAxis.fontControl.bold.value;
+                yFontItalic = this.settingsModel.valueAxis.fontControl.italic.value;
+                yFontUnderline = this.settingsModel.valueAxis.fontControl.underline.value; 
             }
 
             yFontSize = PixelConverter.fromPointToPixel(yFontSize);
@@ -2222,13 +2126,9 @@ export class MekkoChart implements IVisual {
 
         // Axis labels
         if (chartHasAxisLabels) {
-            const hideXAxisTitle: boolean = !this.shouldRenderAxis(
-                axes.x,
-                MekkoChart.ShowAxisTitlePropertyName);
+            const hideXAxisTitle: boolean = !this.shouldRenderAxis(axes.x);
 
-            const hideYAxisTitle: boolean = !this.shouldRenderAxis(
-                axes.y1,
-                MekkoChart.ShowAxisTitlePropertyName);
+            const hideYAxisTitle: boolean = !this.shouldRenderAxis(axes.y1);
 
             const hideY2AxisTitle: boolean = this.valueAxisProperties
                 && this.valueAxisProperties[MekkoChart.SecondShowAxisTitlePropertyName] != null
@@ -2350,9 +2250,9 @@ export class MekkoChart implements IVisual {
         return selection.selectAll("g.tick text");
     }
 
-    private static setAxisLabelColor(selection: Selection, fill: Fill): void {
+    private static setAxisLabelColor(selection: Selection, fill: string): void {
         MekkoChart.getTickText(selection)
-            .style("fill", fill ? fill.solid.color : null);
+            .style("fill", fill);
     }
 
     private static setAxisLabelFontSize(selection: Selection, fontSize: number): void {

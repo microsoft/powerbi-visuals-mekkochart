@@ -42,29 +42,11 @@ import {
     MekkoCalculateScaleAndDomainOptions,
     MekkoChartAxisProperties,
 } from "./../dataInterfaces";
+import { CategoryAxisSettings, ValueAxisSettings } from "../settings";
 
     export interface AxesLabels {
         xAxisLabel: string;
         yAxisLabel: string;
-    }
-
-    /**
-     * Returns a boolean, that indicates if y axis title should be displayed.
-     * @return True if y axis title should be displayed,
-     * otherwise false.
-     */
-    export function shouldShowYAxisLabel(
-        layerNumber: number,
-        valueAxisProperties: DataViewObject,
-        yAxisWillMerge: boolean): boolean {
-
-        return (layerNumber === 0
-            && !!valueAxisProperties
-            && !!valueAxisProperties["showAxisTitle"])
-            || (layerNumber === 1
-                && !yAxisWillMerge
-                && !!valueAxisProperties
-                && !!valueAxisProperties["secShowAxisTitle"]);
     }
 
     /**
@@ -74,37 +56,32 @@ import {
         layers: columnChart.IColumnChart[],
         viewport: IViewport,
         margin: IMargin,
-        categoryAxisProperties: DataViewObject,
-        valueAxisProperties: DataViewObject): MekkoChartAxisProperties {
-
+        categoryAxisSettings: CategoryAxisSettings,
+        valueAxisSettings: ValueAxisSettings): MekkoChartAxisProperties {
         const visualOptions: MekkoCalculateScaleAndDomainOptions = {
             viewport,
             margin,
             forcedXDomain: [
-                categoryAxisProperties
-                    ? categoryAxisProperties["start"]
+                categoryAxisSettings
+                    ? categoryAxisSettings["start"]
                     : null,
-                categoryAxisProperties
-                    ? categoryAxisProperties["end"]
+                categoryAxisSettings
+                    ? categoryAxisSettings["end"]
                     : null
             ],
-            forceMerge: valueAxisProperties && valueAxisProperties["secShow"] === false,
+            forceMerge: valueAxisSettings && valueAxisSettings["secShow"] === false,
             showCategoryAxisLabel: false,
             showValueAxisLabel: false,
-            categoryAxisScaleType: categoryAxisProperties && categoryAxisProperties["axisScale"] != null
-                ? <string>categoryAxisProperties["axisScale"]
-                : axisScale.linear,
-            valueAxisScaleType: valueAxisProperties && valueAxisProperties["axisScale"] != null
-                ? <string>valueAxisProperties["axisScale"]
-                : axisScale.linear,
+            categoryAxisScaleType: axisScale.linear,
+            valueAxisScaleType: axisScale.linear,
             trimOrdinalDataOnOverflow: false
         };
 
-        if (valueAxisProperties) {
+        if (valueAxisSettings) {
             visualOptions.forcedYDomain = AxisHelper.applyCustomizedDomain(
                 [
-                    valueAxisProperties["start"],
-                    valueAxisProperties["end"]
+                    valueAxisSettings["start"],
+                    valueAxisSettings["end"]
                 ],
                 visualOptions.forcedYDomain);
         }
@@ -114,13 +91,9 @@ import {
         for (let layerNumber: number = 0; layerNumber < layers.length; layerNumber++) {
             const currentLayer: columnChart.IColumnChart = layers[layerNumber];
 
-            visualOptions.showCategoryAxisLabel = !!categoryAxisProperties
-                && !!categoryAxisProperties["showAxisTitle"];
+            visualOptions.showCategoryAxisLabel = categoryAxisSettings.showTitle.value;
 
-            visualOptions.showValueAxisLabel = shouldShowYAxisLabel(
-                layerNumber,
-                valueAxisProperties,
-                false);
+            visualOptions.showValueAxisLabel = valueAxisSettings.showTitle.value;
 
             const axes: IAxisProperties[] = currentLayer.calculateAxesProperties(visualOptions);
 

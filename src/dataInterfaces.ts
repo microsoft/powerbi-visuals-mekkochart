@@ -407,8 +407,8 @@ export interface MekkoAxisRenderingOptions {
     hideXAxisTitle: boolean;
     hideYAxisTitle: boolean;
     hideY2AxisTitle?: boolean;
-    xLabelColor?: Fill;
-    yLabelColor?: Fill;
+    xLabelColor: string;
+    yLabelColor: string;
     y2LabelColor?: Fill;
 }
 
