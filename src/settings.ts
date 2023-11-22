@@ -19,6 +19,24 @@ import { MekkoChart } from "./visual";
 import { MekkoChartColumnDataPoint, MekkoColumnChartData } from "./dataInterfaces";
 import { dataViewWildcard } from "powerbi-visuals-utils-dataviewutils";
 
+class ColumnBorderWidthDefaultOptions {
+    public static Width: number = 2;
+    public static MinWidth: number = 0;
+    public static MaxWidth: number = 5;
+}
+
+class FontSizeDefaultOptions {
+    public static FontSize: number = 12;
+    public static MinFontSize: number = 9;
+    public static MaxFontSize: number = 60;
+}
+
+class LabelPrecisionDefaultOptions {
+    public static LabelPrecision: number = 1;
+    public static MinLabelPrecision: number = 0;
+    public static MaxLabelPrecision: number = 10;
+}
+
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
 
     public name: string = "columnBorder";
@@ -40,7 +58,17 @@ export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
     public width = new formattingSettings.NumUpDown({
         name: "width",
         displayNameKey: "Visual_Width",
-        value: MekkoChart.DefaultSettings.columnBorder.width
+        value: ColumnBorderWidthDefaultOptions.Width,
+        options: {
+            minValue: {
+                type: powerbi.visuals.ValidatorType.Min,
+                value: ColumnBorderWidthDefaultOptions.MinWidth,
+            },
+            maxValue: {
+                type: powerbi.visuals.ValidatorType.Max,
+                value: ColumnBorderWidthDefaultOptions.MaxWidth,
+            }
+        }
     });
     
     public slices: FormattingSettingsSlice[] = [this.color, this.width];
@@ -73,7 +101,17 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
     public fontSize = new formattingSettings.NumUpDown({
         name: "fontSize",
         displayNameKey: "Visual_Font_Size",
-        value: 9
+        value: FontSizeDefaultOptions.FontSize,
+        options: {
+            minValue: {
+                type: powerbi.visuals.ValidatorType.Min,
+                value: FontSizeDefaultOptions.MinFontSize,
+            },
+            maxValue: {
+                type: powerbi.visuals.ValidatorType.Max,
+                value: FontSizeDefaultOptions.MaxFontSize,
+            }
+        }
     });
 
     public legendTitleGroup = new formattingSettings.Group({
@@ -156,7 +194,17 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
         name: "labelPrecision",
         displayNameKey: "Visual_Decimal_Places",
         descriptionKey: "Visual_Description_DecimalPlaces",
-        value: 1
+        value: LabelPrecisionDefaultOptions.LabelPrecision,
+        options: {
+            minValue: {
+                type: powerbi.visuals.ValidatorType.Min,
+                value: LabelPrecisionDefaultOptions.MinLabelPrecision,
+            },
+            maxValue: {
+                type: powerbi.visuals.ValidatorType.Max,
+                value: LabelPrecisionDefaultOptions.MaxLabelPrecision,
+            }
+        }
     });
 
     public slices: FormattingSettingsSlice[] = [this.color, this.displayUnits, this.labelPrecision, this.forceDisplay];
@@ -235,7 +283,17 @@ export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
         fontSize: new formattingSettings.NumUpDown({
             name: "fontSize",
             displayNameKey: "Visual_Font_Size",
-            value: 9
+            value: FontSizeDefaultOptions.FontSize,
+            options: {
+                minValue: {
+                    type: powerbi.visuals.ValidatorType.Min,
+                    value: FontSizeDefaultOptions.MinFontSize,
+                },
+                maxValue: {
+                    type: powerbi.visuals.ValidatorType.Max,
+                    value: FontSizeDefaultOptions.MaxFontSize,
+                }
+            }
         }),
         bold: new formattingSettings.ToggleSwitch({
             name: "fontBold",
@@ -291,7 +349,17 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
         fontSize: new formattingSettings.NumUpDown({
             name: "fontSize",
             displayNameKey: "Visual_Font_Size",
-            value: 9
+            value: FontSizeDefaultOptions.FontSize,
+            options: {
+                minValue: {
+                    type: powerbi.visuals.ValidatorType.Min,
+                    value: FontSizeDefaultOptions.MinFontSize,
+                },
+                maxValue: {
+                    type: powerbi.visuals.ValidatorType.Max,
+                    value: FontSizeDefaultOptions.MaxFontSize,
+                }
+            }
         }),
         bold: new formattingSettings.ToggleSwitch({
             name: "fontBold",
