@@ -110,7 +110,7 @@ import ValueType = valueType.ValueType;
 
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
 import SelectionDataPoint = interactivitySelectionService.SelectableDataPoint;
-import { ColumnBorderSettings, LabelsSettings, VisualFormattingSettingsModel } from "../settings";
+import { ColumnBorderSettings, VisualFormattingSettingsModel } from "../settings";
 
 interface LayoutFunction {
     (dataPoint: MekkoChartColumnDataPoint): number;
@@ -517,7 +517,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
 
         this.layout = stackedColumnLayout;
 
-        const labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints(settingsModel.labels),
+        const labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints(settingsModel),
             series: Selection<MekkoChartSeries> = utils.drawSeries(
                 data,
                 this.graphicsContext.mainGraphicsContext);
@@ -791,7 +791,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         };
     }
 
-    protected createMekkoLabelDataPoints(labelSettings: LabelsSettings): LabelDataPoint[] {
+    protected createMekkoLabelDataPoints(settingModel: VisualFormattingSettingsModel): LabelDataPoint[] {
         const labelDataPoints: LabelDataPoint[] = [],
             data: MekkoChartData = this.data,
             dataSeries: MekkoChartSeries[] = data.series,
@@ -800,10 +800,10 @@ export class BaseVisualStrategy implements IVisualStrategy {
 
         for (const currentSeries of dataSeries) {
 
-            if (!labelSettings.topLevelSlice.value || !currentSeries.data) {
+            if (!settingModel.labels.topLevelSlice.value || !currentSeries.data) {
                 continue;
             }
-            const displayUnitValue: number = +labelSettings.displayUnits.value;
+            const displayUnitValue: number = +settingModel.labels.displayUnits.value;
 
             for (const dataPoint of currentSeries.data) {
                 if ((data.hasHighlights && !dataPoint.highlight)
@@ -821,9 +821,9 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 let formatString: string = null,
                     value: number = dataPoint.valueOriginal;
 
-                if (!labelSettings.displayUnits.value) {
+                if (!settingModel.labels.displayUnits.value) {
                     formatString = hundredPercentFormat;
-                    if (this.data.sortSeries.displayPercents === "category") {
+                    if (settingModel.sortSeries.displayPercents.value === "category") {
                         value = dataPoint.valueAbsolute;
                     } else {
                         value = dataPoint.originalValueAbsoluteByAlLData;
@@ -833,16 +833,16 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 const formatter: IValueFormatter = formattersCache.getOrCreate(
                     formatString,
                     {
-                        show: labelSettings.topLevelSlice.value,
-                        precision: labelSettings.labelPrecision.value,
-                        labelColor: labelSettings.color.value.value,
+                        show: settingModel.labels.topLevelSlice.value,
+                        precision: settingModel.labels.labelPrecision.value,
+                        labelColor: settingModel.labels.color.value.value,
                     },
                     displayUnitValue);
 
                 labelDataPoints.push({
                     parentRect,
                     text: formatter.format(value),
-                    fillColor: labelSettings.color.value.value
+                    fillColor: settingModel.labels.color.value.value
                 });
             }
         }

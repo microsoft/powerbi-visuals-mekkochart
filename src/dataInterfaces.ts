@@ -321,7 +321,6 @@ export interface MekkoCalculateScaleAndDomainOptions {
 }
 
 export interface MekkoColumnChartData extends MekkoChartData {
-    sortSeries: MekkoSeriesSortSettings;
     categoriesWidth: number[];
     categoryProperties: MekkoCategoryProperties[];
 }

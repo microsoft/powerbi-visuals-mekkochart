@@ -1026,29 +1026,6 @@ export class MekkoChart implements IVisual {
         return minInterval;
     }
 
-    public static parseSeriesSortSettings(objects: powerbi.DataViewObjects): MekkoSeriesSortSettings {
-        const enabled: boolean = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["sortSeries"]["enabled"],
-            MekkoChart.DefaultSettings.sortSeries.enabled);
-
-        const direction: string = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["sortSeries"]["direction"],
-            MekkoChart.DefaultSettings.sortSeries.direction);
-
-        const displayPercents: string = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["sortSeries"]["displayPercents"],
-            MekkoChart.DefaultSettings.sortSeries.displayPercents);
-
-        return {
-            enabled,
-            direction,
-            displayPercents
-        };
-    }
-
     public getFormattingModel(): powerbi.visuals.FormattingModel {
         const data: MekkoColumnChartData = (<BaseColumnChart>this.layers[0]).getData();
         const seriesCount: number = data.series.length;
