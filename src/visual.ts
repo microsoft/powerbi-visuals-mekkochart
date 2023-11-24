@@ -579,7 +579,7 @@ export class MekkoChart implements IVisual {
             const xAxisYPosition: number = MekkoChart.getTranslation(this.xAxisGraphicsContext.attr("transform"))[1]
                 - fontSize + xFontSize + MekkoChart.XAxisYPositionOffset;
 
-            const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
+            const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value;
 
             let shiftTitle: number = 0;
             if (rotataionEnabled) {
@@ -858,7 +858,7 @@ export class MekkoChart implements IVisual {
             this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length), this.settingsModel);
         }
 
-        const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
+        const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value;
         let additionHeight: number = 0;
         if (rotataionEnabled) {
             const axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
@@ -1024,17 +1024,6 @@ export class MekkoChart implements IVisual {
         }
 
         return minInterval;
-    }
-
-    public static parseXAxisLabelsSettings(objects: powerbi.DataViewObjects): MekkoXAxisLabelsSettings {
-        const enableRotataion: boolean = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["xAxisLabels"]["enableRotataion"],
-            MekkoChart.DefaultSettings.xAxisLabels.enableRotataion);
-
-        return {
-            enableRotataion
-        };
     }
 
     public static parseSeriesSortSettings(objects: powerbi.DataViewObjects): MekkoSeriesSortSettings {
@@ -1648,7 +1637,7 @@ export class MekkoChart implements IVisual {
             maxSecondYaxisSide += MekkoChart.RightPadding;
             xMax += MekkoChart.BottomPadding;
 
-            const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
+            const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value;
 
             if (rotataionEnabled) {
                 const axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
@@ -1903,8 +1892,8 @@ export class MekkoChart implements IVisual {
                     borderWidth,
                     xFontSize / MekkoChart.XFontSizeDelimiter - MekkoChart.XFontSizeOffset);
 
-            const xAxisLabelssettings: MekkoXAxisLabelsSettings = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings();
-            if (!xAxisLabelssettings.enableRotataion) {
+            const rotationEnabled: boolean = this.settingsModel.xAxisLabels.enableRotataion.value;
+            if (!rotationEnabled) {
                 xAxisTextNodes
                     .call(
                         MekkoChart.wordBreak,

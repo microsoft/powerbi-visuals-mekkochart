@@ -82,7 +82,6 @@ import {
     MekkoChartCategoryLayout,
     MekkoSeriesSortSettings,
     MekkoLegendSortSettings,
-    MekkoXAxisLabelsSettings,
     LegendSeriesInfo,
     MekkoLegendDataPoint,
     MekkoDataPoints,
@@ -180,7 +179,6 @@ import { LabelsSettings, VisualFormattingSettingsModel } from "../settings";
 interface ConverterSettingsWrapper {
     sortSeriesSettings: MekkoSeriesSortSettings;
     sortLegendSettings: MekkoLegendSortSettings;
-    xAxisLabelsSettings: MekkoXAxisLabelsSettings;
 }
 
 export class BaseColumnChart implements IColumnChart {
@@ -393,7 +391,6 @@ export class BaseColumnChart implements IColumnChart {
             categoriesWidth: result.categoriesWidth,
             sortlegend: settingsWrapper.sortLegendSettings,
             sortSeries: settingsWrapper.sortSeriesSettings,
-            xAxisLabelsSettings: settingsWrapper.xAxisLabelsSettings,
             series: result.series,
             valuesMetadata,
             legendData: legendAndSeriesInfo.legend,
@@ -411,21 +408,18 @@ export class BaseColumnChart implements IColumnChart {
 
     private static getConverterSettings(dataViewMetadata: powerbi.DataViewMetadata): ConverterSettingsWrapper {
         let sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries,
-            sortLegendSettings: MekkoLegendSortSettings = MekkoChart.DefaultSettings.sortLegend,
-            xAxisLabelsSettings: MekkoXAxisLabelsSettings = MekkoChart.DefaultSettings.xAxisLabels;
+            sortLegendSettings: MekkoLegendSortSettings = MekkoChart.DefaultSettings.sortLegend;
 
         if (dataViewMetadata && dataViewMetadata.objects) {
             const objects: powerbi.DataViewObjects = dataViewMetadata.objects;
 
             sortLegendSettings = MekkoChart.parseLegendSortSettings(objects);
             sortSeriesSettings = MekkoChart.parseSeriesSortSettings(objects);
-            xAxisLabelsSettings = MekkoChart.parseXAxisLabelsSettings(objects);
         }
 
         return {
             sortSeriesSettings: sortSeriesSettings,
-            sortLegendSettings: sortLegendSettings,
-            xAxisLabelsSettings: xAxisLabelsSettings
+            sortLegendSettings: sortLegendSettings
         };
     }
     private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): ICategoryValuesCollection[] {
@@ -1167,10 +1161,6 @@ export class BaseColumnChart implements IColumnChart {
         return this.data.sortlegend;
     }
 
-    public getXAxisLabelsSettings(): MekkoXAxisLabelsSettings {
-        return this.data.xAxisLabelsSettings;
-    }
-
     public setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel): void {
         this.data = {
             categories: [],
@@ -1184,7 +1174,6 @@ export class BaseColumnChart implements IColumnChart {
             scalarCategoryAxis: false,
             sortlegend: null,
             sortSeries: null,
-            xAxisLabelsSettings: null,
             axesLabels: { x: null, y: null },
             hasDynamicSeries: false,
             defaultDataPointColor: null,
