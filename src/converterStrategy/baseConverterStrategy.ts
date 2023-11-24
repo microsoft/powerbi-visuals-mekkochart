@@ -25,7 +25,7 @@
  */
 
 import powerbi from "powerbi-visuals-api";
-import { ColorHelper, createLinearColorScale } from "powerbi-visuals-utils-colorutils";
+import { ColorHelper} from "powerbi-visuals-utils-colorutils";
 import { legendInterfaces } from "powerbi-visuals-utils-chartutils";
 import * as formattingUtils from "./../formattingUtils";
 import { max, sum, min } from "d3-array";
@@ -38,11 +38,9 @@ import DataViewObjects = powerbi.DataViewObjects;
 import PrimitiveValue = powerbi.PrimitiveValue;
 import DataViewValueColumnGroup = powerbi.DataViewValueColumnGroup;
 import ISelectionId = powerbi.visuals.ISelectionId;
-import Fill = powerbi.Fill;
 import DataViewValueColumn = powerbi.DataViewValueColumn;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import DataViewValueColumns = powerbi.DataViewValueColumns;
-import isEqual from "lodash.isequal";
 
 import { MekkoChart } from "./../visual";
 import {
@@ -50,8 +48,7 @@ import {
     ICategotyValuesStatsCollection,
     IFilteredValueGroups,
     BaseColorIdentity,
-    LegendSeriesInfo,
-    MekkoGradientSettings
+    LegendSeriesInfo
 } from "./../dataInterfaces";
 
 // powerbi.extensibility.utils.chart
@@ -110,15 +107,9 @@ export class BaseConverterStrategy implements ConverterStrategy {
         // find base color identity
         // todo handle color change of
         const valueGroups: DataViewValueColumnGroup[] = this.dataView.values.grouped();
-        const categoryGradientBaseColorIdentities: BaseColorIdentity[] = [];
         const categoryItemsCount: Array<IFilteredValueGroups[]> = [];
 
         this.dataView.categories[categoryFieldIndex].values.forEach((category: PrimitiveValue, index: number) => {
-
-            const categorySelectionId: ISelectionId = this.visualHost.createSelectionIdBuilder()
-                .withCategory(this.dataView.categories[categoryFieldIndex], index)
-                .createSelectionId();
-
             // gradiend start color
             const mappedItems: IFilteredValueGroups[] = [];
             valueGroups.forEach(group => {
@@ -173,10 +164,9 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     const label: string = getFormattedLegendLabel(source, allValues);
                     let category: string;
 
-                    let color: string;
                     const categoryIndex: number = series.values.findIndex(value => typeof value !== "undefined" && value !== null);
 
-                    color = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
+                    const color: string = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
                         : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
 
                     legend.push({

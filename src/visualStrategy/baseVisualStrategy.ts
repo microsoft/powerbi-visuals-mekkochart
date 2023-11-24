@@ -75,8 +75,6 @@ import {
 
 import { IVisualStrategy } from "./visualStrategy";
 
-import * as columnChart from "./../columnChart/baseColumnChart";
-
 import { MekkoChart } from "./../visual";
 
 import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
@@ -112,7 +110,7 @@ import ValueType = valueType.ValueType;
 
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
 import SelectionDataPoint = interactivitySelectionService.SelectableDataPoint;
-import { ColumnBorderSettings, VisualFormattingSettingsModel } from "../settings";
+import { ColumnBorderSettings, LabelsSettings, VisualFormattingSettingsModel } from "../settings";
 
 interface LayoutFunction {
     (dataPoint: MekkoChartColumnDataPoint): number;
@@ -519,7 +517,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
 
         this.layout = stackedColumnLayout;
 
-        const labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints(),
+        const labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints(settingsModel.labels),
             series: Selection<MekkoChartSeries> = utils.drawSeries(
                 data,
                 this.graphicsContext.mainGraphicsContext);
@@ -793,7 +791,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         };
     }
 
-    protected createMekkoLabelDataPoints(): LabelDataPoint[] {
+    protected createMekkoLabelDataPoints(labelSettings: LabelsSettings): LabelDataPoint[] {
         const labelDataPoints: LabelDataPoint[] = [],
             data: MekkoChartData = this.data,
             dataSeries: MekkoChartSeries[] = data.series,
@@ -801,17 +799,11 @@ export class BaseVisualStrategy implements IVisualStrategy {
             shapeLayout = this.layout.shapeLayout;
 
         for (const currentSeries of dataSeries) {
-            const labelSettings: VisualDataLabelsSettings = currentSeries.labelSettings
-                ? currentSeries.labelSettings
-                : data.labelSettings;
 
-            if (!labelSettings.show || !currentSeries.data) {
+            if (!labelSettings.topLevelSlice.value || !currentSeries.data) {
                 continue;
             }
-
-            const displayUnitValue: number = getDisplayUnitValueFromAxisFormatter(
-                this.yProps.formatter,
-                labelSettings);
+            const displayUnitValue: number = +labelSettings.displayUnits.value;
 
             for (const dataPoint of currentSeries.data) {
                 if ((data.hasHighlights && !dataPoint.highlight)
@@ -829,7 +821,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 let formatString: string = null,
                     value: number = dataPoint.valueOriginal;
 
-                if (!labelSettings.displayUnits) {
+                if (!labelSettings.displayUnits.value) {
                     formatString = hundredPercentFormat;
                     if (this.data.sortSeries.displayPercents === "category") {
                         value = dataPoint.valueAbsolute;
@@ -840,33 +832,21 @@ export class BaseVisualStrategy implements IVisualStrategy {
 
                 const formatter: IValueFormatter = formattersCache.getOrCreate(
                     formatString,
-                    labelSettings,
+                    {
+                        show: labelSettings.topLevelSlice.value,
+                        precision: labelSettings.labelPrecision.value,
+                        labelColor: labelSettings.color.value.value,
+                    },
                     displayUnitValue);
 
                 labelDataPoints.push({
                     parentRect,
                     text: formatter.format(value),
-                    fillColor: labelSettings.labelColor
-                        ? labelSettings.labelColor
-                        : BaseVisualStrategy.DefaultLabelFillColor
+                    fillColor: labelSettings.color.value.value
                 });
             }
         }
 
         return labelDataPoints;
     }
-}
-
-export function getDisplayUnitValueFromAxisFormatter(
-    axisFormatter: IValueFormatter,
-    labelSettings: VisualDataLabelsSettings): number {
-
-    if (axisFormatter
-        && axisFormatter.displayUnit
-        && labelSettings.displayUnits === 0) {
-
-        return axisFormatter.displayUnit.value;
-    }
-
-    return null;
 }

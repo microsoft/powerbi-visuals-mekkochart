@@ -237,14 +237,6 @@ export interface MekkoChartLabelSettingsOptions extends VisualDataLabelsSettings
     forceDisplay: boolean;
 }
 
-export interface MekkoChartLabelSettings extends VisualDataLabelsSettings {
-    forceDisplay: boolean;
-}
-
-export interface MekkoChartDataLabelObject extends DataLabelObject {
-    forceDisplay: boolean;
-}
-
 export interface MekkoChartData extends MekkoChartBaseData {
     categoryFormatter: IValueFormatter;
     series: MekkoChartSeries[];
@@ -253,7 +245,6 @@ export interface MekkoChartData extends MekkoChartBaseData {
     hasHighlights: boolean;
     categoryMetadata: DataViewMetadataColumn;
     scalarCategoryAxis: boolean;
-    labelSettings: VisualDataLabelsSettings;
     axesLabels: MekkoChartAxesLabels;
     hasDynamicSeries: boolean;
     isMultiMeasure: boolean;
@@ -355,10 +346,6 @@ export interface MekkoDataPointSettings {
     categoryGradient: boolean;
     colorGradientEndColor: any;
     colorDistribution: boolean;
-}
-
-export interface MekkoGradientSettings {
-    categoryGradient: Fill;
 }
 
 export interface MekkoSeriesSortSettings {

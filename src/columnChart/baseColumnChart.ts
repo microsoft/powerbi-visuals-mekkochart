@@ -175,13 +175,12 @@ import BaseConverterStrategy = converterStrategy.BaseConverterStrategy;
 
 // behavior
 import { VisualBehaviorOptions } from "./../behavior/visualBehaviorOptions";
-import { VisualFormattingSettingsModel } from "../settings";
+import { LabelsSettings, VisualFormattingSettingsModel } from "../settings";
 
 interface ConverterSettingsWrapper {
     sortSeriesSettings: MekkoSeriesSortSettings;
     sortLegendSettings: MekkoLegendSortSettings;
     xAxisLabelsSettings: MekkoXAxisLabelsSettings;
-    labelSettings: VisualDataLabelsSettings;
 }
 
 export class BaseColumnChart implements IColumnChart {
@@ -357,7 +356,6 @@ export class BaseColumnChart implements IColumnChart {
             legend,
             legendAndSeriesInfo.seriesObjects,
             converterStrategy,
-            settingsWrapper.labelSettings,
             is100PercentStacked,
             isScalar,
             supportsOverflow,
@@ -396,7 +394,6 @@ export class BaseColumnChart implements IColumnChart {
             sortlegend: settingsWrapper.sortLegendSettings,
             sortSeries: settingsWrapper.sortSeriesSettings,
             xAxisLabelsSettings: settingsWrapper.xAxisLabelsSettings,
-            labelSettings: settingsWrapper.labelSettings,
             series: result.series,
             valuesMetadata,
             legendData: legendAndSeriesInfo.legend,
@@ -415,13 +412,11 @@ export class BaseColumnChart implements IColumnChart {
     private static getConverterSettings(dataViewMetadata: powerbi.DataViewMetadata): ConverterSettingsWrapper {
         let sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries,
             sortLegendSettings: MekkoLegendSortSettings = MekkoChart.DefaultSettings.sortLegend,
-            xAxisLabelsSettings: MekkoXAxisLabelsSettings = MekkoChart.DefaultSettings.xAxisLabels,
-            labelSettings: VisualDataLabelsSettings = dataLabelUtils.getDefaultColumnLabelSettings(true);
+            xAxisLabelsSettings: MekkoXAxisLabelsSettings = MekkoChart.DefaultSettings.xAxisLabels;
 
         if (dataViewMetadata && dataViewMetadata.objects) {
             const objects: powerbi.DataViewObjects = dataViewMetadata.objects;
 
-            labelSettings = MekkoChart.parseLabelSettings(objects);
             sortLegendSettings = MekkoChart.parseLegendSortSettings(objects);
             sortSeriesSettings = MekkoChart.parseSeriesSortSettings(objects);
             xAxisLabelsSettings = MekkoChart.parseXAxisLabelsSettings(objects);
@@ -430,8 +425,7 @@ export class BaseColumnChart implements IColumnChart {
         return {
             sortSeriesSettings: sortSeriesSettings,
             sortLegendSettings: sortLegendSettings,
-            xAxisLabelsSettings: xAxisLabelsSettings,
-            labelSettings: labelSettings
+            xAxisLabelsSettings: xAxisLabelsSettings
         };
     }
     private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): ICategoryValuesCollection[] {
@@ -579,7 +573,6 @@ export class BaseColumnChart implements IColumnChart {
         legend: MekkoLegendDataPoint[],
         seriesObjectsList: powerbi.DataViewObjects[][],
         converterStrategy: BaseConverterStrategy,
-        defaultLabelSettings: VisualDataLabelsSettings,
         is100PercentStacked: boolean = false,
         isScalar: boolean = false,
         supportsOverflow: boolean = false,
@@ -754,7 +747,12 @@ export class BaseColumnChart implements IColumnChart {
                     : null;
 
                 if (labelObjects) {
-                    seriesLabelSettings = Prototype.inherit(defaultLabelSettings);
+                    seriesLabelSettings = {
+                        show: settingsModel.labels.topLevelSlice.value,
+                        displayUnits: +settingsModel.labels.displayUnits.value,
+                        precision: settingsModel.labels.labelPrecision.value,
+                        labelColor: settingsModel.labels.color.value.value
+                    };
 
                     dataLabelUtils.updateLabelSettingsFromLabelsObject(
                         labelObjects,
@@ -911,7 +909,12 @@ export class BaseColumnChart implements IColumnChart {
 
                 const dataPointLabelSettings: VisualDataLabelsSettings = series && series.labelSettings
                     ? series.labelSettings
-                    : defaultLabelSettings;
+                    : {
+                        show: settingsModel.labels.topLevelSlice.value,
+                        displayUnits: +settingsModel.labels.displayUnits.value,
+                        precision: settingsModel.labels.labelPrecision.value,
+                        labelColor: settingsModel.labels.color.value.value
+                    };
 
                 let labelColor: string = dataPointLabelSettings.labelColor,
                     lastValue: boolean = undefined;
@@ -1182,7 +1185,6 @@ export class BaseColumnChart implements IColumnChart {
             sortlegend: null,
             sortSeries: null,
             xAxisLabelsSettings: null,
-            labelSettings: dataLabelUtils.getDefaultColumnLabelSettings(true),
             axesLabels: { x: null, y: null },
             hasDynamicSeries: false,
             defaultDataPointColor: null,
@@ -1423,7 +1425,7 @@ export class BaseColumnChart implements IColumnChart {
                 mainGraphicsContext: this.mainGraphicsContext,
                 viewport: chartDrawInfo.viewport,
                 axisOptions: chartDrawInfo.axisOptions,
-                showLabel: data.labelSettings.show,
+                showLabel: settingsModel.labels.topLevelSlice.value,
                 behavior: null
             };
         }

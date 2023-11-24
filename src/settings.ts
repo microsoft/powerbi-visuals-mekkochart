@@ -32,7 +32,7 @@ class FontSizeDefaultOptions {
 }
 
 class LabelPrecisionDefaultOptions {
-    public static LabelPrecision: number = 1;
+    public static LabelPrecision: number = 2;
     public static MinLabelPrecision: number = 0;
     public static MaxLabelPrecision: number = 4;
 }

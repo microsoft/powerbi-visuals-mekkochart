@@ -56,7 +56,6 @@ import {
     MekkoDataPointSettings,
     MekkoLegendDataPoint,
     MekkoVisualRenderResult,
-    MekkoChartLabelSettings,
     MekkoChartConstructorBaseOptions,
     MekkoChartAxisProperties,
     MekkoChartSmallViewPortProperties,
@@ -70,7 +69,6 @@ import {
     MekkoChartBaseSeries,
     MekkoChartDataPoint,
     ILegendGroup,
-    MekkoChartDataLabelObject,
     Selection
 } from "./dataInterfaces";
 
@@ -119,7 +117,6 @@ import legendProps = legendInterfaces.legendProps;
 import createLegend = legend.createLegend;
 import ILabelLayout = dataLabelInterfaces.ILabelLayout;
 import LegendPosition = legendInterfaces.LegendPosition;
-import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
 import drawDefaultLabelsForDataPointChart = dataLabelUtils.drawDefaultLabelsForDataPointChart;
 
 // powerbi.extensibility.utils.svg
@@ -1027,27 +1024,6 @@ export class MekkoChart implements IVisual {
         }
 
         return minInterval;
-    }
-
-    public static parseLabelSettings(objects: powerbi.DataViewObjects): VisualDataLabelsSettings {
-        const labelSettings: VisualDataLabelsSettings = dataLabelUtils.getDefaultColumnLabelSettings(true),
-            labelsObj: MekkoChartDataLabelObject = objects["labels"] as any,
-            minPrecision: number = MekkoChart.DefaultSettings.labelSettings.minPrecision,
-            maxPrecision: number = MekkoChart.DefaultSettings.labelSettings.maxPrecision;
-
-        (<MekkoChartLabelSettings>labelSettings).forceDisplay = false;
-        dataLabelUtils.updateLabelSettingsFromLabelsObject(labelsObj, labelSettings);
-        (<MekkoChartLabelSettings>labelSettings).forceDisplay = <boolean>(labelsObj || { forceDisplay: false }).forceDisplay;
-
-        if (labelSettings.precision < minPrecision) {
-            labelSettings.precision = minPrecision;
-        }
-
-        if (labelSettings.precision > maxPrecision) {
-            labelSettings.precision = maxPrecision;
-        }
-
-        return labelSettings;
     }
 
     public static parseXAxisLabelsSettings(objects: powerbi.DataViewObjects): MekkoXAxisLabelsSettings {
@@ -2120,7 +2096,7 @@ export class MekkoChart implements IVisual {
                 }
             }
 
-            const forceDisplay: boolean = (<MekkoChartLabelSettings>(<MekkoColumnChartData>layers[0].getData()).labelSettings).forceDisplay;
+            const forceDisplay: boolean = this.settingsModel.labels.forceDisplay.value;
             drawDefaultLabelsForDataPointChart(
                 resultsLabelDataPoints,
                 this.labelGraphicsContextScrollable,
