@@ -330,13 +330,11 @@ export interface MekkoCalculateScaleAndDomainOptions {
 }
 
 export interface MekkoColumnChartData extends MekkoChartData {
-    borderSettings: MekkoBorderSettings;
     sortSeries: MekkoSeriesSortSettings;
     sortlegend: MekkoLegendSortSettings;
     xAxisLabelsSettings: MekkoXAxisLabelsSettings;
     categoriesWidth: number[];
     categoryProperties: MekkoCategoryProperties[];
-    dataPointSettings: MekkoDataPointSettings;
 }
 
 export interface MekkoBorderSettings {
@@ -375,10 +373,6 @@ export interface MekkoXAxisLabelsSettings {
 
 export interface MekkoCategoryColorSettings {
     color: string;
-}
-
-export interface CreateAxisOptions extends CreateAxisOptionsBase {
-    borderSettings: MekkoBorderSettings;
 }
 
 export interface MekkoLabelSettings {

@@ -403,7 +403,6 @@ export class MekkoChart implements IVisual {
     private hasSetData: boolean;
     private visualInitOptions: VisualConstructorOptions;
 
-    private borderObjectProperties: powerbi.DataViewObject;
     private legendObjectProperties: powerbi.DataViewObject;
     private categoryAxisProperties: powerbi.DataViewObject;
 
@@ -592,7 +591,8 @@ export class MekkoChart implements IVisual {
                     options.viewport,
                     this.margin,
                     this.settingsModel.categoryAxis,
-                    this.settingsModel.valueAxis);
+                    this.settingsModel.valueAxis,
+                    this.settingsModel);
                 shiftTitle = this.calculateXAxisAdditionalHeight(axes.x.values);
             }
 
@@ -795,15 +795,9 @@ export class MekkoChart implements IVisual {
                     dataViewMetadata.objects,
                     "legend",
                     {});
-
-                this.borderObjectProperties = dataViewObjects.getObject(
-                    dataViewMetadata.objects,
-                    "columnBorder",
-                    {});
             }
             else {
                 this.legendObjectProperties = {};
-                this.borderObjectProperties = {};
             }
 
             this.categoryAxisProperties = getCategoryAxisProperties(dataViewMetadata);
@@ -864,7 +858,7 @@ export class MekkoChart implements IVisual {
         }
 
         for (let layerIndex: number = 0, length: number = this.layers.length; layerIndex < length; layerIndex++) {
-            this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length));
+            this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length), this.settingsModel);
         }
 
         const rotataionEnabled = (<BaseColumnChart>this.layers[0]).getXAxisLabelsSettings().enableRotataion;
@@ -875,7 +869,8 @@ export class MekkoChart implements IVisual {
                 this.currentViewport,
                 this.margin,
                 this.settingsModel.categoryAxis,
-                this.settingsModel.valueAxis);
+                this.settingsModel.valueAxis,
+                this.settingsModel);
             additionHeight += this.calculateXAxisAdditionalHeight(axes.x.values);
         }
 
@@ -1066,29 +1061,6 @@ export class MekkoChart implements IVisual {
         };
     }
 
-    public static parseDataPointSettings(objects: powerbi.DataViewObjects): MekkoDataPointSettings {
-        const categoryGradient: boolean = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["dataPoint"]["categoryGradient"],
-            MekkoChart.DefaultSettings.dataPoint.categoryGradient);
-
-        const colorGradientEndColor: string = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["dataPoint"]["colorGradientEndColor"],
-            MekkoChart.DefaultSettings.dataPoint.colorGradientEndColor);
-
-        const colorDistribution: boolean = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["dataPoint"]["colorDistribution"],
-            MekkoChart.DefaultSettings.dataPoint.colorDistribution);
-
-        return {
-            categoryGradient,
-            colorGradientEndColor,
-            colorDistribution
-        };
-    }
-
     public static parseSeriesSortSettings(objects: powerbi.DataViewObjects): MekkoSeriesSortSettings {
         const enabled: boolean = dataViewObjects.getValue(
             objects,
@@ -1141,41 +1113,6 @@ export class MekkoChart implements IVisual {
         };
     }
 
-    public static parseBorderSettings(objects: powerbi.DataViewObjects): MekkoBorderSettings {
-        const show: boolean = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["columnBorder"]["show"],
-            MekkoChart.DefaultSettings.columnBorder.show);
-
-        const color: string = dataViewObjects.getFillColor(
-            objects,
-            MekkoChart.Properties["columnBorder"]["color"],
-            MekkoChart.DefaultSettings.columnBorder.color);
-
-        let width: number = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["columnBorder"]["width"],
-            MekkoChart.DefaultSettings.columnBorder.width);
-
-        const maxWidth: number = MekkoChart.DefaultSettings.columnBorder.maxWidth;
-
-        if (width > maxWidth) {
-            width = maxWidth;
-        } else if (width < 0) {
-            width = 0;
-        }
-
-        if (!show) {
-            width = 0;
-        }
-
-        return {
-            show,
-            color,
-            width
-        };
-    }
-
     public getFormattingModel(): powerbi.visuals.FormattingModel {
         const data: MekkoColumnChartData = (<BaseColumnChart>this.layers[0]).getData();
         const seriesCount: number = data.series.length;
@@ -1198,7 +1135,7 @@ export class MekkoChart implements IVisual {
         if (this.hasSetData) {
             for (const layer of this.layers) {
                 layer.onClearSelection();
-                layer.render(true);
+                layer.render(true, this.settingsModel);
             }
         }
     }
@@ -1600,7 +1537,8 @@ export class MekkoChart implements IVisual {
             viewport,
             margin,
             this.settingsModel.categoryAxis,
-            this.settingsModel.valueAxis);
+            this.settingsModel.valueAxis,
+            this.settingsModel);
 
         this.yAxisIsCategorical = axes.y1.isCategoryAxis;
 
@@ -1685,7 +1623,8 @@ export class MekkoChart implements IVisual {
             viewport,
             margin,
             this.settingsModel.categoryAxis,
-            this.settingsModel.valueAxis);
+            this.settingsModel.valueAxis,
+            this.settingsModel);
 
         // we need to make two passes because the margin changes affect the chosen tick values, which then affect the margins again.
         // after the second pass the margins are correct.
@@ -1741,7 +1680,8 @@ export class MekkoChart implements IVisual {
                     this.currentViewport,
                     this.margin,
                     this.settingsModel.categoryAxis,
-                    this.settingsModel.valueAxis);
+                    this.settingsModel.valueAxis,
+                    this.settingsModel);
 
                 xMax += this.calculateXAxisAdditionalHeight(axes.x.values);
             }
@@ -1802,7 +1742,8 @@ export class MekkoChart implements IVisual {
                 viewport,
                 margin,
                 this.settingsModel.categoryAxis,
-                this.settingsModel.valueAxis);
+                this.settingsModel.valueAxis,
+                this.settingsModel);
 
             if (axes.y1.values.length === previousTickCountY1
                 && (!axes.y2 || axes.y2.values.length === previousTickCountY2)) {
@@ -1976,7 +1917,7 @@ export class MekkoChart implements IVisual {
 
             if (this.layers && this.layers.length) {
                 columnWidth = this.layers[0].getColumnsWidth();
-                borderWidth = this.layers[0].getBorderWidth();
+                borderWidth = this.settingsModel.columnBorder.width.value;
             }
 
             xAxisGraphicsElement
@@ -2169,7 +2110,7 @@ export class MekkoChart implements IVisual {
             let resultsLabelDataPoints: LabelDataPoint[] = [];
 
             for (let layerIndex: number = 0; layerIndex < layers.length; layerIndex++) {
-                const result: MekkoVisualRenderResult = layers[layerIndex].render(suppressAnimations);
+                const result: MekkoVisualRenderResult = layers[layerIndex].render(suppressAnimations, this.settingsModel);
 
                 if (result) {
                     dataPoints = dataPoints.concat(result.dataPoints);

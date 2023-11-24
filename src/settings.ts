@@ -26,7 +26,7 @@ class ColumnBorderWidthDefaultOptions {
 }
 
 class FontSizeDefaultOptions {
-    public static FontSize: number = 12;
+    public static FontSize: number = 10;
     public static MinFontSize: number = 9;
     public static MaxFontSize: number = 60;
 }
@@ -34,7 +34,7 @@ class FontSizeDefaultOptions {
 class LabelPrecisionDefaultOptions {
     public static LabelPrecision: number = 1;
     public static MinLabelPrecision: number = 0;
-    public static MaxLabelPrecision: number = 10;
+    public static MaxLabelPrecision: number = 4;
 }
 
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
@@ -389,10 +389,10 @@ export class DataPointSettings extends FormattingSettingsSimpleCard {
     public defaultColor = new formattingSettings.ColorPicker({
         name: "defaultColor",
         displayNameKey: "Visual_Default_Color",
-        value: {value: "gray"},
+        value: {value: "#01B8AA"},
         instanceKind: powerbi.VisualEnumerationInstanceKinds.ConstantOrRule,
         selector: this.selector,
-        // altConstantSelector: this.selector, 
+        altConstantSelector: this.selector, 
         visible: false
     });
 
@@ -450,7 +450,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         const singleSeriesData: MekkoChartColumnDataPoint[] = data.series[0].data;
         const categoryFormatter: IValueFormatter = data.categoryFormatter;
 
-        for (let i: number = 0; i < singleSeriesData.length && data.showAllDataPoints; i++) {
+        for (let i: number = 0; i < singleSeriesData.length && this.dataPoint.showAllDataPoints.value; i++) {
             const singleSeriesDataPoint: MekkoChartColumnDataPoint = singleSeriesData[i];
             const categoryValue: any = data.categories[i];
             const formattedName: string = categoryFormatter ? categoryFormatter.format(categoryValue) : categoryValue;
@@ -475,6 +475,11 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
             this.legend.visible = true;
             this.sortLegend.visible = true;
             this.sortSeries.visible = true;
+
+            const defaultColorSlice: FormattingSettingsSlice = this.dataPoint.slices[0];
+            const showAllSlice: FormattingSettingsSlice = this.dataPoint.slices[1];
+            defaultColorSlice.visible = false;
+            showAllSlice.visible = false;
         }
         else {
             // For single-category, single-measure column charts, the user cant sort legend or series

@@ -27,12 +27,12 @@
 import powerbi from "powerbi-visuals-api";
 import IColorPalette = powerbi.extensibility.IColorPalette;
 import { LegendSeriesInfo } from "./../dataInterfaces";
+import { VisualFormattingSettingsModel } from "../settings";
 
 export interface ConverterStrategy {
     getLegend(
         colors: IColorPalette,
-        defaultLegendLabelColor: string,
-        defaultColor?: string
+        settingsModel: VisualFormattingSettingsModel
     ): LegendSeriesInfo;
     getValueBySeriesAndCategory(series: number, category: number): number;
     getMeasureNameByIndex(series: number, category: number): string;

@@ -80,11 +80,9 @@ import {
     MekkoChartVisualInitOptions,
     MekkoCalculateScaleAndDomainOptions,
     MekkoChartCategoryLayout,
-    MekkoBorderSettings,
     MekkoSeriesSortSettings,
     MekkoLegendSortSettings,
     MekkoXAxisLabelsSettings,
-    MekkoDataPointSettings,
     LegendSeriesInfo,
     MekkoLegendDataPoint,
     MekkoDataPoints,
@@ -177,16 +175,13 @@ import BaseConverterStrategy = converterStrategy.BaseConverterStrategy;
 
 // behavior
 import { VisualBehaviorOptions } from "./../behavior/visualBehaviorOptions";
+import { VisualFormattingSettingsModel } from "../settings";
 
 interface ConverterSettingsWrapper {
-    borderSettings: MekkoBorderSettings;
     sortSeriesSettings: MekkoSeriesSortSettings;
     sortLegendSettings: MekkoLegendSortSettings;
     xAxisLabelsSettings: MekkoXAxisLabelsSettings;
     labelSettings: VisualDataLabelsSettings;
-    dataPointSettings: MekkoDataPointSettings;
-    defaultDataPointColor: string;
-    showAllDataPoints: boolean;
 }
 
 export class BaseColumnChart implements IColumnChart {
@@ -306,34 +301,6 @@ export class BaseColumnChart implements IColumnChart {
             });
     }
 
-    public static getBorderWidth(border: MekkoBorderSettings): number {
-        if (!border
-            || !border.show
-            || !border.width) {
-            return 0;
-        }
-
-        const width: number = border.width;
-
-        if (width < 0) {
-            return 0;
-        }
-
-        if (width > border.maxWidth) {
-            return border.maxWidth;
-        }
-
-        return width;
-    }
-
-    public static getBorderColor(border: MekkoBorderSettings): string {
-        if (!border) {
-            return MekkoChart.DefaultSettings.columnBorder.color;
-        }
-
-        return border.color;
-    }
-
     public static converter(
         visualHost: IVisualHost,
         categorical: DataViewCategorical,
@@ -343,6 +310,7 @@ export class BaseColumnChart implements IColumnChart {
         supportsOverflow: boolean = false,
         dataViewMetadata: DataViewMetadata = null,
         localizationManager: ILocalizationManager,
+        settingsModel: VisualFormattingSettingsModel,
         chartType?: MekkoVisualChartType): MekkoColumnChartData {
 
         const xAxisCardProperties: powerbi.DataViewObject = dataViewUtils.getCategoryAxisProperties(dataViewMetadata);
@@ -375,7 +343,7 @@ export class BaseColumnChart implements IColumnChart {
 
         const settingsWrapper: ConverterSettingsWrapper = BaseColumnChart.getConverterSettings(dataViewMetadata);
         // Allocate colors
-        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, settingsWrapper.defaultDataPointColor, "", settingsWrapper.dataPointSettings.categoryGradient);
+        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, settingsModel);
         const legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
 
         const seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
@@ -394,12 +362,12 @@ export class BaseColumnChart implements IColumnChart {
             isScalar,
             supportsOverflow,
             localizationManager,
+            settingsModel,
             converterHelper.categoryIsAlsoSeriesRole(
                 categorical,
                 RoleNames.series,
                 RoleNames.category),
             firstCategory && firstCategory.objects,
-            settingsWrapper.defaultDataPointColor,
             chartType,
             categoryMetadata);
 
@@ -423,11 +391,8 @@ export class BaseColumnChart implements IColumnChart {
         return {
             categories,
             categoryFormatter,
-            defaultDataPointColor: settingsWrapper.defaultDataPointColor,
-            showAllDataPoints: settingsWrapper.showAllDataPoints,
             categoryMetadata,
             categoriesWidth: result.categoriesWidth,
-            borderSettings: settingsWrapper.borderSettings,
             sortlegend: settingsWrapper.sortLegendSettings,
             sortSeries: settingsWrapper.sortSeriesSettings,
             xAxisLabelsSettings: settingsWrapper.xAxisLabelsSettings,
@@ -443,50 +408,30 @@ export class BaseColumnChart implements IColumnChart {
             },
             hasDynamicSeries: result.hasDynamicSeries,
             categoryProperties: result.categoryProperties,
-            isMultiMeasure: false,
-            dataPointSettings: settingsWrapper.dataPointSettings
+            isMultiMeasure: false
         };
     }
 
     private static getConverterSettings(dataViewMetadata: powerbi.DataViewMetadata): ConverterSettingsWrapper {
-        let borderSettings: MekkoBorderSettings = MekkoChart.DefaultSettings.columnBorder,
-            sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries,
+        let sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries,
             sortLegendSettings: MekkoLegendSortSettings = MekkoChart.DefaultSettings.sortLegend,
             xAxisLabelsSettings: MekkoXAxisLabelsSettings = MekkoChart.DefaultSettings.xAxisLabels,
-            labelSettings: VisualDataLabelsSettings = dataLabelUtils.getDefaultColumnLabelSettings(true),
-            dataPointSettings: MekkoDataPointSettings = MekkoChart.DefaultSettings.dataPoint;
-
-        let defaultDataPointColor: string = undefined,
-            showAllDataPoints: boolean = undefined;
+            labelSettings: VisualDataLabelsSettings = dataLabelUtils.getDefaultColumnLabelSettings(true);
 
         if (dataViewMetadata && dataViewMetadata.objects) {
             const objects: powerbi.DataViewObjects = dataViewMetadata.objects;
 
-            defaultDataPointColor = dataViewObjects.getFillColor(
-                objects,
-                MekkoChart.Properties["dataPoint"]["defaultColor"]);
-
-            showAllDataPoints = dataViewObjects.getValue<boolean>(
-                objects,
-                MekkoChart.Properties["dataPoint"]["showAllDataPoints"]);
-
             labelSettings = MekkoChart.parseLabelSettings(objects);
-            borderSettings = MekkoChart.parseBorderSettings(objects);
             sortLegendSettings = MekkoChart.parseLegendSortSettings(objects);
             sortSeriesSettings = MekkoChart.parseSeriesSortSettings(objects);
             xAxisLabelsSettings = MekkoChart.parseXAxisLabelsSettings(objects);
-            dataPointSettings = MekkoChart.parseDataPointSettings(objects);
         }
 
         return {
-            borderSettings: borderSettings,
             sortSeriesSettings: sortSeriesSettings,
             sortLegendSettings: sortLegendSettings,
             xAxisLabelsSettings: xAxisLabelsSettings,
-            labelSettings: labelSettings,
-            dataPointSettings: dataPointSettings,
-            defaultDataPointColor: defaultDataPointColor,
-            showAllDataPoints: showAllDataPoints
+            labelSettings: labelSettings
         };
     }
     private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): ICategoryValuesCollection[] {
@@ -639,9 +584,9 @@ export class BaseColumnChart implements IColumnChart {
         isScalar: boolean = false,
         supportsOverflow: boolean = false,
         localizationManager: ILocalizationManager,
+        settingsModel: VisualFormattingSettingsModel,
         isCategoryAlsoSeries?: boolean,
         categoryObjectsList?: powerbi.DataViewObjects[],
-        defaultDataPointColor?: string,
         chartType?: MekkoVisualChartType,
         categoryMetadata?: DataViewMetadataColumn): MekkoDataPoints {
 
@@ -1136,6 +1081,14 @@ export class BaseColumnChart implements IColumnChart {
             if (colorOverride) {
                 return colorOverride;
             }
+
+            const defaultColorOverride: string = dataViewObjects.getFillColor(
+                dataPointObjects[categoryIndex],
+                MekkoChart.Properties["dataPoint"]["defaultColor"]);
+
+            if (defaultColorOverride){
+                return defaultColorOverride;
+            }
         }
 
         return legendItem.color;
@@ -1203,10 +1156,6 @@ export class BaseColumnChart implements IColumnChart {
         return data.categoriesWidth;
     }
 
-    public getBorderWidth(): number {
-        return BaseColumnChart.getBorderWidth(this.data.borderSettings);
-    }
-
     public getSeriesSortSettings(): MekkoSeriesSortSettings {
         return this.data.sortSeries;
     }
@@ -1219,7 +1168,7 @@ export class BaseColumnChart implements IColumnChart {
         return this.data.xAxisLabelsSettings;
     }
 
-    public setData(dataViews: powerbi.DataView[]): void {
+    public setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel): void {
         this.data = {
             categories: [],
             categoriesWidth: [],
@@ -1230,7 +1179,6 @@ export class BaseColumnChart implements IColumnChart {
             hasHighlights: false,
             categoryMetadata: null,
             scalarCategoryAxis: false,
-            borderSettings: null,
             sortlegend: null,
             sortSeries: null,
             xAxisLabelsSettings: null,
@@ -1239,8 +1187,7 @@ export class BaseColumnChart implements IColumnChart {
             hasDynamicSeries: false,
             defaultDataPointColor: null,
             isMultiMeasure: false,
-            categoryProperties: null,
-            dataPointSettings: null
+            categoryProperties: null
         };
 
         if (dataViews.length > 0) {
@@ -1257,6 +1204,7 @@ export class BaseColumnChart implements IColumnChart {
                     this.supportsOverflow,
                     dataView.metadata,
                     this.localizationManager,
+                    settingsModel,
                     this.chartType);
 
                 for (const currentSeries of this.data.series) {
@@ -1300,7 +1248,7 @@ export class BaseColumnChart implements IColumnChart {
         });
     }
 
-    public calculateAxesProperties(options: MekkoCalculateScaleAndDomainOptions): IAxisProperties[] {
+    public calculateAxesProperties(options: MekkoCalculateScaleAndDomainOptions, settingsModel: VisualFormattingSettingsModel): IAxisProperties[] {
         const data: MekkoColumnChartData = this.data;
 
         this.currentViewport = options.viewport;
@@ -1369,6 +1317,7 @@ export class BaseColumnChart implements IColumnChart {
 
         this.xAxisProperties = this.columnChart.setXScale(
             BaseColumnChart.Is100Pct,
+            settingsModel,
             options.forcedTickCount,
             options.forcedXDomain,
             isBarChart
@@ -1440,8 +1389,8 @@ export class BaseColumnChart implements IColumnChart {
         this.xAxisProperties = xProperties;
     }
 
-    public render(suppressAnimations: boolean): MekkoVisualRenderResult {
-        const chartDrawInfo: MekkoChartDrawInfo = this.columnChart.drawColumns(!suppressAnimations),
+    public render(suppressAnimations: boolean, settingsModel: VisualFormattingSettingsModel): MekkoVisualRenderResult {
+        const chartDrawInfo: MekkoChartDrawInfo = this.columnChart.drawColumns(!suppressAnimations, settingsModel),
             data: MekkoColumnChartData = this.data;
 
         const margin: IMargin = this.margin,

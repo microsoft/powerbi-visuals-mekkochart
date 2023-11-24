@@ -35,12 +35,14 @@ import {
 
 import IAxisProperties = axisInterfaces.IAxisProperties;
 import powerbi from "powerbi-visuals-api";
+import { VisualFormattingSettingsModel } from "../settings";
 
 export interface IVisualStrategy {
     setData(data: MekkoChartData): void;
     setupVisualProps(columnChartProps: MekkoChartContext): void;
     setXScale(
         is100Pct: boolean,
+        settingsModel: VisualFormattingSettingsModel,
         forcedTickCount?: number,
         forcedXDomain?: any[],
         axisScaleType?: string,
@@ -55,7 +57,7 @@ export interface IVisualStrategy {
         axisDisplayUnits?: number,
         axisPrecision?: number,
         ensureYDomain?: NumberRange): IAxisProperties;
-    drawColumns(useAnimation: boolean): MekkoChartDrawInfo;
+    drawColumns(useAnimation: boolean, settingsModel: VisualFormattingSettingsModel): MekkoChartDrawInfo;
     selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void;
     getClosestColumnIndex(x: number): number;
 }

@@ -42,7 +42,7 @@ import {
     MekkoCalculateScaleAndDomainOptions,
     MekkoChartAxisProperties,
 } from "./../dataInterfaces";
-import { CategoryAxisSettings, ValueAxisSettings } from "../settings";
+import { CategoryAxisSettings, ValueAxisSettings, VisualFormattingSettingsModel } from "../settings";
 
     export interface AxesLabels {
         xAxisLabel: string;
@@ -57,7 +57,8 @@ import { CategoryAxisSettings, ValueAxisSettings } from "../settings";
         viewport: IViewport,
         margin: IMargin,
         categoryAxisSettings: CategoryAxisSettings,
-        valueAxisSettings: ValueAxisSettings): MekkoChartAxisProperties {
+        valueAxisSettings: ValueAxisSettings,
+        settingsModel: VisualFormattingSettingsModel): MekkoChartAxisProperties {
         const visualOptions: MekkoCalculateScaleAndDomainOptions = {
             viewport,
             margin,
@@ -95,7 +96,7 @@ import { CategoryAxisSettings, ValueAxisSettings } from "../settings";
 
             visualOptions.showValueAxisLabel = valueAxisSettings.showTitle.value;
 
-            const axes: IAxisProperties[] = currentLayer.calculateAxesProperties(visualOptions);
+            const axes: IAxisProperties[] = currentLayer.calculateAxesProperties(visualOptions, settingsModel);
 
             if (layerNumber === 0) {
                 result = {

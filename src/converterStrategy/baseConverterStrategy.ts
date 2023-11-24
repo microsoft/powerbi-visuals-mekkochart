@@ -62,6 +62,7 @@ import ILegendData = legendInterfaces.LegendData;
 import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 
 import { ConverterStrategy } from "./converterStrategy";
+import { VisualFormattingSettingsModel } from "../settings";
 
 export class BaseConverterStrategy implements ConverterStrategy {
     private static WidthColumnName: string = "Width";
@@ -82,7 +83,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
     }
 
     // eslint-disable-next-line max-lines-per-function
-    public getLegend(colorPalette: IColorPalette, defaultLabelLegendColor?: string, defaultColor?: string, colorGradient?: boolean): LegendSeriesInfo {
+    public getLegend(colorPalette: IColorPalette, settingsModel: VisualFormattingSettingsModel): LegendSeriesInfo {
         const legend: MekkoLegendDataPoint[] = [];
         const seriesSources: DataViewMetadataColumn[] = [];
         const seriesObjects: DataViewObjects[][] = [];
@@ -93,7 +94,6 @@ export class BaseConverterStrategy implements ConverterStrategy {
         const colorHelper: ColorHelper = new ColorHelper(
             colorPalette,
             MekkoChart.Properties["dataPoint"]["fill"],
-            defaultLabelLegendColor
         );
 
         const categoryFieldIndex: number = 0;
@@ -133,77 +133,6 @@ export class BaseConverterStrategy implements ConverterStrategy {
                 }
             });
             categoryItemsCount[index] = mappedItems;
-
-            if (colorGradient) {
-                categoryItemsCount[index] = categoryItemsCount[index].sort((a, b) => {
-                    return a[BaseConverterStrategy.SortField] > b[BaseConverterStrategy.SortField] ? 1 : -1;
-                });
-            }
-
-            const baseStartColorIdentity: IFilteredValueGroups = mappedItems.sort((a, b) => a[BaseConverterStrategy.SortField] > b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
-            if (baseStartColorIdentity === undefined) {
-                return;
-            }
-
-            let colorStart: string = defaultLabelLegendColor;
-
-            if (baseStartColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
-                colorStart = (<Fill>(<any>baseStartColorIdentity.gr.objects).dataPoint.fill).solid.color;
-            }
-            if (colorStart === undefined) {
-                colorStart = colorHelper.getColorForSeriesValue(baseStartColorIdentity.gr.objects, baseStartColorIdentity.categoryValue);
-            }
-
-            // gradiend end color
-            const baseEndColorIdentity: IFilteredValueGroups = mappedItems.sort((a, b) => a[BaseConverterStrategy.SortField] < b[BaseConverterStrategy.SortField] ? 1 : -1)[0];
-
-            if (baseEndColorIdentity === undefined) {
-                return;
-            }
-
-            let colorEnd: string = defaultLabelLegendColor;
-
-            if (baseEndColorIdentity.gr.objects !== undefined && (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid !== undefined) {
-                colorEnd = (<Fill>(<any>baseEndColorIdentity.gr.objects).dataPoint.fill).solid.color;
-            }
-
-            if (colorEnd === undefined) {
-                colorEnd = colorHelper.getColorForSeriesValue(baseEndColorIdentity.gr.objects, baseEndColorIdentity.categoryValue);
-            }
-
-            const categoryStartColor: string = ((
-                this.dataView.categories[categoryFieldIndex].objects &&
-                this.dataView.categories[categoryFieldIndex].objects[index] &&
-                this.dataView.categories[categoryFieldIndex].objects[index]["categoryColorStart"] ||
-                <MekkoGradientSettings>{
-                    categoryGradient: {
-                        solid: {
-                            color: colorStart
-                        }
-                    }
-                }) as MekkoGradientSettings).categoryGradient.solid.color;
-
-            const categoryEndColor: string = ((
-                this.dataView.categories[categoryFieldIndex].objects &&
-                this.dataView.categories[categoryFieldIndex].objects[index] &&
-                this.dataView.categories[categoryFieldIndex].objects[index]["categoryColorEnd"] ||
-                <MekkoGradientSettings>{
-                    categoryGradient: {
-                        solid: {
-                            color: colorEnd
-                        }
-                    }
-                }) as MekkoGradientSettings).categoryGradient.solid.color;
-
-            categoryGradientBaseColorIdentities[index] = {
-                category: (baseStartColorIdentity.category || "").toString(),
-                color: colorStart,
-                identity: baseStartColorIdentity.gr.identity,
-                group: baseStartColorIdentity.gr,
-                categorySelectionId: categorySelectionId,
-                categoryStartColor: categoryStartColor,
-                categoryEndColor: categoryEndColor
-            };
         });
 
         if (this.dataView && this.dataView.values) {
@@ -247,20 +176,8 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     let color: string;
                     const categoryIndex: number = series.values.findIndex(value => typeof value !== "undefined" && value !== null);
 
-                    if (!colorGradient) {
-                        color = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
-                            : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
-                    }
-                    else {
-                        const positionIndex: number = (<IFilteredValueGroups[]>categoryItemsCount[categoryIndex]).findIndex(ser => isEqual(ser.identity, series.identity));
-                        category = (categoryMaxValues[categoryIndex].category || "").toString();
-                        const gradientBaseColorStart: string = categoryGradientBaseColorIdentities[categoryIndex].categoryStartColor;
-                        const gradientBaseColorEnd: string = categoryGradientBaseColorIdentities[categoryIndex].categoryEndColor;
-
-                        color = createLinearColorScale(
-                            [0, categoryItemsCount[categoryIndex].length],
-                            [gradientBaseColorEnd, gradientBaseColorStart], true)(positionIndex);
-                    }
+                    color = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
+                        : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
 
                     legend.push({
                         color,
@@ -271,9 +188,6 @@ export class BaseConverterStrategy implements ConverterStrategy {
                         valueSum: sum(<number[]>series.values),
                         categoryValues: series.values,
                         category: category,
-                        categoryStartColor: categoryGradientBaseColorIdentities[categoryIndex].categoryStartColor,
-                        categoryEndColor: categoryGradientBaseColorIdentities[categoryIndex].categoryEndColor,
-                        categoryIdentity: categoryGradientBaseColorIdentities[categoryIndex].categorySelectionId,
                         categorySort: this.dataView.categories[categoryFieldIndex].values[categoryIndex]
                     });
 

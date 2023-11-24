@@ -66,7 +66,6 @@ import {
     MekkoChartDrawInfo,
     MekkoChartColumnDataPoint,
     MekkoColumnChartContext,
-    CreateAxisOptions,
     MekkoColumnAxisOptions,
     IMekkoColumnLayout,
     MekkoCreateAxisOptions,
@@ -96,6 +95,7 @@ import createClassAndSelector = CssConstants.createClassAndSelector;
 
 // powerbi.extensibility.utils.chart
 import IAxisProperties = axisInterfaces.IAxisProperties;
+import CreateAxisOptionsBase = axisInterfaces.CreateAxisOptions;
 import hundredPercentFormat = dataLabelUtils.hundredPercentFormat;
 import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
 import IColumnFormatterCacheManager = dataLabelInterfaces.IColumnFormatterCacheManager;
@@ -112,6 +112,7 @@ import ValueType = valueType.ValueType;
 
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
 import SelectionDataPoint = interactivitySelectionService.SelectableDataPoint;
+import { ColumnBorderSettings, VisualFormattingSettingsModel } from "../settings";
 
 interface LayoutFunction {
     (dataPoint: MekkoChartColumnDataPoint): number;
@@ -277,7 +278,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
      * Create a D3 axis including scale. Can be vertical or horizontal, and either datetime, numeric, or text.
      * @param options The properties used to create the axis.
      */
-    private createAxis(options: CreateAxisOptions): IAxisProperties {
+    private createAxis(options: CreateAxisOptionsBase, columnBorderSettings: ColumnBorderSettings): IAxisProperties {
         const pixelSpan: number = options.pixelSpan,
             dataDomain: number[] = options.dataDomain,
             metaDataColumn: DataViewMetadataColumn = options.metaDataColumn,
@@ -294,7 +295,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             scale: ScaleLinear<number> = scaleLinear(),
             scaleDomain: number[] = [0, 1],
             bestTickCount: number = dataDomain.length || 1,
-            borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(options.borderSettings);
+            borderWidth: number = columnBorderSettings.width.value;
 
         let chartWidth: number = pixelSpan - borderWidth * (bestTickCount - 1);
 
@@ -377,6 +378,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         size: number,
         layout: MekkoChartCategoryLayout,
         isVertical: boolean,
+        settingsModel: VisualFormattingSettingsModel,
         forcedXMin?: DataViewPropertyValue,
         forcedXMax?: DataViewPropertyValue,
         axisScaleType?: string): IAxisProperties {
@@ -421,8 +423,9 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 return value;
             },
             scaleType: axisScaleType,
-            borderSettings: data.borderSettings
-        });
+        },
+        settingsModel.columnBorder
+        );
 
         // intentionally updating the input layout by ref
         layout.categoryThickness = axisProperties.categoryThickness;
@@ -432,6 +435,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
 
     public setXScale(
         is100Pct: boolean,
+        settingsModel: VisualFormattingSettingsModel,
         forcedTickCount?: number,
         forcedXDomain?: any[],
         axisScaleType?: string): IAxisProperties {
@@ -449,6 +453,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             this.width,
             this.categoryLayout,
             false,
+            settingsModel,
             forcedXMin,
             forcedXMax,
             axisScaleType);
@@ -497,7 +502,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         return this.yProps;
     }
 
-    public drawColumns(useAnimation: boolean): MekkoChartDrawInfo {
+    public drawColumns(useAnimation: boolean, settingsModel: VisualFormattingSettingsModel): MekkoChartDrawInfo {
         const data: MekkoColumnChartData = this.data;
 
         this.columnsCenters = null;
@@ -510,7 +515,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             margin: this.margin,
         };
 
-        const stackedColumnLayout: IMekkoColumnLayout = BaseVisualStrategy.getLayout(data, axisOptions);
+        const stackedColumnLayout: IMekkoColumnLayout = BaseVisualStrategy.getLayout(data, axisOptions, settingsModel);
 
         this.layout = stackedColumnLayout;
 
@@ -526,7 +531,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 series,
                 stackedColumnLayout,
                 BaseVisualStrategy.ItemSelector,
-                this.interactivityService && this.interactivityService.hasSelection());
+                this.interactivityService && this.interactivityService.hasSelection(),
+                settingsModel);
         }
 
         utils.applyInteractivity(shapes, this.graphicsContext.onDragStart);
@@ -547,7 +553,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
         series: Selection<any>,
         layout: IMekkoColumnLayout,
         itemCS: ClassAndSelector,
-        hasSelection: boolean): Selection<MekkoChartColumnDataPoint> {
+        hasSelection: boolean,
+        settingsModel: VisualFormattingSettingsModel): Selection<MekkoChartColumnDataPoint> {
 
         const dataSelector: (dataPoint: MekkoChartSeries) => any[] =
             (dataPoint: MekkoChartSeries) => dataPoint.data;
@@ -567,9 +574,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             })
             .merge(shapes)
             .style(
-                "fill", (dataPoint: MekkoChartColumnDataPoint) => data.showAllDataPoints
-                    ? dataPoint.color
-                    : data.defaultDataPointColor
+                "fill", (dataPoint: MekkoChartColumnDataPoint) => dataPoint.color
             )
             .style(
                 "fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => utils.getFillOpacity(
@@ -598,7 +603,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 dataSelector,
                 (dataPoint: MekkoChartColumnDataPoint) => dataPoint.key);
 
-        const borderColor: string = columnChart.BaseColumnChart.getBorderColor(data.borderSettings);
+        const borderColor: string = settingsModel.columnBorder.color.value.value;
 
         borders
             .enter()
@@ -715,13 +720,14 @@ export class BaseVisualStrategy implements IVisualStrategy {
 
     public static getLayout(
         data: MekkoColumnChartData,
-        axisOptions: MekkoColumnAxisOptions): IMekkoColumnLayout {
+        axisOptions: MekkoColumnAxisOptions,
+        settingsModel: VisualFormattingSettingsModel): IMekkoColumnLayout {
 
         const xScale: ScaleLinear<number> = axisOptions.xScale,
             yScale: ScaleLinear<number> = axisOptions.yScale,
             scaledY0: number = yScale(0),
             scaledX0: number = xScale(0),
-            borderWidth: number = columnChart.BaseColumnChart.getBorderWidth(data.borderSettings);
+            borderWidth: number = settingsModel.columnBorder.width.value;
 
         const columnWidthScale: LayoutFunction = (dataPoint: MekkoChartColumnDataPoint) => {
             return AxisHelper.diffScaled(xScale, dataPoint.value, 0);
