@@ -1049,35 +1049,6 @@ export class MekkoChart implements IVisual {
         };
     }
 
-    public static parseLegendSortSettings(objects: powerbi.DataViewObjects): MekkoLegendSortSettings {
-        const enabled: boolean = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["sortLegend"]["enabled"],
-            MekkoChart.DefaultSettings.sortLegend.enabled);
-
-        const direction: string = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["sortLegend"]["direction"],
-            MekkoChart.DefaultSettings.sortLegend.direction);
-
-        const groupByCategory: boolean = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["sortLegend"]["groupByCategory"],
-            MekkoChart.DefaultSettings.sortLegend.groupByCategory);
-
-        const groupByCategoryDirection: string = dataViewObjects.getValue(
-            objects,
-            MekkoChart.Properties["sortLegend"]["groupByCategoryDirection"],
-            MekkoChart.DefaultSettings.sortLegend.groupByCategoryDirection);
-
-        return {
-            enabled,
-            direction,
-            groupByCategory,
-            groupByCategoryDirection
-        };
-    }
-
     public getFormattingModel(): powerbi.visuals.FormattingModel {
         const data: MekkoColumnChartData = (<BaseColumnChart>this.layers[0]).getData();
         const seriesCount: number = data.series.length;
@@ -1193,9 +1164,9 @@ export class MekkoChart implements IVisual {
         }
 
         let reducedLegends: IGrouppedLegendData[] = [];
-        const legendSortSettings: MekkoLegendSortSettings = (<BaseColumnChart>this.layers[0]).getLegendSortSettings();
-        if (legendSortSettings.enabled) {
-            if (legendSortSettings.groupByCategory) {
+
+        if (this.settingsModel.sortLegend.topLevelSlice.value) {
+            if (this.settingsModel.sortLegend.groupByCategory.value) {
                 const mappedLegends = legendData.dataPoints.map((dataPoint: MekkoLegendDataPoint) => {
                     const maxVal = max(dataPoint.categoryValues as number[]);
                     const index = dataPoint.categoryValues.indexOf(maxVal as PrimitiveValue);
@@ -1226,14 +1197,14 @@ export class MekkoChart implements IVisual {
                         return;
                     }
                     legend.data = legend.data.sort((a, b) => a["valueSum"] > b["valueSum"] ? 1 : -1);
-                    if (legendSortSettings.groupByCategoryDirection === MekkoChart.SortDirectionDescending) {
+                    if (this.settingsModel.sortLegend.groupByCategoryDirection.value === MekkoChart.SortDirectionDescending) {
                         legend.data = legend.data.reverse();
                     }
                 });
 
                 reducedLegends = reducedLegends.sort((a, b) => a["categorySort"] > b["categorySort"] ? 1 : -1);
 
-                if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
+                if (this.settingsModel.sortLegend.direction.value === MekkoChart.SortDirectionDescending) {
                     reducedLegends = reducedLegends.reverse();
                 }
 
@@ -1247,7 +1218,7 @@ export class MekkoChart implements IVisual {
             }
             else {
                 legendData.dataPoints = legendData.dataPoints.sort((a, b) => a["valueSum"] > b["valueSum"] ? 1 : -1);
-                if (legendSortSettings.direction === MekkoChart.SortDirectionDescending) {
+                if (this.settingsModel.sortLegend.direction.value === MekkoChart.SortDirectionDescending) {
                     legendData.dataPoints = legendData.dataPoints.reverse();
                 }
             }

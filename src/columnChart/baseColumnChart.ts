@@ -178,7 +178,6 @@ import { LabelsSettings, VisualFormattingSettingsModel } from "../settings";
 
 interface ConverterSettingsWrapper {
     sortSeriesSettings: MekkoSeriesSortSettings;
-    sortLegendSettings: MekkoLegendSortSettings;
 }
 
 export class BaseColumnChart implements IColumnChart {
@@ -389,7 +388,6 @@ export class BaseColumnChart implements IColumnChart {
             categoryFormatter,
             categoryMetadata,
             categoriesWidth: result.categoriesWidth,
-            sortlegend: settingsWrapper.sortLegendSettings,
             sortSeries: settingsWrapper.sortSeriesSettings,
             series: result.series,
             valuesMetadata,
@@ -407,19 +405,16 @@ export class BaseColumnChart implements IColumnChart {
     }
 
     private static getConverterSettings(dataViewMetadata: powerbi.DataViewMetadata): ConverterSettingsWrapper {
-        let sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries,
-            sortLegendSettings: MekkoLegendSortSettings = MekkoChart.DefaultSettings.sortLegend;
+        let sortSeriesSettings: MekkoSeriesSortSettings = MekkoChart.DefaultSettings.sortSeries;
 
         if (dataViewMetadata && dataViewMetadata.objects) {
             const objects: powerbi.DataViewObjects = dataViewMetadata.objects;
 
-            sortLegendSettings = MekkoChart.parseLegendSortSettings(objects);
             sortSeriesSettings = MekkoChart.parseSeriesSortSettings(objects);
         }
 
         return {
-            sortSeriesSettings: sortSeriesSettings,
-            sortLegendSettings: sortLegendSettings
+            sortSeriesSettings: sortSeriesSettings
         };
     }
     private static createAlternateStructure(dataPoint: MekkoDataPoints, descendingDirection: boolean = true): ICategoryValuesCollection[] {
@@ -1157,10 +1152,6 @@ export class BaseColumnChart implements IColumnChart {
         return this.data.sortSeries;
     }
 
-    public getLegendSortSettings(): MekkoLegendSortSettings {
-        return this.data.sortlegend;
-    }
-
     public setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel): void {
         this.data = {
             categories: [],
@@ -1172,7 +1163,6 @@ export class BaseColumnChart implements IColumnChart {
             hasHighlights: false,
             categoryMetadata: null,
             scalarCategoryAxis: false,
-            sortlegend: null,
             sortSeries: null,
             axesLabels: { x: null, y: null },
             hasDynamicSeries: false,
