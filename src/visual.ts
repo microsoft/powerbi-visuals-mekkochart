@@ -400,7 +400,6 @@ export class MekkoChart implements IVisual {
     private hasSetData: boolean;
     private visualInitOptions: VisualConstructorOptions;
 
-    private legendObjectProperties: powerbi.DataViewObject;
     private categoryAxisProperties: powerbi.DataViewObject;
 
     private valueAxisProperties: powerbi.DataViewObject;
@@ -787,16 +786,6 @@ export class MekkoChart implements IVisual {
         if (dataViews && dataViews.length > 0) {
             const dataViewMetadata: DataViewMetadata = dataViews[0].metadata;
 
-            if (dataViewMetadata) {
-                this.legendObjectProperties = dataViewObjects.getObject(
-                    dataViewMetadata.objects,
-                    "legend",
-                    {});
-            }
-            else {
-                this.legendObjectProperties = {};
-            }
-
             this.categoryAxisProperties = getCategoryAxisProperties(dataViewMetadata);
             this.valueAxisProperties = getValueAxisProperties(dataViewMetadata);
 
@@ -1095,8 +1084,8 @@ export class MekkoChart implements IVisual {
         const layers: IColumnChart[] = this.layers,
             legendData: ILegendData = {
                 title: "",
-                fontSize: <number>this.legendObjectProperties.fontSize,
-                fontFamily: <string>this.legendObjectProperties.fontFamily,
+                fontSize: this.settingsModel.legend.fontSize.value,
+                fontFamily: this.settingsModel.legend.fontFamily.value,
                 dataPoints: []
             };
 
@@ -1108,6 +1097,12 @@ export class MekkoChart implements IVisual {
                     ? this.layerLegendData.title || ""
                     : legendData.title;
 
+                if (this.dataViews[0].metadata?.objects?.legend?.titleText && !this.settingsModel.sortLegend.groupByCategory.value){
+                    legendData.title = <string>this.dataViews[0].metadata?.objects?.legend?.titleText;
+                }
+
+                this.settingsModel.legend.titleText.value = legendData.title;
+
                 legendData.dataPoints = legendData.dataPoints
                     .concat(this.layerLegendData.dataPoints || []);
 
@@ -1117,24 +1112,15 @@ export class MekkoChart implements IVisual {
             }
         }
 
-        const legendProperties: powerbi.DataViewObject = this.legendObjectProperties;
-
-        if (legendProperties) {
-            if (!legendProperties["fontSize"]) {
-                legendProperties["fontSize"] = MekkoChart.DefaultLabelFontSizeInPt;
-            }
-
-            LegendData.update(legendData, legendProperties);
-
-            const position: string = legendProperties[legendProps.position] as string;
-
-            if (position) {
-                this.legend.changeOrientation(LegendPosition[position]);
-            }
+        const legendProperties: powerbi.DataViewObject = {
+            fontSize: this.settingsModel.legend.fontSize.value,
+            fontFamily: this.settingsModel.legend.fontFamily.value,
+            showTitle: this.settingsModel.legend.showTitle.value,
+            show: this.settingsModel.legend.topLevelSlice.value
         }
-        else {
-            this.legend.changeOrientation(LegendPosition.Top);
-        }
+
+        LegendData.update(legendData, legendProperties);
+        this.legend.changeOrientation(LegendPosition.Top);
 
         if ((legendData.dataPoints.length === 1 && !legendData.grouped) || this.hideLegends()) {
             legendData.dataPoints = [];
@@ -1203,8 +1189,8 @@ export class MekkoChart implements IVisual {
 
         let svgHeight: number = textMeasurementService.estimateSvgTextHeight({
             // fontFamily: MekkoChart.LegendBarTextFont,
-            fontFamily: <string>this.legendObjectProperties.fontFamily ?? "helvetica, arial, sans-serif;",
-            fontSize: PixelConverter.toString(+legendProperties["fontSize"] + MekkoChart.LegendBarHeightMargin),
+            fontFamily: this.settingsModel.legend.fontFamily.value ?? "helvetica, arial, sans-serif;",
+            fontSize: PixelConverter.toString(+this.settingsModel.legend.fontSize.value + MekkoChart.LegendBarHeightMargin),
             text: "AZ"
         });
 
@@ -1225,7 +1211,7 @@ export class MekkoChart implements IVisual {
         this.categoryLegends = this.categoryLegends || [];
         legendParentsWithChildsAttr.each(function (data, index) {
             const legendSvg = select(this);
-            legendSvg.style("font-family", <string>legendProperties["fontFamily"]);
+            legendSvg.style("font-family", mekko.settingsModel.legend.fontFamily.value);
             if (legendSvg.select("svg").node() === null) {
                 const legend: ILegend = createLegend(
                     <any>this,

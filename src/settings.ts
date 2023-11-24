@@ -85,6 +85,12 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
         value: true
     });
 
+    public showTitle = new formattingSettings.ToggleSwitch({
+        name: "showTitle",
+        displayNameKey: "Visual_Title",
+        value: true
+    });
+
     public titleText = new formattingSettings.TextInput({
         name: "titleText",
         displayNameKey: "Visual_Text",
@@ -116,12 +122,7 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
 
     public legendTitleGroup = new formattingSettings.Group({
         name: "titleGroup",
-        displayNameKey: "Visual_Title",
-        topLevelSlice: new formattingSettings.ToggleSwitch({
-            name: "showTitle",
-            value: true
-        }),
-        slices: [this.titleText, this.fontFamily, this.fontSize]
+        slices: [this.showTitle, this.titleText, this.fontFamily, this.fontSize]
     });
 
     public groups: FormattingSettingsGroup[] = [this.legendTitleGroup]
