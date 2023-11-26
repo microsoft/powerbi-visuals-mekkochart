@@ -26,9 +26,9 @@ class ColumnBorderWidthDefaultOptions {
 }
 
 class FontSizeDefaultOptions {
-    public static FontSize: number = 10;
+    public static FontSize: number = 9;
     public static MinFontSize: number = 9;
-    public static MaxFontSize: number = 60;
+    public static MaxFontSize: number = 30;
 }
 
 class LabelPrecisionDefaultOptions {
