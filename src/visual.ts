@@ -1097,7 +1097,7 @@ export class MekkoChart implements IVisual {
                     ? this.layerLegendData.title || ""
                     : legendData.title;
 
-                if (this.dataViews[0].metadata?.objects?.legend?.titleText && !this.settingsModel.sortLegend.groupByCategory.value){
+                if (this.dataViews[0].metadata?.objects?.legend?.hasOwnProperty("titleText") && !this.settingsModel.sortLegend.groupByCategory.value){
                     legendData.title = <string>this.dataViews[0].metadata?.objects?.legend?.titleText;
                 }
 
