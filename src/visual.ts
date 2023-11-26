@@ -435,7 +435,7 @@ export class MekkoChart implements IVisual {
     private formattingSettingsService: FormattingSettingsService;
     private localizationManager: ILocalizationManager;
 
-    private settingsModel: VisualFormattingSettingsModel;
+    public settingsModel: VisualFormattingSettingsModel;
 
     constructor(options: VisualConstructorOptions) {
         this.init(options);
