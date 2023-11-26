@@ -1816,7 +1816,7 @@ export class MekkoChart implements IVisual {
 
             if (this.layers && this.layers.length) {
                 columnWidth = this.layers[0].getColumnsWidth();
-                borderWidth = this.settingsModel.columnBorder.width.value;
+                borderWidth = this.settingsModel.columnBorder.topLevelSlice.value ? this.settingsModel.columnBorder.width.value : 0;
             }
 
             xAxisGraphicsElement

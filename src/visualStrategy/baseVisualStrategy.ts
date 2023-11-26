@@ -293,7 +293,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             scale: ScaleLinear<number> = scaleLinear(),
             scaleDomain: number[] = [0, 1],
             bestTickCount: number = dataDomain.length || 1,
-            borderWidth: number = columnBorderSettings.width.value;
+            borderWidth: number = columnBorderSettings.topLevelSlice.value ? columnBorderSettings.width.value : 0
 
         let chartWidth: number = pixelSpan - borderWidth * (bestTickCount - 1);
 
@@ -725,7 +725,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             yScale: ScaleLinear<number> = axisOptions.yScale,
             scaledY0: number = yScale(0),
             scaledX0: number = xScale(0),
-            borderWidth: number = settingsModel.columnBorder.width.value;
+            borderWidth: number = settingsModel.columnBorder.topLevelSlice.value ? settingsModel.columnBorder.width.value : 0
 
         const columnWidthScale: LayoutFunction = (dataPoint: MekkoChartColumnDataPoint) => {
             return AxisHelper.diffScaled(xScale, dataPoint.value, 0);
