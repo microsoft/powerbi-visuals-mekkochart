@@ -708,11 +708,11 @@ describe("MekkoChart", () => {
                 };
             }
 
-            array = sortBy(array, "data");
+            array = array.sort((a, b) => a["data"] > b["data"] ? 1 : -1);
             visualBuilder.updateRenderTimeout(dataView, () => {
                 expect(document.body.contains(visualBuilder.legendGroup)).toBeTruthy();
+                let textElements = visualBuilder.legendGroup.querySelectorAll("g.legendItem > text");
                 array.forEach((element, index) => {
-                    let textElements = visualBuilder.legendGroup.querySelectorAll("g.legendItem > text");
                     expect(element.key).toEqual(textElements[index].textContent);
                 });
                 done();
@@ -751,7 +751,7 @@ describe("MekkoChart", () => {
 
                 dataView.categorical.categories[0].values.forEach((category, index) => {
                     let filteredByCategory = catigoried.filter(cat => cat.category === index);
-                    filteredByCategory = sortBy(filteredByCategory, "values"); //Piter MSk Kazan
+                    filteredByCategory = filteredByCategory.sort((a, b) => a["values"] > b["values"] ? 1 : -1);
                     let categoryDOM: Array<CategoryLegendDom> = mappedCategoryLegendGroup.filter((val: CategoryLegendDom, index: number) => { return ((mappedCategoryLegendGroup[index].dom).querySelector("text.legendTitle > title").textContent === category); });
                     let legentItem = ((categoryDOM[0].dom)).querySelectorAll("g.legendItem > title");
                     expect(filteredByCategory.length).toEqual(legentItem.length);
@@ -924,7 +924,7 @@ describe("MekkoChart", () => {
             visualBuilder.update(dataViewWithHighLighted);
             visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
                 columnsWithoutSize.forEach(column => {
-                    if (column.matches("highlight")) {
+                    if (column.matches(".highlight")) {
                         highlightedColumnWithoutHeight = true;
                         return;
                     }
