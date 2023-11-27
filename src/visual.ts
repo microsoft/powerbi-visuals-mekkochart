@@ -865,7 +865,7 @@ export class MekkoChart implements IVisual {
             return;
         }
 
-        this.renderLegend(this.settingsModel);
+        this.renderLegend();
 
         this.render();
 
@@ -1079,7 +1079,7 @@ export class MekkoChart implements IVisual {
     }
 
     // eslint-disable-next-line max-lines-per-function
-    private renderLegend(settingModel: VisualFormattingSettingsModel): void {
+    private renderLegend(): void {
         const layers: IColumnChart[] = this.layers,
             legendData: ILegendData = {
                 title: "",
@@ -1095,7 +1095,7 @@ export class MekkoChart implements IVisual {
                 legendData.title = i === 0
                     ? this.layerLegendData.title || ""
                     : legendData.title;
-                if (this.dataViews[0].metadata?.objects?.legend?.hasOwnProperty.call({"titleText": settingModel.legend.titleText.value},"titleText") && !this.settingsModel.sortLegend.groupByCategory.value){
+                if (this.dataViews[0].metadata?.objects?.legend?.hasOwnProperty.call({"titleText": this.settingsModel.legend.titleText.value},"titleText") && !this.settingsModel.sortLegend.groupByCategory.value){
                     legendData.title = <string>this.dataViews[0].metadata?.objects?.legend?.titleText;
                 }
 
