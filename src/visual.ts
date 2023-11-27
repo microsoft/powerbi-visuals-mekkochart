@@ -826,6 +826,8 @@ export class MekkoChart implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
+        this.visualHost.eventService.renderingStarted(options);
+
         this.dataViews = options.dataViews;
         this.currentViewport = options.viewport;
         if (!this.checkDataset()) {
@@ -871,6 +873,8 @@ export class MekkoChart implements IVisual {
 
         this.hasSetData = this.hasSetData
             || (this.dataViews && this.dataViews.length > 0);
+
+        this.visualHost.eventService.renderingFinished(options);
     }
 
     /**
