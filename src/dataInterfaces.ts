@@ -103,7 +103,6 @@ type IInteractivityService = IInteractivityServiceCommon<SelectableDataPoint>;
 import IValueFormatter = vf.IValueFormatter;
 
 import VisualDataLabelsSettingsOptions = dataLabelInterfaces.VisualDataLabelsSettingsOptions;
-import DataLabelObject = dataLabelInterfaces.DataLabelObject;
 
 export interface ValueMultiplers {
     pos: number;

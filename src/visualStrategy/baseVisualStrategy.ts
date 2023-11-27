@@ -95,7 +95,6 @@ import createClassAndSelector = CssConstants.createClassAndSelector;
 import IAxisProperties = axisInterfaces.IAxisProperties;
 import CreateAxisOptionsBase = axisInterfaces.CreateAxisOptions;
 import hundredPercentFormat = dataLabelUtils.hundredPercentFormat;
-import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
 import IColumnFormatterCacheManager = dataLabelInterfaces.IColumnFormatterCacheManager;
 import createColumnFormatterCacheManager = dataLabelUtils.createColumnFormatterCacheManager;
 

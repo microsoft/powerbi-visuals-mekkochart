@@ -113,7 +113,6 @@ import TickLabelMargins = axisInterfaces.TickLabelMargins;
 import ILegend = legendInterfaces.ILegend;
 import ILegendData = legendInterfaces.LegendData;
 
-import legendProps = legendInterfaces.legendProps;
 import createLegend = legend.createLegend;
 import ILabelLayout = dataLabelInterfaces.ILabelLayout;
 import LegendPosition = legendInterfaces.LegendPosition;

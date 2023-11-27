@@ -80,8 +80,6 @@ import {
     MekkoChartVisualInitOptions,
     MekkoCalculateScaleAndDomainOptions,
     MekkoChartCategoryLayout,
-    MekkoSeriesSortSettings,
-    MekkoLegendSortSettings,
     LegendSeriesInfo,
     MekkoLegendDataPoint,
     MekkoDataPoints,
@@ -174,7 +172,7 @@ import BaseConverterStrategy = converterStrategy.BaseConverterStrategy;
 
 // behavior
 import { VisualBehaviorOptions } from "./../behavior/visualBehaviorOptions";
-import { LabelsSettings, VisualFormattingSettingsModel } from "../settings";
+import { VisualFormattingSettingsModel } from "../settings";
 
 export class BaseColumnChart implements IColumnChart {
     private static ColumnChartClassName: string = "columnChart";
@@ -334,7 +332,7 @@ export class BaseColumnChart implements IColumnChart {
         });
 
         // Allocate colors
-        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, settingsModel);
+        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors);
         const legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
 
         const seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;

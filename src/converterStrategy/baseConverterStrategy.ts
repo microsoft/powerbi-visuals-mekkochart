@@ -47,7 +47,6 @@ import {
     MekkoLegendDataPoint,
     ICategotyValuesStatsCollection,
     IFilteredValueGroups,
-    BaseColorIdentity,
     LegendSeriesInfo
 } from "./../dataInterfaces";
 
@@ -59,7 +58,6 @@ import ILegendData = legendInterfaces.LegendData;
 import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 
 import { ConverterStrategy } from "./converterStrategy";
-import { VisualFormattingSettingsModel } from "../settings";
 
 export class BaseConverterStrategy implements ConverterStrategy {
     private static WidthColumnName: string = "Width";
@@ -80,7 +78,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
     }
 
     // eslint-disable-next-line max-lines-per-function
-    public getLegend(colorPalette: IColorPalette, settingsModel: VisualFormattingSettingsModel): LegendSeriesInfo {
+    public getLegend(colorPalette: IColorPalette): LegendSeriesInfo {
         const legend: MekkoLegendDataPoint[] = [];
         const seriesSources: DataViewMetadataColumn[] = [];
         const seriesObjects: DataViewObjects[][] = [];
