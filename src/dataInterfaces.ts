@@ -70,7 +70,6 @@ import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
 import { Selection as d3Selection} from "d3-selection";
 import { ScaleLinear as d3ScaleLinear} from "d3-scale";
 export type Selection = d3Selection<any, any, any, any>;
-export type GenericSelection<T> = d3Selection<any, T, any, any>;
 export type ScaleLinear = d3ScaleLinear<any, any, never>;
 
 // powerbi
