@@ -33,7 +33,6 @@ import {
 import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 import IAxisProperties = axisInterfaces.IAxisProperties;
-import DataViewObject = powerbi.DataViewObject;
 import IViewport = powerbi.IViewport;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 
@@ -113,36 +112,30 @@ import { CategoryAxisSettings, ValueAxisSettings, VisualFormattingSettingsModel 
     }
 
     export function createAxesLabels(
-        categoryAxisProperties: DataViewObject,
-        valueAxisProperties: DataViewObject,
         category: DataViewMetadataColumn,
         values: DataViewMetadataColumn[]): AxesLabels {
 
         let xAxisLabel: string = null,
             yAxisLabel: string = null;
 
-        if (categoryAxisProperties) {
-            // Take the value only if it's there
-            if (category && category.displayName) {
-                xAxisLabel = category.displayName;
-            }
+        // Take the value only if it's there
+        if (category && category.displayName) {
+            xAxisLabel = category.displayName;
         }
 
-        if (valueAxisProperties) {
-            if (values) {
-                // Take the name from the values, and make it unique because there are sometimes duplications
-                const valuesNames: string[] = values
-                    .map((metadata: DataViewMetadataColumn) => {
-                        return metadata
-                            ? metadata.displayName
-                            : "";
-                    })
-                    .filter((value: string, index: number, self: string[]) => {
-                        return value !== "" && self.indexOf(value) === index;
-                    });
+        if (values) {
+            // Take the name from the values, and make it unique because there are sometimes duplications
+            const valuesNames: string[] = values
+                .map((metadata: DataViewMetadataColumn) => {
+                    return metadata
+                        ? metadata.displayName
+                        : "";
+                })
+                .filter((value: string, index: number, self: string[]) => {
+                    return value !== "" && self.indexOf(value) === index;
+                });
 
-                yAxisLabel = valueFormatter.formatListAnd(valuesNames);
-            }
+            yAxisLabel = valueFormatter.formatListAnd(valuesNames);
         }
 
         return {

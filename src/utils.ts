@@ -25,22 +25,12 @@
  */
 import powerbi from "powerbi-visuals-api";
 
-import DataViewCategorical = powerbi.DataViewCategorical;
-import DataViewPropertyValue = powerbi.DataViewPropertyValue;
-import PrimitiveValue = powerbi.PrimitiveValue;
-import DataViewObjects = powerbi.DataViewObjects;
-import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
-import DataViewValueColumn = powerbi.DataViewValueColumn;
-import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
-import DataViewObject = powerbi.DataViewObject;
 import NumberRange = powerbi.NumberRange;
-import DataViewValueColumns = powerbi.DataViewValueColumns;
 
 import { MekkoChart } from "./visual";
 
 import {
-    double as Double,
-    prototype as Prototype
+    double as Double
 } from "powerbi-visuals-utils-typeutils";
 
 import {
@@ -209,117 +199,4 @@ export function getClosestColumnIndex(coordinate: number, columnsCenters: number
     }
 
     return currentIndex;
-}
-
-export function applyUserMinMax(
-    isScalar: boolean,
-    dataView: DataViewCategorical,
-    xAxisCardProperties: DataViewObject): DataViewCategorical {
-
-    if (isScalar) {
-        const min: DataViewPropertyValue = xAxisCardProperties["start"],
-            max: DataViewPropertyValue = xAxisCardProperties["end"];
-
-        return transformDomain(dataView, min, max);
-    }
-
-    return dataView;
-}
-
-export function transformDomain(
-    dataView: DataViewCategorical,
-    min: DataViewPropertyValue,
-    max: DataViewPropertyValue): DataViewCategorical {
-
-    if (!dataView.categories
-        || !dataView.values
-        || dataView.categories.length === 0
-        || dataView.values.length === 0) {
-
-        return dataView;
-    }
-
-    if (typeof min !== "number" && typeof max !== "number") {
-        return dataView;
-    }
-
-    const category: DataViewCategoryColumn = dataView.categories[0];
-
-    const categoryType: ValueTypeDescriptor = category
-        ? category.source.type
-        : null;
-
-    // Min/Max comparison won't work if category source is Ordinal
-    if (AxisHelper.isOrdinal(categoryType)) {
-        return;
-    }
-
-    const categoryValues: PrimitiveValue[] = category.values,
-        categoryObjects: DataViewObjects[] = category.objects;
-
-    if (!categoryValues || !categoryObjects) {
-        return dataView;
-    }
-
-    const newcategoryValues: PrimitiveValue[] = [],
-        newValues: PrimitiveValue[][] = [],
-        newObjects: DataViewObjects[] = [];
-
-    if (typeof min !== "number") {
-        min = categoryValues[0];
-    }
-    if (typeof max !== "number") {
-        max = categoryValues[categoryValues.length - 1];
-    }
-
-    if (min > max) {
-        return dataView;
-    }
-
-    for (let j: number = 0; j < dataView.values.length; j++) {
-        newValues.push([]);
-    }
-
-    for (let t: number = 0; t < categoryValues.length; t++) {
-        if (categoryValues[t] >= min && categoryValues[t] <= max) {
-            newcategoryValues.push(categoryValues[t]);
-
-            if (categoryObjects) {
-                newObjects.push(categoryObjects[t]);
-            }
-
-            if (dataView.values) {
-                for (let k: number = 0; k < dataView.values.length; k++) {
-                    newValues[k].push(dataView.values[k].values[t]);
-                }
-            }
-        }
-    }
-
-    const resultDataView: DataViewCategorical = Prototype.inherit(dataView),
-        resultDataViewValues: DataViewValueColumns
-            = resultDataView.values
-            = Prototype.inherit(resultDataView.values),
-        resultDataViewCategories: DataViewCategoryColumn[]
-            = resultDataView.categories
-            = Prototype.inherit(dataView.categories),
-        resultDataViewCategories0: DataViewCategoryColumn
-            = resultDataView.categories[0]
-            = Prototype.inherit(resultDataViewCategories[0]);
-
-    resultDataViewCategories0.values = newcategoryValues;
-
-    if (resultDataViewCategories0.objects) {
-        resultDataViewCategories0.objects = newObjects;
-    }
-
-    for (let t: number = 0; t < dataView.values.length; t++) {
-        const measureArray: DataViewValueColumn
-            = resultDataViewValues[t]
-            = Prototype.inherit(resultDataViewValues[t]);
-
-        measureArray.values = newValues[t];
-    }
-
-    return resultDataView;
 }

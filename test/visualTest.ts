@@ -519,7 +519,6 @@ describe("MekkoChart", () => {
                         true,
                         false,
                         false,
-                        dataView.metadata,
                         null,
                         visualBuilder.instance.settingsModel);
                     done();

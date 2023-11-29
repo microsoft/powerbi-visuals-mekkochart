@@ -116,10 +116,6 @@ import { MekkoVisualChartType, flagStacked, flagBar } from "./../visualChartType
 
 import { RoleNames, } from "./../roleNames";
 
-import * as dataViewUtils from "./../dataViewUtils";
-
-import * as utils from "./../utils";
-
 import * as tooltip from "./../tooltip";
 
 import * as axisType from "./../axis/type";
@@ -130,7 +126,6 @@ import IColorPalette = powerbi.extensibility.IColorPalette;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewCategorical = powerbi.DataViewCategorical;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
-import DataViewMetadata = powerbi.DataViewMetadata;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import CustomVisualOpaqueIdentity = powerbi.visuals.CustomVisualOpaqueIdentity;
 import PrimitiveValue = powerbi.PrimitiveValue;
@@ -298,16 +293,9 @@ export class BaseColumnChart implements IColumnChart {
         is100PercentStacked: boolean = false,
         isScalar: boolean = false,
         supportsOverflow: boolean = false,
-        dataViewMetadata: DataViewMetadata = null,
         localizationManager: ILocalizationManager,
         settingsModel: VisualFormattingSettingsModel,
         chartType?: MekkoVisualChartType): MekkoColumnChartData {
-
-        const xAxisCardProperties: powerbi.DataViewObject = dataViewUtils.getCategoryAxisProperties(dataViewMetadata);
-        const valueAxisProperties: powerbi.DataViewObject = dataViewUtils.getValueAxisProperties(dataViewMetadata);
-
-        isScalar = dataViewUtils.isScalar(isScalar, xAxisCardProperties);
-        categorical = utils.applyUserMinMax(isScalar, categorical, xAxisCardProperties);
 
         const converterStrategy: BaseConverterStrategy = new BaseConverterStrategy(categorical, visualHost);
 
@@ -371,8 +359,6 @@ export class BaseColumnChart implements IColumnChart {
         }
 
         const labels: axisUtils.AxesLabels = axisUtils.createAxesLabels(
-            xAxisCardProperties,
-            valueAxisProperties,
             categoryMetadata,
             valuesMetadata);
 
@@ -1157,7 +1143,6 @@ export class BaseColumnChart implements IColumnChart {
                     true,
                     false,
                     this.supportsOverflow,
-                    dataView.metadata,
                     this.localizationManager,
                     settingsModel,
                     this.chartType);
