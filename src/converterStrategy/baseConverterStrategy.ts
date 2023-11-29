@@ -88,7 +88,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
 
         const colorHelper: ColorHelper = new ColorHelper(
             colorPalette,
-            MekkoChart.Properties["dataPoint"]["fill"],
+            MekkoChart.Properties.dataPoint.fill
         );
 
         const categoryFieldIndex: number = 0;

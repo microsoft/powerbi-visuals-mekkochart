@@ -502,7 +502,7 @@ export class MekkoChart implements IVisual {
     }
 
     private calculateXAxisAdditionalHeight(categories: PrimitiveValue[]): number {
-        const sortedByLength: PrimitiveValue[] = categories.sort((a, b) => a["length"] > b["length"] ? 1 : -1);
+        const sortedByLength: PrimitiveValue[] = categories.sort((a: string, b: string) => a.length > b.length ? 1 : -1);
         let longestCategory: PrimitiveValue = sortedByLength[categories.length - 1] || "";
         const shortestCategory: PrimitiveValue = sortedByLength[0] || "";
 
@@ -1092,13 +1092,13 @@ export class MekkoChart implements IVisual {
                     if (legend === undefined) {
                         return;
                     }
-                    legend.data = legend.data.sort((a, b) => a["valueSum"] > b["valueSum"] ? 1 : -1);
+                    legend.data = legend.data.sort((a, b) => a?.valueSum > b?.valueSum ? 1 : -1);
                     if (this.settingsModel.sortLegend.groupByCategoryDirection.value === MekkoChart.SortDirectionDescending) {
                         legend.data = legend.data.reverse();
                     }
                 });
 
-                reducedLegends = reducedLegends.sort((a, b) => a["categorySort"] > b["categorySort"] ? 1 : -1);
+                reducedLegends = reducedLegends.sort((a, b) => a.categorySorting > b.categorySorting ? 1 : -1);
 
                 if (this.settingsModel.sortLegend.direction.value === MekkoChart.SortDirectionDescending) {
                     reducedLegends = reducedLegends.reverse();
@@ -1113,7 +1113,7 @@ export class MekkoChart implements IVisual {
                 });
             }
             else {
-                legendData.dataPoints = legendData.dataPoints.sort((a, b) => a["valueSum"] > b["valueSum"] ? 1 : -1);
+                legendData.dataPoints = legendData.dataPoints.sort((a: MekkoLegendDataPoint, b: MekkoLegendDataPoint) => a?.valueSum > b?.valueSum ? 1 : -1);
                 if (this.settingsModel.sortLegend.direction.value === MekkoChart.SortDirectionDescending) {
                     legendData.dataPoints = legendData.dataPoints.reverse();
                 }
@@ -1165,7 +1165,7 @@ export class MekkoChart implements IVisual {
             this.categoryLegends.forEach((legend: ILegend) => {
                 (<ILegendGroup>legend).position = +select((<ILegendGroup>legend).element).style("top").replace("px", "");
             });
-            this.categoryLegends = this.categoryLegends.sort((a, b) => a["position"] > b["position"] ? 1 : -1).reverse();
+            this.categoryLegends = this.categoryLegends.sort((a: ILegendGroup, b: ILegendGroup) => a?.position > b?.position ? 1 : -1).reverse();
             this.categoryLegends.forEach((legend, index) => {
                 if (reducedLegends[index] === undefined) {
                     LegendData.update({
@@ -1198,7 +1198,7 @@ export class MekkoChart implements IVisual {
         }
         legendParentsWithData.exit().remove();
 
-        if (legendProperties["show"] === false) {
+        if (this.settingsModel.legend.topLevelSlice.value === false) {
             legendData.dataPoints = [];
             this.categoryLegends.forEach(legend => {
                 legend.changeOrientation(LegendPosition.None);

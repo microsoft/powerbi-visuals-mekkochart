@@ -418,17 +418,16 @@ export class BaseColumnChart implements IColumnChart {
 
         // copy array with specific fields
         for (let col = 0; col < colsCount; col++) {
-            const tmpObject = [];
-            tmpObject["identity"] = columns[col].identity;
-            tmpObject["categoryValue"] = columns[col].categoryValue;
-            tmpObject["color"] = columns[col].color;
+            const tmpIdentity: ISelectionId = columns[col].identity;
+            const tmpCategoryValue: PrimitiveValue = columns[col].categoryValue;
+            const tmpColor: string = columns[col].color;
             columns[col] = columns[col].sort((a, b) => a[BaseColumnChart.ColumSortField] > b[BaseColumnChart.ColumSortField] ? 1 : -1);
             if (descendingDirection) {
                 columns[col] = (columns[col]).reverse();
             }
-            columns[col].identity = tmpObject["identity"];
-            columns[col].categoryValue = tmpObject["categoryValue"];
-            columns[col].color = tmpObject["color"];
+            columns[col].identity = tmpIdentity;
+            columns[col].categoryValue = tmpCategoryValue;
+            columns[col].color = tmpColor;
         }
 
         return columns;
@@ -697,7 +696,7 @@ export class BaseColumnChart implements IColumnChart {
                 const labelObjects: DataLabelObject = labelsSeriesGroup
                     && labelsSeriesGroup.source
                     && labelsSeriesGroup.source.objects
-                    ? labelsSeriesGroup.source.objects["labels"] as any
+                    ? labelsSeriesGroup.source.objects?.labels as any
                     : null;
 
                 if (labelObjects) {
@@ -1033,7 +1032,7 @@ export class BaseColumnChart implements IColumnChart {
         if (dataPointObjects) {
             const colorOverride: string = dataViewObjects.getFillColor(
                 dataPointObjects[categoryIndex],
-                MekkoChart.Properties["dataPoint"]["fill"]);
+                MekkoChart.Properties.dataPoint.fill);
 
             if (colorOverride) {
                 return colorOverride;
@@ -1041,7 +1040,7 @@ export class BaseColumnChart implements IColumnChart {
 
             const defaultColorOverride: string = dataViewObjects.getFillColor(
                 dataPointObjects[categoryIndex],
-                MekkoChart.Properties["dataPoint"]["defaultColor"]);
+                MekkoChart.Properties.dataPoint.defaultColor);
 
             if (defaultColorOverride){
                 return defaultColorOverride;

@@ -690,6 +690,11 @@ describe("MekkoChart", () => {
                 }
             };
 
+            interface ValueLegend {
+                key: string;
+                data: number;
+            }
+            
             let data = dataView.categorical.values.grouped().map(v => { return { key: v.name, data: sum(v.values[0].values) }; });
 
             let reduced = {};
@@ -699,7 +704,8 @@ describe("MekkoChart", () => {
             });
 
             let index = 0;
-            let array = [];
+            let array: Array<ValueLegend> = [];
+
             for (let key in reduced) {
                 array[index++] = {
                     key: key,
@@ -707,7 +713,7 @@ describe("MekkoChart", () => {
                 };
             }
 
-            array = array.sort((a, b) => a["data"] > b["data"] ? 1 : -1);
+            array = array.sort((a, b) => a.data > b.data ? 1 : -1);
             visualBuilder.updateRenderTimeout(dataView, () => {
                 expect(document.body.contains(visualBuilder.legendGroup)).toBeTruthy();
                 let textElements = visualBuilder.legendGroup.querySelectorAll("g.legendItem > text");
@@ -750,7 +756,7 @@ describe("MekkoChart", () => {
 
                 dataView.categorical.categories[0].values.forEach((category, index) => {
                     let filteredByCategory = catigoried.filter(cat => cat.category === index);
-                    filteredByCategory = filteredByCategory.sort((a, b) => a["values"] > b["values"] ? 1 : -1);
+                    filteredByCategory = filteredByCategory.sort((a, b) => a.values > b.values ? 1 : -1);
                     let categoryDOM: Array<CategoryLegendDom> = mappedCategoryLegendGroup.filter((val: CategoryLegendDom, index: number) => { return ((mappedCategoryLegendGroup[index].dom).querySelector("text.legendTitle > title").textContent === category); });
                     let legentItem = ((categoryDOM[0].dom)).querySelectorAll("g.legendItem > title");
                     expect(filteredByCategory.length).toEqual(legentItem.length);

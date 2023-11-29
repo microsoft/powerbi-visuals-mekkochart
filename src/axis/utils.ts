@@ -61,15 +61,8 @@ import { CategoryAxisSettings, ValueAxisSettings, VisualFormattingSettingsModel 
         const visualOptions: MekkoCalculateScaleAndDomainOptions = {
             viewport,
             margin,
-            forcedXDomain: [
-                categoryAxisSettings
-                    ? categoryAxisSettings["start"]
-                    : null,
-                categoryAxisSettings
-                    ? categoryAxisSettings["end"]
-                    : null
-            ],
-            forceMerge: valueAxisSettings && valueAxisSettings["secShow"] === false,
+            forcedXDomain: [null, null],
+            forceMerge: false,
             showCategoryAxisLabel: false,
             showValueAxisLabel: false,
             categoryAxisScaleType: axisScale.linear,
@@ -77,14 +70,7 @@ import { CategoryAxisSettings, ValueAxisSettings, VisualFormattingSettingsModel 
             trimOrdinalDataOnOverflow: false
         };
 
-        if (valueAxisSettings) {
-            visualOptions.forcedYDomain = AxisHelper.applyCustomizedDomain(
-                [
-                    valueAxisSettings["start"],
-                    valueAxisSettings["end"]
-                ],
-                visualOptions.forcedYDomain);
-        }
+        visualOptions.forcedYDomain = AxisHelper.applyCustomizedDomain([null, null], visualOptions.forcedYDomain);
 
         let result: MekkoChartAxisProperties;
 
