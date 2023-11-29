@@ -83,7 +83,7 @@ export class VisualBehavior implements IInteractiveBehavior {
 
             selectionHandler.handleSelection(
                 dataOfTheLastEvent,
-                keyboardEvent.ctrlKey
+                keyboardEvent.ctrlKey || keyboardEvent.metaKey || keyboardEvent.shiftKey
             );
         });
 
