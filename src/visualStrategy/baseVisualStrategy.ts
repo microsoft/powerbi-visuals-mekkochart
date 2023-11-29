@@ -691,8 +691,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 .classed(BaseVisualStrategy.InteractiveHoverLineSelector.className, true)
                 .attr("x1", x)
                 .attr("x2", x)
-                .attr("y1", 0)
-                .attr("y2", this.height);
+                .attr("y1", 0);
 
             handleSelection
                 .append("circle")

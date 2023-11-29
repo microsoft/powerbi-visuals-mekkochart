@@ -27,7 +27,6 @@ import powerbi from "powerbi-visuals-api";
 
 import PrimitiveValue = powerbi.PrimitiveValue;
 import NumberRange = powerbi.NumberRange;
-import Fill = powerbi.Fill;
 import IViewport = powerbi.IViewport;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import IColorPalette = powerbi.extensibility.IColorPalette;
@@ -178,13 +177,11 @@ export interface MekkoChartBaseData {
 export interface MekkoChartAxesLabels {
     x: string;
     y: string;
-    y2?: string;
 }
 
 export interface MekkoChartAxisProperties {
     x: IAxisProperties;
     y1: IAxisProperties;
-    y2?: IAxisProperties;
 }
 
 export interface MekkoChartCategoryLayoutOptions {
@@ -386,10 +383,8 @@ export interface MekkoAxisRenderingOptions {
     margin: IMargin;
     hideXAxisTitle: boolean;
     hideYAxisTitle: boolean;
-    hideY2AxisTitle?: boolean;
     xLabelColor: string;
     yLabelColor: string;
-    y2LabelColor?: Fill;
 }
 
 export interface MekkoCategoryProperties {
