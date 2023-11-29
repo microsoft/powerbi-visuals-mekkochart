@@ -58,6 +58,7 @@ import ILegendData = legendInterfaces.LegendData;
 import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 
 import { ConverterStrategy } from "./converterStrategy";
+import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
 
 export class BaseConverterStrategy implements ConverterStrategy {
     private static WidthColumnName: string = "Width";
@@ -85,11 +86,6 @@ export class BaseConverterStrategy implements ConverterStrategy {
 
         let grouped: boolean = false;
         let legendTitle: string = undefined;
-
-        const colorHelper: ColorHelper = new ColorHelper(
-            colorPalette,
-            MekkoChart.Properties.dataPoint.fill
-        );
 
         const categoryFieldIndex: number = 0;
         const categoryMaxValues: ICategotyValuesStatsCollection = {};
@@ -164,8 +160,15 @@ export class BaseConverterStrategy implements ConverterStrategy {
 
                     const categoryIndex: number = series.values.findIndex(value => typeof value !== "undefined" && value !== null);
 
-                    const color: string = hasDynamicSeries ? colorHelper.getColorForSeriesValue(valueGroupObjects || source.objects, source.groupName)
-                        : colorHelper.getColorForMeasure(valueGroupObjects || source.objects, source.queryName);
+                    let color: string;
+                    if (hasDynamicSeries){
+                        const colorFromPallete: string = colorPalette.getColor(source.groupName.toString()).value;
+                        const dataPointFillColor = dataViewObjects.getFillColor(valueGroupObjects || source.objects, MekkoChart.Properties.dataPoint.fill);
+                        color = dataPointFillColor ?? colorFromPallete;
+                    }
+                    else {
+                        color = colorPalette.getColor(source.queryName).value;
+                    }
 
                     legend.push({
                         color,
