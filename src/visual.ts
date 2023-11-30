@@ -1030,11 +1030,16 @@ export class MekkoChart implements IVisual {
                 legendData.title = i === 0
                     ? this.layerLegendData.title || ""
                     : legendData.title;
-                if (this.dataViews[0].metadata?.objects?.legend?.hasOwnProperty.call({"titleText": this.settingsModel.legend.titleText.value},"titleText") && !this.settingsModel.sortLegend.groupByCategory.value){
-                    legendData.title = <string>this.dataViews[0].metadata?.objects?.legend?.titleText;
-                }
 
-                this.settingsModel.legend.titleText.value = legendData.title;
+                if (this.settingsModel.legend.titleText.value)
+                {
+                    if (!this.settingsModel.sortLegend.groupByCategory.value){
+                        legendData.title = this.settingsModel.legend.titleText.value;
+                    }
+                }
+                else {
+                    this.settingsModel.legend.titleText.value = legendData.title;
+                }
 
                 legendData.dataPoints = legendData.dataPoints
                     .concat(this.layerLegendData.dataPoints || []);

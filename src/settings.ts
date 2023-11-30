@@ -94,7 +94,7 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
     public titleText = new formattingSettings.TextInput({
         name: "titleText",
         displayNameKey: "Visual_Text",
-        value: "Title Text",
+        value: "",
         placeholder: "Title Text"
     });
 
