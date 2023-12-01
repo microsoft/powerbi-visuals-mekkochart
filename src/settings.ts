@@ -385,15 +385,14 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
 export class DataPointSettings extends FormattingSettingsSimpleCard {
     public name: string = "dataPoint";
     public displayNameKey:string = "Visual_Data_Colors";
-    private selector = dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals);
 
     public defaultColor = new formattingSettings.ColorPicker({
         name: "defaultColor",
         displayNameKey: "Visual_Default_Color",
         value: {value: "#01B8AA"},
         instanceKind: powerbi.VisualEnumerationInstanceKinds.ConstantOrRule,
-        selector: this.selector,
-        altConstantSelector: this.selector, 
+        selector: dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals),
+        altConstantSelector: null,
         visible: false
     });
 

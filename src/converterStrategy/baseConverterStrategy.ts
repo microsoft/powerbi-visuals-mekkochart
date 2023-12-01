@@ -58,6 +58,7 @@ import getFormattedLegendLabel = formattingUtils.getFormattedLegendLabel;
 
 import { ConverterStrategy } from "./converterStrategy";
 import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
+import { VisualFormattingSettingsModel } from "../settings";
 
 export class BaseConverterStrategy implements ConverterStrategy {
     private static WidthColumnName: string = "Width";
@@ -78,7 +79,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
     }
 
     // eslint-disable-next-line max-lines-per-function
-    public getLegend(colorPalette: IColorPalette): LegendSeriesInfo {
+    public getLegend(colorPalette: IColorPalette, settingsModel: VisualFormattingSettingsModel): LegendSeriesInfo {
         const legend: MekkoLegendDataPoint[] = [];
         const seriesSources: DataViewMetadataColumn[] = [];
         const seriesObjects: DataViewObjects[][] = [];
@@ -166,7 +167,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                         color = dataPointFillColor ?? colorFromPallete;
                     }
                     else {
-                        color = colorPalette.getColor(source.queryName).value;
+                        color = settingsModel.dataPoint.defaultColor.value.value;
                     }
 
                     legend.push({

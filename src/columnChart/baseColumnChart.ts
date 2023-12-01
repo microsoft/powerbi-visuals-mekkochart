@@ -320,7 +320,7 @@ export class BaseColumnChart implements IColumnChart {
         });
 
         // Allocate colors
-        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors);
+        const legendAndSeriesInfo: LegendSeriesInfo = converterStrategy.getLegend(colors, settingsModel);
         const legend: MekkoLegendDataPoint[] = legendAndSeriesInfo.legend.dataPoints;
 
         const seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
