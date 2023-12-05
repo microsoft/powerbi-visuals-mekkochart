@@ -62,5 +62,6 @@
 	"Visual_Description_DecimalPlaces": "Select the number of decimal places to display",
 	"Visual_CategoryDataColorsStart": "Categoty data colors start",
 	"Visual_CategoryDataColorsEnd": "Categoty data colors end",
-	"Visual_HighlightedValueDisplayName": "Highlighted"
+	"Visual_HighlightedValueDisplayName": "Highlighted",
+	"Visual_DrillControl": "Drill control"
 }

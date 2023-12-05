@@ -779,6 +779,10 @@ export class MekkoChart implements IVisual {
             this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length), this.settingsModel);
         }
 
+        // enable/disable drill control
+        const isDrillEnabled: boolean = this.settingsModel.drillControl.enabled.value;
+        this.visualHost.setCanDrill(isDrillEnabled);
+
         const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value;
         let additionHeight: number = 0;
         if (rotataionEnabled) {

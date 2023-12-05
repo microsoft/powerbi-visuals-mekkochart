@@ -359,6 +359,15 @@
                     }
                 }
             }
+        },
+        "drillControl":{
+            "properties":{
+                "enabled":{
+                    "type":{
+                        "bool": true
+                    }
+                }
+            }
         }
     },
     "dataViewMappings": [
@@ -436,7 +445,8 @@
     "drilldown": {
         "roles": [
             "Category"
-        ]
+        ],
+        "canDisableDrill": {}
     },
     "privileges": []
     
