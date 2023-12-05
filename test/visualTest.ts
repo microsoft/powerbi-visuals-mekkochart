@@ -943,4 +943,141 @@ describe("MekkoChart", () => {
             });
         });
     });
+
+    describe("Keyboard navigation test", () => {
+        it("enter toggles the correct column", (done) => {
+            const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+            visualBuilder.updateRenderTimeout(
+                dataView, () => {
+                    const columns: HTMLElement[] = [...visualBuilder.columns];
+
+                    columns[0].dispatchEvent(enterEvent);
+                    expect(columns[0].getAttribute("aria-selected")).toBe("true");
+
+                    const otherColumns: HTMLElement[] = columns.slice(1);
+                    otherColumns.forEach((column: HTMLElement) => {
+                        expect(column.getAttribute("aria-selected")).toBe("false");
+                    });
+
+                    columns[1].dispatchEvent(enterEvent);
+                    expect(columns[1].getAttribute("aria-selected")).toBe("true");
+
+                    columns.splice(1,1);
+                    columns.forEach((column: HTMLElement) => {
+                        expect(column.getAttribute("aria-selected")).toBe("false");
+                    });
+                    done();
+                },
+            );
+        });
+
+        it("space toggles the correct column", (done) => {
+            const enterEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+            visualBuilder.updateRenderTimeout(
+                dataView, () => {
+                    const columns: HTMLElement[] = [...visualBuilder.columns];
+
+                    columns[0].dispatchEvent(enterEvent);
+                    expect(columns[0].getAttribute("aria-selected")).toBe("true");
+
+                    const otherColumns: HTMLElement[] = columns.slice(1);
+                    otherColumns.forEach((column: HTMLElement) => {
+                        expect(column.getAttribute("aria-selected")).toBe("false");
+                    });
+
+                    columns[1].dispatchEvent(enterEvent);
+                    expect(columns[1].getAttribute("aria-selected")).toBe("true");
+
+                    columns.splice(1,1);
+                    columns.forEach((column: HTMLElement) => {
+                        expect(column.getAttribute("aria-selected")).toBe("false");
+                    });
+                    done();
+                },
+            );
+        });
+
+        it("multiselection should work with ctrlKey", (done) => {
+            const enterEventCtrlKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, ctrlKey: true });
+            visualBuilder.updateRenderTimeout(
+                dataView, () => {
+                    checkKeyboardMultiSelection(enterEventCtrlKey);
+                    done();
+                },
+            );
+        });
+
+        it("multiselection should work with metaKey", (done) => {
+            const enterEventMetaKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, metaKey: true });
+            visualBuilder.updateRenderTimeout(
+                dataView, () => {
+                    checkKeyboardMultiSelection(enterEventMetaKey);
+                    done();
+                },
+            );
+        });
+
+        it("multiselection should work with shiftKey", (done) => {
+            const enterEventShiftKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, shiftKey: true });
+            visualBuilder.updateRenderTimeout(
+                dataView, () => {
+                    checkKeyboardMultiSelection(enterEventShiftKey);
+                    done();
+                },
+            );
+        });
+
+        it("columns can be focused", (done) => {
+            visualBuilder.updateRenderTimeout(
+                dataView, () => {
+                    debugger;
+                    const columns: HTMLElement[] = [...visualBuilder.columns];
+                    columns.forEach((column: HTMLElement) => {
+                        expect(column.matches(":focus-visible")).toBeFalse();
+                    });
+
+                    columns[0].focus();
+                    expect(columns[0].matches(':focus-visible')).toBeTrue();
+
+                    const otherColumns: HTMLElement[] = columns.slice(1);
+                    otherColumns.forEach((column: HTMLElement) => {
+                        expect(column.matches(":focus-visible")).toBeFalse();
+                    });
+
+                    done();
+                },
+            );
+        });
+
+        function checkKeyboardMultiSelection(keyboardMultiselectionEvent: KeyboardEvent): void{
+            const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+
+            const columns: HTMLElement[] = [...visualBuilder.columns];
+            const firstColumn: HTMLElement = columns[0];
+            const secondColumn: HTMLElement = columns[1];
+
+            // select first column
+            firstColumn.dispatchEvent(enterEvent);
+            const firstColumnCSS: CSSStyleDeclaration = getComputedStyle(firstColumn);
+            const firstColumnFillOpacity: string = firstColumnCSS.getPropertyValue("fill-opacity");
+            // multiselect second column
+            secondColumn.dispatchEvent(keyboardMultiselectionEvent);
+            const secondColumnCSS: CSSStyleDeclaration = getComputedStyle(secondColumn);
+            const secondColumnFillOpacity: string = secondColumnCSS.getPropertyValue("fill-opacity");
+
+            expect(firstColumn.getAttribute("aria-selected")).toBe("true");
+            expect(parseFloat(firstColumnFillOpacity)).toBe(1);
+
+            expect(secondColumn.getAttribute("aria-selected")).toBe("true");
+            expect(parseFloat(secondColumnFillOpacity)).toBe(1);
+
+            const notSelectedColumns: HTMLElement[] = columns.slice(2);
+            notSelectedColumns.forEach((column: HTMLElement) => {
+                const columnCSS: CSSStyleDeclaration = getComputedStyle(column);
+                const columnFillOpacity: string = columnCSS.getPropertyValue("fill-opacity");
+                expect(parseFloat(columnFillOpacity)).toBeLessThan(1);
+                expect(column.getAttribute("aria-selected")).toBe("false");
+            });
+        }
+    });
 });
