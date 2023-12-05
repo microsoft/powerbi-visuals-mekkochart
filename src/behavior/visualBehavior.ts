@@ -57,7 +57,7 @@ export class VisualBehavior implements IInteractiveBehavior {
 
             selectionHandler.handleSelection(
                 dataOfTheLastEvent,
-                mouseEvent.ctrlKey
+                mouseEvent.ctrlKey || mouseEvent.metaKey || mouseEvent.shiftKey
             );
         });
 

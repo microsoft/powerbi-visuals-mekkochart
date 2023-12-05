@@ -281,13 +281,25 @@ describe("MekkoChart", () => {
 
         function checkAxisLabels(mainElement: Element, textElement: Element): void {
             expect(isTextElementInOrOutElement(
-                visualBuilder.mainElement,
-                visualBuilder.xAxisLabel[0],
+                mainElement,
+                textElement,
                 (firstValue: number, secondValue: number) => firstValue >= secondValue)).toBeTruthy();
         }
 
         // test case requires new powerbi-visuals-utils-testutils with API 2.1.0 support
-        it("multi-selection test", () => {
+        it("multi-selection should work with ctrlKey", () => {
+            checkMultisilection(ClickEventType.CtrlKey);
+        });
+
+        it("multi-selection should work with metaKey", () => {
+            checkMultisilection(ClickEventType.MetaKey);
+        });
+
+        it("multi-selection should work with shiftKey", () => {
+            checkMultisilection(ClickEventType.ShiftKey);
+        });
+
+        function checkMultisilection(eventType: number): void{
             dataView = defaultDataViewBuilder.getDataView([
                 MekkoChartData.ColumnCategory,
                 MekkoChartData.ColumnY
@@ -302,7 +314,7 @@ describe("MekkoChart", () => {
                 thirdColumn: Element = columns[2];
 
             d3Click(firstColumn, 1, 1, ClickEventType.Default, 0);
-            d3Click(secondColumn, 1, 1, ClickEventType.CtrlKey, 0);
+            d3Click(secondColumn, 1, 1, eventType, 0);
 
             const firstColumnCSS: CSSStyleDeclaration = getComputedStyle(firstColumn);
             const firstColumnFillOpacity: string = firstColumnCSS.getPropertyValue("fill-opacity");
@@ -316,7 +328,7 @@ describe("MekkoChart", () => {
             expect(parseFloat(firstColumnFillOpacity)).toBe(1);
             expect(parseFloat(secondColumnFillOpacity)).toBe(1);
             expect(parseFloat(thirdColumnFillOpacity)).toBeLessThan(1);
-        });
+        }
     });
 
     describe("Format settings test", () => {
