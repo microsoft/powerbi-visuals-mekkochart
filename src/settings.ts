@@ -15,7 +15,6 @@ import FormattingSettingsModel = formattingSettings.Model;
 
 import { IColumnChart } from "./columnChart/columnChartVisual";
 import { BaseColumnChart } from "./columnChart/baseColumnChart";
-import { MekkoChart } from "./visual";
 import { MekkoChartColumnDataPoint, MekkoColumnChartData } from "./dataInterfaces";
 import { dataViewWildcard } from "powerbi-visuals-utils-dataviewutils";
 
@@ -52,7 +51,7 @@ export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
         name: "color",
         displayNameKey: "Visual_Color",
         descriptionKey: "Visual_Description_Color",
-        value: {value: MekkoChart.DefaultSettings.columnBorder.color},
+        value: {value: "#fff"},
     });
 
     public width = new formattingSettings.NumUpDown({

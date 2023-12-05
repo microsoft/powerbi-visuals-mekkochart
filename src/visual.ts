@@ -39,7 +39,6 @@ import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
 import Fill = powerbi.Fill;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
-import SortDirection = powerbi.SortDirection;
 import IVisual = powerbi.extensibility.visual.IVisual;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
@@ -281,83 +280,7 @@ export class MekkoChart implements IVisual {
     public static Properties: MekkoChartProperties = <MekkoChartProperties>{
         dataPoint: {
             defaultColor: { objectName: "dataPoint", propertyName: "defaultColor" },
-            fill: { objectName: "dataPoint", propertyName: "fill" },
-            showAllDataPoints: { objectName: "dataPoint", propertyName: "showAllDataPoints" }
-        },
-        columnBorder: {
-            show: { objectName: "columnBorder", propertyName: "show", },
-            color: { objectName: "columnBorder", propertyName: "color" },
-            width: { objectName: "columnBorder", propertyName: "width" }
-        },
-        sortSeries: {
-            enabled: { objectName: "sortSeries", propertyName: "enabled", },
-            direction: { objectName: "sortSeries", propertyName: "direction" },
-            displayPercents: { objectName: "sortSeries", propertyName: "displayPercents" }
-        },
-        sortLegend: {
-            enabled: { objectName: "sortLegend", propertyName: "enabled", },
-            direction: { objectName: "sortLegend", propertyName: "direction" },
-            groupByCategory: { objectName: "sortLegend", propertyName: "groupByCategory" },
-            groupByCategoryDirection: { objectName: "sortLegend", propertyName: "groupByCategoryDirection" }
-        },
-        xAxisLabels: {
-            enableRotataion: { objectName: "xAxisLabels", propertyName: "enableRotataion", },
-        },
-        categoryColors: {
-            color: { objectName: "categoryColors", propertyName: "color" },
-        }
-    };
-
-    public static DefaultSettings: MekkoChartSettings = {
-        columnBorder: {
-            show: true,
-            color: "#fff",
-            width: 2,
-            maxWidth: 5,
-        },
-        labelSettings: {
-            maxPrecision: 4,
-            minPrecision: 0,
-        },
-        sortLegend: {
-            enabled: false,
-            groupByCategory: false,
-            direction: SortDirection.Ascending,
-            groupByCategoryDirection: SortDirection.Ascending
-        },
-        sortSeries: {
-            enabled: false,
-            direction: SortDirection.Ascending,
-            displayPercents: "category"
-        },
-        xAxisLabels: {
-            enableRotataion: false
-        },
-        categoryAxis: {
-            labelColor: {
-                solid: {
-                    color: "#000000"
-                }
-            }
-        },
-        valueAxis: {
-            labelColor: {
-                solid: {
-                    color: "#000000"
-                }
-            }
-        },
-        categoryColor: {
-            color: "#ffffff",
-        },
-        dataPoint: {
-            categoryGradient: false,
-            colorDistribution: true,
-            colorGradientEndColor: {
-                solid: {
-                    color: "#f9eaea"
-                }
-            }
+            fill: { objectName: "dataPoint", propertyName: "fill" }
         }
     };
 
