@@ -36,6 +36,8 @@ const coverageFolder = "coverage";
 
 process.env.CHROME_BIN = require("playwright-chromium").chromium.executablePath();
 
+import { Config, ConfigOptions } from "karma";
+
 module.exports = (config) => {
     config.set({
         mode: "development",
