@@ -484,7 +484,7 @@ export class MekkoChart implements IVisual {
             const xAxisYPosition: number = MekkoChart.getTranslation(this.xAxisGraphicsContext.attr("transform"))[1]
                 - fontSize + xFontSize + MekkoChart.XAxisYPositionOffset;
 
-            const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value;
+            const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value && this.settingsModel.categoryAxis.topLevelSlice.value;
 
             let shiftTitle: number = 0;
             if (rotataionEnabled) {
@@ -702,7 +702,7 @@ export class MekkoChart implements IVisual {
             this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length), this.settingsModel);
         }
 
-        const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value;
+        const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value && this.settingsModel.categoryAxis.topLevelSlice.value;
         let additionHeight: number = 0;
         if (rotataionEnabled) {
             const axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
@@ -1348,7 +1348,7 @@ export class MekkoChart implements IVisual {
             maxSecondYaxisSide += MekkoChart.RightPadding;
             xMax += MekkoChart.BottomPadding;
 
-            const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value;
+            const rotataionEnabled = this.settingsModel.xAxisLabels.enableRotataion.value && this.settingsModel.categoryAxis.topLevelSlice.value;
 
             if (rotataionEnabled) {
                 const axes: MekkoChartAxisProperties = this.axes = axisUtils.calculateAxes(
