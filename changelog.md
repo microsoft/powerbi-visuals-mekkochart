@@ -1,3 +1,9 @@
+## 3.5.0.0
+* Fix a bug with reassigning colors
+* Fix a bug with incorrect mekko height 
+* Add shift and meta keys for multiselection
+* Add conditional formatting to default color picker
+
 ## 3.4.0.0
 * Add aria-selected attribute, option role, and listbox role for screen readers
 * Add aria-label attribute for screen readers
