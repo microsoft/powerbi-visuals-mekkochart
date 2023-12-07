@@ -38,8 +38,8 @@ process.env.CHROME_BIN = require("playwright-chromium").chromium.executablePath(
 
 import { Config, ConfigOptions } from "karma";
 
-module.exports = (config) => {
-    config.set({
+module.exports = (config: Config) => {
+    config.set(<ConfigOptions>{
         mode: "development",
         browserNoActivityTimeout: 100000,
         browsers: ["ChromeHeadless"],
