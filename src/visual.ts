@@ -1089,6 +1089,10 @@ export class MekkoChart implements IVisual {
             this.legendMargins.height = this.legendMargins.height - MekkoChart.LegendBarHeightMargin;
             this.legendMargins.height = this.legendMargins.height * reducedLegends.length;
         }
+        else if (this.legendMargins) {
+            this.legendMargins.height = 0;
+        }
+
         if (reducedLegends.length > 0) {
             this.categoryLegends.forEach((legend: ILegend) => {
                 (<ILegendGroup>legend).position = +select((<ILegendGroup>legend).element).style("top").replace("px", "");
