@@ -422,8 +422,8 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         this.legend,
         this.sortLegend,
         this.sortSeries,
-        this.xAxisLabels,
         this.categoryAxis,
+        this.xAxisLabels,
         this.valueAxis,
         this.dataPoint
     ];
@@ -469,10 +469,13 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         }
     }
     public setVisibilityOfFileds(data: MekkoColumnChartData): void {
+        // Hide xAxis labels rotation if the categoryAxis is off
+        this.xAxisLabels.visible = this.categoryAxis.topLevelSlice.value;
+
         const seriesCount: number = data.series.length;
         if (data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata) {
             this.legend.visible = true;
-            this.sortLegend.visible = true;
+            this.sortLegend.visible = this.legend.topLevelSlice.value;
             this.sortSeries.visible = true;
 
             const defaultColorSlice: FormattingSettingsSlice = this.dataPoint.slices[0];
