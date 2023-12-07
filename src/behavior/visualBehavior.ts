@@ -57,17 +57,21 @@ export class VisualBehavior implements IInteractiveBehavior {
 
             selectionHandler.handleSelection(
                 dataOfTheLastEvent,
-                mouseEvent.ctrlKey
+                mouseEvent.ctrlKey || mouseEvent.metaKey || mouseEvent.shiftKey
             );
         });
 
-        eventGroup.on("contextmenu", function (mouseEvent: MouseEvent) {
+        eventGroup.on("contextmenu", function (pointerEvent: PointerEvent) {
+            const dataOfTheLastEvent: SelectionDataPoint = VisualBehavior.getDatumForLastInputEvent(pointerEvent);
 
-            if (mouseEvent.ctrlKey) {
-                return;
-            }
-
-            mouseEvent.preventDefault();
+            selectionHandler.handleContextMenu(
+                dataOfTheLastEvent,
+                {
+                    x: pointerEvent.clientX,
+                    y: pointerEvent.clientY
+                });
+                
+            pointerEvent.preventDefault();
         });
 
         eventGroup.on("keydown", function(keyboardEvent: KeyboardEvent) {
@@ -79,7 +83,7 @@ export class VisualBehavior implements IInteractiveBehavior {
 
             selectionHandler.handleSelection(
                 dataOfTheLastEvent,
-                keyboardEvent.ctrlKey
+                keyboardEvent.ctrlKey || keyboardEvent.metaKey || keyboardEvent.shiftKey
             );
         });
 

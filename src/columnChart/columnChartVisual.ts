@@ -40,16 +40,16 @@ import {
 // powerbi.extensibility.utils.chart
 import LegendData = legendInterfaces.LegendData;
 import IAxisProperties = axisInterfaces.IAxisProperties;
+import { VisualFormattingSettingsModel } from "../settings";
 
 export interface IColumnChart {
     getColumnsWidth(): number[];
-    getBorderWidth(): number;
 
     init(options: MekkoChartVisualInitOptions): void;
-    setData(dataViews: powerbi.DataView[], resized?: boolean): void;
-    calculateAxesProperties(options: MekkoCalculateScaleAndDomainOptions): IAxisProperties[];
+    setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel, resized?: boolean): void;
+    calculateAxesProperties(options: MekkoCalculateScaleAndDomainOptions, settingsModel: VisualFormattingSettingsModel): IAxisProperties[];
     overrideXScale(xProperties: IAxisProperties): void;
-    render(suppressAnimations: boolean): MekkoVisualRenderResult;
+    render(suppressAnimations: boolean, settingsModel: VisualFormattingSettingsModel): MekkoVisualRenderResult;
     calculateLegend(): LegendData;
     hasLegend(): boolean;
     onClearSelection(): void;

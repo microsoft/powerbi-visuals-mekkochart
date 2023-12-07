@@ -91,11 +91,6 @@
                     },
                     "suppressFormatPainterCopy": true
                 },
-                "showAll": {
-                    "type": {
-                        "bool": true
-                    }
-                },
                 "fontSize": {
                     "type": {
                         "formatting": {
@@ -293,11 +288,6 @@
                         "bool": true
                     }
                 },
-                "intersection": {
-                    "type": {
-                        "numeric": true
-                    }
-                },
                 "showAxisTitle": {
                     "type": {
                         "bool": true
@@ -345,25 +335,6 @@
         },
         "dataPoint": {
             "properties": {
-                "categoryGradient": {
-                    "type": {
-                        "bool": true
-                    }
-                },
-                "colorDistribution": {
-                    "type": {
-                        "bool": true
-                    }
-                },
-                "colorGradientEndColor": {
-                    "type": {
-                        "fill": {
-                            "solid": {
-                                "color": true
-                            }
-                        }
-                    }
-                },
                 "defaultColor": {
                     "type": {
                         "fill": {
@@ -379,32 +350,6 @@
                     }
                 },
                 "fill": {
-                    "type": {
-                        "fill": {
-                            "solid": {
-                                "color": true
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "categoryColorStart": {
-            "properties": {
-                "categoryGradient": {
-                    "type": {
-                        "fill": {
-                            "solid": {
-                                "color": true
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "categoryColorEnd": {
-            "properties": {
-                "categoryGradient": {
                     "type": {
                         "fill": {
                             "solid": {

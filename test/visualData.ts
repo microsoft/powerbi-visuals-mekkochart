@@ -36,7 +36,6 @@ import { getRandomNumbers, getRandomNumber, testDataViewBuilder } from "powerbi-
 // powerbi.extensibility.utils.test
 import TestDataViewBuilder = testDataViewBuilder.TestDataViewBuilder;
 import { DataViewBuilderValuesColumnOptions } from "powerbi-visuals-utils-testutils/lib/dataViewBuilder/dataViewBuilder";
-import { Primitive } from "d3";
 
 export class MekkoChartData extends TestDataViewBuilder {
     private static DefaultFormat: string = "\"$\"#,##0;\\(\"$\"#,##0\\)";
@@ -153,7 +152,7 @@ export class MekkoChartData extends TestDataViewBuilder {
             const highlightedSeriesNumber: number = Math.ceil(getRandomNumber(0, dataView.categorical.values.length - 1));
             const seriesLength: number = dataView.categorical.values[0].values.length;
             const seriesCount: number = dataView.categorical.values.length;
-            const highlightedSeriesValues: Primitive[] = dataView.categorical.values[highlightedSeriesNumber].values;
+            const highlightedSeriesValues: powerbi.PrimitiveValue[] = dataView.categorical.values[highlightedSeriesNumber].values;
 
             let notNullableValuesIndexes: number[] = [];
             for (let i = 0; i < seriesLength; i++) {
@@ -164,7 +163,7 @@ export class MekkoChartData extends TestDataViewBuilder {
 
             const highlightedElementNumber: number = notNullableValuesIndexes[Math.ceil(getRandomNumber(0, notNullableValuesIndexes.length - 1))];
             for (let i = 0; i < seriesCount; i++) {
-                let highLights: Primitive[] = new Array(seriesLength).fill(null);
+                let highLights: powerbi.PrimitiveValue[] = new Array(seriesLength).fill(null);
                 if (i === highlightedSeriesNumber) {
                     highLights[highlightedElementNumber] = highlightedSeriesValues[highlightedElementNumber];
                 }

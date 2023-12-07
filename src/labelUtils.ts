@@ -66,24 +66,20 @@ export function getTickLabelMargins(
     bottomMarginLimit: number,
     xAxisTextProperties: TextProperties,
     y1AxisTextProperties: TextProperties,
-    y2AxisTextProperties: TextProperties,
     enableOverflowCheck: boolean,
     scrollbarVisible?: boolean,
     showOnRight?: boolean,
     renderXAxis?: boolean,
-    renderY1Axis?: boolean,
-    renderY2Axis?: boolean): TickLabelMargins {
+    renderY1Axis?: boolean): TickLabelMargins {
 
     const xAxisProperties: IAxisProperties = axes.x,
         y1AxisProperties: IAxisProperties = axes.y1,
-        y2AxisProperties: IAxisProperties = axes.y2,
         xLabels: any[] = xAxisProperties.values,
         y1Labels: any[] = y1AxisProperties.values;
 
     let leftOverflow: number = 0,
         rightOverflow: number = 0,
         maxWidthY1: number = 0,
-        maxWidthY2: number = 0,
         xMax: number = 0; // bottom margin
 
     const ordinalLabelOffset: number = xAxisProperties.categoryThickness
@@ -117,18 +113,6 @@ export function getTickLabelMargins(
                 maxWidthY1 = Math.max(
                     maxWidthY1,
                     textWidthMeasurer(y1AxisTextProperties));
-            }
-        }
-
-        if (y2AxisProperties && renderY2Axis) {
-            const y2Labels: any[] = y2AxisProperties.values;
-
-            for (let i: number = 0; i < y2Labels.length; i++) {
-                y2AxisTextProperties.text = y2Labels[i];
-
-                maxWidthY2 = Math.max(
-                    maxWidthY2,
-                    textWidthMeasurer(y2AxisTextProperties));
             }
         }
 
@@ -215,12 +199,12 @@ export function getTickLabelMargins(
     const bottomMargin: number = Math.min(Math.ceil(xMax), bottomMarginLimit);
 
     if (showOnRight) {
-        leftMargin = Math.min(Math.max(leftOverflow, maxWidthY2), yMarginLimit);
+        leftMargin = Math.min(leftOverflow, yMarginLimit);
         rightMargin = Math.min(Math.max(rightOverflow, maxWidthY1), yMarginLimit);
     }
     else {
         leftMargin = Math.min(Math.max(leftOverflow, maxWidthY1), yMarginLimit);
-        rightMargin = Math.min(Math.max(rightOverflow, maxWidthY2), yMarginLimit);
+        rightMargin = Math.min(rightOverflow, yMarginLimit);
     }
 
     return {
