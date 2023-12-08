@@ -405,6 +405,19 @@ export class DataPointSettings extends FormattingSettingsSimpleCard {
     public slices: FormattingSettingsSlice[] = [this.defaultColor, this.showAllDataPoints];
 }
 
+export class DrillControlCard extends FormattingSettingsSimpleCard{
+    public name: string = "drillControl";
+    public displayNameKey:string = "Visual_DrillControl";
+
+    public enabled = new formattingSettings.ToggleSwitch({
+        name: "enabled",
+        displayName: "Visual_Enabled",
+        value: true
+    });
+
+    public slices: FormattingSettingsSlice[] = [this.enabled];
+}
+
 export class VisualFormattingSettingsModel extends FormattingSettingsModel {
     public columnBorder: ColumnBorderSettings = new ColumnBorderSettings();
     public legend: LegendSettings = new LegendSettings();
@@ -415,6 +428,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
     public categoryAxis: CategoryAxisSettings = new CategoryAxisSettings();
     public valueAxis: ValueAxisSettings = new ValueAxisSettings();
     public dataPoint: DataPointSettings = new DataPointSettings();
+    public drillControl: DrillControlCard = new DrillControlCard();
 
     public cards: FormattingSettingsCard[] = [
         this.columnBorder,
@@ -425,7 +439,8 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         this.categoryAxis,
         this.xAxisLabels,
         this.valueAxis,
-        this.dataPoint
+        this.dataPoint,
+        this.drillControl
     ];
 
     public setDataPointColorPickerSlices(layers: IColumnChart[]) {
