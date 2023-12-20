@@ -661,7 +661,9 @@ export class MekkoChart implements IVisual {
             !this.dataViews[0].categorical ||
             !this.dataViews[0].categorical.categories ||
             !this.dataViews[0].categorical.categories[0] ||
-            !this.dataViews[0].categorical.categories[0].values[0]
+            !this.dataViews[0].categorical.categories[0].values[0] ||
+            !this.dataViews[0].categorical.values ||
+            !this.dataViews[0].categorical.values[0]
         ) {
             return false;
         }
