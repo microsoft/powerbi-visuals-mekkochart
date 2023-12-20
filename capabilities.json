@@ -445,7 +445,10 @@
     "drilldown": {
         "roles": [
             "Category"
-        ]
+        ],
+        "canDisableDrill": {
+            "disabledByDefault": true
+        }
     },
     "privileges": []
     

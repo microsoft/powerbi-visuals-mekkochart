@@ -411,7 +411,7 @@ export class DrillControlCard extends FormattingSettingsSimpleCard{
 
     public enabled = new formattingSettings.ToggleSwitch({
         name: "enabled",
-        displayName: "Visual_Enabled",
+        displayNameKey: "Visual_Enabled",
         value: true
     });
 
