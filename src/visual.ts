@@ -1040,7 +1040,7 @@ export class MekkoChart implements IVisual {
         let svgHeight: number = textMeasurementService.estimateSvgTextHeight({
             // fontFamily: MekkoChart.LegendBarTextFont,
             fontFamily: this.settingsModel.legend.fontFamily.value,
-            fontSize: PixelConverter.toString(+this.settingsModel.legend.fontSize.value + MekkoChart.LegendBarHeightMargin),
+            fontSize: PixelConverter.fromPoint(this.settingsModel.legend.fontSize.value),
             text: "AZ"
         });
 
@@ -1053,7 +1053,7 @@ export class MekkoChart implements IVisual {
         const legendParentsWithChilds = legendParentsWithData.enter().append("div");
         const legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style("position", "absolute")
-            .style("top", (data, index) => PixelConverter.toString(svgHeight * index));
+            .style("top", (data, index) => PixelConverter.toString((svgHeight + MekkoChart.LegendBarHeightMargin) * index));
 
         // Disable linter rule for aliasing this to local variable as it is required in this instance
         // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -1072,15 +1072,6 @@ export class MekkoChart implements IVisual {
                 mekko.categoryLegends[index] = <ILegend>legend;
             }
         });
-
-        if (reducedLegends.length) {
-            this.legendMargins = this.categoryLegends[0].getMargins();
-            this.legendMargins.height = this.legendMargins.height - MekkoChart.LegendBarHeightMargin;
-            this.legendMargins.height = this.legendMargins.height * reducedLegends.length;
-        }
-        else if (this.legendMargins) {
-            this.legendMargins.height = 0;
-        }
 
         if (reducedLegends.length > 0) {
             this.categoryLegends.forEach((legend: ILegend) => {
@@ -1107,14 +1098,6 @@ export class MekkoChart implements IVisual {
 
                 LegendData.update(legendData, legendProperties);
                 legend.drawLegend(legendData, this.currentViewport);
-
-                if (index === 0) {
-                    if (legendParentsWithChildsAttr.node() === null) {
-                        svgHeight = +legendParents.select("svg").attr("height").replace("px", "");
-                    } else {
-                        svgHeight = +select(legendParentsWithChildsAttr.node()).select("svg").attr("height").replace("px", "");
-                    }
-                }
             });
         }
         legendParentsWithData.exit().remove();
@@ -1133,6 +1116,14 @@ export class MekkoChart implements IVisual {
         }
 
         this.legend.drawLegend(legendData, this.currentViewport);
+
+        if (reducedLegends.length) {
+            this.legendMargins = this.categoryLegends[0].getMargins();
+            this.legendMargins.height = (svgHeight + MekkoChart.LegendBarHeightMargin) * reducedLegends.length;
+        }
+        else if (this.legendMargins) {
+            this.legendMargins.height = 0;
+        }
     }
 
     private hideLegends(): boolean {
