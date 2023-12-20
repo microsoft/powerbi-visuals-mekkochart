@@ -1037,7 +1037,7 @@ export class MekkoChart implements IVisual {
             }
         }
 
-        let svgHeight: number = textMeasurementService.estimateSvgTextHeight({
+        const svgHeight: number = textMeasurementService.estimateSvgTextHeight({
             // fontFamily: MekkoChart.LegendBarTextFont,
             fontFamily: this.settingsModel.legend.fontFamily.value,
             fontSize: PixelConverter.fromPoint(this.settingsModel.legend.fontSize.value),
