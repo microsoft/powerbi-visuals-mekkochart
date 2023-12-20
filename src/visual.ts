@@ -271,7 +271,7 @@ export class MekkoChart implements IVisual {
     private static getTextProperties(fontSize: number = MekkoChart.FontSize): TextProperties {
         return {
             fontFamily: "helvetica, arial, sans-serif",
-            fontSize: PixelConverter.toString(fontSize),
+            fontSize: PixelConverter.fromPoint(fontSize),
         };
     }
 
@@ -464,7 +464,7 @@ export class MekkoChart implements IVisual {
         return [matrix.e, matrix.f, -Math.asin(matrix.a) * 180 / Math.PI];
     }
 
-    private renderAxesLabels(options: MekkoAxisRenderingOptions, xFontSize: number, yFontSize: number): void {
+    private renderAxesLabels(options: MekkoAxisRenderingOptions, xFontSize: number): void {
         this.axisGraphicsContext
             .selectAll(MekkoChart.XAxisLabelSelector.selectorName)
             .remove();
@@ -506,13 +506,7 @@ export class MekkoChart implements IVisual {
                     "y", xAxisYPosition + shiftTitle
                 )
                 .style(
-                    "fill", options.xLabelColor
-                )
-                .style("font-family", this.settingsModel.categoryAxis.fontControl.fontFamily.value)
-                .style("font-size", xFontSize)
-                .style("font-weight", this.settingsModel.categoryAxis.fontControl.bold.value)
-                .style("font-style", this.settingsModel.categoryAxis.fontControl.italic.value)
-                .style("text-decoration", this.settingsModel.categoryAxis.fontControl.underline.value)
+                    "fill", options.xLabelColor)
                 .text(options.axisLabels.x)
                 .classed(MekkoChart.XAxisLabelSelector.className, true);
 
@@ -536,11 +530,6 @@ export class MekkoChart implements IVisual {
                 )
                 .attr("x", -((height - margin.top - options.legendMargin) / MekkoChart.XDelimiter))
                 .attr("dy", MekkoChart.DefaultDy)
-                .style("font-family", this.settingsModel.valueAxis.fontControl.fontFamily.value)
-                .style("font-size", yFontSize)
-                .style("font-weight", this.settingsModel.valueAxis.fontControl.bold.value)
-                .style("font-style", this.settingsModel.valueAxis.fontControl.italic.value)
-                .style("text-decoration", this.settingsModel.valueAxis.fontControl.underline.value)
                 .classed(MekkoChart.YAxisLabelSelector.className, true);
 
             yAxisLabel.call(AxisHelper.LabelLayoutStrategy.clip,
@@ -1686,7 +1675,7 @@ export class MekkoChart implements IVisual {
                 margin: undefined
             };
 
-            this.renderAxesLabels(renderAxisOptions, xFontSize, yFontSize);
+            this.renderAxesLabels(renderAxisOptions, xFontSize);
         }
         else {
             this.axisGraphicsContext
