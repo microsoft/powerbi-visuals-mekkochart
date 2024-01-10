@@ -77,9 +77,9 @@ import { CategoryAxisSettings, ValueAxisSettings, VisualFormattingSettingsModel 
         for (let layerNumber: number = 0; layerNumber < layers.length; layerNumber++) {
             const currentLayer: columnChart.IColumnChart = layers[layerNumber];
 
-            visualOptions.showCategoryAxisLabel = categoryAxisSettings.showTitle.value && categoryAxisSettings.topLevelSlice.value;
+            visualOptions.showCategoryAxisLabel = categoryAxisSettings.showTitle.value && categoryAxisSettings.show.value;
 
-            visualOptions.showValueAxisLabel = valueAxisSettings.showTitle.value && valueAxisSettings.topLevelSlice.value;
+            visualOptions.showValueAxisLabel = valueAxisSettings.showTitle.value && valueAxisSettings.show.value;
 
             const axes: IAxisProperties[] = currentLayer.calculateAxesProperties(visualOptions, settingsModel);
 

@@ -41,11 +41,13 @@ export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
     public name: string = "columnBorder";
     public displayNameKey?: string = "Visual_ColumnBorder";
     
-    public topLevelSlice = new formattingSettings.ToggleSwitch({
+    public show = new formattingSettings.ToggleSwitch({
         name: "show",
         displayNameKey: "Visual_Show",
         value: true
     });
+
+    public topLevelSlice = this.show;
 
     public color = new formattingSettings.ColorPicker({
         name: "color",
@@ -78,11 +80,13 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
     public displayNameKey: string = "Visual_Legend";
     public visible: boolean = false;
 
-    public topLevelSlice = new formattingSettings.ToggleSwitch({
+    public show = new formattingSettings.ToggleSwitch({
         name: "show",
         displayNameKey: "Visual_Show",
         value: true
     });
+
+    public topLevelSlice = this.show;
 
     public showTitle = new formattingSettings.ToggleSwitch({
         name: "showTitle",
@@ -132,11 +136,13 @@ export class SortLegendSettings extends FormattingSettingsSimpleCard {
     public displayNameKey: string = "Visual_SortLegend";
     public visible: boolean = false;
 
-    public topLevelSlice = new formattingSettings.ToggleSwitch({
+    public enabled = new formattingSettings.ToggleSwitch({
         name: "enabled",
         displayNameKey: "Visual_Enabled",
         value: false
     });
+
+    public topLevelSlice = this.enabled;
 
     public direction = new formattingSettings.AutoDropdown({
         name: "direction",
@@ -164,11 +170,13 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
     public displayNameKey: string = "Visual_Data_Labels";
     public descriptionKey: string = "Visual_Description_DataLabels";
 
-    public topLevelSlice = new formattingSettings.ToggleSwitch({
+    public show = new formattingSettings.ToggleSwitch({
         name: "show",
         displayNameKey: "Visual_Show",
         value: false
     });
+
+    public topLevelSlice = this.show;
 
     public forceDisplay = new formattingSettings.ToggleSwitch({
         name: "forceDisplay",
@@ -215,11 +223,13 @@ export class SeriesSortSettings extends FormattingSettingsSimpleCard {
     public displayNameKey: string = "Visual_SortSeries";
     public visible: boolean = false;
 
-    public topLevelSlice = new formattingSettings.ToggleSwitch({
+    public enabled = new formattingSettings.ToggleSwitch({
         name: "enabled",
         displayNameKey: "Visual_Enabled",
         value: false
     });
+
+    public topLevelSlice = this.enabled;
 
     public direction = new formattingSettings.AutoDropdown({
         name: "direction",
@@ -253,11 +263,13 @@ export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
     public name: string = "categoryAxis";
     public displayNameKey:string = "Visual_XAxis";
 
-    public topLevelSlice = new formattingSettings.ToggleSwitch({
+    public show = new formattingSettings.ToggleSwitch({
         name: "show",
         displayNameKey: "Visual_Show",
         value: true
     });
+
+    public topLevelSlice = this.show;
 
     public showTitle = new formattingSettings.ToggleSwitch({
         name: "showAxisTitle",
@@ -319,11 +331,13 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
     public name: string = "valueAxis";
     public displayNameKey:string = "Visual_YAxis";
 
-    public topLevelSlice = new formattingSettings.ToggleSwitch({
+    public show = new formattingSettings.ToggleSwitch({
         name: "show",
         displayNameKey: "Visual_Show",
         value: true
     });
+
+    public topLevelSlice = this.show;
 
     public showTitle = new formattingSettings.ToggleSwitch({
         name: "showAxisTitle",
@@ -470,12 +484,12 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
     }
     public setVisibilityOfFileds(data: MekkoColumnChartData): void {
         // Hide xAxis labels rotation if the categoryAxis is off
-        this.xAxisLabels.visible = this.categoryAxis.topLevelSlice.value;
+        this.xAxisLabels.visible = this.categoryAxis.show.value;
 
         const seriesCount: number = data.series.length;
         if (data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata) {
             this.legend.visible = true;
-            this.sortLegend.visible = this.legend.topLevelSlice.value;
+            this.sortLegend.visible = this.legend.show.value;
             this.sortSeries.visible = true;
 
             const defaultColorSlice: FormattingSettingsSlice = this.dataPoint.slices[0];
