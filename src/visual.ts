@@ -268,9 +268,9 @@ export class MekkoChart implements IVisual {
 
     private static LegendBarTextFont: string = "helvetica, arial, sans-serif;";
 
-    private static getTextProperties(fontSize: number = MekkoChart.FontSize): TextProperties {
+    private static getTextProperties(fontSize: number = MekkoChart.FontSize, fontFamily: string): TextProperties {
         return {
-            fontFamily: "helvetica, arial, sans-serif",
+            fontFamily: fontFamily,
             fontSize: PixelConverter.fromPoint(fontSize),
         };
     }
@@ -445,7 +445,7 @@ export class MekkoChart implements IVisual {
             longestCategory = formatter.format(longestCategory);
         }
 
-        const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.categoryAxis.fontControl.fontSize.value);
+        const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.categoryAxis.fontControl.fontSize.value, this.settingsModel.categoryAxis.fontControl.fontFamily.value);
 
         const longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory.toString());
         const requiredHeight = longestCategoryWidth * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180);
@@ -1116,7 +1116,7 @@ export class MekkoChart implements IVisual {
 
         if (reducedLegends.length) {
             this.legendMargins = this.categoryLegends[0].getMargins();
-            this.legendMargins.height = (svgHeight + MekkoChart.LegendBarHeightMargin) * reducedLegends.length;
+            this.legendMargins.height = (svgHeight + MekkoChart.LegendBarHeightMargin) * reducedLegends.length + MekkoChart.LegendBarHeightMargin;
         }
         else if (this.legendMargins) {
             this.legendMargins.height = 0;
@@ -1177,9 +1177,9 @@ export class MekkoChart implements IVisual {
             MekkoChart.MinBottomMargin,
             Math.ceil(viewport.height * maxMarginFactor));
 
-        const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.categoryAxis.fontControl.fontSize.value);
+        const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.categoryAxis.fontControl.fontSize.value, this.settingsModel.categoryAxis.fontControl.fontFamily.value);
 
-        const y1AxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.valueAxis.fontControl.fontSize.value);
+        const y1AxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.valueAxis.fontControl.fontSize.value, this.settingsModel.valueAxis.fontControl.fontFamily.value);
 
         const margin: IMargin = this.margin;
 
