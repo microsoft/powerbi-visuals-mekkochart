@@ -347,7 +347,7 @@ export class BaseColumnChart implements IColumnChart {
             chartType,
             categoryMetadata);
 
-        if (settingsModel.sortSeries.topLevelSlice.value) {
+        if (settingsModel.sortSeries.enabled.value) {
             const columns = BaseColumnChart.createAlternateStructure(result, settingsModel.sortSeries.direction.value === "des");
             BaseColumnChart.reorderPositions(result, columns);
         }
@@ -701,7 +701,7 @@ export class BaseColumnChart implements IColumnChart {
 
                 if (labelObjects) {
                     seriesLabelSettings = {
-                        show: settingsModel.labels.topLevelSlice.value,
+                        show: settingsModel.labels.show.value,
                         displayUnits: +settingsModel.labels.displayUnits.value,
                         precision: settingsModel.labels.labelPrecision.value,
                         labelColor: settingsModel.labels.color.value.value
@@ -863,7 +863,7 @@ export class BaseColumnChart implements IColumnChart {
                 const dataPointLabelSettings: VisualDataLabelsSettings = series && series.labelSettings
                     ? series.labelSettings
                     : {
-                        show: settingsModel.labels.topLevelSlice.value,
+                        show: settingsModel.labels.show.value,
                         displayUnits: +settingsModel.labels.displayUnits.value,
                         precision: settingsModel.labels.labelPrecision.value,
                         labelColor: settingsModel.labels.color.value.value
@@ -1362,7 +1362,7 @@ export class BaseColumnChart implements IColumnChart {
                 mainGraphicsContext: this.mainGraphicsContext,
                 viewport: chartDrawInfo.viewport,
                 axisOptions: chartDrawInfo.axisOptions,
-                showLabel: settingsModel.labels.topLevelSlice.value,
+                showLabel: settingsModel.labels.show.value,
                 behavior: null
             };
         }
