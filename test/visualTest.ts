@@ -1042,7 +1042,6 @@ describe("MekkoChart", () => {
         it("columns can be focused", (done) => {
             visualBuilder.updateRenderTimeout(
                 dataView, () => {
-                    debugger;
                     const columns: HTMLElement[] = [...visualBuilder.columns];
                     columns.forEach((column: HTMLElement) => {
                         expect(column.matches(":focus-visible")).toBeFalse();

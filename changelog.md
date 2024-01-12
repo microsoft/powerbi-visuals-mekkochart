@@ -1,6 +1,10 @@
 ## 3.6.0.0
 * Add dynamic drill control support
 
+## 3.5.1.0
+* Fix grouped legend overlapping the visual
+* Update dataview validation
+
 ## 3.5.0.0
 * Fix a bug with reassigning colors
 * Fix a bug with incorrect mekko height 

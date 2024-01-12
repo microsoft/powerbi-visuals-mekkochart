@@ -292,7 +292,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             scale: ScaleLinear<number> = scaleLinear(),
             scaleDomain: number[] = [0, 1],
             bestTickCount: number = dataDomain.length || 1,
-            borderWidth: number = columnBorderSettings.topLevelSlice.value ? columnBorderSettings.width.value : 0
+            borderWidth: number = columnBorderSettings.show.value ? columnBorderSettings.width.value : 0
 
         let chartWidth: number = pixelSpan - borderWidth * (bestTickCount - 1);
 
@@ -723,7 +723,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             yScale: ScaleLinear<number> = axisOptions.yScale,
             scaledY0: number = yScale(0),
             scaledX0: number = xScale(0),
-            borderWidth: number = settingsModel.columnBorder.topLevelSlice.value ? settingsModel.columnBorder.width.value : 0
+            borderWidth: number = settingsModel.columnBorder.show.value ? settingsModel.columnBorder.width.value : 0
 
         const columnWidthScale: LayoutFunction = (dataPoint: MekkoChartColumnDataPoint) => {
             return AxisHelper.diffScaled(xScale, dataPoint.value, 0);
@@ -798,7 +798,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
 
         for (const currentSeries of dataSeries) {
 
-            if (!settingModel.labels.topLevelSlice.value || !currentSeries.data) {
+            if (!settingModel.labels.show.value || !currentSeries.data) {
                 continue;
             }
             const displayUnitValue: number = +settingModel.labels.displayUnits.value;
@@ -831,7 +831,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 const formatter: IValueFormatter = formattersCache.getOrCreate(
                     formatString,
                     {
-                        show: settingModel.labels.topLevelSlice.value,
+                        show: settingModel.labels.show.value,
                         precision: settingModel.labels.labelPrecision.value,
                         labelColor: settingModel.labels.color.value.value,
                     },
