@@ -1,7 +1,9 @@
-A mix of 100% stacked column chart and 100% stacked bar chart combined into one view
+# PowerBI-visuals-Mekko
+[![Build Status](https://github.com/microsoft/powerbi-visuals-mekkochart/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/microsoft/powerbi-visuals-mekkochart/actions/workflows/build.yml)
 
-<img width="302" alt="MekkoChart" src="https://github.com/microsoft/powerbi-visuals-mekkochart/blob/master/assets/screenshot.png">
+> A mix of 100% stacked column chart and 100% stacked bar chart combined into one view
 
+![Mekko chart screenshot](assets/screenshot.png)
 
 # Overview
 
