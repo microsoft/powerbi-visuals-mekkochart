@@ -1,3 +1,6 @@
+## 3.6.0.0
+* Add dynamic drill control support
+
 ## 3.5.1.0
 * Fix grouped legend overlapping the visual
 * Update dataview validation
