@@ -72,6 +72,7 @@ export class VisualBehavior implements IInteractiveBehavior {
                 });
                 
             pointerEvent.preventDefault();
+            pointerEvent.stopPropagation();
         });
 
         eventGroup.on("keydown", function(keyboardEvent: KeyboardEvent) {
