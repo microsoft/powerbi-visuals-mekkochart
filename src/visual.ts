@@ -1814,7 +1814,7 @@ export class MekkoChart implements IVisual {
     }
 
     private handleContextMenu() {
-        this.rootElement.on("contextmenu", (event: MouseEvent) => {
+        this.rootElement.on("contextmenu", (event: PointerEvent) => {
             this.selectionManager.showContextMenu({}, {
                 x: event.clientX,
                 y: event.clientY
