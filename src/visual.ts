@@ -168,6 +168,7 @@ import * as columnChartBaseColumnChart from "./columnChart/baseColumnChart";
 // columnChart
 import IColumnChart = columnChart.IColumnChart;
 import BaseColumnChart = columnChartBaseColumnChart.BaseColumnChart;
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
 
 export interface MekkoChartProperty {
     [propertyName: string]: DataViewObjectPropertyIdentifier;
@@ -348,6 +349,7 @@ export class MekkoChart implements IVisual {
 
     private formattingSettingsService: FormattingSettingsService;
     private localizationManager: ILocalizationManager;
+    private selectionManager: ISelectionManager;
 
     public settingsModel: VisualFormattingSettingsModel;
 
@@ -375,6 +377,8 @@ export class MekkoChart implements IVisual {
         this.svg = this.rootElement
             .append("svg")
             .classed(MekkoChart.RootSvgSelector.className, true);
+
+        this.handleContextMenu();
 
         this.axisGraphicsContext = this.svg
             .append("g")
@@ -413,6 +417,7 @@ export class MekkoChart implements IVisual {
         this.interactivityService = createInteractivityService(this.visualHost);
         
         this.localizationManager = this.visualHost.createLocalizationManager();
+        this.selectionManager = this.visualHost.createSelectionManager();
         this.formattingSettingsService = new FormattingSettingsService(this.localizationManager);
 
         const legendParent = select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
@@ -1806,6 +1811,17 @@ export class MekkoChart implements IVisual {
             .attr("transform", (value: number, index: number) => {
                 return manipulation.translate(scale(value) + (borderWidth * index), yOffset);
             });
+    }
+
+    private handleContextMenu() {
+        this.rootElement.on("contextmenu", (event: PointerEvent) => {
+            this.selectionManager.showContextMenu({}, {
+                x: event.clientX,
+                y: event.clientY
+            });
+
+            event.preventDefault();
+        })
     }
 }
 

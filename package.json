@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-mekkochart",
-  "version": "3.6.0.0",
+  "version": "3.6.1.0",
   "description": "A Mekko chart is a mix of a 100% stacked column chart and a 100% stacked bar chart combined into one view. Similar to a treemap, the dimensional values are represented by length and width of each rectangle. The width of a column is proportional to the total value of the column.",
   "repository": {
     "type": "git",
@@ -59,7 +59,7 @@
     "lodash.sortby": "^4.7.0",
     "lodash.sum": "^4.0.2",
     "playwright-chromium": "^1.40.1",
-    "powerbi-visuals-tools": "^5.4.0",
+    "powerbi-visuals-tools": "^5.4.1",
     "powerbi-visuals-utils-testutils": "^6.0.3",
     "style-loader": "^3.3.4",
     "ts-loader": "^9.5.1",
@@ -80,14 +80,14 @@
     "eslint": "^8.56.0",
     "eslint-plugin-powerbi-visuals": "^0.8.1",
     "powerbi-visuals-api": "^5.7.0",
-    "powerbi-visuals-utils-chartutils": "6.0.1",
-    "powerbi-visuals-utils-colorutils": "^6.0.2",
+    "powerbi-visuals-utils-chartutils": "^6.0.2",
+    "powerbi-visuals-utils-colorutils": "^6.0.3",
     "powerbi-visuals-utils-dataviewutils": "^6.0.2",
     "powerbi-visuals-utils-formattingmodel": "^6.0.1",
-    "powerbi-visuals-utils-formattingutils": "^6.0.2",
-    "powerbi-visuals-utils-interactivityutils": "6.0.2",
-    "powerbi-visuals-utils-svgutils": "^6.0.2",
-    "powerbi-visuals-utils-tooltiputils": "^6.0.2",
+    "powerbi-visuals-utils-formattingutils": "^6.0.3",
+    "powerbi-visuals-utils-interactivityutils": "^6.0.3",
+    "powerbi-visuals-utils-svgutils": "^6.0.3",
+    "powerbi-visuals-utils-tooltiputils": "^6.0.3",
     "powerbi-visuals-utils-typeutils": "^6.0.2"
   }
 }
