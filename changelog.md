@@ -1,3 +1,7 @@
+## 3.6.1.0
+* Show context menu when right-clicking on empty spot inside the visual
+* Update powerbi utils and tools dependencies
+
 ## 3.6.0.0
 * Add dynamic drill control support
 
