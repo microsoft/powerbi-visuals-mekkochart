@@ -1,11 +1,9 @@
-# powerbi-visuals-mekkochart
-[![Build Status](https://travis-ci.org/Microsoft/powerbi-visuals-mekkochart.svg?branch=master)](https://travis-ci.org/Microsoft/powerbi-visuals-mekkochart) [![Coverage Status](https://coveralls.io/repos/github/Microsoft/powerbi-visuals-mekkochart/badge.svg?branch=master)](https://coveralls.io/github/Microsoft/powerbi-visuals-mekkochart?branch=master) 
-[![Build Status](https://dev.azure.com/customvisuals/public/_apis/build/status/Microsoft.powerbi-visuals-chord)](https://dev.azure.com/customvisuals/public/_build/latest?definitionId=8)
+# PowerBI-visuals-Mekko
+[![Build Status](https://github.com/microsoft/powerbi-visuals-mekkochart/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/microsoft/powerbi-visuals-mekkochart/actions/workflows/build.yml)
 
+> A mix of 100% stacked column chart and 100% stacked bar chart combined into one view
 
-A mix of 100% stacked column chart and 100% stacked bar chart combined into one view
-
-![Mekko chart screenshot](https://az158878.vo.msecnd.net/marketing/Partner_21474836617/Product_42949680589/Asset_694cc686-1c97-4063-b1e1-a67a2f57fab7/MekkoChartscreenshot1.png)
+![Mekko chart screenshot](assets/screenshot.png)
 
 # Overview
 

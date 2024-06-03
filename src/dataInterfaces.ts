@@ -27,7 +27,6 @@ import powerbi from "powerbi-visuals-api";
 
 import PrimitiveValue = powerbi.PrimitiveValue;
 import NumberRange = powerbi.NumberRange;
-import Fill = powerbi.Fill;
 import IViewport = powerbi.IViewport;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import IColorPalette = powerbi.extensibility.IColorPalette;
@@ -67,7 +66,10 @@ import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
 
 // d3
-export type Selection = d3.Selection<any, any, any, any>;
+import { Selection as d3Selection} from "d3-selection";
+import { ScaleLinear as d3ScaleLinear} from "d3-scale";
+export type Selection = d3Selection<any, any, any, any>;
+export type ScaleLinear = d3ScaleLinear<any, any, never>;
 
 // powerbi
 import IDataViewObjects = powerbi.DataViewObjects;
@@ -99,7 +101,6 @@ type IInteractivityService = IInteractivityServiceCommon<SelectableDataPoint>;
 import IValueFormatter = vf.IValueFormatter;
 
 import VisualDataLabelsSettingsOptions = dataLabelInterfaces.VisualDataLabelsSettingsOptions;
-import DataLabelObject = dataLabelInterfaces.DataLabelObject;
 
 export interface ValueMultiplers {
     pos: number;
@@ -145,9 +146,9 @@ export interface MekkoChartAnimationResult {
 }
 
 export interface MekkoChartAxisOptions {
-    xScale: d3.ScaleLinear<any, any>;
-    yScale: d3.ScaleLinear<any, any>;
-    seriesOffsetScale?: d3.ScaleLinear<any, any>;
+    xScale: ScaleLinear;
+    yScale: ScaleLinear;
+    seriesOffsetScale?: ScaleLinear;
     columnWidth: number;
     categoryWidth?: number;
     isScalar: boolean;
@@ -176,13 +177,11 @@ export interface MekkoChartBaseData {
 export interface MekkoChartAxesLabels {
     x: string;
     y: string;
-    y2?: string;
 }
 
 export interface MekkoChartAxisProperties {
     x: IAxisProperties;
     y1: IAxisProperties;
-    y2?: IAxisProperties;
 }
 
 export interface MekkoChartCategoryLayoutOptions {
@@ -233,14 +232,6 @@ export interface MekkoChartLabelSettingsOptions extends VisualDataLabelsSettings
     forceDisplay: boolean;
 }
 
-export interface MekkoChartLabelSettings extends VisualDataLabelsSettings {
-    forceDisplay: boolean;
-}
-
-export interface MekkoChartDataLabelObject extends DataLabelObject {
-    forceDisplay: boolean;
-}
-
 export interface MekkoChartData extends MekkoChartBaseData {
     categoryFormatter: IValueFormatter;
     series: MekkoChartSeries[];
@@ -249,7 +240,6 @@ export interface MekkoChartData extends MekkoChartBaseData {
     hasHighlights: boolean;
     categoryMetadata: DataViewMetadataColumn;
     scalarCategoryAxis: boolean;
-    labelSettings: VisualDataLabelsSettings;
     axesLabels: MekkoChartAxesLabels;
     hasDynamicSeries: boolean;
     isMultiMeasure: boolean;
@@ -326,13 +316,8 @@ export interface MekkoCalculateScaleAndDomainOptions {
 }
 
 export interface MekkoColumnChartData extends MekkoChartData {
-    borderSettings: MekkoBorderSettings;
-    sortSeries: MekkoSeriesSortSettings;
-    sortlegend: MekkoLegendSortSettings;
-    xAxisLabelsSettings: MekkoXAxisLabelsSettings;
     categoriesWidth: number[];
     categoryProperties: MekkoCategoryProperties[];
-    dataPointSettings: MekkoDataPointSettings;
 }
 
 export interface MekkoBorderSettings {
@@ -355,10 +340,6 @@ export interface MekkoDataPointSettings {
     colorDistribution: boolean;
 }
 
-export interface MekkoGradientSettings {
-    categoryGradient: Fill;
-}
-
 export interface MekkoSeriesSortSettings {
     enabled: boolean;
     direction: any;
@@ -371,10 +352,6 @@ export interface MekkoXAxisLabelsSettings {
 
 export interface MekkoCategoryColorSettings {
     color: string;
-}
-
-export interface CreateAxisOptions extends CreateAxisOptionsBase {
-    borderSettings: MekkoBorderSettings;
 }
 
 export interface MekkoLabelSettings {
@@ -406,10 +383,8 @@ export interface MekkoAxisRenderingOptions {
     margin: IMargin;
     hideXAxisTitle: boolean;
     hideYAxisTitle: boolean;
-    hideY2AxisTitle?: boolean;
-    xLabelColor?: Fill;
-    yLabelColor?: Fill;
-    y2LabelColor?: Fill;
+    xLabelColor: string;
+    yLabelColor: string;
 }
 
 export interface MekkoCategoryProperties {
@@ -501,7 +476,7 @@ export interface MekkoChartConstructorOptions extends MekkoChartConstructorBaseO
 
 export interface MekkoChartDrawInfo {
     eventGroup?: Selection;
-    shapesSelection: d3.Selection<any, TooltipEnabledDataPoint, any, any>;
+    shapesSelection: d3Selection<any, TooltipEnabledDataPoint, any, any>;
     viewport: IViewport;
     axisOptions: MekkoChartAxisOptions;
     labelDataPoints: LabelDataPoint[];

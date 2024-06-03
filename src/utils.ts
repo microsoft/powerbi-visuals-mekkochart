@@ -25,30 +25,18 @@
  */
 import powerbi from "powerbi-visuals-api";
 
-import DataViewCategorical = powerbi.DataViewCategorical;
-import DataViewPropertyValue = powerbi.DataViewPropertyValue;
-import PrimitiveValue = powerbi.PrimitiveValue;
-import DataViewObjects = powerbi.DataViewObjects;
-import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
-import DataViewValueColumn = powerbi.DataViewValueColumn;
-import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
-import DataViewObject = powerbi.DataViewObject;
 import NumberRange = powerbi.NumberRange;
-import DataViewValueColumns = powerbi.DataViewValueColumns;
 
 import { MekkoChart } from "./visual";
 
 import {
-    double as Double,
-    prototype as Prototype
+    double as Double
 } from "powerbi-visuals-utils-typeutils";
 
 import {
     MekkoChartSeries,
     MekkoChartColumnDataPoint,
-    MekkoChartAxisOptions,
     MekkoChartData,
-
 } from "./dataInterfaces";
 
 import {
@@ -56,11 +44,11 @@ import {
 } from "powerbi-visuals-utils-chartutils";
 
 // d3
-import * as d3selection from "d3-selection";
-import * as d3scale from "d3-scale";
-import * as d3array from "d3-array";
-import LinearScale = d3scale.ScaleLinear;
-import Selection = d3selection.Selection;
+import { Selection as d3Selection } from "d3-selection";
+import { ScaleLinear as d3ScaleLinear } from "d3-scale";
+import { max as d3Max, min as d3Min } from "d3-array";
+type Selection<T> = d3Selection<any, T, any, any>;
+type ScaleLinear = d3ScaleLinear<any, any, never>;
 
 const PctRoundingError: number = 0.0001;
 const RectName: string = "rect";
@@ -73,7 +61,7 @@ const DefaultNumberRange: NumberRange = {
     max: 10
 };
 
-export function getSize(scale: LinearScale<any, any>, size: number, zeroVal: number = 0): number {
+export function getSize(scale: ScaleLinear, size: number, zeroVal: number = 0): number {
     return AxisHelper.diffScaled(scale, zeroVal, size);
 }
 
@@ -85,20 +73,20 @@ export function calcValueDomain(data: MekkoChartSeries[], is100pct: boolean): Nu
         };
     }
 
-    let min: number = d3array.min<MekkoChartSeries, number>(
+    let min: number = d3Min<MekkoChartSeries, number>(
         data,
         (series: MekkoChartSeries) => {
-            return d3array.min<MekkoChartColumnDataPoint, number>(
+            return d3Min<MekkoChartColumnDataPoint, number>(
                 series.data,
                 (dataPoint: MekkoChartColumnDataPoint) => {
                     return dataPoint.position - dataPoint.valueAbsolute;
                 });
         });
 
-    let max: number = d3array.max<MekkoChartSeries, number>(
+    let max: number = d3Max<MekkoChartSeries, number>(
         data,
         (series: MekkoChartSeries) => {
-            return d3array.max<MekkoChartColumnDataPoint, number>(
+            return d3Max<MekkoChartColumnDataPoint, number>(
                 series.data,
                 (dataPoint: MekkoChartColumnDataPoint) => dataPoint.position);
         });
@@ -116,21 +104,21 @@ export function calcValueDomain(data: MekkoChartSeries[], is100pct: boolean): Nu
 
 export function drawSeries(
     data: MekkoChartData,
-    graphicsContext: Selection<any, any, any, any>,
-    axisOptions: MekkoChartAxisOptions): Selection<any, MekkoChartSeries, any, any> {
+    graphicsContext: Selection<any>): Selection<MekkoChartSeries> {
 
-    let seriesData: Selection<any, MekkoChartSeries, any, any> = graphicsContext
+    const seriesData: Selection<MekkoChartSeries> = graphicsContext
         .selectAll(MekkoChart.SeriesSelector.selectorName)
         .data(data.series, (series: MekkoChartSeries) => series.key);
 
-    let mergedSeries = seriesData
+    const mergedSeries = seriesData
         .enter()
         .append("g")
         .classed(MekkoChart.SeriesSelector.className, true)
         .merge(seriesData);
     mergedSeries
-        .style("fill", (series: MekkoChartSeries) => series.color);
-
+        .style("fill", (series: MekkoChartSeries) => series.color)
+        .attr("role", "listbox")
+        .attr("aria-selected", false);
     seriesData
         .exit()
         .remove();
@@ -138,7 +126,7 @@ export function drawSeries(
     return mergedSeries;
 }
 
-export function applyInteractivity(columns: Selection<any, any, any, any>, onDragStart): void {
+export function applyInteractivity(columns: Selection<any>, onDragStart): void {
     if (onDragStart) {
         columns
             .attr("draggable", "true")
@@ -159,13 +147,25 @@ export function getFillOpacity(
     return DefaultOpacity;
 }
 
+export function getAriaLabel(
+    toolTipInfo: powerbi.extensibility.VisualTooltipDataItem[]): string {
+        let labelval: string = "";
+        toolTipInfo.forEach(element => {
+            labelval = labelval.concat(element.displayName);
+            labelval = labelval.concat(" : ");
+            labelval = labelval.concat(element.value);
+            labelval = labelval.concat("\n");
+        });
+        return labelval;
+}
+
 export function setChosenColumnOpacity(
-    mainGraphicsContext: Selection<any, any, any, any>,
+    mainGraphicsContext: Selection<any>,
     columnGroupSelector: string,
     selectedColumnIndex: number,
     lastColumnIndex: number): void {
 
-    const series: Selection<any, any, any, any> = mainGraphicsContext
+    const series: Selection<any> = mainGraphicsContext
         .selectAll(MekkoChart.SeriesSelector.selectorName);
 
     const lastColumnUndefined: boolean = typeof lastColumnIndex === "undefined";
@@ -199,117 +199,4 @@ export function getClosestColumnIndex(coordinate: number, columnsCenters: number
     }
 
     return currentIndex;
-}
-
-export function applyUserMinMax(
-    isScalar: boolean,
-    dataView: DataViewCategorical,
-    xAxisCardProperties: DataViewObject): DataViewCategorical {
-
-    if (isScalar) {
-        const min: DataViewPropertyValue = xAxisCardProperties["start"],
-            max: DataViewPropertyValue = xAxisCardProperties["end"];
-
-        return transformDomain(dataView, min, max);
-    }
-
-    return dataView;
-}
-
-export function transformDomain(
-    dataView: DataViewCategorical,
-    min: DataViewPropertyValue,
-    max: DataViewPropertyValue): DataViewCategorical {
-
-    if (!dataView.categories
-        || !dataView.values
-        || dataView.categories.length === 0
-        || dataView.values.length === 0) {
-
-        return dataView;
-    }
-
-    if (typeof min !== "number" && typeof max !== "number") {
-        return dataView;
-    }
-
-    const category: DataViewCategoryColumn = dataView.categories[0];
-
-    const categoryType: ValueTypeDescriptor = category
-        ? category.source.type
-        : null;
-
-    // Min/Max comparison won't work if category source is Ordinal
-    if (AxisHelper.isOrdinal(categoryType)) {
-        return;
-    }
-
-    const categoryValues: PrimitiveValue[] = category.values,
-        categoryObjects: DataViewObjects[] = category.objects;
-
-    if (!categoryValues || !categoryObjects) {
-        return dataView;
-    }
-
-    const newcategoryValues: PrimitiveValue[] = [],
-        newValues: PrimitiveValue[][] = [],
-        newObjects: DataViewObjects[] = [];
-
-    if (typeof min !== "number") {
-        min = categoryValues[0];
-    }
-    if (typeof max !== "number") {
-        max = categoryValues[categoryValues.length - 1];
-    }
-
-    if (min > max) {
-        return dataView;
-    }
-
-    for (let j: number = 0; j < dataView.values.length; j++) {
-        newValues.push([]);
-    }
-
-    for (let t: number = 0; t < categoryValues.length; t++) {
-        if (categoryValues[t] >= min && categoryValues[t] <= max) {
-            newcategoryValues.push(categoryValues[t]);
-
-            if (categoryObjects) {
-                newObjects.push(categoryObjects[t]);
-            }
-
-            if (dataView.values) {
-                for (let k: number = 0; k < dataView.values.length; k++) {
-                    newValues[k].push(dataView.values[k].values[t]);
-                }
-            }
-        }
-    }
-
-    const resultDataView: DataViewCategorical = Prototype.inherit(dataView),
-        resultDataViewValues: DataViewValueColumns
-            = resultDataView.values
-            = Prototype.inherit(resultDataView.values),
-        resultDataViewCategories: DataViewCategoryColumn[]
-            = resultDataView.categories
-            = Prototype.inherit(dataView.categories),
-        resultDataViewCategories0: DataViewCategoryColumn
-            = resultDataView.categories[0]
-            = Prototype.inherit(resultDataViewCategories[0]);
-
-    resultDataViewCategories0.values = newcategoryValues;
-
-    if (resultDataViewCategories0.objects) {
-        resultDataViewCategories0.objects = newObjects;
-    }
-
-    for (let t: number = 0; t < dataView.values.length; t++) {
-        const measureArray: DataViewValueColumn
-            = resultDataViewValues[t]
-            = Prototype.inherit(resultDataViewValues[t]);
-
-        measureArray.values = newValues[t];
-    }
-
-    return resultDataView;
 }

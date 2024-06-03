@@ -1,3 +1,32 @@
+## 3.6.1.0
+* Show context menu when right-clicking on empty spot inside the visual
+* Update powerbi utils and tools dependencies
+
+## 3.6.0.0
+* Add dynamic drill control support
+
+## 3.5.1.0
+* Fix grouped legend overlapping the visual
+* Update dataview validation
+
+## 3.5.0.0
+* Fix a bug with reassigning colors
+* Fix a bug with incorrect mekko height 
+* Add shift and meta keys for multiselection
+* Add conditional formatting to default color picker
+
+## 3.4.0.0
+* Add aria-selected attribute, option role, and listbox role for screen readers
+* Add aria-label attribute for screen readers
+* Add keyboard navigation with Tab, Enter, and Space 
+
+## 3.3.0
+* Update powerbi-visuals-api to 5.4.0
+* Update powerbi-visuals-tools to 4.3.2
+* Implement new format pane using the updated powerbi-visuals-api 
+* Add font control to x and y axis settings
+* Add font picker for the legend
+
 ## 3.1.0
 * Fix selection rendering issue
 * Fix rendering of filtered series

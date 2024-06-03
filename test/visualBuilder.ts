@@ -39,118 +39,114 @@ export class MekkoChartBuilder extends VisualBuilderBase<MekkoChart> {
         return new MekkoChart(options);
     }
 
-    public get rootElement(): JQuery {
-        return this.element.find(".mekkoChart");
+    public get instance(): MekkoChart {
+        return this.visual;
     }
 
-    public get mainElement(): JQuery {
-        return this.rootElement
-            .children("svg");
+    public get rootElement(): HTMLElement {
+        return this.element.querySelector(".mekkoChart");
     }
 
-    public get categoriesAxis(): JQuery {
+    public get mainElement(): SVGElement {
+        return this.rootElement.querySelector("svg");
+    }
+
+    public get categoriesAxis(): HTMLElement {
         return this.mainElement
-            .children("g.axisGraphicsContext")
-            .children("g.x.axis.showLinesOnAxis");
+            .querySelector("g.axisGraphicsContext > g.x.axis.showLinesOnAxis");
     }
 
-    public get categoriesAxisTicks(): JQuery {
-        return this.categoriesAxis.children("g.tick");
+    public get categoriesAxisTicks(): NodeListOf<HTMLElement> {
+        return this.categoriesAxis.querySelectorAll("g.tick");
     }
 
-    public get rootAxisGraphicsContext(): JQuery {
-        return this.mainElement.children("g.axisGraphicsContext");
+    public get rootAxisGraphicsContext(): HTMLElement {
+        return this.mainElement.querySelector("g.axisGraphicsContext");
     }
 
-    public get svgScrollableAxisGraphicsContext(): JQuery {
+    public get svgScrollableAxisGraphicsContext(): HTMLElement {
         return this.mainElement
-            .children("svg.svgScrollable")
-            .children("g.axisGraphicsContext");
+            .querySelector("svg.svgScrollable > g.axisGraphicsContext");
     }
 
-    public get xAxisTicks(): JQuery {
+    public get xAxisTicks(): NodeListOf<HTMLElement> {
         return this.rootAxisGraphicsContext
-            .children("g.x.axis")
-            .children("g.tick");
+            .querySelectorAll("g.x.axis > g.tick");
     }
 
-    public get yAxisTicks(): JQuery {
+    public get yAxisTicks(): NodeListOf<HTMLElement> {
         return this.svgScrollableAxisGraphicsContext
-            .children("g.y.axis")
-            .children("g.tick");
+            .querySelectorAll("g.y.axis > g.tick");
     }
 
-    public get xAxisLabel(): JQuery {
+    public get xAxisLabel(): NodeListOf<HTMLElement> {
         return this.rootAxisGraphicsContext
-            .children("text.xAxisLabel");
+            .querySelectorAll("text.xAxisLabel");
     }
 
-    public get yAxisLabel(): JQuery {
+    public get yAxisLabel(): NodeListOf<HTMLElement> {
         return this.rootAxisGraphicsContext
-            .children("text.yAxisLabel");
+            .querySelectorAll("text.yAxisLabel");
     }
 
-    public get columnElement(): JQuery {
+    public get columnElement(): HTMLElement {
         return this.mainElement
-            .find("svg.svgScrollable g.axisGraphicsContext .columnChartMainGraphicsContext");
+            .querySelector("svg.svgScrollable g.axisGraphicsContext .columnChartMainGraphicsContext");
     }
 
-    public get series(): JQuery {
-        return this.columnElement.children("g.series");
+    public get series(): NodeListOf<HTMLElement> {
+        return this.columnElement.querySelectorAll("g.series");
     }
 
-    public get columns(): JQuery {
-        return this.series.children("rect.column");
+    public get columns(): NodeListOf<HTMLElement> {
+        return this.series[0].querySelectorAll("rect.column");
     }
 
-    public get borders(): JQuery {
-        return this.series.children("rect.mekkoborder");
+    public get borders(): NodeListOf<HTMLElement> {
+        return this.series[0].querySelectorAll("rect.mekkoborder");
     }
 
-    public get dataLabels(): JQuery {
+    public get dataLabels(): NodeListOf<HTMLElement> {
         return this.mainElement
-            .children("svg.svgScrollable")
-            .find(".labels")
-            .children(".data-labels");
+            .querySelectorAll("svg.svgScrollable .labels > .data-labels");
     }
 
-    public get columnsWithSize(): JQuery {
-        return this.series
-            .children("rect.column")
-            .filter((i, element: Element) => {
-                return parseFloat($(element).attr("height")) > 0;
+    public get columnsWithSize(): Element[] {
+        return Array.from(this.series[0]
+            .querySelectorAll("rect.column"))
+            .filter((element) => {
+                const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                const elementHeight: string = elementComputedStyle.getPropertyValue("height");
+                return parseFloat(elementHeight) > 0;
             });
     }
 
-    public get columnsWithoutSize(): JQuery {
-        return this.series
-            .children("rect.column")
-            .filter((i, element: Element) => {
-                return parseFloat($(element).attr("height")) === 0;
+    public get columnsWithoutSize(): Element[] {
+        return Array.from(this.series[0]
+            .querySelectorAll("rect.column"))
+            .filter((element) => {
+                const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                const elementHeight: string = elementComputedStyle.getPropertyValue("height");
+                return parseFloat(elementHeight) === 0;
             });
     }
 
-    public get legendGroup(): JQuery {
+    public get legendGroup(): HTMLElement {
         return this.rootElement
-            .children(".legendParentDefault")
-            .children("svg.legend")
-            .children("g#legendGroup");
+            .querySelector(".legendParentDefault > svg.legend > g#legendGroup");
     }
 
-    public get categoryLegendGroup(): JQuery {
+    public get categoryLegendGroup(): NodeListOf<HTMLElement> {
         return this.rootElement
-            .children(".legendParent")
-            .children("svg.legend")
-            .children("g#legendGroup");
+            .querySelectorAll(".legendParent >  svg.legend > g#legendGroup");
     }
 
-    public get legendTitle(): JQuery {
-        return this.legendGroup.children(".legendTitle");
+    public get legendTitle(): HTMLElement {
+        return this.legendGroup.querySelector(".legendTitle");
     }
 
-    public get legendItemText(): JQuery {
+    public get legendItemText(): NodeListOf<HTMLElement> {
         return this.legendGroup
-            .children(".legendItem")
-            .children("text.legendText");
+            .querySelectorAll(".legendItem > text.legendText");
     }
 }
