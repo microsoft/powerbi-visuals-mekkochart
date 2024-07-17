@@ -1,4 +1,5 @@
 import powerbi from "powerbi-visuals-api";
+import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
 import ISelectionId = powerbi.visuals.ISelectionId;
 
 import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
@@ -398,6 +399,7 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
 export class DataPointSettings extends FormattingSettingsSimpleCard {
     public name: string = "dataPoint";
     public displayNameKey:string = "Visual_Data_Colors";
+    public defaultStrokeColor: string = "transparent";
 
     public defaultColor = new formattingSettings.ColorPicker({
         name: "defaultColor",
@@ -456,6 +458,26 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         this.dataPoint,
         this.drillControl
     ];
+
+    public setHighContrastMode(colorPalette: ISandboxExtendedColorPalette): void {
+        const isHighContrastMode: boolean = colorPalette.isHighContrast;
+        if (isHighContrastMode){
+            const foregroundColor: string = colorPalette.foreground.value;
+            const backgroundColor: string = colorPalette.background.value;
+
+            this.columnBorder.color.value.value = backgroundColor;
+            this.labels.color.value.value = foregroundColor;
+            this.categoryAxis.labelColor.value.value = foregroundColor;
+            this.valueAxis.labelColor.value.value = foregroundColor;
+            this.dataPoint.defaultStrokeColor = foregroundColor;
+        }
+
+        this.dataPoint.visible = !isHighContrastMode;
+        this.columnBorder.color.visible = !isHighContrastMode;
+        this.labels.color.visible = !isHighContrastMode;
+        this.categoryAxis.labelColor.visible = !isHighContrastMode;
+        this.valueAxis.labelColor.visible = !isHighContrastMode;
+    }
 
     public setDataPointColorPickerSlices(layers: IColumnChart[]) {
         for (let i: number = 0; i < layers.length; i++) {

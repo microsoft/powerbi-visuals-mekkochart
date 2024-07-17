@@ -99,6 +99,14 @@ export class VisualBehavior implements IInteractiveBehavior {
                 !dataPoint.selected && this.options.hasHighlights);
         });
 
+        this.options.bars.style("stroke-opacity", (dataPoint: MekkoChartColumnDataPoint) => {
+            return utils.getFillOpacity(
+                dataPoint.selected,
+                dataPoint.highlight,
+                !dataPoint.highlight && hasSelection,
+                !dataPoint.selected && this.options.hasHighlights);
+        });
+
         const series: Selection<any, any, any, any> = this.options.mainGraphicsContext
         .selectAll(MekkoChart.SeriesSelector.selectorName);
 
