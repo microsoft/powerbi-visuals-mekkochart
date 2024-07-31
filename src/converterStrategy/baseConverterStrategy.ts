@@ -29,7 +29,7 @@ import { legendInterfaces } from "powerbi-visuals-utils-chartutils";
 import * as formattingUtils from "./../formattingUtils";
 import { max, sum, min } from "d3-array";
 
-import IColorPalette = powerbi.extensibility.IColorPalette;
+import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import DataViewCategorical = powerbi.DataViewCategorical;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
@@ -65,6 +65,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
     private static YColumnName: string = "Y";
 
     private static SortField: string = "categoryValue";
+    private static DefaultLegendLabelColor: string = "black";
 
     private dataView: DataViewCategorical;
     private visualHost: IVisualHost;
@@ -79,7 +80,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
     }
 
     // eslint-disable-next-line max-lines-per-function
-    public getLegend(colorPalette: IColorPalette, settingsModel: VisualFormattingSettingsModel): LegendSeriesInfo {
+    public getLegend(colorPalette: ISandboxExtendedColorPalette, settingsModel: VisualFormattingSettingsModel): LegendSeriesInfo {
         const legend: MekkoLegendDataPoint[] = [];
         const seriesSources: DataViewMetadataColumn[] = [];
         const seriesObjects: DataViewObjects[][] = [];
@@ -171,7 +172,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     }
 
                     legend.push({
-                        color,
+                        color: colorPalette.isHighContrast ? colorPalette.background.value : color,
                         label,
                         markerShape: LegendIcon.circle,
                         identity: selectionId,
@@ -193,10 +194,13 @@ export class BaseConverterStrategy implements ConverterStrategy {
                 : "";
         }
 
+        const labelColor: string = colorPalette.isHighContrast ? colorPalette.foreground.value : BaseConverterStrategy.DefaultLegendLabelColor;
+
         const legendData: ILegendData = {
             title: legendTitle,
             dataPoints: legend,
             grouped: grouped,
+            labelColor: labelColor
         };
 
         return {

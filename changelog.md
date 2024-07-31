@@ -1,3 +1,6 @@
+## 3.6.2.0
+* Add high contrast mode support
+
 ## 3.6.1.0
 * Show context menu when right-clicking on empty spot inside the visual
 * Update powerbi utils and tools dependencies

@@ -29,7 +29,7 @@ import PrimitiveValue = powerbi.PrimitiveValue;
 import NumberRange = powerbi.NumberRange;
 import IViewport = powerbi.IViewport;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-import IColorPalette = powerbi.extensibility.IColorPalette;
+import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import CustomVisualOpaqueIdentity = powerbi.visuals.CustomVisualOpaqueIdentity;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
@@ -128,7 +128,7 @@ export interface ILegendGroup extends ILegend {
 
 export interface IMekkoChartVisualHost {
     updateLegend(data: ILegendData): void;
-    getSharedColors(): IColorPalette;
+    getSharedColors(): ISandboxExtendedColorPalette;
     triggerRender(suppressAnimations: boolean): void;
 }
 

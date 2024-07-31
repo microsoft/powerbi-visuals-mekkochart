@@ -122,7 +122,7 @@ import * as axisType from "./../axis/type";
 
 import IViewport = powerbi.IViewport;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-import IColorPalette = powerbi.extensibility.IColorPalette;
+import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewCategorical = powerbi.DataViewCategorical;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
@@ -197,7 +197,7 @@ export class BaseColumnChart implements IColumnChart {
 
     private data: MekkoColumnChartData;
 
-    private colorPalette: IColorPalette;
+    private colorPalette: ISandboxExtendedColorPalette;
     private visualHost: IVisualHost;
     private localizationManager: ILocalizationManager;
 
@@ -289,7 +289,7 @@ export class BaseColumnChart implements IColumnChart {
     public static converter(
         visualHost: IVisualHost,
         categorical: DataViewCategorical,
-        colors: IColorPalette,
+        colors: ISandboxExtendedColorPalette,
         is100PercentStacked: boolean = false,
         isScalar: boolean = false,
         supportsOverflow: boolean = false,

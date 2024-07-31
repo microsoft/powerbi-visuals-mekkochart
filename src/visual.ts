@@ -41,6 +41,7 @@ import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructor
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
+import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
 
 import {
     MekkoColumnChartData,
@@ -290,6 +291,7 @@ export class MekkoChart implements IVisual {
     public static OuterPaddingRatio: number = 0.4;
     public static InnerPaddingRatio: number = 0.2;
     public static TickLabelPadding: number = 2;
+    public static DefaultAxisLinesColor: string = "black";
 
     private rootElement: Selection;
     private legendParent: Selection;
@@ -350,6 +352,7 @@ export class MekkoChart implements IVisual {
     private formattingSettingsService: FormattingSettingsService;
     private localizationManager: ILocalizationManager;
     private selectionManager: ISelectionManager;
+    private colorPalette: ISandboxExtendedColorPalette;
 
     public settingsModel: VisualFormattingSettingsModel;
 
@@ -360,6 +363,7 @@ export class MekkoChart implements IVisual {
     public init(options: VisualConstructorOptions) {
         this.visualInitOptions = options;
         this.visualHost = options.host;
+        this.colorPalette = options.host.colorPalette;
 
         select("body").style(
             "-webkit-tap-highlight-color", "transparent"
@@ -687,6 +691,7 @@ export class MekkoChart implements IVisual {
 
         if (this.dataViews && this.dataViews.length > 0) {
             this.settingsModel = this.formattingSettingsService.populateFormattingSettingsModel(VisualFormattingSettingsModel, this.dataViews[0]);
+            this.settingsModel.setHighContrastMode(this.colorPalette);
         }
 
         for (let layerIndex: number = 0, length: number = this.layers.length; layerIndex < length; layerIndex++) {
@@ -965,6 +970,10 @@ export class MekkoChart implements IVisual {
                 if (this.layerLegendData.grouped) {
                     legendData.grouped = true;
                 }
+
+                if (this.layerLegendData.labelColor){
+                    legendData.labelColor = this.layerLegendData.labelColor;
+                }
             }
         }
 
@@ -1101,6 +1110,7 @@ export class MekkoChart implements IVisual {
                     title: reducedLegends[index].category,
                     dataPoints: reducedLegends[index].data
                 };
+
 
                 LegendData.update(legendData, legendProperties);
                 legend.drawLegend(legendData, this.currentViewport);

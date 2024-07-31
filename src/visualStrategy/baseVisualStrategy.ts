@@ -580,6 +580,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                     hasSelection,
                     data.hasHighlights)
             )
+            .style("stroke", settingsModel.dataPoint.defaultStrokeColor)
             .attr("height", layout.shapeLayout.height)
             .attr("width", layout.shapeLayout.width)
             .attr("x", layout.shapeLayout.x)
