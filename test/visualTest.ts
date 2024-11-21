@@ -524,15 +524,16 @@ describe("MekkoChart", () => {
                 const visualHost: IVisualHost = createVisualHost();
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     visualBuilder.instance.getFormattingModel();
-                    mekkoColumnChartData = BaseColumnChart.converter(
+                    mekkoColumnChartData = BaseColumnChart.converter({
                         visualHost,
-                        dataView.categorical,
-                        visualHost.colorPalette,
-                        true,
-                        false,
-                        false,
-                        null,
-                        visualBuilder.instance.settingsModel);
+                        categorical: dataView.categorical,
+                        colors: visualHost.colorPalette,
+                        is100PercentStacked: true,
+                        isScalar: false,
+                        supportsOverflow: false,
+                        localizationManager: null,
+                        settingsModel: visualBuilder.instance.settingsModel
+                    });
                     done();
                 });
             });
