@@ -55,12 +55,6 @@ import {
 from "powerbi-visuals-utils-typeutils";
 
 import {
-    interactivitySelectionService,
-    interactivityBaseService
-}
-from "powerbi-visuals-utils-interactivityutils";
-
-import {
     valueFormatter,
     displayUnitSystemType
 }
@@ -92,7 +86,9 @@ import {
     MekkoChartColumnDataPoint,
     MekkoColumnChartContext,
     MekkoChartBaseData,
-    MekkoChartConstructorBaseOptions
+    MekkoChartConstructorBaseOptions,
+    BaseConverterOptions,
+    CreateDataPointsOptions
 }
 from "./../dataInterfaces";
 
@@ -150,10 +146,6 @@ import ValueType = valueType.ValueType;
 import ILegendData = legendInterfaces.LegendData;
 import LegendDataPoint = legendInterfaces.LegendDataPoint;
 import DataLabelObject = dataLabelInterfaces.DataLabelObject;
-import IInteractivityServiceCommon = interactivityBaseService.IInteractivityService;
-import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
-
-type IInteractivityService = IInteractivityServiceCommon<SelectableDataPoint>;
 
 // powerbi.extensibility.utils.formatting
 import IValueFormatter = valueFormatter.IValueFormatter;
@@ -210,7 +202,6 @@ export class BaseColumnChart implements IColumnChart {
     private margin: IMargin;
     private lastInteractiveSelectedColumnIndex: number;
     private supportsOverflow: boolean;
-    private interactivityService: IInteractivityService;
     private dataViewCat: DataViewCategorical;
     private categoryAxisType: string = null;
     private isScrollable: boolean;
@@ -220,7 +211,6 @@ export class BaseColumnChart implements IColumnChart {
     constructor(options: MekkoChartConstructorOptions) {
         this.chartType = options.chartType;
         this.isScrollable = options.isScrollable;
-        this.interactivityService = options.interactivityService;
     }
 
     public init(options: MekkoChartVisualInitOptions) {
@@ -286,16 +276,16 @@ export class BaseColumnChart implements IColumnChart {
             });
     }
 
-    public static converter(
-        visualHost: IVisualHost,
-        categorical: DataViewCategorical,
-        colors: ISandboxExtendedColorPalette,
-        is100PercentStacked: boolean = false,
-        isScalar: boolean = false,
-        supportsOverflow: boolean = false,
-        localizationManager: ILocalizationManager,
-        settingsModel: VisualFormattingSettingsModel,
-        chartType?: MekkoVisualChartType): MekkoColumnChartData {
+    public static converter({
+        visualHost,
+        categorical,
+        colors,
+        is100PercentStacked,
+        isScalar,
+        supportsOverflow,
+        localizationManager,
+        settingsModel,
+        chartType } : BaseConverterOptions) : MekkoColumnChartData {
 
         const converterStrategy: BaseConverterStrategy = new BaseConverterStrategy(categorical, visualHost);
 
@@ -326,26 +316,27 @@ export class BaseColumnChart implements IColumnChart {
         const seriesSources: DataViewMetadataColumn[] = legendAndSeriesInfo.seriesSources;
 
         // Determine data points
-        const result: MekkoDataPoints = BaseColumnChart.createDataPoints(
+        const result: MekkoDataPoints = BaseColumnChart.createDataPoints({
             visualHost,
-            categorical,
+            dataViewCat: categorical,
             categories,
             categoryIdentities,
             legend,
-            legendAndSeriesInfo.seriesObjects,
+            seriesObjectsList: legendAndSeriesInfo.seriesObjects,
             converterStrategy,
             is100PercentStacked,
             isScalar,
             supportsOverflow,
             localizationManager,
             settingsModel,
-            converterHelper.categoryIsAlsoSeriesRole(
+            colorPalette: colors,
+            isCategoryAlsoSeries: converterHelper.categoryIsAlsoSeriesRole(
                 categorical,
                 RoleNames.series,
                 RoleNames.category),
-            firstCategory && firstCategory.objects,
+            categoryObjectsList: firstCategory?.objects,
             chartType,
-            categoryMetadata);
+            categoryMetadata});
 
         if (settingsModel.sortSeries.enabled.value) {
             const columns = BaseColumnChart.createAlternateStructure(result, settingsModel.sortSeries.direction.value === "des");
@@ -518,23 +509,22 @@ export class BaseColumnChart implements IColumnChart {
             : BaseColumnChart.DefaultStackedPosition;
     }
     // eslint-disable-next-line max-lines-per-function
-    private static createDataPoints(
-        visualHost: IVisualHost,
-        dataViewCat: DataViewCategorical,
-        categories: any[],
-        categoryIdentities: CustomVisualOpaqueIdentity[],
-        legend: MekkoLegendDataPoint[],
-        seriesObjectsList: powerbi.DataViewObjects[][],
-        converterStrategy: BaseConverterStrategy,
-        is100PercentStacked: boolean = false,
-        isScalar: boolean = false,
-        supportsOverflow: boolean = false,
-        localizationManager: ILocalizationManager,
-        settingsModel: VisualFormattingSettingsModel,
-        isCategoryAlsoSeries?: boolean,
-        categoryObjectsList?: powerbi.DataViewObjects[],
-        chartType?: MekkoVisualChartType,
-        categoryMetadata?: DataViewMetadataColumn): MekkoDataPoints {
+    private static createDataPoints({
+        visualHost,
+        dataViewCat,
+        categories,
+        legend,
+        seriesObjectsList,
+        converterStrategy,
+        is100PercentStacked,
+        isScalar,
+        supportsOverflow,
+        localizationManager,
+        settingsModel,
+        categoryObjectsList,
+        chartType,
+        categoryMetadata,
+        colorPalette } : CreateDataPointsOptions) : MekkoDataPoints {
 
         const grouped: DataViewValueColumnGroup[] = dataViewCat && dataViewCat.values
             ? dataViewCat.values.grouped()
@@ -823,6 +813,7 @@ export class BaseColumnChart implements IColumnChart {
                 const color: string = BaseColumnChart.getDataPointColor(
                     legendItem,
                     categoryIndex,
+                    colorPalette,
                     dataPointObjects
                 );
 
@@ -1027,6 +1018,7 @@ export class BaseColumnChart implements IColumnChart {
     private static getDataPointColor(
         legendItem: MekkoLegendDataPoint,
         categoryIndex: number,
+        colorPalette: ISandboxExtendedColorPalette,
         dataPointObjects?: powerbi.DataViewObjects[]): string {
 
         if (dataPointObjects) {
@@ -1047,7 +1039,7 @@ export class BaseColumnChart implements IColumnChart {
             }
         }
 
-        return legendItem.color;
+        return colorPalette.isHighContrast ? colorPalette.background.value : legendItem.color;
     }
 
     private static getStackedLabelColor(
@@ -1135,22 +1127,17 @@ export class BaseColumnChart implements IColumnChart {
 
             if (dataView && dataView.categorical) {
                 this.dataViewCat = dataView.categorical;
-                this.data = BaseColumnChart.converter(
-                    this.visualHost,
-                    this.dataViewCat,
-                    this.cartesianVisualHost.getSharedColors(),
-                    true,
-                    false,
-                    this.supportsOverflow,
-                    this.localizationManager,
+                this.data = BaseColumnChart.converter({
+                    visualHost: this.visualHost,
+                    categorical: this.dataViewCat,
+                    colors: this.cartesianVisualHost.getSharedColors(),
+                    is100PercentStacked: true,
+                    isScalar: false,
+                    supportsOverflow: this.supportsOverflow,
+                    localizationManager: this.localizationManager,
                     settingsModel,
-                    this.chartType);
-
-                for (const currentSeries of this.data.series) {
-                    if (this.interactivityService) {
-                        this.interactivityService.applySelectionStateToData(currentSeries.data);
-                    }
-                }
+                    chartType: this.chartType
+                });
             }
         }
     }
@@ -1239,7 +1226,6 @@ export class BaseColumnChart implements IColumnChart {
             labelGraphicsContext: this.labelGraphicsContext,
             margin: this.margin,
             layout: chartLayout,
-            interactivityService: this.interactivityService,
             viewportHeight: this.currentViewport.height - (this.margin.top + this.margin.bottom),
             viewportWidth: this.currentViewport.width - (this.margin.left + this.margin.right),
             is100Pct: BaseColumnChart.Is100Pct,
@@ -1349,23 +1335,18 @@ export class BaseColumnChart implements IColumnChart {
         let dataPoints: MekkoChartColumnDataPoint[] = [];
         let behaviorOptions: VisualBehaviorOptions = undefined;
 
-        if (this.interactivityService) {
-            for (let dataPointIndex: number = 0; dataPointIndex < data.series.length; dataPointIndex++) {
-                dataPoints = dataPoints.concat(data.series[dataPointIndex].data);
-            }
-
-            behaviorOptions = {
-                dataPoints,
-                bars: chartDrawInfo.shapesSelection,
-                hasHighlights: data.hasHighlights,
-                eventGroup: this.mainGraphicsContext,
-                mainGraphicsContext: this.mainGraphicsContext,
-                viewport: chartDrawInfo.viewport,
-                axisOptions: chartDrawInfo.axisOptions,
-                showLabel: settingsModel.labels.show.value,
-                behavior: null
-            };
+        for (let dataPointIndex: number = 0; dataPointIndex < data.series.length; dataPointIndex++) {
+            dataPoints = dataPoints.concat(data.series[dataPointIndex].data);
         }
+
+        behaviorOptions = {
+            bars: chartDrawInfo.shapesSelection,
+            hasHighlights: data.hasHighlights,
+            eventGroup: this.mainGraphicsContext,
+            mainGraphicsContext: this.mainGraphicsContext,
+            viewport: chartDrawInfo.viewport,
+            axisOptions: chartDrawInfo.axisOptions
+        };
 
         return {
             dataPoints,
@@ -1373,12 +1354,6 @@ export class BaseColumnChart implements IColumnChart {
             labelDataPoints: chartDrawInfo.labelDataPoints,
             labelsAreNumeric: true
         };
-    }
-
-    public onClearSelection(): void {
-        if (this.interactivityService) {
-            this.interactivityService.clearSelection();
-        }
     }
 
     public getVisualCategoryAxisIsScalar(): boolean {
@@ -1416,7 +1391,6 @@ export function createBaseColumnChartLayer(
     defaultOptions: MekkoChartConstructorBaseOptions): BaseColumnChart {
 
     const options: MekkoChartConstructorOptions = {
-        interactivityService: defaultOptions.interactivityService,
         isScrollable: defaultOptions.isScrollable,
         chartType: type
     };

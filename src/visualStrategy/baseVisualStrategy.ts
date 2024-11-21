@@ -31,7 +31,7 @@ import DataViewPropertyValue = powerbi.DataViewPropertyValue;
 import ValueRange = powerbi.ValueRange;
 
 import { DataWrapper } from "./../dataWrapper";
-import * as utils from "./../utils";
+import { MekkoChartUtils } from "./../utils";
 
 import {
     IMargin,
@@ -39,12 +39,6 @@ import {
     IRect
 }
     from "powerbi-visuals-utils-svgutils";
-
-import {
-    interactivityBaseService,
-    interactivitySelectionService,
-}
-    from "powerbi-visuals-utils-interactivityutils";
 
 import {
     valueFormatter
@@ -98,9 +92,6 @@ import hundredPercentFormat = dataLabelUtils.hundredPercentFormat;
 import IColumnFormatterCacheManager = dataLabelInterfaces.IColumnFormatterCacheManager;
 import createColumnFormatterCacheManager = dataLabelUtils.createColumnFormatterCacheManager;
 
-// powerbi.extensibility.utils.interactivity
-import IInteractivityService = interactivityBaseService.IInteractivityService;
-
 // powerbi.extensibility.utils.formatting
 import IValueFormatter = valueFormatter.IValueFormatter;
 
@@ -108,7 +99,6 @@ import IValueFormatter = valueFormatter.IValueFormatter;
 import ValueType = valueType.ValueType;
 
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
-import SelectionDataPoint = interactivitySelectionService.SelectableDataPoint;
 import { ColumnBorderSettings, VisualFormattingSettingsModel } from "../settings";
 
 interface LayoutFunction {
@@ -146,7 +136,6 @@ export class BaseVisualStrategy implements IVisualStrategy {
     private columnsCenters: number[];
     private columnSelectionLineHandle: Selection<any>;
 
-    private interactivityService: IInteractivityService<SelectionDataPoint>;
     private viewportHeight: number;
 
     private static validLabelPositions = [1];
@@ -158,7 +147,6 @@ export class BaseVisualStrategy implements IVisualStrategy {
         this.height = this.graphicsContext.height;
         this.categoryLayout = columnChartProps.layout;
 
-        this.interactivityService = columnChartProps.interactivityService;
         this.viewportHeight = columnChartProps.viewportHeight;
     }
 
@@ -465,7 +453,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         axisScaleType?: string): IAxisProperties {
 
         const height: number = this.viewportHeight,
-            valueDomain: ValueRange<number> = utils.calcValueDomain(this.data.series, is100Pct),
+            valueDomain: ValueRange<number> = MekkoChartUtils.calcValueDomain(this.data.series, is100Pct),
             valueDomainArr: number[] = [valueDomain.min, valueDomain.max],
             combinedDomain: any[] = AxisHelper.combineDomain(forcedYDomain, valueDomainArr),
             shouldClamp: boolean = AxisHelper.scaleShouldClamp(combinedDomain, valueDomainArr),
@@ -517,7 +505,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         this.layout = stackedColumnLayout;
 
         const labelDataPoints: LabelDataPoint[] = this.createMekkoLabelDataPoints(settingsModel),
-            series: Selection<MekkoChartSeries> = utils.drawSeries(
+            series: Selection<MekkoChartSeries> = MekkoChartUtils.drawSeries(
                 data,
                 this.graphicsContext.mainGraphicsContext);
 
@@ -528,11 +516,10 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 series,
                 stackedColumnLayout,
                 BaseVisualStrategy.ItemSelector,
-                this.interactivityService && this.interactivityService.hasSelection(),
                 settingsModel);
         }
 
-        utils.applyInteractivity(shapes, this.graphicsContext.onDragStart);
+        MekkoChartUtils.applyInteractivity(shapes, this.graphicsContext.onDragStart);
 
         return {
             axisOptions,
@@ -550,7 +537,6 @@ export class BaseVisualStrategy implements IVisualStrategy {
         series: Selection<any>,
         layout: IMekkoColumnLayout,
         itemCS: ClassAndSelector,
-        hasSelection: boolean,
         settingsModel: VisualFormattingSettingsModel): Selection<MekkoChartColumnDataPoint> {
 
         const dataSelector: (dataPoint: MekkoChartSeries) => any[] =
@@ -573,13 +559,6 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .style(
                 "fill", (dataPoint: MekkoChartColumnDataPoint) => dataPoint.color
             )
-            .style(
-                "fill-opacity", (dataPoint: MekkoChartColumnDataPoint) => utils.getFillOpacity(
-                    dataPoint.selected,
-                    dataPoint.highlight,
-                    hasSelection,
-                    data.hasHighlights)
-            )
             .style("stroke", settingsModel.dataPoint.defaultStrokeColor)
             .attr("height", layout.shapeLayout.height)
             .attr("width", layout.shapeLayout.width)
@@ -587,7 +566,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .attr("y", layout.shapeLayout.y)
             .attr("role", "option")
             .attr("aria-selected", "false")
-            .attr("aria-label", (dataPoint: MekkoChartColumnDataPoint) => utils.getAriaLabel(
+            .attr("aria-label", (dataPoint: MekkoChartColumnDataPoint) => MekkoChartUtils.getAriaLabel(
                 dataPoint.tooltipInfo)
             )
             .attr("tabindex", "0");
@@ -614,8 +593,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .style(
                 "fill-opacity", () => {
                     return data.hasHighlights
-                        ? utils.DimmedOpacity
-                        : utils.DefaultOpacity;
+                        ? MekkoChartUtils.DimmedOpacity
+                        : MekkoChartUtils.DefaultOpacity;
                 }
             )
             .attr("height", layout.shapeBorder.height)
@@ -632,7 +611,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
 
     public selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void {
 
-        utils.setChosenColumnOpacity(
+        MekkoChartUtils.setChosenColumnOpacity(
             this.graphicsContext.mainGraphicsContext,
             BaseVisualStrategy.ItemSelector.selectorName,
             selectedColumnIndex,
@@ -643,7 +622,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
     }
 
     public getClosestColumnIndex(x: number): number {
-        return utils.getClosestColumnIndex(x, this.getColumnsCenters());
+        return MekkoChartUtils.getClosestColumnIndex(x, this.getColumnsCenters());
     }
 
     /**
@@ -748,7 +727,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         };
 
         const height: LayoutFunction = (dataPoint: MekkoChartColumnDataPoint) => {
-            return utils.getSize(yScale, dataPoint.valueAbsolute);
+            return MekkoChartUtils.getSize(yScale, dataPoint.valueAbsolute);
         };
 
         return {
@@ -769,7 +748,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 x: columnStart,
                 y: yPosition,
                 height: (dataPoint: MekkoChartColumnDataPoint) => {
-                    return utils.getSize(yScale, dataPoint.originalValueAbsolute);
+                    return MekkoChartUtils.getSize(yScale, dataPoint.originalValueAbsolute);
                 }
             },
             zeroShapeLayout: {
@@ -777,7 +756,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 x: columnStart,
                 y: (dataPoint: MekkoChartColumnDataPoint) => {
                     return scaledY0 + AxisHelper.diffScaled(yScale, dataPoint.position, 0)
-                        + utils.getSize(yScale, dataPoint.valueAbsolute);
+                        + MekkoChartUtils.getSize(yScale, dataPoint.valueAbsolute);
                 },
                 height: () => 0
             },
