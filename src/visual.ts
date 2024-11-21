@@ -1077,7 +1077,8 @@ export class MekkoChart implements IVisual {
 
                 const legendData: ILegendData = {
                     title: reducedLegends[index].category,
-                    dataPoints: reducedLegends[index].data
+                    dataPoints: reducedLegends[index].data,
+                    labelColor: this.layerLegendData?.labelColor
                 };
 
                 LegendData.update(legendData, legendProperties);

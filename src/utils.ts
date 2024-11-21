@@ -56,6 +56,8 @@ export class MekkoChartUtils {
     static DimmedOpacity = 0.4;
     static DefaultOpacity = 1.0;
     static DimmedColor = "#A6A6A6";
+    static SelectedStrokeWidth = "5px";
+    static DefaultStrokeWidth = "2px";
 
     static DefaultNumberRange: NumberRange = {
         min: 0,
@@ -146,6 +148,17 @@ export class MekkoChartUtils {
         }
     
         return MekkoChartUtils.DefaultOpacity;
+    }
+
+    static getStrokeWidth(
+        selected: boolean,
+        highlight: boolean,
+        hasSelection: boolean,
+        hasPartialHighlights: boolean): string {
+
+        return ((hasSelection && selected) || (hasPartialHighlights && highlight)) 
+            ? MekkoChartUtils.SelectedStrokeWidth
+            : MekkoChartUtils.DefaultStrokeWidth;
     }
     
     static getLegendFillOpacity(

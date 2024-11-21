@@ -204,6 +204,15 @@ export class CustomVisualBehavior {
                     !dataPoint.highlight && dataPointHasSelection,
                     !dataPoint.selected && layer.hasHighlights);
             });
+
+            layer.bars.style("stroke-width", (dataPoint: MekkoChartColumnDataPoint) => {
+                return MekkoChartUtils.getStrokeWidth(
+                    dataPoint.selected,
+                    dataPoint.highlight,
+                    !dataPoint.highlight && dataPointHasSelection,
+                    !dataPoint.selected && layer.hasHighlights
+                );
+            });
         });
     }
 
