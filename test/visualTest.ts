@@ -521,7 +521,7 @@ describe("MekkoChart", () => {
             let mekkoColumnChartData: MekkoColumnChartData;
 
             beforeEach((done) => {
-                const visualHost: IVisualHost = createVisualHost();
+                const visualHost: IVisualHost = createVisualHost({});
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     visualBuilder.instance.getFormattingModel();
                     mekkoColumnChartData = BaseColumnChart.converter({
