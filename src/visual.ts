@@ -428,8 +428,6 @@ export class MekkoChart implements IVisual {
 
         this.legend = createLegend(
             <HTMLElement>legendParent.node(),
-            false,
-            this.interactivityService,
             true);
     }
 
@@ -1080,8 +1078,6 @@ export class MekkoChart implements IVisual {
             if (legendSvg.select("svg").node() === null) {
                 const legend: ILegend = createLegend(
                     <any>this,
-                    false,
-                    mekko.interactivityService,
                     true);
 
                 mekko.categoryLegends[index] = <ILegend>legend;
