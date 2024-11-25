@@ -981,7 +981,6 @@ export class MekkoChart implements IVisual {
             showTitle: this.settingsModel.legend.showTitle.value,
             show: this.settingsModel.legend.show.value
         }
-        
         LegendData.update(legendData, legendProperties);
         this.legend.changeOrientation(LegendPosition.Top);
 
@@ -1141,7 +1140,7 @@ export class MekkoChart implements IVisual {
         legends.style("font-weight", mekko.settingsModel.legend.fontControl.bold.value? "bold" : "normal");
         legends.style("font-style", mekko.settingsModel.legend.fontControl.italic.value ? "italic" : "normal");
         legends.style("text-decoration", mekko.settingsModel.legend.fontControl.underline.value ? "underline" : "none");
-        
+        legends.style("fill", this.colorPalette.isHighContrast ? this.colorPalette.foreground.value : mekko.settingsModel.legend.color.value.value);
     }
 
     private hideLegends(): boolean {
