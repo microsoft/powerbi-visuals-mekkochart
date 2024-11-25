@@ -1136,7 +1136,7 @@ export class MekkoChart implements IVisual {
             this.legendMargins.height = 0;
         }
 
-        let legends = selectAll(this.rootElement.node().querySelectorAll(".legendItem,.legendTitle"));
+        const legends = selectAll(this.rootElement.node().querySelectorAll(".legendItem,.legendTitle"));
         legends.style("font-weight", mekko.settingsModel.legend.fontControl.bold.value? "bold" : "normal");
         legends.style("font-style", mekko.settingsModel.legend.fontControl.italic.value ? "italic" : "normal");
         legends.style("text-decoration", mekko.settingsModel.legend.fontControl.underline.value ? "underline" : "none");
