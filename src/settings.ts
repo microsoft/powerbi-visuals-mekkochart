@@ -102,31 +102,56 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
         placeholder: "Title Text"
     });
 
-    public fontFamily = new formattingSettings.FontPicker({
-        name: "fontFamily",
-        displayNameKey: "Visual_Font",
-        value: "Arial"
+    public color = new formattingSettings.ColorPicker({
+        name: "color",
+        displayNameKey: "Visual_Color",
+        descriptionKey: "Visual_Description_Color",
+        value: {value: "black"},
     });
 
-    public fontSize = new formattingSettings.NumUpDown({
-        name: "fontSize",
-        displayNameKey: "Visual_Font_Size",
-        value: FontSizeDefaultOptions.FontSize,
-        options: {
-            minValue: {
-                type: powerbi.visuals.ValidatorType.Min,
-                value: FontSizeDefaultOptions.MinFontSize,
-            },
-            maxValue: {
-                type: powerbi.visuals.ValidatorType.Max,
-                value: FontSizeDefaultOptions.MaxFontSize,
+    public fontControl: formattingSettings.FontControl = new formattingSettings.FontControl({
+        name: "fontControl",
+        displayNameKey: "Visual_Font_Control",
+        fontFamily: new formattingSettings.FontPicker({
+            name: "fontFamily",
+            displayNameKey: "Visual_Font",
+            value: "Arial"
+        }),
+        fontSize: new formattingSettings.NumUpDown({
+            name: "fontSize",
+            displayNameKey: "Visual_Font_Size",
+            value: FontSizeDefaultOptions.FontSize,
+            options: {
+                minValue: {
+                    type: powerbi.visuals.ValidatorType.Min,
+                    value: FontSizeDefaultOptions.MinFontSize,
+                },
+                maxValue: {
+                    type: powerbi.visuals.ValidatorType.Max,
+                    value: FontSizeDefaultOptions.MaxFontSize,
+                }
             }
-        }
+        }),
+        bold: new formattingSettings.ToggleSwitch({
+            name: "fontBold",
+            displayNameKey: "Visual_Font_Bold",
+            value: false
+        }),
+        italic: new formattingSettings.ToggleSwitch({
+            name: "fontItalic",
+            displayNameKey: "Visual_Font_Italic",
+            value: false
+        }),
+        underline: new formattingSettings.ToggleSwitch({
+            name: "fontUnderline",
+            displayNameKey: "Visual_Font_Underline",
+            value: false
+        })
     });
 
     public legendTitleGroup = new formattingSettings.Group({
         name: "titleGroup",
-        slices: [this.showTitle, this.titleText, this.fontFamily, this.fontSize]
+        slices: [this.showTitle, this.titleText, this.color, this.fontControl]
     });
 
     public groups: FormattingSettingsGroup[] = [this.legendTitleGroup]
@@ -192,6 +217,46 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
         value: {value: "white"},
     });
 
+    public fontControl: formattingSettings.FontControl = new formattingSettings.FontControl({
+        name: "fontControl",
+        displayNameKey: "Visual_Font_Control",
+        fontFamily: new formattingSettings.FontPicker({
+            name: "fontFamily",
+            displayNameKey: "Visual_Font",
+            value: "Arial"
+        }),
+        fontSize: new formattingSettings.NumUpDown({
+            name: "fontSize",
+            displayNameKey: "Visual_Font_Size",
+            value: FontSizeDefaultOptions.FontSize,
+            options: {
+                minValue: {
+                    type: powerbi.visuals.ValidatorType.Min,
+                    value: FontSizeDefaultOptions.MinFontSize,
+                },
+                maxValue: {
+                    type: powerbi.visuals.ValidatorType.Max,
+                    value: FontSizeDefaultOptions.MaxFontSize,
+                }
+            }
+        }),
+        bold: new formattingSettings.ToggleSwitch({
+            name: "fontBold",
+            displayNameKey: "Visual_Font_Bold",
+            value: false
+        }),
+        italic: new formattingSettings.ToggleSwitch({
+            name: "fontItalic",
+            displayNameKey: "Visual_Font_Italic",
+            value: false
+        }),
+        underline: new formattingSettings.ToggleSwitch({
+            name: "fontUnderline",
+            displayNameKey: "Visual_Font_Underline",
+            value: false
+        })
+    });
+
     public displayUnits = new formattingSettings.AutoDropdown({
         name: "labelDisplayUnits",
         displayName: "Display units",
@@ -216,7 +281,7 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
         }
     });
 
-    public slices: FormattingSettingsSlice[] = [this.color, this.displayUnits, this.labelPrecision, this.forceDisplay];
+    public slices: FormattingSettingsSlice[] = [this.color, this.fontControl, this.displayUnits, this.labelPrecision, this.forceDisplay];
 }
 
 export class SeriesSortSettings extends FormattingSettingsSimpleCard {

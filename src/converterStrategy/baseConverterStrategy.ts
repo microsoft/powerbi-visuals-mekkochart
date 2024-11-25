@@ -194,7 +194,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                 : "";
         }
 
-        const labelColor: string = colorPalette.isHighContrast ? colorPalette.foreground.value : BaseConverterStrategy.DefaultLegendLabelColor;
+        const labelColor: string = colorPalette.isHighContrast ? colorPalette.foreground.value : settingsModel.legend.color.value.value;
 
         const legendData: ILegendData = {
             title: legendTitle,
