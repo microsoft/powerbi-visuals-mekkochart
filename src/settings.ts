@@ -106,7 +106,7 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
         name: "color",
         displayNameKey: "Visual_Color",
         descriptionKey: "Visual_Description_Color",
-        value: {value: "black"},
+        value: {value: "#252423"},
     });
 
     public fontControl: formattingSettings.FontControl = new formattingSettings.FontControl({
@@ -115,7 +115,7 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
         fontFamily: new formattingSettings.FontPicker({
             name: "fontFamily",
             displayNameKey: "Visual_Font",
-            value: "Arial"
+            value: "Segoe UI, wf_segoe-ui_normal, helvetica, arial, sans-serif"
         }),
         fontSize: new formattingSettings.NumUpDown({
             name: "fontSize",
@@ -223,7 +223,7 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
         fontFamily: new formattingSettings.FontPicker({
             name: "fontFamily",
             displayNameKey: "Visual_Font",
-            value: "Arial"
+            value: "Segoe UI, wf_segoe-ui_normal, helvetica, arial, sans-serif"
         }),
         fontSize: new formattingSettings.NumUpDown({
             name: "fontSize",
