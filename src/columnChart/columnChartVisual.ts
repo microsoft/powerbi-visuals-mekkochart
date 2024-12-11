@@ -26,8 +26,6 @@
 import powerbi from "powerbi-visuals-api";
 import { legendInterfaces, axisInterfaces } from "powerbi-visuals-utils-chartutils";
 
-import VisualObjectInstance = powerbi.VisualObjectInstance;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import IViewport = powerbi.IViewport;
 
 import {
@@ -52,10 +50,6 @@ export interface IColumnChart {
     render(suppressAnimations: boolean, settingsModel: VisualFormattingSettingsModel): MekkoVisualRenderResult;
     calculateLegend(): LegendData;
     hasLegend(): boolean;
-    onClearSelection(): void;
-    enumerateObjectInstances?(
-        instances: VisualObjectInstance[],
-        options: EnumerateVisualObjectInstancesOptions): void;
     getVisualCategoryAxisIsScalar?(): boolean;
     getSupportedCategoryAxisType?(): string;
     getPreferredPlotArea?(
