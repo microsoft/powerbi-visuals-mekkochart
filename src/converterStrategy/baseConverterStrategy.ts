@@ -172,7 +172,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
                     }
 
                     legend.push({
-                        color: colorPalette.isHighContrast ? colorPalette.background.value : color,
+                        color: colorPalette.isHighContrast ? colorPalette.foreground.value : color,
                         label,
                         markerShape: LegendIcon.circle,
                         identity: selectionId,
@@ -223,7 +223,7 @@ export class BaseConverterStrategy implements ConverterStrategy {
             ? this.dataView.values[series]
             : undefined;
 
-        return valueColumn && !!valueColumn.highlights;
+        return !!valueColumn?.highlights;
     }
 
     public getHighlightBySeriesAndCategory(series: number, category: number): number {

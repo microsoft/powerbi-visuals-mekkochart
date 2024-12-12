@@ -110,6 +110,7 @@ import IAxisProperties = axisInterfaces.IAxisProperties;
 import TickLabelMargins = axisInterfaces.TickLabelMargins;
 import ILegend = legendInterfaces.ILegend;
 import ILegendData = legendInterfaces.LegendData;
+import ISelectableDataPoint = legendInterfaces.ISelectableDataPoint;
 
 import createLegend = legend.createLegend;
 import ILabelLayout = dataLabelInterfaces.ILabelLayout;
@@ -124,20 +125,6 @@ import {
 } from "powerbi-visuals-utils-svgutils";
 import ClassAndSelector = CssConstants.ClassAndSelector;
 import createClassAndSelector = CssConstants.createClassAndSelector;
-
-// powerbi.extensibility.utils.interactivity
-import {
-    interactivityBaseService,
-    interactivitySelectionService as interactivityService
-} from "powerbi-visuals-utils-interactivityutils";
-
-import appendClearCatcher = interactivityBaseService.appendClearCatcher;
-import SelectableDataPoint = interactivityService.SelectableDataPoint;
-import IInteractiveBehavior = interactivityBaseService.IInteractiveBehavior;
-import IInteractivityServiceCommon = interactivityBaseService.IInteractivityService;
-import createInteractivityService = interactivityService.createInteractivitySelectionService;
-
-type IInteractivityService = IInteractivityServiceCommon<SelectableDataPoint>;
 
 // powerbi.extensibility.utils.formatting
 import {
@@ -159,9 +146,9 @@ import {
 import ValueType = valueType.ValueType;
 
 // behavior
-import { VisualBehavior } from "./behavior/visualBehavior";
 import { CustomVisualBehavior } from "./behavior/customVisualBehavior";
 import { CustomVisualBehaviorOptions } from "./behavior/customVisualBehaviorOptions";
+import { VisualBehaviorOptions } from "./behavior/visualBehaviorOptions";
 
 import * as columnChart from "./columnChart/columnChartVisual";
 import * as columnChartBaseColumnChart from "./columnChart/baseColumnChart";
@@ -299,7 +286,7 @@ export class MekkoChart implements IVisual {
     private xAxisGraphicsContext: Selection;
     private y1AxisGraphicsContext: Selection;
     private svg: Selection;
-    private clearCatcher: Selection;
+    private legendSelection: Selection;
 
     private margin: IMargin = {
         top: 1,
@@ -322,8 +309,9 @@ export class MekkoChart implements IVisual {
 
     private valueAxisProperties: powerbi.DataViewObject;
     private cartesianSmallViewPortProperties: MekkoChartSmallViewPortProperties;
-    private interactivityService: IInteractivityService;
-    private behavior: IInteractiveBehavior;
+
+    private behavior: CustomVisualBehavior;
+
     private categoryAxisHasUnitType: boolean;
     private valueAxisHasUnitType: boolean;
     private hasCategoryAxis: boolean;
@@ -373,16 +361,12 @@ export class MekkoChart implements IVisual {
             .append("div")
             .classed(MekkoChart.ClassName, true);
 
-        this.behavior = new CustomVisualBehavior([new VisualBehavior()]);
-
         this.brush = brushX();
         this.yAxisOrientation = axisPosition.left;
 
         this.svg = this.rootElement
             .append("svg")
             .classed(MekkoChart.RootSvgSelector.className, true);
-
-        this.handleContextMenu();
 
         this.axisGraphicsContext = this.svg
             .append("g")
@@ -400,8 +384,6 @@ export class MekkoChart implements IVisual {
             .append("g")
             .classed(MekkoChart.LabelGraphicsContextClass.className, true);
 
-        this.clearCatcher = appendClearCatcher(this.axisGraphicsContextScrollable);
-
         this.xAxisGraphicsContext = this.axisGraphicsContext
             .append("g")
             .classed(MekkoChart.XAxisSelector.className, true);
@@ -417,11 +399,12 @@ export class MekkoChart implements IVisual {
         this.y1AxisGraphicsContext
             .classed(MekkoChart.ShowLinesOnAxisSelector.className, true)
             .classed(MekkoChart.HideLinesOnAxisSelector.className, false);
-
-        this.interactivityService = createInteractivityService(this.visualHost);
         
+            
+        this.selectionManager = options.host.createSelectionManager();
+        this.behavior = new CustomVisualBehavior(this.selectionManager, this.colorPalette);
+
         this.localizationManager = this.visualHost.createLocalizationManager();
-        this.selectionManager = this.visualHost.createSelectionManager();
         this.formattingSettingsService = new FormattingSettingsService(this.localizationManager);
 
         const legendParent = select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
@@ -888,15 +871,6 @@ export class MekkoChart implements IVisual {
         return formattingModel;
     }
 
-    public onClearSelection(): void {
-        if (this.hasSetData) {
-            for (const layer of this.layers) {
-                layer.onClearSelection();
-                layer.render(true, this.settingsModel);
-            }
-        }
-    }
-
     private createAndInitLayers(dataViews: DataView[]): IColumnChart[] {
         let objects: powerbi.DataViewObjects;
 
@@ -911,7 +885,6 @@ export class MekkoChart implements IVisual {
         const layers: IColumnChart[] = createLayers(
             this.type,
             objects,
-            this.interactivityService,
             this.isScrollable);
 
         const cartesianOptions: MekkoChartVisualInitOptions
@@ -1103,9 +1076,9 @@ export class MekkoChart implements IVisual {
 
                 const legendData: ILegendData = {
                     title: reducedLegends[index].category,
-                    dataPoints: reducedLegends[index].data
+                    dataPoints: reducedLegends[index].data,
+                    labelColor: this.layerLegendData?.labelColor
                 };
-
 
                 LegendData.update(legendData, legendProperties);
                 legend.drawLegend(legendData, this.currentViewport);
@@ -1136,11 +1109,13 @@ export class MekkoChart implements IVisual {
             this.legendMargins.height = 0;
         }
 
-        const legends = selectAll(this.rootElement.node().querySelectorAll(".legendItem,.legendTitle"));
-        legends.style("font-weight", mekko.settingsModel.legend.fontControl.bold.value? "bold" : "normal");
-        legends.style("font-style", mekko.settingsModel.legend.fontControl.italic.value ? "italic" : "normal");
-        legends.style("text-decoration", mekko.settingsModel.legend.fontControl.underline.value ? "underline" : "none");
-        legends.style("fill", this.colorPalette.isHighContrast ? this.colorPalette.foreground.value : mekko.settingsModel.legend.color.value.value);
+        this.legendSelection = this.rootElement
+            .selectAll(MekkoChart.LegendSelector.selectorName);
+
+        this.legendSelection.style("font-weight", mekko.settingsModel.legend.fontControl.bold.value? "bold" : "normal");
+        this.legendSelection.style("font-style", mekko.settingsModel.legend.fontControl.italic.value ? "italic" : "normal");
+        this.legendSelection.style("text-decoration", mekko.settingsModel.legend.fontControl.underline.value ? "underline" : "none");
+        this.legendSelection.style("fill", this.colorPalette.isHighContrast ? this.colorPalette.foreground.value : mekko.settingsModel.legend.color.value.value);
     }
 
     private hideLegends(): boolean {
@@ -1696,15 +1671,18 @@ export class MekkoChart implements IVisual {
                 .remove();
         }
 
-        let dataPoints: SelectableDataPoint[] = [];
-        const layerBehaviorOptions: any[] = [];
+        let dataPoints: ISelectableDataPoint[] = [];
+        let legendDataPoints: ISelectableDataPoint[] = [];
+        const layerBehaviorOptions: VisualBehaviorOptions[] = [];
 
         if (this.behavior) {
             let resultsLabelDataPoints: LabelDataPoint[] = [];
 
             for (let layerIndex: number = 0; layerIndex < layers.length; layerIndex++) {
-                const result: MekkoVisualRenderResult = layers[layerIndex].render(suppressAnimations, this.settingsModel);
+                const layerLegend: ILegendData = layers[layerIndex].calculateLegend();
+                legendDataPoints = legendDataPoints.concat(layerLegend.dataPoints);
 
+                const result: MekkoVisualRenderResult = layers[layerIndex].render(suppressAnimations, this.settingsModel);
                 if (result) {
                     dataPoints = dataPoints.concat(result.dataPoints);
                     layerBehaviorOptions.push(result.behaviorOptions);
@@ -1720,16 +1698,14 @@ export class MekkoChart implements IVisual {
                 this.getLabelLayout(forceDisplay),
                 this.currentViewport, false, 0, false, !forceDisplay);
 
-            if (this.interactivityService) {
-                const behaviorOptions: CustomVisualBehaviorOptions = {
-                    layerOptions: layerBehaviorOptions,
-                    clearCatcher: this.clearCatcher,
-                    dataPoints: dataPoints,
-                    behavior: this.behavior,
-                };
-
-                this.interactivityService.bind(behaviorOptions);
-            }
+            const behaviorOptions: CustomVisualBehaviorOptions = {
+                layerOptions: layerBehaviorOptions,
+                clearCatcher: this.rootElement,
+                legend: this.legendSelection,
+                legendDataPoints: legendDataPoints
+            };
+            this.behavior.bindEvents(behaviorOptions);
+            this.behavior.renderSelection();
         }
     }
 
@@ -1838,30 +1814,17 @@ export class MekkoChart implements IVisual {
                 return manipulation.translate(scale(value) + (borderWidth * index), yOffset);
             });
     }
-
-    private handleContextMenu() {
-        this.rootElement.on("contextmenu", (event: PointerEvent) => {
-            this.selectionManager.showContextMenu({}, {
-                x: event.clientX,
-                y: event.clientY
-            });
-
-            event.preventDefault();
-        })
-    }
 }
 
 export function createLayers(
     type: MekkoChartType,
     objects: powerbi.DataViewObjects,
-    interactivityService: IInteractivityService,
     isScrollable: boolean = true): IColumnChart[] {
 
     const layers: IColumnChart[] = [];
 
     const cartesianOptions: MekkoChartConstructorBaseOptions = {
-        isScrollable,
-        interactivityService
+        isScrollable
     };
 
     layers.push(columnChartBaseColumnChart.createBaseColumnChartLayer(

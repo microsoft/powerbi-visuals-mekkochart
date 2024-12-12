@@ -1,3 +1,9 @@
+## 3.6.3.0
+* Remove interactivity utils
+* Update packages
+* Increase selection visibility in high contrast mode
+* Use API 5.11.0
+
 ## 3.6.2.0
 * Add high contrast mode support
 
