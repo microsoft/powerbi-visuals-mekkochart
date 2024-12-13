@@ -90,7 +90,7 @@ import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel
 import { VisualFormattingSettingsModel } from "./settings";
 
 import { max, sum } from "d3-array";
-import { select, selectAll } from "d3-selection";
+import { select } from "d3-selection";
 import { brushX, BrushBehavior } from "d3-brush";
 import { ScaleLinear as d3ScaleLinear } from "d3-scale";
 type ScaleLinear<T> = d3ScaleLinear<T, T, never>;
