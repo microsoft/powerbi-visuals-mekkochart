@@ -820,7 +820,12 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 labelDataPoints.push({
                     parentRect,
                     text: formatter.format(value),
-                    fillColor: settingModel.labels.color.value.value
+                    fillColor: settingModel.labels.color.value.value,
+                    fontFamily: settingModel.labels.fontControl.fontFamily.value,
+                    fontSize: settingModel.labels.fontControl.fontSize.value,
+                    bold: settingModel.labels.fontControl.bold.value,
+                    italic: settingModel.labels.fontControl.italic.value,
+                    underline: settingModel.labels.fontControl.underline.value,
                 });
             }
         }

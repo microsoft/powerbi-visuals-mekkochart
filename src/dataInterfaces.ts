@@ -251,6 +251,11 @@ export interface LabelDataPoint {
     size?: ISize;
     text: string;
     fillColor: string;
+    fontFamily: string;
+    fontSize: number;
+    bold: boolean;
+    italic: boolean;
+    underline: boolean;
 }
 
 export interface MekkoChartVisualInitOptions extends VisualConstructorOptions {

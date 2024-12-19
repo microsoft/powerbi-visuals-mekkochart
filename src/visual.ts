@@ -912,8 +912,8 @@ export class MekkoChart implements IVisual {
         const layers: IColumnChart[] = this.layers,
             legendData: ILegendData = {
                 title: "",
-                fontSize: this.settingsModel.legend.fontSize.value,
-                fontFamily: this.settingsModel.legend.fontFamily.value,
+                fontSize: this.settingsModel.legend.fontControl.fontSize.value,
+                fontFamily: this.settingsModel.legend.fontControl.fontFamily.value,
                 dataPoints: []
             };
 
@@ -949,12 +949,11 @@ export class MekkoChart implements IVisual {
         }
 
         const legendProperties: powerbi.DataViewObject = {
-            fontSize: this.settingsModel.legend.fontSize.value,
-            fontFamily: this.settingsModel.legend.fontFamily.value,
+            fontSize: this.settingsModel.legend.fontControl.fontSize.value,
+            fontFamily: this.settingsModel.legend.fontControl.fontFamily.value,
             showTitle: this.settingsModel.legend.showTitle.value,
             show: this.settingsModel.legend.show.value
         }
-
         LegendData.update(legendData, legendProperties);
         this.legend.changeOrientation(LegendPosition.Top);
 
@@ -1025,8 +1024,8 @@ export class MekkoChart implements IVisual {
 
         const svgHeight: number = textMeasurementService.estimateSvgTextHeight({
             // fontFamily: MekkoChart.LegendBarTextFont,
-            fontFamily: this.settingsModel.legend.fontFamily.value,
-            fontSize: PixelConverter.fromPoint(this.settingsModel.legend.fontSize.value),
+            fontFamily: this.settingsModel.legend.fontControl.fontFamily.value,
+            fontSize: PixelConverter.fromPoint(this.settingsModel.legend.fontControl.fontSize.value),
             text: "AZ"
         });
 
@@ -1047,7 +1046,7 @@ export class MekkoChart implements IVisual {
         this.categoryLegends = this.categoryLegends || [];
         legendParentsWithChildsAttr.each(function (data, index) {
             const legendSvg = select(this);
-            legendSvg.style("font-family", mekko.settingsModel.legend.fontFamily.value);
+            legendSvg.style("font-family", mekko.settingsModel.legend.fontControl.fontFamily.value);
             if (legendSvg.select("svg").node() === null) {
                 const legend: ILegend = createLegend(
                     <any>this,
@@ -1112,6 +1111,11 @@ export class MekkoChart implements IVisual {
 
         this.legendSelection = this.rootElement
             .selectAll(MekkoChart.LegendSelector.selectorName);
+
+        this.legendSelection.style("font-weight", mekko.settingsModel.legend.fontControl.bold.value? "bold" : "normal");
+        this.legendSelection.style("font-style", mekko.settingsModel.legend.fontControl.italic.value ? "italic" : "normal");
+        this.legendSelection.style("text-decoration", mekko.settingsModel.legend.fontControl.underline.value ? "underline" : "none");
+        this.legendSelection.style("fill", this.colorPalette.isHighContrast ? this.colorPalette.foreground.value : mekko.settingsModel.legend.color.value.value);
     }
 
     private hideLegends(): boolean {
@@ -1728,7 +1732,22 @@ export class MekkoChart implements IVisual {
             style: {
                 "fill": (dataPoint: LabelDataPoint) => {
                     return dataPoint.fillColor;
-                }
+                },
+                "font-family": (dataPoint: LabelDataPoint) => {
+                    return dataPoint.fontFamily;
+                },
+                "font-size": (dataPoint: LabelDataPoint) => {
+                    return dataPoint.fontSize;
+                },
+                "font-weight": (dataPoint: LabelDataPoint) => {
+                    return dataPoint.bold ? "bold" : "normal";
+                },
+                "font-style": (dataPoint: LabelDataPoint) => {
+                    return dataPoint.italic ? "italic" : "normal";
+                },
+                "text-decoration": (dataPoint: LabelDataPoint) => {
+                    return dataPoint.underline ? "underline" : "none";
+                },
             }
         };
     }
