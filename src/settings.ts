@@ -115,7 +115,7 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
         fontFamily: new formattingSettings.FontPicker({
             name: "fontFamily",
             displayNameKey: "Visual_Font",
-            value: "Segoe UI, wf_segoe-ui_normal, helvetica, arial, sans-serif"
+            value: "Arial"
         }),
         fontSize: new formattingSettings.NumUpDown({
             name: "fontSize",
@@ -228,7 +228,7 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
         fontSize: new formattingSettings.NumUpDown({
             name: "fontSize",
             displayNameKey: "Visual_Font_Size",
-            value: FontSizeDefaultOptions.FontSize,
+            value: 12,
             options: {
                 minValue: {
                     type: powerbi.visuals.ValidatorType.Min,
