@@ -37,6 +37,8 @@ import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifi
 import DataView = powerbi.DataView;
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
 import Fill = powerbi.Fill;
+import VisualUpdateType = powerbi.VisualUpdateType;
+
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
@@ -152,6 +154,9 @@ import { VisualBehaviorOptions } from "./behavior/visualBehaviorOptions";
 
 import * as columnChart from "./columnChart/columnChartVisual";
 import * as columnChartBaseColumnChart from "./columnChart/baseColumnChart";
+
+import { MekkoChartOnObjectService } from "./onObject/onObjectService";
+import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
 
 // columnChart
 import IColumnChart = columnChart.IColumnChart;
@@ -342,6 +347,7 @@ export class MekkoChart implements IVisual {
     private selectionManager: ISelectionManager;
     private colorPalette: ISandboxExtendedColorPalette;
 
+    public visualOnObjectFormatting: MekkoChartOnObjectService;
     public settingsModel: VisualFormattingSettingsModel;
 
     constructor(options: VisualConstructorOptions) {
@@ -403,6 +409,7 @@ export class MekkoChart implements IVisual {
             
         this.selectionManager = options.host.createSelectionManager();
         this.behavior = new CustomVisualBehavior(this.selectionManager, this.colorPalette);
+        this.visualOnObjectFormatting = new MekkoChartOnObjectService(options.element, options.host, this.localizationManager);
 
         this.localizationManager = this.visualHost.createLocalizationManager();
         this.formattingSettingsService = new FormattingSettingsService(this.localizationManager);
@@ -704,12 +711,26 @@ export class MekkoChart implements IVisual {
 
         this.renderLegend();
 
-        this.render();
+        this.render(options.formatMode);
 
         this.hasSetData = this.hasSetData
             || (this.dataViews && this.dataViews.length > 0);
 
+        this.applyOnObjectFormatting(options.formatMode, options.type, options.subSelections);
+
         this.visualHost.eventService.renderingFinished(options);
+    }
+
+    private applyOnObjectFormatting(isFormatMode: boolean, updateType: VisualUpdateType, subSelections?: CustomVisualSubSelection[]): void{
+        this.visualOnObjectFormatting.setFormatMode(isFormatMode);
+
+        const shouldUpdateSubSelection = updateType & (powerbi.VisualUpdateType.Data
+            | powerbi.VisualUpdateType.Resize
+            | powerbi.VisualUpdateType.FormattingSubSelectionChange);
+
+        if (isFormatMode && shouldUpdateSubSelection) {
+            this.visualOnObjectFormatting.updateOutlinesFromSubSelections(subSelections, true);
+        }
     }
 
     /**
@@ -1149,7 +1170,7 @@ export class MekkoChart implements IVisual {
     }
 
     // eslint-disable-next-line max-lines-per-function
-    private render(suppressAnimations: boolean = true): void {
+    private render(formatMode: boolean, suppressAnimations: boolean = true): void {
         this.setVisibility(true);
 
         this.legendMargins = this.legendMargins || this.legend.getMargins();
@@ -1393,7 +1414,9 @@ export class MekkoChart implements IVisual {
             chartHasAxisLabels,
             axisLabels,
             viewport,
-            suppressAnimations);
+            suppressAnimations,
+            formatMode
+        );
     }
 
     private hideAxisLabels(legendMargins: IViewport): boolean {
@@ -1466,7 +1489,8 @@ export class MekkoChart implements IVisual {
         chartHasAxisLabels: boolean,
         axisLabels: MekkoChartAxesLabels,
         viewport: IViewport,
-        suppressAnimations: boolean) {
+        suppressAnimations: boolean,
+        isFormatMode: boolean): void {
 
         const bottomMarginLimit: number = this.bottomMarginLimit,
             leftRightMarginLimit: number = this.leftRightMarginLimit,
@@ -1702,7 +1726,8 @@ export class MekkoChart implements IVisual {
                 layerOptions: layerBehaviorOptions,
                 clearCatcher: this.rootElement,
                 legend: this.legendSelection,
-                legendDataPoints: legendDataPoints
+                legendDataPoints: legendDataPoints,
+                isFormatMode
             };
             this.behavior.bindEvents(behaviorOptions);
             this.behavior.renderSelection();

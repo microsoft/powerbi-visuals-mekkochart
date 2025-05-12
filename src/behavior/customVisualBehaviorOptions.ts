@@ -38,4 +38,5 @@ export interface CustomVisualBehaviorOptions {
     layerOptions: VisualBehaviorOptions[];
     clearCatcher: Selection<any>;
     legendDataPoints: ISelectableDataPoint[];
+    isFormatMode: boolean;
 }
