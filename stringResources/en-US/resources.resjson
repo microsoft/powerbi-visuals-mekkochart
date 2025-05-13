@@ -73,5 +73,8 @@
 	"Visual_EnableSort": "Enable sorting",
 	"Visual_DisableSort": "Disable sorting",
 	"Visual_EnableGroupByCategory": "Enable grouping by category",
-	"Visual_DisableGroupByCategory": "Disable griuping by category"
+	"Visual_DisableGroupByCategory": "Disable griuping by category",
+	"Visual_EnableForceDisplay": "Enable force display",
+	"Visual_DisableForceDisplay": "Disable force display",
+	"Visual_FormatLabels": "Format data labels"
 }

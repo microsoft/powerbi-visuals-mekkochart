@@ -4,14 +4,16 @@ import SubSelectionStyles = powerbi.visuals.SubSelectionStyles;
 import VisualSubSelectionShortcuts = powerbi.visuals.VisualSubSelectionShortcuts;
 import SubSelectionStylesType = powerbi.visuals.SubSelectionStylesType;
 import VisualShortcutType = powerbi.visuals.VisualShortcutType;
+import TextSubSelectionStyles = powerbi.visuals.TextSubSelectionStyles;
+import NumericTextSubSelectionStyles = powerbi.visuals.NumericTextSubSelectionStyles;
 
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
 import { IFontReference } from "./interfaces";
-import { legendReferences, sortLegendReferences } from "./references";
+import { labelsReferences, legendReferences, sortLegendReferences } from "./references";
 
 export class SubSelectionStylesService {
-    private static GetSubselectionStylesForText(objectReference: IFontReference): SubSelectionStyles {
+    private static GetSubselectionStylesForText(objectReference: IFontReference): TextSubSelectionStyles {
         return {
             type: SubSelectionStylesType.Text,
             fontFamily: {
@@ -55,6 +57,27 @@ export class SubSelectionStylesService {
 
     public static GetLegendStyles(): SubSelectionStyles {
         return SubSelectionStylesService.GetSubselectionStylesForText(legendReferences);
+    }
+
+    public static GetLabelsStyles(): SubSelectionStyles {
+        const textStyles: NumericTextSubSelectionStyles = {
+            ...this.GetSubselectionStylesForText(labelsReferences),
+            type: SubSelectionStylesType.NumericText,
+            displayUnits: {
+                reference: {
+                    ...labelsReferences.displayUnits
+                },
+                label: labelsReferences.displayUnits.propertyName
+            },
+            precision: {
+                reference: {
+                    ...labelsReferences.precision
+                },
+                label: labelsReferences.precision.propertyName
+            }
+        };
+
+        return textStyles;
     }
 }
 
@@ -142,6 +165,37 @@ export class SubSelectionShortcutsService {
                 type: VisualShortcutType.Navigate,
                 destinationInfo: { cardUid: legendReferences.cardUid, groupUid: legendReferences.groupUid },
                 label: localizationManager.getDisplayName("Visual_FormatTitle")
+            }
+        ];
+    }
+
+    public static GetLabelsShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+        return [
+            {
+                type: VisualShortcutType.Toggle,
+                ...labelsReferences.show,
+                disabledLabel: localizationManager.getDisplayName("Visual_Delete")
+            },
+            {
+                type: VisualShortcutType.Toggle,
+                ...labelsReferences.forceDisplay,
+                enabledLabel: localizationManager.getDisplayName("Visual_EnableForceDisplay"),
+                disabledLabel: localizationManager.getDisplayName("Visual_DisableForceDisplay")
+            },
+            {
+                type: VisualShortcutType.Divider,
+            },
+            {
+                type: VisualShortcutType.Reset,
+                relatedResetFormattingIds: [
+                    labelsReferences.show,
+                    labelsReferences.forceDisplay
+                ]
+            },
+            {
+                type: VisualShortcutType.Navigate,
+                destinationInfo: { cardUid: labelsReferences.cardUid, groupUid: labelsReferences.groupUid },
+                label: localizationManager.getDisplayName("Visual_FormatLabels")
             }
         ];
     }

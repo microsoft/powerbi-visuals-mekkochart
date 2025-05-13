@@ -57,6 +57,8 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
             switch (visualObject.objectName) {
                 case MekkoChartObjectNames.Legend:
                     return SubSelectionStylesService.GetLegendStyles();
+                case MekkoChartObjectNames.Labels:
+                    return SubSelectionStylesService.GetLabelsStyles();
             }
         }
     }
@@ -70,6 +72,8 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
                     return SubSelectionShortcutsService.GetLegendShortcuts(this.localizationManager);
                 case MekkoChartObjectNames.LegendTitle:
                     return SubSelectionShortcutsService.GetLegendTitleShortcuts(this.localizationManager);
+                case MekkoChartObjectNames.Labels:
+                    return SubSelectionShortcutsService.GetLabelsShortcuts(this.localizationManager);
             }
         }
     }

@@ -40,7 +40,8 @@ class LabelPrecisionDefaultOptions {
 export const enum MekkoChartObjectNames {
     Legend = "legend",
     LegendTitle = "legendTitle",
-    SortLegend = "sortLegend"
+    SortLegend = "sortLegend",
+    Labels = "labels",
 }
 
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
@@ -198,7 +199,7 @@ export class SortLegendSettings extends FormattingSettingsSimpleCard {
 }
 
 export class LabelsSettings extends FormattingSettingsSimpleCard {
-    public name: string = "labels";
+    public name: string = MekkoChartObjectNames.Labels;
     public displayNameKey: string = "Visual_Data_Labels";
     public descriptionKey: string = "Visual_Description_DataLabels";
 

@@ -2,7 +2,7 @@ import powerbi from "powerbi-visuals-api";
 import SubSelectableDirectEdit = powerbi.visuals.SubSelectableDirectEdit;
 import SubSelectableDirectEditStyle = powerbi.visuals.SubSelectableDirectEditStyle;
 
-import { IFontReference, ILegendReference, ISortLegendReference } from "./interfaces";
+import { IFontReference, ILabelsReference, ILegendReference, ISortLegendReference } from "./interfaces";
 import { MekkoChartObjectNames } from "../settings";
 
 const createBaseFontReference = (objectName: string, colorName: string = ""): IFontReference => {
@@ -79,5 +79,27 @@ export const sortLegendReferences: ISortLegendReference = {
     groupByCategoryDirection: {
         objectName: MekkoChartObjectNames.SortLegend,
         propertyName: "groupByCategoryDirection"
+    }
+}
+
+export const labelsReferences: ILabelsReference = {
+    ...createBaseFontReference(MekkoChartObjectNames.Labels),
+    cardUid: "Visual-labels-card",
+    groupUid: "labels-group",
+    show: {
+        objectName: MekkoChartObjectNames.Labels,
+        propertyName: "show"
+    },
+    forceDisplay: {
+        objectName: MekkoChartObjectNames.Labels,
+        propertyName: "forceDisplay"
+    },
+    displayUnits: {
+        objectName: MekkoChartObjectNames.Labels,
+        propertyName: "labelDisplayUnits"
+    },
+    precision: {
+        objectName: MekkoChartObjectNames.Labels,
+        propertyName: "labelPrecision"
     }
 }

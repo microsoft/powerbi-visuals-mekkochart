@@ -1742,6 +1742,8 @@ export class MekkoChart implements IVisual {
                 this.getLabelLayout(forceDisplay),
                 this.currentViewport, false, 0, false, !forceDisplay);
 
+            this.applyOnObjectStylesToLabels(isFormatMode);
+
             const behaviorOptions: CustomVisualBehaviorOptions = {
                 layerOptions: layerBehaviorOptions,
                 clearCatcher: this.rootElement,
@@ -1752,6 +1754,15 @@ export class MekkoChart implements IVisual {
             this.behavior.bindEvents(behaviorOptions);
             this.behavior.renderSelection();
         }
+    }
+
+    private applyOnObjectStylesToLabels(isFormatMode: boolean): void {
+        this.labelGraphicsContextScrollable
+            .selectAll(".data-labels")
+            .classed(HtmlSubSelectableClass, isFormatMode)
+            .style("pointer-events", "auto")
+            .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.Labels)
+            .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Data_Labels"));
     }
 
     private getLabelLayout(forceDisplay: boolean = false): ILabelLayout {

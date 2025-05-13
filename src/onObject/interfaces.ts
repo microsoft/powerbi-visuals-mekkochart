@@ -24,3 +24,10 @@ export interface ISortLegendReference extends GroupFormattingModelReference {
     groupByCategory: FormattingId;
     groupByCategoryDirection: FormattingId;
 }
+
+export interface ILabelsReference extends IFontReference {
+    show: FormattingId;
+    forceDisplay: FormattingId;
+    displayUnits: FormattingId;
+    precision: FormattingId;
+}
