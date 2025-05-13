@@ -46,6 +46,7 @@ export const enum MekkoChartObjectNames {
     XAxisTitle = "categoryAxisTitle",
     YAxis = "valueAxis",
     YAxisTitle = "valueAxisTitle",
+    XAxisRotation = "xAxisLabels"
 }
 
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
@@ -324,7 +325,7 @@ export class SeriesSortSettings extends FormattingSettingsSimpleCard {
 }
 
 export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
-    public name: string = "xAxisLabels";
+    public name: string = MekkoChartObjectNames.XAxisRotation;
     public displayNameKey: string = "Visual_XAxisLabelsRotation";
 
     public enableRotataion = new formattingSettings.ToggleSwitch({

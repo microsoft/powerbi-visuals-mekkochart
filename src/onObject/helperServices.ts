@@ -9,7 +9,7 @@ import NumericTextSubSelectionStyles = powerbi.visuals.NumericTextSubSelectionSt
 
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
-import { IAxisReference, IFontReference } from "./interfaces";
+import { IAxisReference, IFontReference, IXAxisLabelsRotationReference } from "./interfaces";
 import { labelsReferences, legendReferences, sortLegendReferences, xAxisReferences, yAxisReferences } from "./references";
 
 export class SubSelectionStylesService {
@@ -209,6 +209,7 @@ export class SubSelectionShortcutsService {
     }
 
     private static GetAxisShortcuts(axisReference: IAxisReference, displayKey: string, localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+        const xAxisInterface = axisReference as IXAxisLabelsRotationReference;
         return [
             {
                 type: VisualShortcutType.Toggle,
@@ -220,6 +221,12 @@ export class SubSelectionShortcutsService {
                 ...axisReference.showTitle,
                 enabledLabel: localizationManager.getDisplayName("Visual_AddTitle")
             },
+            xAxisInterface?.enableRotation ? {
+                type: VisualShortcutType.Toggle,
+                ...xAxisInterface.enableRotation,
+                enabledLabel: localizationManager.getDisplayName("Visual_EnableLabelsRotation"),
+                disabledLabel: localizationManager.getDisplayName("Visual_DisableLabelsRotation")
+            } : null,
             {
                 type: VisualShortcutType.Divider,
             },
@@ -233,6 +240,7 @@ export class SubSelectionShortcutsService {
                     axisReference.underline,
                     axisReference.color,
                     axisReference.show,
+                    xAxisInterface?.enableRotation
                 ]
             },
             {
@@ -277,9 +285,9 @@ export class SubSelectionShortcutsService {
 
     public static GetYAxisShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
         return SubSelectionShortcutsService.GetAxisShortcuts(yAxisReferences, "Visual_FormatYAxis", localizationManager);
-     }
+    }
  
-     public static GetYAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
-         return SubSelectionShortcutsService.GetAxisTitleShortcuts(yAxisReferences, localizationManager);
-     }
+    public static GetYAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+        return SubSelectionShortcutsService.GetAxisTitleShortcuts(yAxisReferences, localizationManager);
+    }
 }

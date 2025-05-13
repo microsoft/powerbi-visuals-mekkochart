@@ -78,5 +78,7 @@
 	"Visual_DisableForceDisplay": "Disable force display",
 	"Visual_FormatLabels": "Format data labels",
 	"Visual_FormatXAxis": "Format X-Axis",
-	"Visual_FormatYAxis": "Format Y-Axis"
+	"Visual_FormatYAxis": "Format Y-Axis",
+	"Visual_EnableLabelsRotation": "Enable labels rotation",
+	"Visual_DisableLabelsRotation": "Disable labels rotation"
 }

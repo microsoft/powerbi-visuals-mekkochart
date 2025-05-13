@@ -2,7 +2,7 @@ import powerbi from "powerbi-visuals-api";
 import SubSelectableDirectEdit = powerbi.visuals.SubSelectableDirectEdit;
 import SubSelectableDirectEditStyle = powerbi.visuals.SubSelectableDirectEditStyle;
 
-import { IAxisReference, IFontReference, ILabelsReference, ILegendReference, ISortLegendReference } from "./interfaces";
+import { IAxisReference, IFontReference, ILabelsReference, ILegendReference, ISortLegendReference, IXAxisLabelsRotationReference } from "./interfaces";
 import { MekkoChartObjectNames } from "../settings";
 
 const createBaseFontReference = (objectName: string, colorName: string = ""): IFontReference => {
@@ -104,7 +104,7 @@ export const labelsReferences: ILabelsReference = {
     }
 }
 
-export const xAxisReferences: IAxisReference = {
+export const xAxisReferences: IXAxisLabelsRotationReference = {
     ...createBaseFontReference(MekkoChartObjectNames.XAxis, "label"),
     cardUid: "Visual-categoryAxis-card",
     groupUid: "categoryAxis-group",
@@ -116,6 +116,10 @@ export const xAxisReferences: IAxisReference = {
         objectName: MekkoChartObjectNames.XAxis,
         propertyName: "showAxisTitle"
     },
+    enableRotation: {
+        objectName: MekkoChartObjectNames.XAxisRotation,
+        propertyName: "enableRotataion"
+    }
 }
 
 export const yAxisReferences: IAxisReference = {
