@@ -204,14 +204,16 @@ export class MekkoChart implements IVisual {
 
     private static LabelGraphicsContextClass: ClassAndSelector = createClassAndSelector("labelGraphicsContext");
     private static BaseXAxisSelector: ClassAndSelector = createClassAndSelector("x.axis");
-    private static XAxisLabelSelector: ClassAndSelector = createClassAndSelector("xAxisLabel");
-    private static YAxisLabelSelector: ClassAndSelector = createClassAndSelector("yAxisLabel");
+    private static AxisLabelSelector: ClassAndSelector = createClassAndSelector("label");
     private static LegendSelector: ClassAndSelector = createClassAndSelector("legend");
     private static XBrushSelector: ClassAndSelector = createClassAndSelector("x brush");
     private static BrushSelector: ClassAndSelector = createClassAndSelector("brush");
     private static LabelMiddleSelector: ClassAndSelector = createClassAndSelector("labelMiddle");
     private static ZeroLineSelector: ClassAndSelector = createClassAndSelector("zero-line");
     private static SvgScrollableSelector: ClassAndSelector = createClassAndSelector("svgScrollable");
+    private static XSelector: ClassAndSelector = createClassAndSelector("x");
+    private static YSelector: ClassAndSelector = createClassAndSelector("y");
+    private static AxisSelector: ClassAndSelector = createClassAndSelector("axis");
     private static XAxisSelector: ClassAndSelector = createClassAndSelector("x axis");
     private static YAxisSelector: ClassAndSelector = createClassAndSelector("y axis");
     private static ShowLinesOnAxisSelector: ClassAndSelector = createClassAndSelector("showLinesOnAxis");
@@ -468,11 +470,7 @@ export class MekkoChart implements IVisual {
 
     private renderAxesLabels(options: MekkoAxisRenderingOptions, xFontSize: number): void {
         this.axisGraphicsContext
-            .selectAll(MekkoChart.XAxisLabelSelector.selectorName)
-            .remove();
-
-        this.axisGraphicsContext
-            .selectAll(MekkoChart.YAxisLabelSelector.selectorName)
+            .selectAll(MekkoChart.AxisLabelSelector.selectorName)
             .remove();
 
         const margin: IMargin = this.margin,
@@ -505,12 +503,17 @@ export class MekkoChart implements IVisual {
                 .attr("y", xAxisYPosition + shiftTitle)
                 .style("fill", options.xLabelColor)
                 .text(options.axisLabels.x)
-                .classed(MekkoChart.XAxisLabelSelector.className, true);
+                .classed(MekkoChart.XSelector.className, true)
+                .classed(MekkoChart.AxisSelector.className, true)
+                .classed(MekkoChart.AxisLabelSelector.className, true);
 
                 xAxisLabel.call(
                 AxisHelper.LabelLayoutStrategy.clip,
                 width,
                 textMeasurementService.svgEllipsis);
+
+            this.applyOnObjectStylesToAxis(this.axisGraphicsContext, options.isFormatMode, MekkoChartObjectNames.XAxis);
+            this.applyOnObjectStylesToAxisTitle(xAxisLabel, options.isFormatMode, MekkoChartObjectNames.XAxisTitle);
         }
 
         if (!options.hideYAxisTitle) {
@@ -527,12 +530,29 @@ export class MekkoChart implements IVisual {
                 )
                 .attr("x", -((height - margin.top - options.legendMargin) / MekkoChart.XDelimiter))
                 .attr("dy", MekkoChart.DefaultDy)
-                .classed(MekkoChart.YAxisLabelSelector.className, true);
+                .classed(MekkoChart.YSelector.className, true)
+                .classed(MekkoChart.YAxisSelector.className, true)
+                .classed(MekkoChart.AxisLabelSelector.className, true);
 
             yAxisLabel.call(AxisHelper.LabelLayoutStrategy.clip,
                 height - (margin.bottom + margin.top),
                 textMeasurementService.svgEllipsis);
         }
+    }
+
+    private applyOnObjectStylesToAxis(axis: Selection, isFormatMode: boolean, objectName: string): void {
+        axis
+            .select(MekkoChart.AxisSelector.selectorName)
+            .classed(HtmlSubSelectableClass, isFormatMode)
+            .attr(SubSelectableObjectNameAttribute, objectName)
+            .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Axis"));
+    }
+
+    private applyOnObjectStylesToAxisTitle(label: Selection, isFormatMode: boolean, objectName: string){
+        label
+            .classed(HtmlSubSelectableClass, isFormatMode)
+            .attr(SubSelectableObjectNameAttribute, objectName)
+            .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Title"));
     }
 
     private adjustMargins(viewport: IViewport): void {
@@ -1699,19 +1719,15 @@ export class MekkoChart implements IVisual {
                 hideYAxisTitle: hideYAxisTitle,
                 xLabelColor: xLabelColor,
                 yLabelColor: yLabelColor,
-                margin: undefined
+                margin: undefined,
+                isFormatMode
             };
 
             this.renderAxesLabels(renderAxisOptions, xFontSize);
         }
         else {
             this.axisGraphicsContext
-                .selectAll(MekkoChart.XAxisLabelSelector.selectorName)
-                .remove();
-
-            this.axisGraphicsContext
-                .selectAll(MekkoChart.XAxisLabelSelector.selectorName)
-                .selectAll(MekkoChart.YAxisLabelSelector.selectorName)
+                .selectAll(MekkoChart.AxisLabelSelector.selectorName)
                 .remove();
         }
 

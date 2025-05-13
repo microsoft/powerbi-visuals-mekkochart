@@ -42,6 +42,8 @@ export const enum MekkoChartObjectNames {
     LegendTitle = "legendTitle",
     SortLegend = "sortLegend",
     Labels = "labels",
+    XAxis = "categoryAxis",
+    XAxisTitle = "categoryAxisTitle",
 }
 
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
@@ -333,7 +335,7 @@ export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
 }
 
 export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
-    public name: string = "categoryAxis";
+    public name: string = MekkoChartObjectNames.XAxis;
     public displayNameKey:string = "Visual_XAxis";
 
     public show = new formattingSettings.ToggleSwitch({

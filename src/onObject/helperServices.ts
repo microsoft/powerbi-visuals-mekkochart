@@ -9,8 +9,8 @@ import NumericTextSubSelectionStyles = powerbi.visuals.NumericTextSubSelectionSt
 
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
-import { IFontReference } from "./interfaces";
-import { labelsReferences, legendReferences, sortLegendReferences } from "./references";
+import { IAxisReference, IFontReference } from "./interfaces";
+import { labelsReferences, legendReferences, sortLegendReferences, xAxisReferences, yAxisReferences } from "./references";
 
 export class SubSelectionStylesService {
     private static GetSubselectionStylesForText(objectReference: IFontReference): TextSubSelectionStyles {
@@ -78,6 +78,10 @@ export class SubSelectionStylesService {
         };
 
         return textStyles;
+    }
+
+    public static GetXAxisStyles(): SubSelectionStyles {
+        return SubSelectionStylesService.GetSubselectionStylesForText(xAxisReferences);
     }
 }
 
@@ -198,5 +202,72 @@ export class SubSelectionShortcutsService {
                 label: localizationManager.getDisplayName("Visual_FormatLabels")
             }
         ];
+    }
+
+    private static GetAxisShortcuts(axisReference: IAxisReference, displayKey: string, localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+        return [
+            {
+                type: VisualShortcutType.Toggle,
+                ...axisReference.show,
+                disabledLabel: localizationManager.getDisplayName("Visual_Delete")
+            },
+            {
+                type: VisualShortcutType.Toggle,
+                ...axisReference.showTitle,
+                enabledLabel: localizationManager.getDisplayName("Visual_AddTitle")
+            },
+            {
+                type: VisualShortcutType.Divider,
+            },
+            {
+                type: VisualShortcutType.Reset,
+                relatedResetFormattingIds: [
+                    axisReference.bold,
+                    axisReference.fontFamily,
+                    axisReference.fontSize,
+                    axisReference.italic,
+                    axisReference.underline,
+                    axisReference.color,
+                    axisReference.show,
+                ]
+            },
+            {
+                type: VisualShortcutType.Navigate,
+                destinationInfo: { cardUid: axisReference.cardUid, groupUid: axisReference.groupUid },
+                label: localizationManager.getDisplayName(displayKey)
+            }
+        ];
+    }
+
+    public static GetAxisTitleShortcuts(axisReference: IAxisReference, localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+        return [
+            {
+                type: VisualShortcutType.Toggle,
+                ...axisReference.showTitle,
+                disabledLabel: localizationManager.getDisplayName("Visual_Delete")
+            },
+            {
+                type: VisualShortcutType.Divider,
+            },
+            {
+                type: VisualShortcutType.Reset,
+                relatedResetFormattingIds: [
+                    axisReference.showTitle
+                ]
+            },
+            {
+                type: VisualShortcutType.Navigate,
+                destinationInfo: { cardUid: axisReference.cardUid, groupUid: axisReference.groupUid },
+                label: localizationManager.getDisplayName("Visual_FormatTitle")
+            }
+        ];
+    }
+
+    public static GetXAxisShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+       return SubSelectionShortcutsService.GetAxisShortcuts(xAxisReferences, "Visual_FormatXAxis", localizationManager);
+    }
+
+    public static GetXAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+        return SubSelectionShortcutsService.GetAxisTitleShortcuts(xAxisReferences, localizationManager);
     }
 }

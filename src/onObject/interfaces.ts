@@ -31,3 +31,8 @@ export interface ILabelsReference extends IFontReference {
     displayUnits: FormattingId;
     precision: FormattingId;
 }
+
+export interface IAxisReference extends IFontReference {
+    show: FormattingId;
+    showTitle: FormattingId;
+}

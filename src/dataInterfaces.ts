@@ -416,6 +416,7 @@ export interface MekkoAxisRenderingOptions {
     hideYAxisTitle: boolean;
     xLabelColor: string;
     yLabelColor: string;
+    isFormatMode: boolean;
 }
 
 export interface MekkoCategoryProperties {

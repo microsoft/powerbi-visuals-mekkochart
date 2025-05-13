@@ -2,7 +2,7 @@ import powerbi from "powerbi-visuals-api";
 import SubSelectableDirectEdit = powerbi.visuals.SubSelectableDirectEdit;
 import SubSelectableDirectEditStyle = powerbi.visuals.SubSelectableDirectEditStyle;
 
-import { IFontReference, ILabelsReference, ILegendReference, ISortLegendReference } from "./interfaces";
+import { IAxisReference, IFontReference, ILabelsReference, ILegendReference, ISortLegendReference } from "./interfaces";
 import { MekkoChartObjectNames } from "../settings";
 
 const createBaseFontReference = (objectName: string, colorName: string = ""): IFontReference => {
@@ -102,4 +102,18 @@ export const labelsReferences: ILabelsReference = {
         objectName: MekkoChartObjectNames.Labels,
         propertyName: "labelPrecision"
     }
+}
+
+export const xAxisReferences: IAxisReference = {
+    ...createBaseFontReference(MekkoChartObjectNames.XAxis, "label"),
+    cardUid: "Visual-categoryAxis-card",
+    groupUid: "categoryAxis-group",
+    show: {
+        objectName: MekkoChartObjectNames.XAxis,
+        propertyName: "show"
+    },
+    showTitle: {
+        objectName: MekkoChartObjectNames.XAxis,
+        propertyName: "showAxisTitle"
+    },
 }

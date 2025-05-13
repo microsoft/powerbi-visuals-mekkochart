@@ -59,6 +59,8 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
                     return SubSelectionStylesService.GetLegendStyles();
                 case MekkoChartObjectNames.Labels:
                     return SubSelectionStylesService.GetLabelsStyles();
+                case MekkoChartObjectNames.XAxis:
+                    return SubSelectionStylesService.GetXAxisStyles();
             }
         }
     }
@@ -74,6 +76,10 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
                     return SubSelectionShortcutsService.GetLegendTitleShortcuts(this.localizationManager);
                 case MekkoChartObjectNames.Labels:
                     return SubSelectionShortcutsService.GetLabelsShortcuts(this.localizationManager);
+                case MekkoChartObjectNames.XAxis:
+                    return SubSelectionShortcutsService.GetXAxisShortcuts(this.localizationManager);
+                case MekkoChartObjectNames.XAxisTitle:
+                    return SubSelectionShortcutsService.GetXAxisTitleShortcuts(this.localizationManager);
             }
         }
     }
