@@ -89,7 +89,7 @@ import * as axisUtils from "./axis/utils";
 import { dataViewObjects } from "powerbi-visuals-utils-dataviewutils";
 
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
-import { VisualFormattingSettingsModel } from "./settings";
+import { LegendSettings, MekkoChartObjectNames, VisualFormattingSettingsModel } from "./settings";
 
 import { max, sum } from "d3-array";
 import { select } from "d3-selection";
@@ -147,6 +147,11 @@ import {
 
 import ValueType = valueType.ValueType;
 
+// powerbi.visuals.subselections
+import { HtmlSubSelectableClass, SubSelectableDirectEdit, SubSelectableDisplayNameAttribute, SubSelectableObjectNameAttribute, SubSelectableTypeAttribute } from "powerbi-visuals-utils-onobjectutils";
+import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
+import SubSelectionStylesType = powerbi.visuals.SubSelectionStylesType;
+
 // behavior
 import { CustomVisualBehavior } from "./behavior/customVisualBehavior";
 import { CustomVisualBehaviorOptions } from "./behavior/customVisualBehaviorOptions";
@@ -156,12 +161,12 @@ import * as columnChart from "./columnChart/columnChartVisual";
 import * as columnChartBaseColumnChart from "./columnChart/baseColumnChart";
 
 import { MekkoChartOnObjectService } from "./onObject/onObjectService";
-import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
 
 // columnChart
 import IColumnChart = columnChart.IColumnChart;
 import BaseColumnChart = columnChartBaseColumnChart.BaseColumnChart;
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
+import { titleEditSubSelection } from "./onObject/references";
 
 export interface MekkoChartProperty {
     [propertyName: string]: DataViewObjectPropertyIdentifier;
@@ -409,10 +414,10 @@ export class MekkoChart implements IVisual {
             
         this.selectionManager = options.host.createSelectionManager();
         this.behavior = new CustomVisualBehavior(this.selectionManager, this.colorPalette);
-        this.visualOnObjectFormatting = new MekkoChartOnObjectService(options.element, options.host, this.localizationManager);
 
         this.localizationManager = this.visualHost.createLocalizationManager();
         this.formattingSettingsService = new FormattingSettingsService(this.localizationManager);
+        this.visualOnObjectFormatting = new MekkoChartOnObjectService(options.element, options.host, this.localizationManager);
 
         const legendParent = select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
 
@@ -683,7 +688,7 @@ export class MekkoChart implements IVisual {
         }
 
         for (let layerIndex: number = 0, length: number = this.layers.length; layerIndex < length; layerIndex++) {
-            this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length), this.settingsModel);
+            this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length), this.settingsModel, options.formatMode);
         }
 
         // enable/disable drill control
@@ -709,7 +714,7 @@ export class MekkoChart implements IVisual {
             return;
         }
 
-        this.renderLegend();
+        this.renderLegend(this.settingsModel.legend, options.formatMode);
 
         this.render(options.formatMode);
 
@@ -929,12 +934,12 @@ export class MekkoChart implements IVisual {
     }
 
     // eslint-disable-next-line max-lines-per-function
-    private renderLegend(): void {
+    private renderLegend(legendSettings: LegendSettings, isFormatMode: boolean): void {
         const layers: IColumnChart[] = this.layers,
             legendData: ILegendData = {
                 title: "",
-                fontSize: this.settingsModel.legend.fontControl.fontSize.value,
-                fontFamily: this.settingsModel.legend.fontControl.fontFamily.value,
+                fontSize: legendSettings.fontControl.fontSize.value,
+                fontFamily: legendSettings.fontControl.fontFamily.value,
                 dataPoints: []
             };
 
@@ -946,14 +951,14 @@ export class MekkoChart implements IVisual {
                     ? this.layerLegendData.title || ""
                     : legendData.title;
 
-                if (this.settingsModel.legend.titleText.value)
+                if (legendSettings.titleText.value)
                 {
                     if (!this.settingsModel.sortLegend.groupByCategory.value){
-                        legendData.title = this.settingsModel.legend.titleText.value;
+                        legendData.title = legendSettings.titleText.value;
                     }
                 }
                 else {
-                    this.settingsModel.legend.titleText.value = legendData.title;
+                    legendSettings.titleText.value = legendData.title;
                 }
 
                 legendData.dataPoints = legendData.dataPoints
@@ -970,10 +975,10 @@ export class MekkoChart implements IVisual {
         }
 
         const legendProperties: powerbi.DataViewObject = {
-            fontSize: this.settingsModel.legend.fontControl.fontSize.value,
-            fontFamily: this.settingsModel.legend.fontControl.fontFamily.value,
-            showTitle: this.settingsModel.legend.showTitle.value,
-            show: this.settingsModel.legend.show.value
+            fontSize: legendSettings.fontControl.fontSize.value,
+            fontFamily: legendSettings.fontControl.fontFamily.value,
+            showTitle: legendSettings.showTitle.value,
+            show: legendSettings.show.value
         }
         LegendData.update(legendData, legendProperties);
         this.legend.changeOrientation(LegendPosition.Top);
@@ -1045,8 +1050,8 @@ export class MekkoChart implements IVisual {
 
         const svgHeight: number = textMeasurementService.estimateSvgTextHeight({
             // fontFamily: MekkoChart.LegendBarTextFont,
-            fontFamily: this.settingsModel.legend.fontControl.fontFamily.value,
-            fontSize: PixelConverter.fromPoint(this.settingsModel.legend.fontControl.fontSize.value),
+            fontFamily: legendSettings.fontControl.fontFamily.value,
+            fontSize: PixelConverter.fromPoint(legendSettings.fontControl.fontSize.value),
             text: "AZ"
         });
 
@@ -1107,7 +1112,7 @@ export class MekkoChart implements IVisual {
         }
         legendParentsWithData.exit().remove();
 
-        if (this.settingsModel.legend.show.value === false) {
+        if (legendSettings.show.value === false) {
             legendData.dataPoints = [];
             this.categoryLegends.forEach(legend => {
                 legend.changeOrientation(LegendPosition.None);
@@ -1133,10 +1138,12 @@ export class MekkoChart implements IVisual {
         this.legendSelection = this.rootElement
             .selectAll(MekkoChart.LegendSelector.selectorName);
 
-        this.legendSelection.style("font-weight", mekko.settingsModel.legend.fontControl.bold.value? "bold" : "normal");
-        this.legendSelection.style("font-style", mekko.settingsModel.legend.fontControl.italic.value ? "italic" : "normal");
-        this.legendSelection.style("text-decoration", mekko.settingsModel.legend.fontControl.underline.value ? "underline" : "none");
-        this.legendSelection.style("fill", this.colorPalette.isHighContrast ? this.colorPalette.foreground.value : mekko.settingsModel.legend.color.value.value);
+        this.legendSelection.style("font-weight", legendSettings.fontControl.bold.value? "bold" : "normal");
+        this.legendSelection.style("font-style", legendSettings.fontControl.italic.value ? "italic" : "normal");
+        this.legendSelection.style("text-decoration", legendSettings.fontControl.underline.value ? "underline" : "none");
+        this.legendSelection.style("fill", this.colorPalette.isHighContrast ? this.colorPalette.foreground.value : legendSettings.color.value.value);
+
+        this.applyOnObjectStylesToLegend(isFormatMode, legendSettings);
     }
 
     private hideLegends(): boolean {
@@ -1167,6 +1174,19 @@ export class MekkoChart implements IVisual {
         }
 
         return false;
+    }
+
+    private applyOnObjectStylesToLegend(isFormatMode: boolean, settings: LegendSettings): void {
+        this.legendSelection.select("#legendGroup")
+            .classed(HtmlSubSelectableClass, isFormatMode && settings.show.value)
+            .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.Legend)
+            .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Legend"));
+
+            this.legendSelection.select(".legendTitle")
+            .classed(HtmlSubSelectableClass, isFormatMode && settings.show.value && settings.showTitle.value)
+            .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.LegendTitle)
+            .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_LegendName"))
+            .attr(SubSelectableDirectEdit, titleEditSubSelection);
     }
 
     // eslint-disable-next-line max-lines-per-function

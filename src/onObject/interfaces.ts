@@ -11,3 +11,16 @@ export interface IFontReference extends GroupFormattingModelReference {
     fontSize: FormattingId;
     color: FormattingId;
 }
+
+export interface ILegendReference extends IFontReference {
+    show: FormattingId;
+    showTitle: FormattingId;
+    titleText: FormattingId;
+}
+
+export interface ISortLegendReference extends GroupFormattingModelReference {
+    enabled: FormattingId;
+    direction: FormattingId;
+    groupByCategory: FormattingId;
+    groupByCategoryDirection: FormattingId;
+}

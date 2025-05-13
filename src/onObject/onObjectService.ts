@@ -14,6 +14,9 @@ import SubSelectionStylesType = powerbi.visuals.SubSelectionStylesType;
 import { select as d3Select } from "d3-selection";
 import { HtmlSubSelectionHelper, SubSelectableObjectNameAttribute } from "powerbi-visuals-utils-onobjectutils";
 
+import { MekkoChartObjectNames } from "../settings";
+import { SubSelectionStylesService, SubSelectionShortcutsService } from "./helperServices";
+
 export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
     private localizationManager: ILocalizationManager;
     private htmlSubSelectionHelper: HtmlSubSelectionHelper;
@@ -52,7 +55,8 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
 
         if (visualObject) {
             switch (visualObject.objectName) {
-                default: return undefined;
+                case MekkoChartObjectNames.Legend:
+                    return SubSelectionStylesService.GetLegendStyles();
             }
         }
     }
@@ -62,7 +66,10 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
 
         if (visualObject) {
             switch (visualObject.objectName) {
-                default: return undefined;
+                case MekkoChartObjectNames.Legend:
+                    return SubSelectionShortcutsService.GetLegendShortcuts(this.localizationManager);
+                case MekkoChartObjectNames.LegendTitle:
+                    return SubSelectionShortcutsService.GetLegendTitleShortcuts(this.localizationManager);
             }
         }
     }

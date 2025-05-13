@@ -1,6 +1,9 @@
 import powerbi from "powerbi-visuals-api";
+import SubSelectableDirectEdit = powerbi.visuals.SubSelectableDirectEdit;
+import SubSelectableDirectEditStyle = powerbi.visuals.SubSelectableDirectEditStyle;
 
-import { IFontReference } from "./interfaces";
+import { IFontReference, ILegendReference, ISortLegendReference } from "./interfaces";
+import { MekkoChartObjectNames } from "../settings";
 
 const createBaseFontReference = (objectName: string, colorName: string = ""): IFontReference => {
     return {
@@ -31,3 +34,50 @@ const createBaseFontReference = (objectName: string, colorName: string = ""): IF
     }
 }
 
+export const legendReferences: ILegendReference = {
+    ...createBaseFontReference(MekkoChartObjectNames.Legend),
+    cardUid: "Visual-legend-card",
+    groupUid: "legend-group",
+    show: {
+        objectName: MekkoChartObjectNames.Legend,
+        propertyName: "show"
+    },
+    showTitle: {
+        objectName: MekkoChartObjectNames.Legend,
+        propertyName: "showTitle"
+    },
+    titleText: {
+        objectName: MekkoChartObjectNames.Legend,
+        propertyName: "titleText"
+    }
+}
+
+export const TitleEdit: SubSelectableDirectEdit = {
+    reference: {
+        objectName: MekkoChartObjectNames.Legend,
+        propertyName: "titleText"
+    },
+    style: SubSelectableDirectEditStyle.HorizontalLeft,
+}
+
+export const titleEditSubSelection = JSON.stringify(TitleEdit);
+
+export const sortLegendReferences: ISortLegendReference = {
+    cardUid: "Visual-sortLegend-card",
+    enabled: {
+        objectName: MekkoChartObjectNames.SortLegend,
+        propertyName: "enabled"
+    },
+    direction: {
+        objectName: MekkoChartObjectNames.SortLegend,
+        propertyName: "direction"
+    },
+    groupByCategory: {
+        objectName: MekkoChartObjectNames.SortLegend,
+        propertyName: "groupByCategory"
+    },
+    groupByCategoryDirection: {
+        objectName: MekkoChartObjectNames.SortLegend,
+        propertyName: "groupByCategoryDirection"
+    }
+}

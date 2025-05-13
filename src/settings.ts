@@ -37,6 +37,12 @@ class LabelPrecisionDefaultOptions {
     public static MaxLabelPrecision: number = 4;
 }
 
+export const enum MekkoChartObjectNames {
+    Legend = "legend",
+    LegendTitle = "legendTitle",
+    SortLegend = "sortLegend"
+}
+
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
 
     public name: string = "columnBorder";
@@ -77,7 +83,7 @@ export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
 }
 
 export class LegendSettings extends FormattingSettingsCompositeCard {
-    public name: string = "legend";
+    public name: string = MekkoChartObjectNames.Legend;
     public displayNameKey: string = "Visual_Legend";
     public visible: boolean = false;
 
@@ -158,7 +164,7 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
 }
 
 export class SortLegendSettings extends FormattingSettingsSimpleCard {
-    public name: string = "sortLegend";
+    public name: string = MekkoChartObjectNames.SortLegend;
     public displayNameKey: string = "Visual_SortLegend";
     public visible: boolean = false;
 

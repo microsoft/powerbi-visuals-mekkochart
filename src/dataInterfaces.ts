@@ -235,6 +235,7 @@ export interface MekkoChartData extends MekkoChartBaseData {
     axesLabels: MekkoChartAxesLabels;
     hasDynamicSeries: boolean;
     isMultiMeasure: boolean;
+    isFormatMode: boolean;
     defaultDataPointColor?: string;
     showAllDataPoints?: boolean;
 }
@@ -326,6 +327,7 @@ export interface BaseConverterOptions {
     supportsOverflow: boolean;
     localizationManager: ILocalizationManager;
     settingsModel: VisualFormattingSettingsModel;
+    isFormatMode: boolean;
     chartType?: MekkoVisualChartType;
 }
 

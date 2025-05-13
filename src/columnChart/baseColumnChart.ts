@@ -285,7 +285,8 @@ export class BaseColumnChart implements IColumnChart {
         supportsOverflow,
         localizationManager,
         settingsModel,
-        chartType } : BaseConverterOptions) : MekkoColumnChartData {
+        chartType, 
+        isFormatMode } : BaseConverterOptions) : MekkoColumnChartData {
 
         const converterStrategy: BaseConverterStrategy = new BaseConverterStrategy(categorical, visualHost);
 
@@ -369,7 +370,8 @@ export class BaseColumnChart implements IColumnChart {
             },
             hasDynamicSeries: result.hasDynamicSeries,
             categoryProperties: result.categoryProperties,
-            isMultiMeasure: false
+            isMultiMeasure: false,
+            isFormatMode
         };
     }
 
@@ -1104,7 +1106,7 @@ export class BaseColumnChart implements IColumnChart {
         return data.categoriesWidth;
     }
 
-    public setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel): void {
+    public setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel, isFormatMode: boolean): void {
         this.data = {
             categories: [],
             categoriesWidth: [],
@@ -1119,7 +1121,8 @@ export class BaseColumnChart implements IColumnChart {
             hasDynamicSeries: false,
             defaultDataPointColor: null,
             isMultiMeasure: false,
-            categoryProperties: null
+            categoryProperties: null,
+            isFormatMode
         };
 
         if (dataViews.length > 0) {
@@ -1136,7 +1139,8 @@ export class BaseColumnChart implements IColumnChart {
                     supportsOverflow: this.supportsOverflow,
                     localizationManager: this.localizationManager,
                     settingsModel,
-                    chartType: this.chartType
+                    chartType: this.chartType,
+                    isFormatMode
                 });
             }
         }
