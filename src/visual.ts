@@ -537,6 +537,9 @@ export class MekkoChart implements IVisual {
             yAxisLabel.call(AxisHelper.LabelLayoutStrategy.clip,
                 height - (margin.bottom + margin.top),
                 textMeasurementService.svgEllipsis);
+
+            this.applyOnObjectStylesToAxis(this.axisGraphicsContextScrollable, options.isFormatMode, MekkoChartObjectNames.YAxis);
+            this.applyOnObjectStylesToAxisTitle(yAxisLabel, options.isFormatMode, MekkoChartObjectNames.YAxisTitle);
         }
     }
 

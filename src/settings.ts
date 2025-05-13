@@ -44,6 +44,8 @@ export const enum MekkoChartObjectNames {
     Labels = "labels",
     XAxis = "categoryAxis",
     XAxisTitle = "categoryAxisTitle",
+    YAxis = "valueAxis",
+    YAxisTitle = "valueAxisTitle",
 }
 
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
@@ -403,7 +405,7 @@ export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
 }
 
 export class ValueAxisSettings extends FormattingSettingsSimpleCard {
-    public name: string = "valueAxis";
+    public name: string = MekkoChartObjectNames.YAxis;
     public displayNameKey:string = "Visual_YAxis";
 
     public show = new formattingSettings.ToggleSwitch({

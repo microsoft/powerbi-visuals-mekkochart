@@ -83,6 +83,10 @@ export class SubSelectionStylesService {
     public static GetXAxisStyles(): SubSelectionStyles {
         return SubSelectionStylesService.GetSubselectionStylesForText(xAxisReferences);
     }
+
+    public static GetYAxisStyles(): SubSelectionStyles {
+        return SubSelectionStylesService.GetSubselectionStylesForText(yAxisReferences);
+    }
 }
 
 export class SubSelectionShortcutsService {
@@ -270,4 +274,12 @@ export class SubSelectionShortcutsService {
     public static GetXAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
         return SubSelectionShortcutsService.GetAxisTitleShortcuts(xAxisReferences, localizationManager);
     }
+
+    public static GetYAxisShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+        return SubSelectionShortcutsService.GetAxisShortcuts(yAxisReferences, "Visual_FormatYAxis", localizationManager);
+     }
+ 
+     public static GetYAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+         return SubSelectionShortcutsService.GetAxisTitleShortcuts(yAxisReferences, localizationManager);
+     }
 }

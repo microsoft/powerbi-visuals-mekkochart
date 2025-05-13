@@ -117,3 +117,17 @@ export const xAxisReferences: IAxisReference = {
         propertyName: "showAxisTitle"
     },
 }
+
+export const yAxisReferences: IAxisReference = {
+    ...createBaseFontReference(MekkoChartObjectNames.YAxis, "label"),
+    cardUid: "Visual-valueAxis-card",
+    groupUid: "valueAxis-group",
+    show: {
+        objectName: MekkoChartObjectNames.YAxis,
+        propertyName: "show"
+    },
+    showTitle: {
+        objectName: MekkoChartObjectNames.YAxis,
+        propertyName: "showAxisTitle"
+    },
+}
