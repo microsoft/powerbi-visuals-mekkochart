@@ -79,14 +79,14 @@ export class MekkoChartBuilder extends VisualBuilderBase<MekkoChart> {
             .querySelectorAll("g.y.axis > g.tick");
     }
 
-    public get xAxisLabel(): NodeListOf<HTMLElement> {
+    public get xAxisLabel(): HTMLElement {
         return this.rootAxisGraphicsContext
-            .querySelectorAll("text.xAxisLabel");
+            .querySelector("text.x.axis.label");
     }
 
-    public get yAxisLabel(): NodeListOf<HTMLElement> {
+    public get yAxisLabel(): HTMLElement {
         return this.rootAxisGraphicsContext
-            .querySelectorAll("text.yAxisLabel");
+            .querySelector("text.y.axis.label");
     }
 
     public get columnElement(): HTMLElement {
