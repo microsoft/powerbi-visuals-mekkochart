@@ -40,7 +40,6 @@ import {
 import LegendData = legendInterfaces.LegendData;
 import IAxisProperties = axisInterfaces.IAxisProperties;
 import { VisualFormattingSettingsModel } from "../settings";
-import { IVisualStrategy } from "../visualStrategy/visualStrategy";
 
 export interface IColumnChart {
     getColumnsWidth(): number[];

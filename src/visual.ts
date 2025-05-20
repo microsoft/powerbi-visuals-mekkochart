@@ -71,10 +71,8 @@ import {
     MekkoChartDataPoint,
     ILegendGroup,
     Selection,
-    MekkoChartColumnDataPoint,
     MekkoColumnAxisOptions,
     RectDataPoint,
-    MekkoChartSeries
 } from "./dataInterfaces";
 
 import {

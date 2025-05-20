@@ -18,7 +18,7 @@ import { HtmlSubSelectionHelper, SubSelectableObjectNameAttribute } from "powerb
 
 import { MekkoChartObjectNames } from "../settings";
 import { SubSelectionStylesService, SubSelectionShortcutsService } from "./helperServices";
-import { MekkoChartColumnDataPoint, MekkoChartSeries, RectDataPoint } from "../dataInterfaces";
+import { RectDataPoint } from "../dataInterfaces";
 
 import { legendInterfaces } from "powerbi-visuals-utils-chartutils";
 import ISelectableDataPoint = legendInterfaces.ISelectableDataPoint;
