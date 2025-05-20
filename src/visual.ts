@@ -152,7 +152,7 @@ import {
 import ValueType = valueType.ValueType;
 
 // powerbi.visuals.subselections
-import { HtmlSubSelectableClass, SubSelectableDirectEdit, SubSelectableDisplayNameAttribute, SubSelectableObjectNameAttribute } from "powerbi-visuals-utils-onobjectutils";
+import { HtmlSubSelectableClass, SubSelectableDirectEdit, SubSelectableDisplayNameAttribute, SubSelectableObjectNameAttribute, SubSelectableTypeAttribute } from "powerbi-visuals-utils-onobjectutils";
 import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
 import SubSelectionStylesType = powerbi.visuals.SubSelectionStylesType;
 
@@ -553,6 +553,7 @@ export class MekkoChart implements IVisual {
             .select(MekkoChart.AxisSelector.selectorName)
             .classed(HtmlSubSelectableClass, isFormatMode)
             .attr(SubSelectableObjectNameAttribute, objectName)
+            .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
             .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Axis"));
     }
 
@@ -560,6 +561,7 @@ export class MekkoChart implements IVisual {
         label
             .classed(HtmlSubSelectableClass, isFormatMode)
             .attr(SubSelectableObjectNameAttribute, objectName)
+            .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
             .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Title"));
     }
 
@@ -1273,11 +1275,13 @@ export class MekkoChart implements IVisual {
         this.legendSelection.select("#legendGroup")
             .classed(HtmlSubSelectableClass, isFormatMode && settings.show.value)
             .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.Legend)
+            .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
             .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Legend"));
 
             this.legendSelection.select(".legendTitle")
             .classed(HtmlSubSelectableClass, isFormatMode && settings.show.value && settings.showTitle.value)
             .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.LegendTitle)
+            .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
             .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_LegendName"))
             .attr(SubSelectableDirectEdit, titleEditSubSelection);
     }
@@ -1851,6 +1855,7 @@ export class MekkoChart implements IVisual {
             .classed(HtmlSubSelectableClass, isFormatMode)
             .style("pointer-events", "auto")
             .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.Labels)
+            .attr(SubSelectableTypeAttribute, SubSelectionStylesType.NumericText)
             .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Data_Labels"));
     }
 
