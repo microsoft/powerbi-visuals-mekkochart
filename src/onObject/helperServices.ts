@@ -11,7 +11,7 @@ import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
 import { IAxisReference, IFontReference, IXAxisLabelsRotationReference } from "./interfaces";
-import { columnBorderReferences, dataPointReferences, labelsReferences, legendReferences, sortLegendReferences, xAxisReferences, yAxisReferences } from "./references";
+import { columnBorderReferences, dataPointReferences, labelsReferences, legendReferences, sortLegendReferences, sortSeriesReferences, xAxisReferences, yAxisReferences } from "./references";
 
 export class SubSelectionStylesService {
     private static GetSubselectionStylesForText(objectReference: IFontReference): TextSubSelectionStyles {
@@ -327,6 +327,22 @@ export class SubSelectionShortcutsService {
                 disabledLabel: localizationManager.getDisplayName("Visual_HideBorder")
             },
             {
+                type: VisualShortcutType.Toggle,
+                ...sortSeriesReferences.enabled,
+                enabledLabel: localizationManager.getDisplayName("Visual_EnableSortSeries"),
+                disabledLabel: localizationManager.getDisplayName("Visual_DisableSortSeries")
+            },
+            {
+                type: VisualShortcutType.Picker,
+                ...sortSeriesReferences.direction,
+                label: localizationManager.getDisplayName("Visual_Direction")
+            },
+            {
+                type: VisualShortcutType.Picker,
+                ...sortSeriesReferences.displayPercents,
+                label: localizationManager.getDisplayName("Visual_DisplayPercents")
+            },
+            {
                 type: VisualShortcutType.Divider,
             },
             {
@@ -336,7 +352,10 @@ export class SubSelectionShortcutsService {
                     dataPointReferences.defaultColor,
                     dataPointReferences.showAllDataPoints,
                     columnBorderReferences.show,
-                    columnBorderReferences.border
+                    columnBorderReferences.border,
+                    sortSeriesReferences.enabled,
+                    sortSeriesReferences.direction,
+                    sortSeriesReferences.displayPercents
                 ]
             },
             {

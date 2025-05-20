@@ -2,7 +2,7 @@ import powerbi from "powerbi-visuals-api";
 import SubSelectableDirectEdit = powerbi.visuals.SubSelectableDirectEdit;
 import SubSelectableDirectEditStyle = powerbi.visuals.SubSelectableDirectEditStyle;
 
-import { IAxisReference, IColumnBorderReference, IDataPointReference, IFontReference, ILabelsReference, ILegendReference, ISortLegendReference, IXAxisLabelsRotationReference } from "./interfaces";
+import { IAxisReference, IColumnBorderReference, IDataPointReference, IFontReference, ILabelsReference, ILegendReference, ISortLegendReference, ISortSeriesReference, IXAxisLabelsRotationReference } from "./interfaces";
 import { MekkoChartObjectNames } from "../settings";
 
 const createBaseFontReference = (objectName: string, colorName: string = ""): IFontReference => {
@@ -163,5 +163,21 @@ export const columnBorderReferences: IColumnBorderReference = {
     show: {
         objectName: MekkoChartObjectNames.ColumnBorder,
         propertyName: "show"
+    }
+}
+
+export const sortSeriesReferences: ISortSeriesReference = {
+    cardUid: "Visual-sortSeries-card",
+    enabled: {
+        objectName: MekkoChartObjectNames.SortSeries,
+        propertyName: "enabled"
+    },
+    direction: {
+        objectName: MekkoChartObjectNames.SortSeries,
+        propertyName: "direction"
+    },
+    displayPercents: {
+        objectName: MekkoChartObjectNames.SortSeries,
+        propertyName: "displayPercents"
     }
 }

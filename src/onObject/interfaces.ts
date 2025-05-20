@@ -51,3 +51,9 @@ export interface IColumnBorderReference extends GroupFormattingModelReference {
     border: FormattingId;
     show: FormattingId;
 }
+
+export interface ISortSeriesReference extends GroupFormattingModelReference {
+    enabled: FormattingId;
+    direction: FormattingId;
+    displayPercents: FormattingId;
+}

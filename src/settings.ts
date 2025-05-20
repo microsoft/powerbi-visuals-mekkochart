@@ -47,6 +47,7 @@ export const enum MekkoChartObjectNames {
     XAxisRotation = "xAxisLabels",
     DataPoint = "dataPoint",
     ColumnBorder = "columnBorder",
+    SortSeries= "sortSeries"
 }
 
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
@@ -296,7 +297,7 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
 }
 
 export class SeriesSortSettings extends FormattingSettingsSimpleCard {
-    public name: string = "sortSeries";
+    public name: string = MekkoChartObjectNames.SortSeries;
     public displayNameKey: string = "Visual_SortSeries";
     public visible: boolean = false;
 
