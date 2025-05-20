@@ -43,12 +43,17 @@ import {
     axis as AxisHelper
 } from "powerbi-visuals-utils-chartutils";
 
+import { HtmlSubSelectableClass, SubSelectableDisplayNameAttribute, SubSelectableObjectNameAttribute, SubSelectableTypeAttribute } from "powerbi-visuals-utils-onobjectutils";
+import SubSelectionStylesType = powerbi.visuals.SubSelectionStylesType;
+
 // d3
 import { Selection as d3Selection } from "d3-selection";
 import { ScaleLinear as d3ScaleLinear } from "d3-scale";
 import { max as d3Max, min as d3Min } from "d3-array";
 type Selection<T> = d3Selection<any, T, any, any>;
 type ScaleLinear = d3ScaleLinear<any, any, never>;
+
+import { MekkoChartObjectNames } from "./settings";
 
 export class MekkoChartUtils {
     static PctRoundingError: number = 0.0001;
@@ -125,10 +130,28 @@ export class MekkoChartUtils {
         seriesData
             .exit()
             .remove();
-    
+
+        MekkoChartUtils.applyOnObjectStylesToShapes(mergedSeries, data);
+
         return mergedSeries;
     }
-    
+
+    private static applyOnObjectStylesToShapes(series: Selection<MekkoChartSeries>, data: MekkoChartData): void{
+        const seriesCount: number = data.series.length;
+        const isMultiSeries: boolean = data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata;
+
+        const getDisplayName = (dataPoint: MekkoChartSeries) => {
+            const columnName = data.localizationManager.getDisplayName("Visual_Column");
+            return `"${dataPoint.displayName}" ${columnName}`;
+        }
+
+        series
+            .classed(HtmlSubSelectableClass, data.isFormatMode && isMultiSeries)
+            .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.DataPoint)
+            .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Shape)
+            .attr(SubSelectableDisplayNameAttribute, getDisplayName);
+    }
+
     static applyInteractivity(columns: Selection<any>, onDragStart): void {
         if (onDragStart) {
             columns

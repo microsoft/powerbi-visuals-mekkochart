@@ -185,6 +185,13 @@ export interface MekkoChartCategoryLayoutOptions {
     isScrollable?: boolean;
 }
 
+export interface RectDataPoint {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+}
+
 export interface MekkoChartColumnDataPoint extends
     MekkoChartDataPoint,
     ISelectableDataPoint,
@@ -215,7 +222,6 @@ export interface MekkoChartSeries extends MekkoChartBaseSeries {
     key: string;
     index: number;
     data: MekkoChartColumnDataPoint[];
-    identity: ISelectionId;
     color: string;
     labelSettings: VisualDataLabelsSettings;
 }
@@ -236,6 +242,7 @@ export interface MekkoChartData extends MekkoChartBaseData {
     hasDynamicSeries: boolean;
     isMultiMeasure: boolean;
     isFormatMode: boolean;
+    localizationManager: ILocalizationManager;
     defaultDataPointColor?: string;
     showAllDataPoints?: boolean;
 }

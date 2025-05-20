@@ -6,11 +6,12 @@ import SubSelectionStylesType = powerbi.visuals.SubSelectionStylesType;
 import VisualShortcutType = powerbi.visuals.VisualShortcutType;
 import TextSubSelectionStyles = powerbi.visuals.TextSubSelectionStyles;
 import NumericTextSubSelectionStyles = powerbi.visuals.NumericTextSubSelectionStyles;
+import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
 
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
 import { IAxisReference, IFontReference, IXAxisLabelsRotationReference } from "./interfaces";
-import { labelsReferences, legendReferences, sortLegendReferences, xAxisReferences, yAxisReferences } from "./references";
+import { columnBorderReferences, dataPointReferences, labelsReferences, legendReferences, sortLegendReferences, xAxisReferences, yAxisReferences } from "./references";
 
 export class SubSelectionStylesService {
     private static GetSubselectionStylesForText(objectReference: IFontReference): TextSubSelectionStyles {
@@ -86,6 +87,26 @@ export class SubSelectionStylesService {
 
     public static GetYAxisStyles(): SubSelectionStyles {
         return SubSelectionStylesService.GetSubselectionStylesForText(yAxisReferences);
+    }
+
+    public static GetDataPointStyles(subSelections: CustomVisualSubSelection[], localizationManager: ILocalizationManager): SubSelectionStyles {
+        const selector = subSelections[0].customVisualObjects[0].selectionId?.getSelector();
+        return {
+            type: SubSelectionStylesType.Shape,
+            fill: {
+                reference: {
+                    ...dataPointReferences.fill,
+                    selector
+                },
+                label: localizationManager.getDisplayName("Visual_Fill")
+            },
+            stroke: {
+                reference: {
+                    ...columnBorderReferences.border
+                },
+                label: localizationManager.getDisplayName("Visual_ColumnBorder")
+            },
+        }
     }
 }
 
@@ -289,5 +310,40 @@ export class SubSelectionShortcutsService {
  
     public static GetYAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
         return SubSelectionShortcutsService.GetAxisTitleShortcuts(yAxisReferences, localizationManager);
+    }
+
+    public static GetDataPointShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
+        return [
+            {
+                type: VisualShortcutType.Toggle,
+                ...dataPointReferences.showAllDataPoints,
+                enabledLabel: localizationManager.getDisplayName("Visual_EnableShowAllDataPoints"),
+                disabledLabel: localizationManager.getDisplayName("Visual_DisableShowAllDataPoints")
+            },
+            {
+                type: VisualShortcutType.Toggle,
+                ...columnBorderReferences.show,
+                enabledLabel: localizationManager.getDisplayName("Visual_ShowBorder"),
+                disabledLabel: localizationManager.getDisplayName("Visual_HideBorder")
+            },
+            {
+                type: VisualShortcutType.Divider,
+            },
+            {
+                type: VisualShortcutType.Reset,
+                relatedResetFormattingIds: [
+                    dataPointReferences.fill,
+                    dataPointReferences.defaultColor,
+                    dataPointReferences.showAllDataPoints,
+                    columnBorderReferences.show,
+                    columnBorderReferences.border
+                ]
+            },
+            {
+                type: VisualShortcutType.Navigate,
+                destinationInfo: { cardUid: dataPointReferences.cardUid, groupUid: dataPointReferences.groupUid },
+                label: localizationManager.getDisplayName("Visual_FormatDataColors")
+            }
+        ];
     }
 }

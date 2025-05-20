@@ -80,5 +80,11 @@
 	"Visual_FormatXAxis": "Format X-Axis",
 	"Visual_FormatYAxis": "Format Y-Axis",
 	"Visual_EnableLabelsRotation": "Enable labels rotation",
-	"Visual_DisableLabelsRotation": "Disable labels rotation"
+	"Visual_DisableLabelsRotation": "Disable labels rotation",
+	"Visual_Column": "Column",
+	"Visual_EnableShowAllDataPoints": "Show all data points",
+	"Visual_DisableShowAllDataPoints": "Hide all data points",
+	"Visual_FormatDataColors": "Format data colors",
+	"Visual_ShowBorder": "Show border",
+	"Visual_HideBorder": "Hide border"
 }

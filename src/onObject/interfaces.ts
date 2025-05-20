@@ -40,3 +40,14 @@ export interface IAxisReference extends IFontReference {
 export interface IXAxisLabelsRotationReference extends IAxisReference {
     enableRotation: FormattingId;
 }
+
+export interface IDataPointReference extends GroupFormattingModelReference {
+    fill: FormattingId;
+    defaultColor: FormattingId;
+    showAllDataPoints: FormattingId;
+}
+
+export interface IColumnBorderReference extends GroupFormattingModelReference {
+    border: FormattingId;
+    show: FormattingId;
+}

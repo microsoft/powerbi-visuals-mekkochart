@@ -1,11 +1,9 @@
 import powerbi from "powerbi-visuals-api";
 import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
-import ISelectionId = powerbi.visuals.ISelectionId;
 
 import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 import IValueFormatter = valueFormatter.IValueFormatter;
 
-import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
 import FormattingSettingsCompositeCard = formattingSettings.CompositeCard;
@@ -46,12 +44,13 @@ export const enum MekkoChartObjectNames {
     XAxisTitle = "categoryAxisTitle",
     YAxis = "valueAxis",
     YAxisTitle = "valueAxisTitle",
-    XAxisRotation = "xAxisLabels"
+    XAxisRotation = "xAxisLabels",
+    DataPoint = "dataPoint",
+    ColumnBorder = "columnBorder",
 }
 
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
-
-    public name: string = "columnBorder";
+    public name: string = MekkoChartObjectNames.ColumnBorder;
     public displayNameKey?: string = "Visual_ColumnBorder";
     
     public show = new formattingSettings.ToggleSwitch({
@@ -474,7 +473,7 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
 }
 
 export class DataPointSettings extends FormattingSettingsSimpleCard {
-    public name: string = "dataPoint";
+    public name: string = MekkoChartObjectNames.DataPoint;
     public displayNameKey:string = "Visual_Data_Colors";
     public defaultStrokeColor: string = "transparent";
 
@@ -566,7 +565,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
                     new formattingSettings.ColorPicker({
                         name: "fill",
                         displayName: series.displayName,
-                        selector: ColorHelper.normalizeSelector(series.identity.getSelector()),
+                        selector: series.identity.getSelector(),
                         value: {value: series.color}
                     })
                 );
@@ -589,7 +588,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
                 new formattingSettings.ColorPicker({
                     name: "fill",
                     displayName: formattedName,
-                    selector: ColorHelper.normalizeSelector((singleSeriesDataPoint.identity as ISelectionId).getSelector(), true),
+                    selector: singleSeriesDataPoint.identity.getSelector(),
                     value: {value: singleSeriesDataPoint.color},
                     visible: data.showAllDataPoints
                 })

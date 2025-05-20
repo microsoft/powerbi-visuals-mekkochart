@@ -2,7 +2,7 @@ import powerbi from "powerbi-visuals-api";
 import SubSelectableDirectEdit = powerbi.visuals.SubSelectableDirectEdit;
 import SubSelectableDirectEditStyle = powerbi.visuals.SubSelectableDirectEditStyle;
 
-import { IAxisReference, IFontReference, ILabelsReference, ILegendReference, ISortLegendReference, IXAxisLabelsRotationReference } from "./interfaces";
+import { IAxisReference, IColumnBorderReference, IDataPointReference, IFontReference, ILabelsReference, ILegendReference, ISortLegendReference, IXAxisLabelsRotationReference } from "./interfaces";
 import { MekkoChartObjectNames } from "../settings";
 
 const createBaseFontReference = (objectName: string, colorName: string = ""): IFontReference => {
@@ -134,4 +134,34 @@ export const yAxisReferences: IAxisReference = {
         objectName: MekkoChartObjectNames.YAxis,
         propertyName: "showAxisTitle"
     },
+}
+
+export const dataPointReferences: IDataPointReference = {
+    cardUid: "Visual-dataPoint-card",
+    groupUid: "dataPoint-group",
+    fill: {
+        objectName: MekkoChartObjectNames.DataPoint,
+        propertyName: "fill"
+    },
+    defaultColor: {
+        objectName: MekkoChartObjectNames.DataPoint,
+        propertyName: "defaultColor"
+    },
+    showAllDataPoints: {
+        objectName: MekkoChartObjectNames.DataPoint,
+        propertyName: "showAllDataPoints"
+    }
+}
+
+export const columnBorderReferences: IColumnBorderReference = {
+    cardUid: "Visual-columnBorder-card",
+    groupUid: "columnBorder-group",
+    border: {
+        objectName: MekkoChartObjectNames.ColumnBorder,
+        propertyName: "color"
+    },
+    show: {
+        objectName: MekkoChartObjectNames.ColumnBorder,
+        propertyName: "show"
+    }
 }

@@ -153,7 +153,6 @@ export class BaseConverterStrategy implements ConverterStrategy {
 
                     const selectionId: ISelectionId = this.visualHost.createSelectionIdBuilder()
                         .withCategory(categoryColumn, 0)
-                        .withMeasure(this.getMeasureNameByIndex(valueIndex))
                         .createSelectionId();
 
                     const label: string = getFormattedLegendLabel(source, allValues);

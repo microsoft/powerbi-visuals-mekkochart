@@ -70,7 +70,11 @@ import {
     MekkoChartBaseSeries,
     MekkoChartDataPoint,
     ILegendGroup,
-    Selection
+    Selection,
+    MekkoChartColumnDataPoint,
+    MekkoColumnAxisOptions,
+    RectDataPoint,
+    MekkoChartSeries
 } from "./dataInterfaces";
 
 import {
@@ -148,7 +152,7 @@ import {
 import ValueType = valueType.ValueType;
 
 // powerbi.visuals.subselections
-import { HtmlSubSelectableClass, SubSelectableDirectEdit, SubSelectableDisplayNameAttribute, SubSelectableObjectNameAttribute, SubSelectableTypeAttribute } from "powerbi-visuals-utils-onobjectutils";
+import { HtmlSubSelectableClass, SubSelectableDirectEdit, SubSelectableDisplayNameAttribute, SubSelectableObjectNameAttribute } from "powerbi-visuals-utils-onobjectutils";
 import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
 import SubSelectionStylesType = powerbi.visuals.SubSelectionStylesType;
 
@@ -167,6 +171,7 @@ import IColumnChart = columnChart.IColumnChart;
 import BaseColumnChart = columnChartBaseColumnChart.BaseColumnChart;
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import { titleEditSubSelection } from "./onObject/references";
+import { BaseVisualStrategy } from "./visualStrategy/baseVisualStrategy";
 
 export interface MekkoChartProperty {
     [propertyName: string]: DataViewObjectPropertyIdentifier;
@@ -419,7 +424,7 @@ export class MekkoChart implements IVisual {
 
         this.localizationManager = this.visualHost.createLocalizationManager();
         this.formattingSettingsService = new FormattingSettingsService(this.localizationManager);
-        this.visualOnObjectFormatting = new MekkoChartOnObjectService(options.element, options.host, this.localizationManager);
+        this.visualOnObjectFormatting = new MekkoChartOnObjectService(options.element, options.host, this.localizationManager, this.getSeriesDataPoints.bind(this));
 
         const legendParent = select(this.rootElement.node()).append("div").classed("legendParentDefault", true);
 
@@ -711,7 +716,7 @@ export class MekkoChart implements IVisual {
         }
 
         for (let layerIndex: number = 0, length: number = this.layers.length; layerIndex < length; layerIndex++) {
-            this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length), this.settingsModel, options.formatMode);
+            this.layers[layerIndex].setData(dataViewUtils.getLayerData(this.dataViews, layerIndex, length), this.settingsModel, options.formatMode, this.localizationManager);
         }
 
         // enable/disable drill control
@@ -758,6 +763,71 @@ export class MekkoChart implements IVisual {
 
         if (isFormatMode && shouldUpdateSubSelection) {
             this.visualOnObjectFormatting.updateOutlinesFromSubSelections(subSelections, true);
+        }
+    }
+
+    private getSeriesDataPoints(selectionId: powerbi.visuals.ISelectionId): RectDataPoint[] {
+        const layer = this.layers[0] as BaseColumnChart;
+        const data: MekkoColumnChartData = layer.getData();
+
+        const currentSeries = data.series.find(s => s.identity.equals(selectionId));
+        const currentDataPoints = currentSeries?.data
+            ?? (() => {
+                const foundDataPoint = data.series[0].data.find(dp => dp.identity.equals(selectionId));
+                return foundDataPoint ? [foundDataPoint] : [];
+            })();
+
+        if (currentDataPoints.length === 0){
+            return [];
+        }
+
+        const axisProperties = layer.getAxisProperties();
+        const axisOptions: MekkoColumnAxisOptions = {
+            columnWidth: 0,
+            xScale: axisProperties[0].scale,
+            yScale: axisProperties[1].scale,
+            isScalar: layer.categoryAxisType != null,
+            margin: this.margin,
+        };
+        const layout = BaseVisualStrategy.getLayout(axisOptions, this.settingsModel);
+        const result: RectDataPoint[] = [];
+        const legendPosition: number = this.legend.getOrientation();
+        const xShift: number = this.getXShift(legendPosition, this.margin);
+        const yShift: number = this.getYShift(legendPosition, this.margin);
+
+        currentDataPoints.forEach(dataPoint => {
+            const currentrect: RectDataPoint = {
+                x: layout.shapeLayout.x(dataPoint) + xShift,
+                y: layout.shapeLayout.y(dataPoint)+ yShift,
+                height: layout.shapeLayout.height(dataPoint),
+                width: layout.shapeLayout.width(dataPoint),
+            };
+
+            result.push(currentrect);
+        });
+
+        return result;
+    }
+
+     private getXShift(legendPosition: LegendPosition, margin: IMargin): number {
+        const defaultShift: number = margin.left;
+        switch (legendPosition) {
+            case LegendPosition.Left:
+            case LegendPosition.LeftCenter:
+                return defaultShift+ this.legend.getMargins().width;
+            default:
+                return defaultShift;
+        }
+    }
+
+    private getYShift(legendPosition: LegendPosition, margin: IMargin): number {
+        const defaultShift: number = margin.top;
+        switch (legendPosition) {
+            case LegendPosition.Top:
+            case LegendPosition.TopCenter:
+                return defaultShift + this.legend.getMargins().height;
+            default:
+                return defaultShift;
         }
     }
 

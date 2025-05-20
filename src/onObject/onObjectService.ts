@@ -1,6 +1,5 @@
 import powerbi from "powerbi-visuals-api";
 
-import IPoint = powerbi.extensibility.IPoint;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import VisualOnObjectFormatting = powerbi.extensibility.visual.VisualOnObjectFormatting;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
@@ -10,25 +9,29 @@ import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
 import SubSelectionStyles = powerbi.visuals.SubSelectionStyles;
 import VisualSubSelectionShortcuts = powerbi.visuals.VisualSubSelectionShortcuts;
 import SubSelectionStylesType = powerbi.visuals.SubSelectionStylesType;
+import SubSelectionRegionOutlineFragment = powerbi.visuals.SubSelectionRegionOutlineFragment;
+import SubSelectionOutlineType = powerbi.visuals.SubSelectionOutlineType;
+import SubSelectionOutline = powerbi.visuals.SubSelectionOutline;
 
 import { select as d3Select } from "d3-selection";
 import { HtmlSubSelectionHelper, SubSelectableObjectNameAttribute } from "powerbi-visuals-utils-onobjectutils";
 
 import { MekkoChartObjectNames } from "../settings";
 import { SubSelectionStylesService, SubSelectionShortcutsService } from "./helperServices";
+import { MekkoChartColumnDataPoint, MekkoChartSeries, RectDataPoint } from "../dataInterfaces";
+
+import { legendInterfaces } from "powerbi-visuals-utils-chartutils";
+import ISelectableDataPoint = legendInterfaces.ISelectableDataPoint;
 
 export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
     private localizationManager: ILocalizationManager;
     private htmlSubSelectionHelper: HtmlSubSelectionHelper;
-    private getSelectionId: (stackedValue: any) => ISelectionId;
-    private calculatePoints: (identity: ISelectionId) => IPoint[];
+    private calculatePoints: (identity: ISelectionId) => RectDataPoint[];
 
     constructor(element: HTMLElement, host: IVisualHost, localizationManager: ILocalizationManager,
-        getSelectionId?: (stackedValue: any) => ISelectionId,
-        calculatePoints?: (identity: ISelectionId) => IPoint[]
+        calculatePoints?: (identity: ISelectionId) => RectDataPoint[]
     ) {
         this.localizationManager = localizationManager;
-        this.getSelectionId = getSelectionId;
         this.calculatePoints = calculatePoints;
         this.htmlSubSelectionHelper = HtmlSubSelectionHelper.createHtmlSubselectionHelper({
             hostElement: element,
@@ -63,6 +66,8 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
                     return SubSelectionStylesService.GetXAxisStyles();
                 case MekkoChartObjectNames.YAxis:
                     return SubSelectionStylesService.GetYAxisStyles();
+                case MekkoChartObjectNames.DataPoint:
+                    return SubSelectionStylesService.GetDataPointStyles(subSelections, this.localizationManager);
             }
         }
     }
@@ -86,6 +91,8 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
                     return SubSelectionShortcutsService.GetYAxisShortcuts(this.localizationManager);
                 case MekkoChartObjectNames.YAxisTitle:
                     return SubSelectionShortcutsService.GetYAxisTitleShortcuts(this.localizationManager);
+                case MekkoChartObjectNames.DataPoint:
+                    return SubSelectionShortcutsService.GetDataPointShortcuts(this.localizationManager);
             }
         }
     }
@@ -94,17 +101,47 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
         const elementType: string = d3Select(e).attr(SubSelectableObjectNameAttribute);
 
         switch (elementType) {
-            default:
-                return undefined;
+            case MekkoChartObjectNames.DataPoint: {
+                const datum = d3Select<Element, ISelectableDataPoint>(e).datum();
+                return datum.identity;
+            }
         }
     }
 
-    public customOutlineCallback(subSelections: CustomVisualSubSelection): powerbi.visuals.SubSelectionRegionOutlineFragment[] {
+    public customOutlineCallback(subSelections: CustomVisualSubSelection): SubSelectionRegionOutlineFragment[] {
         const elementType: string = subSelections.customVisualObjects[0].objectName;
 
         switch (elementType) {
-            default:
-                return undefined;
+            case MekkoChartObjectNames.DataPoint: {
+                const subSelectionIdentity: powerbi.visuals.ISelectionId = subSelections.customVisualObjects[0].selectionId;
+                const points = this.calculatePoints(subSelectionIdentity);
+
+                const getOutlines = (points: RectDataPoint[]): SubSelectionOutline[] => {
+                    const outlines: SubSelectionOutline[] = [];
+                    points.forEach((point: RectDataPoint) => {
+                        const newOutline: SubSelectionOutline = {
+                            type: SubSelectionOutlineType.Rectangle,
+                            x: point.x,
+                            y: point.y,
+                            width: point.width,
+                            height: point.height
+                        }
+                        outlines.push(newOutline);
+                    });
+
+                    return outlines;
+                }
+
+                const result: SubSelectionRegionOutlineFragment[] = [{
+                    id: subSelectionIdentity.getKey(),
+                    outline: {
+                        type: SubSelectionOutlineType.Group,
+                        outlines: getOutlines(points),
+                    }
+                }];
+
+                return result;
+            }
         }
     }
 }
