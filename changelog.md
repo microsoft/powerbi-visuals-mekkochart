@@ -1,4 +1,4 @@
-## 3.6.4.0
+## 4.0.0.0
 
 ### New features
 * Added on-Object formatting API
