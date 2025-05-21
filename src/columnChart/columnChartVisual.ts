@@ -27,6 +27,7 @@ import powerbi from "powerbi-visuals-api";
 import { legendInterfaces, axisInterfaces } from "powerbi-visuals-utils-chartutils";
 
 import IViewport = powerbi.IViewport;
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
 import {
     MekkoChartVisualInitOptions,
@@ -44,7 +45,7 @@ export interface IColumnChart {
     getColumnsWidth(): number[];
 
     init(options: MekkoChartVisualInitOptions): void;
-    setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel, resized?: boolean): void;
+    setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel, isFormatMode: boolean, localizationManager: ILocalizationManager, resized?: boolean): void;
     calculateAxesProperties(options: MekkoCalculateScaleAndDomainOptions, settingsModel: VisualFormattingSettingsModel): IAxisProperties[];
     overrideXScale(xProperties: IAxisProperties): void;
     render(suppressAnimations: boolean, settingsModel: VisualFormattingSettingsModel): MekkoVisualRenderResult;
@@ -59,4 +60,5 @@ export interface IColumnChart {
     setFilteredData?(startIndex: number, endIndex: number): MekkoChartBaseData;
 
     getData?(): MekkoChartBaseData;
+    getAxisProperties?(): IAxisProperties[];
 }

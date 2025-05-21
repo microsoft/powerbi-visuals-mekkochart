@@ -1,3 +1,11 @@
+## 3.7.0.0
+
+### New features
+* Added on-Object formatting API
+
+### Other
+* Updated dependencies
+
 ## 3.6.3.0
 * Remove interactivity utils
 * Update packages

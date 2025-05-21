@@ -73,6 +73,8 @@ import { MekkoChart } from "./../visual";
 
 import { valueType, pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
 
+import { HtmlSubSelectableClass, SubSelectableDisplayNameAttribute, SubSelectableObjectNameAttribute } from "powerbi-visuals-utils-onobjectutils";
+
 // d3
 import { Selection as d3Selection } from "d3-selection";
 import { ScaleLinear as d3ScaleLinear, scaleLinear as scaleLinear } from "d3-scale";
@@ -99,7 +101,7 @@ import IValueFormatter = valueFormatter.IValueFormatter;
 import ValueType = valueType.ValueType;
 
 import ValueTypeDescriptor = powerbi.ValueTypeDescriptor;
-import { ColumnBorderSettings, VisualFormattingSettingsModel } from "../settings";
+import { ColumnBorderSettings, VisualFormattingSettingsModel, MekkoChartObjectNames } from "../settings";
 
 interface LayoutFunction {
     (dataPoint: MekkoChartColumnDataPoint): number;
@@ -500,7 +502,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             margin: this.margin,
         };
 
-        const stackedColumnLayout: IMekkoColumnLayout = BaseVisualStrategy.getLayout(data, axisOptions, settingsModel);
+        const stackedColumnLayout: IMekkoColumnLayout = BaseVisualStrategy.getLayout(axisOptions, settingsModel);
 
         this.layout = stackedColumnLayout;
 
@@ -575,6 +577,8 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .exit()
             .remove();
 
+        BaseVisualStrategy.applyOnObjectStylesToShapes(allShapes, data.isFormatMode, data);
+
         const borderSelection: Selection<any> = series.selectAll(BaseVisualStrategy.BorderSelector.selectorName),
             borders: Selection<MekkoChartColumnDataPoint> = borderSelection.data(
                 dataSelector,
@@ -607,6 +611,21 @@ export class BaseVisualStrategy implements IVisualStrategy {
             .remove();
 
         return allShapes;
+    }
+
+    private static applyOnObjectStylesToShapes(shapes: Selection<MekkoChartColumnDataPoint>, isFormatMode: boolean, data: MekkoColumnChartData): void{
+        const seriesCount: number = data.series.length;
+        const isMultiSeries: boolean = data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata;
+
+        const getDisplayName = (dataPoint: MekkoChartColumnDataPoint) => {
+            const columnName = data.localizationManager.getDisplayName("Visual_Column");
+            return `"${dataPoint.categoryValue}" ${columnName}`;
+        }
+
+        shapes
+            .classed(HtmlSubSelectableClass, isFormatMode && !isMultiSeries)
+            .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.DataPoint)
+            .attr(SubSelectableDisplayNameAttribute, getDisplayName);
     }
 
     public selectColumn(selectedColumnIndex: number, lastSelectedColumnIndex: number): void {
@@ -695,7 +714,6 @@ export class BaseVisualStrategy implements IVisualStrategy {
     }
 
     public static getLayout(
-        data: MekkoColumnChartData,
         axisOptions: MekkoColumnAxisOptions,
         settingsModel: VisualFormattingSettingsModel): IMekkoColumnLayout {
 

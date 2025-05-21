@@ -147,6 +147,32 @@ export class CustomVisualBehavior {
         this.layerOptions = options.layerOptions;
         this.clearCatcher = options.clearCatcher;
 
+        this.applyOnObjectFormatMode(options.isFormatMode);
+    }
+
+    private applyOnObjectFormatMode(isFormatMode: boolean){
+        if (isFormatMode){
+            // remove event listeners which are irrelevant for format mode.
+            this.removeEventListeners();
+            this.selectionManager.clear();
+        } else {
+            this.addEventListeners();
+        }
+    }
+
+    private removeEventListeners(): void {
+        this.legendItems.on("click", null);
+        this.clearCatcher.on("click", null);
+        this.clearCatcher.on("contextmenu", null);
+
+        this.layerOptions.forEach((layer: VisualBehaviorOptions) => {
+            layer.bars.on("click", null);
+            layer.bars.on("contextmenu", null);
+            layer.bars.on("keydown", null);
+        });
+    }
+
+    private addEventListeners(): void {
         this.bindClickEvent(this.legendItems);
         this.bindClickEvent(this.clearCatcher);
         this.bindContextMenuEvent(this.clearCatcher);

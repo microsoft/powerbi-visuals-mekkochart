@@ -1,11 +1,9 @@
 import powerbi from "powerbi-visuals-api";
 import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
-import ISelectionId = powerbi.visuals.ISelectionId;
 
 import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 import IValueFormatter = valueFormatter.IValueFormatter;
 
-import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
 import FormattingSettingsCompositeCard = formattingSettings.CompositeCard;
@@ -37,9 +35,23 @@ class LabelPrecisionDefaultOptions {
     public static MaxLabelPrecision: number = 4;
 }
 
-export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
+export const enum MekkoChartObjectNames {
+    Legend = "legend",
+    LegendTitle = "legendTitle",
+    SortLegend = "sortLegend",
+    Labels = "labels",
+    XAxis = "categoryAxis",
+    XAxisTitle = "categoryAxisTitle",
+    YAxis = "valueAxis",
+    YAxisTitle = "valueAxisTitle",
+    XAxisRotation = "xAxisLabels",
+    DataPoint = "dataPoint",
+    ColumnBorder = "columnBorder",
+    SortSeries= "sortSeries"
+}
 
-    public name: string = "columnBorder";
+export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
+    public name: string = MekkoChartObjectNames.ColumnBorder;
     public displayNameKey?: string = "Visual_ColumnBorder";
     
     public show = new formattingSettings.ToggleSwitch({
@@ -77,7 +89,7 @@ export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
 }
 
 export class LegendSettings extends FormattingSettingsCompositeCard {
-    public name: string = "legend";
+    public name: string = MekkoChartObjectNames.Legend;
     public displayNameKey: string = "Visual_Legend";
     public visible: boolean = false;
 
@@ -158,7 +170,7 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
 }
 
 export class SortLegendSettings extends FormattingSettingsSimpleCard {
-    public name: string = "sortLegend";
+    public name: string = MekkoChartObjectNames.SortLegend;
     public displayNameKey: string = "Visual_SortLegend";
     public visible: boolean = false;
 
@@ -192,7 +204,7 @@ export class SortLegendSettings extends FormattingSettingsSimpleCard {
 }
 
 export class LabelsSettings extends FormattingSettingsSimpleCard {
-    public name: string = "labels";
+    public name: string = MekkoChartObjectNames.Labels;
     public displayNameKey: string = "Visual_Data_Labels";
     public descriptionKey: string = "Visual_Description_DataLabels";
 
@@ -285,7 +297,7 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
 }
 
 export class SeriesSortSettings extends FormattingSettingsSimpleCard {
-    public name: string = "sortSeries";
+    public name: string = MekkoChartObjectNames.SortSeries;
     public displayNameKey: string = "Visual_SortSeries";
     public visible: boolean = false;
 
@@ -313,7 +325,7 @@ export class SeriesSortSettings extends FormattingSettingsSimpleCard {
 }
 
 export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
-    public name: string = "xAxisLabels";
+    public name: string = MekkoChartObjectNames.XAxisRotation;
     public displayNameKey: string = "Visual_XAxisLabelsRotation";
 
     public enableRotataion = new formattingSettings.ToggleSwitch({
@@ -326,7 +338,7 @@ export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
 }
 
 export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
-    public name: string = "categoryAxis";
+    public name: string = MekkoChartObjectNames.XAxis;
     public displayNameKey:string = "Visual_XAxis";
 
     public show = new formattingSettings.ToggleSwitch({
@@ -394,7 +406,7 @@ export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
 }
 
 export class ValueAxisSettings extends FormattingSettingsSimpleCard {
-    public name: string = "valueAxis";
+    public name: string = MekkoChartObjectNames.YAxis;
     public displayNameKey:string = "Visual_YAxis";
 
     public show = new formattingSettings.ToggleSwitch({
@@ -462,7 +474,7 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
 }
 
 export class DataPointSettings extends FormattingSettingsSimpleCard {
-    public name: string = "dataPoint";
+    public name: string = MekkoChartObjectNames.DataPoint;
     public displayNameKey:string = "Visual_Data_Colors";
     public defaultStrokeColor: string = "transparent";
 
@@ -554,7 +566,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
                     new formattingSettings.ColorPicker({
                         name: "fill",
                         displayName: series.displayName,
-                        selector: ColorHelper.normalizeSelector(series.identity.getSelector()),
+                        selector: series.identity.getSelector(),
                         value: {value: series.color}
                     })
                 );
@@ -577,7 +589,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
                 new formattingSettings.ColorPicker({
                     name: "fill",
                     displayName: formattedName,
-                    selector: ColorHelper.normalizeSelector((singleSeriesDataPoint.identity as ISelectionId).getSelector(), true),
+                    selector: singleSeriesDataPoint.identity.getSelector(),
                     value: {value: singleSeriesDataPoint.color},
                     visible: data.showAllDataPoints
                 })

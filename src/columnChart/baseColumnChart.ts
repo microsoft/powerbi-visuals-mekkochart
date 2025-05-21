@@ -203,7 +203,7 @@ export class BaseColumnChart implements IColumnChart {
     private lastInteractiveSelectedColumnIndex: number;
     private supportsOverflow: boolean;
     private dataViewCat: DataViewCategorical;
-    private categoryAxisType: string = null;
+    public categoryAxisType: string = null;
     private isScrollable: boolean;
 
     private tooltipServiceWrapper: ITooltipServiceWrapper;
@@ -285,7 +285,8 @@ export class BaseColumnChart implements IColumnChart {
         supportsOverflow,
         localizationManager,
         settingsModel,
-        chartType } : BaseConverterOptions) : MekkoColumnChartData {
+        chartType, 
+        isFormatMode } : BaseConverterOptions) : MekkoColumnChartData {
 
         const converterStrategy: BaseConverterStrategy = new BaseConverterStrategy(categorical, visualHost);
 
@@ -369,7 +370,9 @@ export class BaseColumnChart implements IColumnChart {
             },
             hasDynamicSeries: result.hasDynamicSeries,
             categoryProperties: result.categoryProperties,
-            isMultiMeasure: false
+            isMultiMeasure: false,
+            isFormatMode,
+            localizationManager
         };
     }
 
@@ -807,7 +810,6 @@ export class BaseColumnChart implements IColumnChart {
                 const identity: ISelectionId = visualHost.createSelectionIdBuilder()
                     .withCategory(category, categoryIndex)
                     .withSeries(dataViewCat.values, columnGroup)
-                    .withMeasure(converterStrategy.getMeasureNameByIndex(seriesIndex))
                     .createSelectionId();
 
                 const color: string = BaseColumnChart.getDataPointColor(
@@ -1104,7 +1106,7 @@ export class BaseColumnChart implements IColumnChart {
         return data.categoriesWidth;
     }
 
-    public setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel): void {
+    public setData(dataViews: powerbi.DataView[], settingsModel: VisualFormattingSettingsModel, isFormatMode: boolean, localizationManager: ILocalizationManager): void {
         this.data = {
             categories: [],
             categoriesWidth: [],
@@ -1119,7 +1121,9 @@ export class BaseColumnChart implements IColumnChart {
             hasDynamicSeries: false,
             defaultDataPointColor: null,
             isMultiMeasure: false,
-            categoryProperties: null
+            categoryProperties: null,
+            isFormatMode,
+            localizationManager
         };
 
         if (dataViews.length > 0) {
@@ -1136,7 +1140,8 @@ export class BaseColumnChart implements IColumnChart {
                     supportsOverflow: this.supportsOverflow,
                     localizationManager: this.localizationManager,
                     settingsModel,
-                    chartType: this.chartType
+                    chartType: this.chartType,
+                    isFormatMode
                 });
             }
         }
@@ -1278,6 +1283,13 @@ export class BaseColumnChart implements IColumnChart {
             this.yAxisProperties.axisLabel = null;
         }
 
+        return [
+            this.xAxisProperties,
+            this.yAxisProperties
+        ];
+    }
+
+    public getAxisProperties(): IAxisProperties[] {
         return [
             this.xAxisProperties,
             this.yAxisProperties
