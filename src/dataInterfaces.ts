@@ -28,8 +28,11 @@ import powerbi from "powerbi-visuals-api";
 import PrimitiveValue = powerbi.PrimitiveValue;
 import NumberRange = powerbi.NumberRange;
 import IViewport = powerbi.IViewport;
+import DataViewCategorical = powerbi.DataViewCategorical;
+
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-import IColorPalette = powerbi.extensibility.IColorPalette;
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
+import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import CustomVisualOpaqueIdentity = powerbi.visuals.CustomVisualOpaqueIdentity;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
@@ -52,13 +55,6 @@ import {
     dataLabelInterfaces
 }
 from "powerbi-visuals-utils-chartutils";
-
-
-import {
-    interactivitySelectionService,
-    interactivityBaseService
-}
-from "powerbi-visuals-utils-interactivityutils";
 
 import { MekkoVisualChartType } from "./visualChartType";
 
@@ -84,23 +80,19 @@ import ClassAndSelector = CssConstants.ClassAndSelector;
 import ILegendData = legendInterfaces.LegendData;
 import IAxisProperties = axisInterfaces.IAxisProperties;
 import LegendDataPoint = legendInterfaces.LegendDataPoint;
+import ISelectableDataPoint = legendInterfaces.ISelectableDataPoint;
 import CreateAxisOptionsBase = axisInterfaces.CreateAxisOptions;
-import IInteractivityServiceCommon = interactivityBaseService.IInteractivityService;
 import LabelEnabledDataPoint = dataLabelInterfaces.LabelEnabledDataPoint;
 import VisualDataLabelsSettings = dataLabelInterfaces.VisualDataLabelsSettings;
+import VisualDataLabelsSettingsOptions = dataLabelInterfaces.VisualDataLabelsSettingsOptions;
 import ILegend = legendInterfaces.ILegend;
-
-// powerbi.extensibility.utils.interactivity
-import SelectableDataPoint = interactivitySelectionService.SelectableDataPoint;
-
-type IInteractivityService = IInteractivityServiceCommon<SelectableDataPoint>;
-
-// powerbi.extensibility.utils.tooltip
 
 // powerbi.extensibility.utils.formatting
 import IValueFormatter = vf.IValueFormatter;
 
-import VisualDataLabelsSettingsOptions = dataLabelInterfaces.VisualDataLabelsSettingsOptions;
+import { VisualBehaviorOptions } from "./behavior/visualBehaviorOptions";
+import { VisualFormattingSettingsModel } from "./settings";
+import { BaseConverterStrategy } from "./converterStrategy/baseConverterStrategy";
 
 export interface ValueMultiplers {
     pos: number;
@@ -128,7 +120,7 @@ export interface ILegendGroup extends ILegend {
 
 export interface IMekkoChartVisualHost {
     updateLegend(data: ILegendData): void;
-    getSharedColors(): IColorPalette;
+    getSharedColors(): ISandboxExtendedColorPalette;
     triggerRender(suppressAnimations: boolean): void;
 }
 
@@ -163,7 +155,7 @@ export interface MekkoChartDataPoint {
     highlight?: boolean;
 }
 
-export interface MekkoChartBaseSeries extends SelectableDataPoint {
+export interface MekkoChartBaseSeries extends ISelectableDataPoint {
     data: MekkoChartDataPoint[];
 }
 
@@ -193,9 +185,16 @@ export interface MekkoChartCategoryLayoutOptions {
     isScrollable?: boolean;
 }
 
+export interface RectDataPoint {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+}
+
 export interface MekkoChartColumnDataPoint extends
     MekkoChartDataPoint,
-    SelectableDataPoint,
+    ISelectableDataPoint,
     TooltipEnabledDataPoint,
     LabelEnabledDataPoint {
 
@@ -223,7 +222,6 @@ export interface MekkoChartSeries extends MekkoChartBaseSeries {
     key: string;
     index: number;
     data: MekkoChartColumnDataPoint[];
-    identity: ISelectionId;
     color: string;
     labelSettings: VisualDataLabelsSettings;
 }
@@ -243,6 +241,8 @@ export interface MekkoChartData extends MekkoChartBaseData {
     axesLabels: MekkoChartAxesLabels;
     hasDynamicSeries: boolean;
     isMultiMeasure: boolean;
+    isFormatMode: boolean;
+    localizationManager: ILocalizationManager;
     defaultDataPointColor?: string;
     showAllDataPoints?: boolean;
 }
@@ -259,6 +259,11 @@ export interface LabelDataPoint {
     size?: ISize;
     text: string;
     fillColor: string;
+    fontFamily: string;
+    fontSize: number;
+    bold: boolean;
+    italic: boolean;
+    underline: boolean;
 }
 
 export interface MekkoChartVisualInitOptions extends VisualConstructorOptions {
@@ -288,8 +293,8 @@ export interface IMekkoChartLayout {
 }
 
 export interface MekkoVisualRenderResult {
-    dataPoints: SelectableDataPoint[];
-    behaviorOptions: any;
+    dataPoints: ISelectableDataPoint[];
+    behaviorOptions: VisualBehaviorOptions;
     labelDataPoints: LabelDataPoint[];
     labelsAreNumeric: boolean;
 }
@@ -318,6 +323,39 @@ export interface MekkoCalculateScaleAndDomainOptions {
 export interface MekkoColumnChartData extends MekkoChartData {
     categoriesWidth: number[];
     categoryProperties: MekkoCategoryProperties[];
+}
+
+export interface BaseConverterOptions {
+    visualHost: IVisualHost;
+    categorical: DataViewCategorical;
+    colors: ISandboxExtendedColorPalette;
+    is100PercentStacked: boolean;
+    isScalar: boolean;
+    supportsOverflow: boolean;
+    localizationManager: ILocalizationManager;
+    settingsModel: VisualFormattingSettingsModel;
+    isFormatMode: boolean;
+    chartType?: MekkoVisualChartType;
+}
+
+export interface CreateDataPointsOptions {
+    visualHost: IVisualHost;
+    dataViewCat: DataViewCategorical;
+    categories: any[];
+    categoryIdentities: CustomVisualOpaqueIdentity[];
+    legend: MekkoLegendDataPoint[];
+    seriesObjectsList: powerbi.DataViewObjects[][];
+    converterStrategy: BaseConverterStrategy;
+    is100PercentStacked: boolean;
+    isScalar: boolean;
+    supportsOverflow: boolean;
+    localizationManager: ILocalizationManager;
+    settingsModel: VisualFormattingSettingsModel;
+    colorPalette: ISandboxExtendedColorPalette;
+    isCategoryAlsoSeries?: boolean;
+    categoryObjectsList?: powerbi.DataViewObjects[];
+    chartType?: MekkoVisualChartType;
+    categoryMetadata?: DataViewMetadataColumn;
 }
 
 export interface MekkoBorderSettings {
@@ -385,6 +423,7 @@ export interface MekkoAxisRenderingOptions {
     hideYAxisTitle: boolean;
     xLabelColor: string;
     yLabelColor: string;
+    isFormatMode: boolean;
 }
 
 export interface MekkoCategoryProperties {
@@ -437,7 +476,6 @@ export interface MekkoChartContext {
     mainGraphicsContext: Selection;
     layout: MekkoChartCategoryLayout;
     onDragStart?: (datum: MekkoChartColumnDataPoint) => void;
-    interactivityService: IInteractivityService;
     viewportHeight: number;
     viewportWidth: number;
     is100Pct: boolean;
@@ -453,7 +491,6 @@ export interface MekkoColumnChartContext extends MekkoChartContext {
     labelGraphicsContext: Selection;
     layout: MekkoChartCategoryLayout;
     onDragStart?: (datum: MekkoChartColumnDataPoint) => void;
-    interactivityService: IInteractivityService;
     viewportHeight: number;
     viewportWidth: number;
     is100Pct: boolean;
@@ -463,7 +500,6 @@ export interface MekkoColumnChartContext extends MekkoChartContext {
 
 export interface MekkoChartConstructorBaseOptions {
     isScrollable: boolean;
-    interactivityService?: IInteractivityService;
     isLabelInteractivityEnabled?: boolean;
     tooltipsEnabled?: boolean;
     tooltipBucketEnabled?: boolean;
@@ -476,7 +512,7 @@ export interface MekkoChartConstructorOptions extends MekkoChartConstructorBaseO
 
 export interface MekkoChartDrawInfo {
     eventGroup?: Selection;
-    shapesSelection: d3Selection<any, TooltipEnabledDataPoint, any, any>;
+    shapesSelection: d3Selection<any, MekkoChartColumnDataPoint, any, any>;
     viewport: IViewport;
     axisOptions: MekkoChartAxisOptions;
     labelDataPoints: LabelDataPoint[];
