@@ -1,10 +1,9 @@
 import powerbi from "powerbi-visuals-api";
-import ISelectionId = powerbi.visuals.ISelectionId;
+import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
 
 import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 import IValueFormatter = valueFormatter.IValueFormatter;
 
-import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import FormattingSettingsSimpleCard = formattingSettings.SimpleCard;
 import FormattingSettingsCompositeCard = formattingSettings.CompositeCard;
@@ -36,9 +35,23 @@ class LabelPrecisionDefaultOptions {
     public static MaxLabelPrecision: number = 4;
 }
 
-export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
+export const enum MekkoChartObjectNames {
+    Legend = "legend",
+    LegendTitle = "legendTitle",
+    SortLegend = "sortLegend",
+    Labels = "labels",
+    XAxis = "categoryAxis",
+    XAxisTitle = "categoryAxisTitle",
+    YAxis = "valueAxis",
+    YAxisTitle = "valueAxisTitle",
+    XAxisRotation = "xAxisLabels",
+    DataPoint = "dataPoint",
+    ColumnBorder = "columnBorder",
+    SortSeries= "sortSeries"
+}
 
-    public name: string = "columnBorder";
+export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
+    public name: string = MekkoChartObjectNames.ColumnBorder;
     public displayNameKey?: string = "Visual_ColumnBorder";
     
     public show = new formattingSettings.ToggleSwitch({
@@ -76,7 +89,7 @@ export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
 }
 
 export class LegendSettings extends FormattingSettingsCompositeCard {
-    public name: string = "legend";
+    public name: string = MekkoChartObjectNames.Legend;
     public displayNameKey: string = "Visual_Legend";
     public visible: boolean = false;
 
@@ -101,38 +114,63 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
         placeholder: "Title Text"
     });
 
-    public fontFamily = new formattingSettings.FontPicker({
-        name: "fontFamily",
-        displayNameKey: "Visual_Font",
-        value: "Arial"
+    public color = new formattingSettings.ColorPicker({
+        name: "color",
+        displayNameKey: "Visual_Color",
+        descriptionKey: "Visual_Description_Color",
+        value: {value: "#252423"},
     });
 
-    public fontSize = new formattingSettings.NumUpDown({
-        name: "fontSize",
-        displayNameKey: "Visual_Font_Size",
-        value: FontSizeDefaultOptions.FontSize,
-        options: {
-            minValue: {
-                type: powerbi.visuals.ValidatorType.Min,
-                value: FontSizeDefaultOptions.MinFontSize,
-            },
-            maxValue: {
-                type: powerbi.visuals.ValidatorType.Max,
-                value: FontSizeDefaultOptions.MaxFontSize,
+    public fontControl: formattingSettings.FontControl = new formattingSettings.FontControl({
+        name: "fontControl",
+        displayNameKey: "Visual_Font_Control",
+        fontFamily: new formattingSettings.FontPicker({
+            name: "fontFamily",
+            displayNameKey: "Visual_Font",
+            value: "Arial"
+        }),
+        fontSize: new formattingSettings.NumUpDown({
+            name: "fontSize",
+            displayNameKey: "Visual_Font_Size",
+            value: FontSizeDefaultOptions.FontSize,
+            options: {
+                minValue: {
+                    type: powerbi.visuals.ValidatorType.Min,
+                    value: FontSizeDefaultOptions.MinFontSize,
+                },
+                maxValue: {
+                    type: powerbi.visuals.ValidatorType.Max,
+                    value: FontSizeDefaultOptions.MaxFontSize,
+                }
             }
-        }
+        }),
+        bold: new formattingSettings.ToggleSwitch({
+            name: "fontBold",
+            displayNameKey: "Visual_Font_Bold",
+            value: false
+        }),
+        italic: new formattingSettings.ToggleSwitch({
+            name: "fontItalic",
+            displayNameKey: "Visual_Font_Italic",
+            value: false
+        }),
+        underline: new formattingSettings.ToggleSwitch({
+            name: "fontUnderline",
+            displayNameKey: "Visual_Font_Underline",
+            value: false
+        })
     });
 
     public legendTitleGroup = new formattingSettings.Group({
         name: "titleGroup",
-        slices: [this.showTitle, this.titleText, this.fontFamily, this.fontSize]
+        slices: [this.showTitle, this.titleText, this.color, this.fontControl]
     });
 
     public groups: FormattingSettingsGroup[] = [this.legendTitleGroup]
 }
 
 export class SortLegendSettings extends FormattingSettingsSimpleCard {
-    public name: string = "sortLegend";
+    public name: string = MekkoChartObjectNames.SortLegend;
     public displayNameKey: string = "Visual_SortLegend";
     public visible: boolean = false;
 
@@ -166,7 +204,7 @@ export class SortLegendSettings extends FormattingSettingsSimpleCard {
 }
 
 export class LabelsSettings extends FormattingSettingsSimpleCard {
-    public name: string = "labels";
+    public name: string = MekkoChartObjectNames.Labels;
     public displayNameKey: string = "Visual_Data_Labels";
     public descriptionKey: string = "Visual_Description_DataLabels";
 
@@ -189,6 +227,46 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
         displayNameKey: "Visual_Color",
         descriptionKey: "Visual_Description_Color",
         value: {value: "white"},
+    });
+
+    public fontControl: formattingSettings.FontControl = new formattingSettings.FontControl({
+        name: "fontControl",
+        displayNameKey: "Visual_Font_Control",
+        fontFamily: new formattingSettings.FontPicker({
+            name: "fontFamily",
+            displayNameKey: "Visual_Font",
+            value: "Segoe UI, wf_segoe-ui_normal, helvetica, arial, sans-serif"
+        }),
+        fontSize: new formattingSettings.NumUpDown({
+            name: "fontSize",
+            displayNameKey: "Visual_Font_Size",
+            value: 12,
+            options: {
+                minValue: {
+                    type: powerbi.visuals.ValidatorType.Min,
+                    value: FontSizeDefaultOptions.MinFontSize,
+                },
+                maxValue: {
+                    type: powerbi.visuals.ValidatorType.Max,
+                    value: FontSizeDefaultOptions.MaxFontSize,
+                }
+            }
+        }),
+        bold: new formattingSettings.ToggleSwitch({
+            name: "fontBold",
+            displayNameKey: "Visual_Font_Bold",
+            value: false
+        }),
+        italic: new formattingSettings.ToggleSwitch({
+            name: "fontItalic",
+            displayNameKey: "Visual_Font_Italic",
+            value: false
+        }),
+        underline: new formattingSettings.ToggleSwitch({
+            name: "fontUnderline",
+            displayNameKey: "Visual_Font_Underline",
+            value: false
+        })
     });
 
     public displayUnits = new formattingSettings.AutoDropdown({
@@ -215,11 +293,11 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
         }
     });
 
-    public slices: FormattingSettingsSlice[] = [this.color, this.displayUnits, this.labelPrecision, this.forceDisplay];
+    public slices: FormattingSettingsSlice[] = [this.color, this.fontControl, this.displayUnits, this.labelPrecision, this.forceDisplay];
 }
 
 export class SeriesSortSettings extends FormattingSettingsSimpleCard {
-    public name: string = "sortSeries";
+    public name: string = MekkoChartObjectNames.SortSeries;
     public displayNameKey: string = "Visual_SortSeries";
     public visible: boolean = false;
 
@@ -247,7 +325,7 @@ export class SeriesSortSettings extends FormattingSettingsSimpleCard {
 }
 
 export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
-    public name: string = "xAxisLabels";
+    public name: string = MekkoChartObjectNames.XAxisRotation;
     public displayNameKey: string = "Visual_XAxisLabelsRotation";
 
     public enableRotataion = new formattingSettings.ToggleSwitch({
@@ -260,7 +338,7 @@ export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
 }
 
 export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
-    public name: string = "categoryAxis";
+    public name: string = MekkoChartObjectNames.XAxis;
     public displayNameKey:string = "Visual_XAxis";
 
     public show = new formattingSettings.ToggleSwitch({
@@ -328,7 +406,7 @@ export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
 }
 
 export class ValueAxisSettings extends FormattingSettingsSimpleCard {
-    public name: string = "valueAxis";
+    public name: string = MekkoChartObjectNames.YAxis;
     public displayNameKey:string = "Visual_YAxis";
 
     public show = new formattingSettings.ToggleSwitch({
@@ -396,8 +474,9 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
 }
 
 export class DataPointSettings extends FormattingSettingsSimpleCard {
-    public name: string = "dataPoint";
+    public name: string = MekkoChartObjectNames.DataPoint;
     public displayNameKey:string = "Visual_Data_Colors";
+    public defaultStrokeColor: string = "transparent";
 
     public defaultColor = new formattingSettings.ColorPicker({
         name: "defaultColor",
@@ -457,6 +536,26 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         this.drillControl
     ];
 
+    public setHighContrastMode(colorPalette: ISandboxExtendedColorPalette): void {
+        const isHighContrastMode: boolean = colorPalette.isHighContrast;
+        if (isHighContrastMode){
+            const foregroundColor: string = colorPalette.foreground.value;
+            const backgroundColor: string = colorPalette.background.value;
+
+            this.columnBorder.color.value.value = backgroundColor;
+            this.labels.color.value.value = foregroundColor;
+            this.categoryAxis.labelColor.value.value = foregroundColor;
+            this.valueAxis.labelColor.value.value = foregroundColor;
+            this.dataPoint.defaultStrokeColor = foregroundColor;
+        }
+
+        this.dataPoint.visible = !isHighContrastMode;
+        this.columnBorder.color.visible = !isHighContrastMode;
+        this.labels.color.visible = !isHighContrastMode;
+        this.categoryAxis.labelColor.visible = !isHighContrastMode;
+        this.valueAxis.labelColor.visible = !isHighContrastMode;
+    }
+
     public setDataPointColorPickerSlices(layers: IColumnChart[]) {
         for (let i: number = 0; i < layers.length; i++) {
             for (const series of (<BaseColumnChart>layers[i]).getData().series) {
@@ -467,7 +566,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
                     new formattingSettings.ColorPicker({
                         name: "fill",
                         displayName: series.displayName,
-                        selector: ColorHelper.normalizeSelector(series.identity.getSelector()),
+                        selector: series.identity.getSelector(),
                         value: {value: series.color}
                     })
                 );
@@ -490,7 +589,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
                 new formattingSettings.ColorPicker({
                     name: "fill",
                     displayName: formattedName,
-                    selector: ColorHelper.normalizeSelector((singleSeriesDataPoint.identity as ISelectionId).getSelector(), true),
+                    selector: singleSeriesDataPoint.identity.getSelector(),
                     value: {value: singleSeriesDataPoint.color},
                     visible: data.showAllDataPoints
                 })

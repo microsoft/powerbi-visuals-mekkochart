@@ -26,19 +26,17 @@
 
 // d3
 import { Selection as d3Selection } from "d3-selection";
+type Selection<T> = d3Selection<any, T, any, any>;
 
-// powerbi.extensibility.utils.interactivity
-import {
-    interactivityBaseService,
-    interactivitySelectionService as interactivityService
-} from "powerbi-visuals-utils-interactivityutils";
+import { legendInterfaces } from "powerbi-visuals-utils-chartutils";
+import ISelectableDataPoint = legendInterfaces.ISelectableDataPoint;
 
-import SelectableDataPoint = interactivityService.SelectableDataPoint;
-import IBehaviorOptionsCommon = interactivityBaseService.IBehaviorOptions;
+import { VisualBehaviorOptions } from "./visualBehaviorOptions";
 
-type IBehaviorOptions = IBehaviorOptionsCommon<SelectableDataPoint>;
-
-export interface CustomVisualBehaviorOptions extends IBehaviorOptions {
-    layerOptions: any[];
-    clearCatcher: d3Selection<any, any, any, any>;
+export interface CustomVisualBehaviorOptions {
+    legend: Selection<any>;
+    layerOptions: VisualBehaviorOptions[];
+    clearCatcher: Selection<any>;
+    legendDataPoints: ISelectableDataPoint[];
+    isFormatMode: boolean;
 }

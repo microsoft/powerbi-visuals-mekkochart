@@ -76,6 +76,35 @@
                         }
                     }
                 },
+                "fontFamily": {
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontSize": {
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "fontBold": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontItalic": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontUnderline": {
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "labelDisplayUnits": {
                     "type": {
                         "formatting": {
@@ -90,13 +119,6 @@
                         "numeric": true
                     },
                     "suppressFormatPainterCopy": true
-                },
-                "fontSize": {
-                    "type": {
-                        "formatting": {
-                            "fontSize": true
-                        }
-                    }
                 }
             }
         },
@@ -117,10 +139,12 @@
                         "text": true
                     }
                 },
-                "fontSize": {
+                "color": {
                     "type": {
-                        "formatting": {
-                            "fontSize": true
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
                         }
                     }
                 },
@@ -129,6 +153,28 @@
                         "formatting": {
                             "fontFamily": true
                         }
+                    }
+                },
+                "fontSize": {
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "fontBold": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontItalic": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontUnderline": {
+                    "type": {
+                        "bool": true
                     }
                 }
             }
@@ -450,6 +496,7 @@
             "disabledByDefault": true
         }
     },
-    "privileges": []
-    
+    "privileges": [],
+    "supportsOnObjectFormatting": true,
+    "enablePointerEventsFormatMode": true
 }

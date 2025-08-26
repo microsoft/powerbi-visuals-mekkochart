@@ -249,7 +249,7 @@ describe("MekkoChart", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(document.body.contains(visualBuilder.xAxisLabel[0])).toBeFalsy();
+                expect(document.body.contains(visualBuilder.xAxisLabel)).toBeFalsy();
                 done();
             }, 300);
         });
@@ -269,11 +269,11 @@ describe("MekkoChart", () => {
             visualBuilder.updateRenderTimeout(dataView, () => {
                 checkAxisLabels(
                     visualBuilder.mainElement,
-                    visualBuilder.xAxisLabel[0]);
+                    visualBuilder.xAxisLabel);
 
                 checkAxisLabels(
                     visualBuilder.mainElement,
-                    visualBuilder.yAxisLabel[0]);
+                    visualBuilder.yAxisLabel);
 
                 done();
             }, 300);
@@ -444,12 +444,12 @@ describe("MekkoChart", () => {
                 (dataView.metadata.objects as any).categoryAxis.showAxisTitle = true;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(document.body.contains(visualBuilder.xAxisLabel[0])).toBeTruthy();
+                expect(document.body.contains(visualBuilder.xAxisLabel)).toBeTruthy();
 
                 (dataView.metadata.objects as any).categoryAxis.showAxisTitle = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(document.body.contains(visualBuilder.xAxisLabel[0])).toBeFalse();
+                expect(document.body.contains(visualBuilder.xAxisLabel)).toBeFalse();
             });
 
             it("color", () => {
@@ -492,11 +492,11 @@ describe("MekkoChart", () => {
             it("show title", () => {
                 (dataView.metadata.objects as any).valueAxis.showAxisTitle = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
-                expect(document.body.contains(visualBuilder.yAxisLabel[0])).toBeFalsy();
+                expect(document.body.contains(visualBuilder.yAxisLabel)).toBeFalsy();
 
                 (dataView.metadata.objects as any).valueAxis.showAxisTitle = true;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
-                expect(document.body.contains(visualBuilder.yAxisLabel[0])).toBeTruthy();
+                expect(document.body.contains(visualBuilder.yAxisLabel)).toBeTruthy();
             });
 
             it("color", () => {
@@ -521,18 +521,20 @@ describe("MekkoChart", () => {
             let mekkoColumnChartData: MekkoColumnChartData;
 
             beforeEach((done) => {
-                const visualHost: IVisualHost = createVisualHost();
+                const visualHost: IVisualHost = createVisualHost({});
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     visualBuilder.instance.getFormattingModel();
-                    mekkoColumnChartData = BaseColumnChart.converter(
+                    mekkoColumnChartData = BaseColumnChart.converter({
                         visualHost,
-                        dataView.categorical,
-                        visualHost.colorPalette,
-                        true,
-                        false,
-                        false,
-                        null,
-                        visualBuilder.instance.settingsModel);
+                        categorical: dataView.categorical,
+                        colors: visualHost.colorPalette,
+                        is100PercentStacked: true,
+                        isScalar: false,
+                        supportsOverflow: false,
+                        localizationManager: null,
+                        settingsModel: visualBuilder.instance.settingsModel,
+                        isFormatMode: false
+                    });
                     done();
                 });
             });
