@@ -47,13 +47,13 @@ export const enum MekkoChartObjectNames {
     XAxisRotation = "xAxisLabels",
     DataPoint = "dataPoint",
     ColumnBorder = "columnBorder",
-    SortSeries= "sortSeries"
+    SortSeries = "sortSeries"
 }
 
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
     public name: string = MekkoChartObjectNames.ColumnBorder;
     public displayNameKey?: string = "Visual_ColumnBorder";
-    
+
     public show = new formattingSettings.ToggleSwitch({
         name: "show",
         displayNameKey: "Visual_Show",
@@ -66,7 +66,7 @@ export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
         name: "color",
         displayNameKey: "Visual_Color",
         descriptionKey: "Visual_Description_Color",
-        value: {value: "#fff"},
+        value: { value: "#fff" },
     });
 
     public width = new formattingSettings.NumUpDown({
@@ -84,7 +84,7 @@ export class ColumnBorderSettings extends FormattingSettingsSimpleCard {
             }
         }
     });
-    
+
     public slices: FormattingSettingsSlice[] = [this.color, this.width];
 }
 
@@ -118,7 +118,7 @@ export class LegendSettings extends FormattingSettingsCompositeCard {
         name: "color",
         displayNameKey: "Visual_Color",
         descriptionKey: "Visual_Description_Color",
-        value: {value: "#252423"},
+        value: { value: "#252423" },
     });
 
     public fontControl: formattingSettings.FontControl = new formattingSettings.FontControl({
@@ -226,7 +226,7 @@ export class LabelsSettings extends FormattingSettingsSimpleCard {
         name: "color",
         displayNameKey: "Visual_Color",
         descriptionKey: "Visual_Description_Color",
-        value: {value: "white"},
+        value: { value: "white" },
     });
 
     public fontControl: formattingSettings.FontControl = new formattingSettings.FontControl({
@@ -339,7 +339,7 @@ export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
 
 export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
     public name: string = MekkoChartObjectNames.XAxis;
-    public displayNameKey:string = "Visual_XAxis";
+    public displayNameKey: string = "Visual_XAxis";
 
     public show = new formattingSettings.ToggleSwitch({
         name: "show",
@@ -359,7 +359,7 @@ export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
         name: "labelColor",
         displayNameKey: "Visual_Color",
         descriptionKey: "Visual_Description_Color",
-        value: {value: "black"}
+        value: { value: "black" }
     });
 
     public fontControl = new formattingSettings.FontControl({
@@ -407,7 +407,7 @@ export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
 
 export class ValueAxisSettings extends FormattingSettingsSimpleCard {
     public name: string = MekkoChartObjectNames.YAxis;
-    public displayNameKey:string = "Visual_YAxis";
+    public displayNameKey: string = "Visual_YAxis";
 
     public show = new formattingSettings.ToggleSwitch({
         name: "show",
@@ -427,7 +427,7 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
         name: "labelColor",
         displayNameKey: "Visual_Color",
         descriptionKey: "Visual_Description_Color",
-        value: {value: "black"}
+        value: { value: "black" }
     });
 
     public fontControl = new formattingSettings.FontControl({
@@ -469,19 +469,25 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
             value: false
         })
     });
+    public valueMode = new formattingSettings.AutoDropdown({
+        name: "valueMode",
+        displayName: "Value Mode",
+        displayNameKey: "Visual_Value_Mode",
+        value: "percentage",
+    })
 
-    public slices: FormattingSettingsSlice[] = [this.showTitle, this.labelColor, this.fontControl];
+    public slices: FormattingSettingsSlice[] = [this.showTitle, this.labelColor, this.fontControl, this.valueMode];
 }
 
 export class DataPointSettings extends FormattingSettingsSimpleCard {
     public name: string = MekkoChartObjectNames.DataPoint;
-    public displayNameKey:string = "Visual_Data_Colors";
+    public displayNameKey: string = "Visual_Data_Colors";
     public defaultStrokeColor: string = "transparent";
 
     public defaultColor = new formattingSettings.ColorPicker({
         name: "defaultColor",
         displayNameKey: "Visual_Default_Color",
-        value: {value: "#01B8AA"},
+        value: { value: "#01B8AA" },
         instanceKind: powerbi.VisualEnumerationInstanceKinds.ConstantOrRule,
         selector: dataViewWildcard.createDataViewWildcardSelector(dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals),
         altConstantSelector: null,
@@ -498,9 +504,9 @@ export class DataPointSettings extends FormattingSettingsSimpleCard {
     public slices: FormattingSettingsSlice[] = [this.defaultColor, this.showAllDataPoints];
 }
 
-export class DrillControlCard extends FormattingSettingsSimpleCard{
+export class DrillControlCard extends FormattingSettingsSimpleCard {
     public name: string = "drillControl";
-    public displayNameKey:string = "Visual_DrillControl";
+    public displayNameKey: string = "Visual_DrillControl";
 
     public enabled = new formattingSettings.ToggleSwitch({
         name: "enabled",
@@ -525,7 +531,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
 
     public cards: FormattingSettingsCard[] = [
         this.columnBorder,
-        this.labels, 
+        this.labels,
         this.legend,
         this.sortLegend,
         this.sortSeries,
@@ -538,7 +544,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
 
     public setHighContrastMode(colorPalette: ISandboxExtendedColorPalette): void {
         const isHighContrastMode: boolean = colorPalette.isHighContrast;
-        if (isHighContrastMode){
+        if (isHighContrastMode) {
             const foregroundColor: string = colorPalette.foreground.value;
             const backgroundColor: string = colorPalette.background.value;
 
@@ -559,7 +565,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
     public setDataPointColorPickerSlices(layers: IColumnChart[]) {
         for (let i: number = 0; i < layers.length; i++) {
             for (const series of (<BaseColumnChart>layers[i]).getData().series) {
-                if (this.dataPoint.slices.some((dataPointColorSelector: FormattingSettingsSlice) => dataPointColorSelector.displayName === series.displayName)){
+                if (this.dataPoint.slices.some((dataPointColorSelector: FormattingSettingsSlice) => dataPointColorSelector.displayName === series.displayName)) {
                     return;
                 }
                 this.dataPoint.slices.push(
@@ -567,13 +573,13 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
                         name: "fill",
                         displayName: series.displayName,
                         selector: series.identity.getSelector(),
-                        value: {value: series.color}
+                        value: { value: series.color }
                     })
                 );
             }
         }
     }
-    public setDataPointColorPickerSlicesSingleSeries(data: MekkoColumnChartData){
+    public setDataPointColorPickerSlicesSingleSeries(data: MekkoColumnChartData) {
         const singleSeriesData: MekkoChartColumnDataPoint[] = data.series[0].data;
         const categoryFormatter: IValueFormatter = data.categoryFormatter;
 
@@ -582,7 +588,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
             const categoryValue: any = data.categories[i];
             const formattedName: string = categoryFormatter ? categoryFormatter.format(categoryValue) : categoryValue;
 
-            if (this.dataPoint.slices.some((dataPointColorSelector: FormattingSettingsSlice) => dataPointColorSelector.displayName === formattedName)){
+            if (this.dataPoint.slices.some((dataPointColorSelector: FormattingSettingsSlice) => dataPointColorSelector.displayName === formattedName)) {
                 return;
             }
             this.dataPoint.slices.push(
@@ -590,7 +596,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
                     name: "fill",
                     displayName: formattedName,
                     selector: singleSeriesDataPoint.identity.getSelector(),
-                    value: {value: singleSeriesDataPoint.color},
+                    value: { value: singleSeriesDataPoint.color },
                     visible: data.showAllDataPoints
                 })
             )

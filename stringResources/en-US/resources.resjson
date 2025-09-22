@@ -88,5 +88,8 @@
 	"Visual_ShowBorder": "Show border",
 	"Visual_HideBorder": "Hide border",
 	"Visual_EnableSortSeries": "Enable series sorting",
-	"Visual_DisableSortSeries": "Disable series sorting"
+	"Visual_DisableSortSeries": "Disable series sorting",
+	"Visual_Value_Mode":"Visual Mode",
+	"Visual_Percentage":"Percentage123",
+	"Visual_Absolute":"Absolute123"
 }

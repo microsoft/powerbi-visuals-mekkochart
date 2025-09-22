@@ -376,6 +376,20 @@
                     "type": {
                         "bool": true
                     }
+                },
+                "valueMode":{
+                    "type":{    
+                        "enumeration":[
+                            {
+                                "value":"absolute",
+                                "displayName":"Visual_Percentage"
+                            },
+                            {
+                                "value":"percentage",
+                                "displayName":"Visual_Percentage"
+                            }
+                        ]
+                    }
                 }
             }
         },
