@@ -1,0 +1,30 @@
+name: Capabilities compatibility check
+
+on:
+  pull_request:
+    paths:
+      - 'capabilities.json'
+      - '.github/**'
+
+jobs:
+  check-capabilities:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout base and PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # needed to get the base branch
+      - name: Determine base ref
+        id: vars
+        run: |
+          echo "BASE_REF=${{ github.event.pull_request.base.ref }}" >> $GITHUB_OUTPUT
+          echo "PR_REF=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+      - name: Checkout base branch file
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
+          git show origin/${{ github.event.pull_request.base.ref }}:capabilities.json > capabilities.base.json
+      - name: Run compatibility script
+        run: |
+          node ./.github/scripts/check-capabilities-compatibility.js --baseFile=capabilities.base.json --prFile=capabilities.json || exit 1
+        shell: bash
