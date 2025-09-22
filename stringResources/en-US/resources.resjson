@@ -90,6 +90,6 @@
 	"Visual_EnableSortSeries": "Enable series sorting",
 	"Visual_DisableSortSeries": "Disable series sorting",
 	"Visual_Value_Mode":"Visual Mode",
-	"Visual_Percentage":"Percentage123",
-	"Visual_Absolute":"Absolute123"
+	"Visual_Percentage":"Percentage",
+	"Visual_Absolute":"Absolute"
 }
