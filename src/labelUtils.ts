@@ -47,7 +47,13 @@ import ITextAsSVGMeasurer = formattingInterfaces.ITextAsSVGMeasurer;
 
 // powerbi.extensibility.utils.chart
 import IAxisProperties = axisInterfaces.IAxisProperties;
-import TickLabelMargins = axisInterfaces.TickLabelMargins;
+
+// Define TickLabelMargins interface locally since it's no longer exported from chartutils
+export interface TickLabelMargins {
+    xMax: number;
+    yLeft: number;
+    yRight: number;
+}
 
 const XLabelMaxAllowedOverflow: number = 35;
 const OffsetDelimiter: number = 2;

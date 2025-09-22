@@ -501,6 +501,7 @@
     ],
     "supportsHighlight": true,
     "supportsKeyboardFocus": true,
+    "supportsMultiVisualSelection": true,
     "sorting": {
         "default": {}
     },

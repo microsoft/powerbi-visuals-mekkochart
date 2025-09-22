@@ -83,6 +83,7 @@ import {
 import * as dataViewUtils from "./dataViewUtils";
 
 import * as labelUtils from "./labelUtils";
+import { TickLabelMargins } from "./labelUtils";
 
 import * as axisType from "./axis/type";
 import * as axisPosition from "./axis/position";
@@ -111,7 +112,6 @@ import {
 } from "powerbi-visuals-utils-chartutils";
 
 import IAxisProperties = axisInterfaces.IAxisProperties;
-import TickLabelMargins = axisInterfaces.TickLabelMargins;
 import ILegend = legendInterfaces.ILegend;
 import ILegendData = legendInterfaces.LegendData;
 import ISelectableDataPoint = legendInterfaces.ISelectableDataPoint;
@@ -415,8 +415,8 @@ export class MekkoChart implements IVisual {
         this.y1AxisGraphicsContext
             .classed(MekkoChart.ShowLinesOnAxisSelector.className, true)
             .classed(MekkoChart.HideLinesOnAxisSelector.className, false);
-        
-            
+
+
         this.selectionManager = options.host.createSelectionManager();
         this.behavior = new CustomVisualBehavior(this.selectionManager, this.colorPalette);
 
@@ -510,7 +510,7 @@ export class MekkoChart implements IVisual {
                 .classed(MekkoChart.AxisSelector.className, true)
                 .classed(MekkoChart.AxisLabelSelector.className, true);
 
-                xAxisLabel.call(
+            xAxisLabel.call(
                 AxisHelper.LabelLayoutStrategy.clip,
                 width,
                 textMeasurementService.svgEllipsis);
@@ -555,7 +555,7 @@ export class MekkoChart implements IVisual {
             .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Axis"));
     }
 
-    private applyOnObjectStylesToAxisTitle(label: Selection, isFormatMode: boolean, objectName: string){
+    private applyOnObjectStylesToAxisTitle(label: Selection, isFormatMode: boolean, objectName: string) {
         label
             .classed(HtmlSubSelectableClass, isFormatMode)
             .attr(SubSelectableObjectNameAttribute, objectName)
@@ -754,7 +754,7 @@ export class MekkoChart implements IVisual {
         this.visualHost.eventService.renderingFinished(options);
     }
 
-    private applyOnObjectFormatting(isFormatMode: boolean, updateType: VisualUpdateType, subSelections?: CustomVisualSubSelection[]): void{
+    private applyOnObjectFormatting(isFormatMode: boolean, updateType: VisualUpdateType, subSelections?: CustomVisualSubSelection[]): void {
         this.visualOnObjectFormatting.setFormatMode(isFormatMode);
 
         const shouldUpdateSubSelection = updateType & (powerbi.VisualUpdateType.Data
@@ -777,7 +777,7 @@ export class MekkoChart implements IVisual {
                 return foundDataPoint ? [foundDataPoint] : [];
             })();
 
-        if (currentDataPoints.length === 0){
+        if (currentDataPoints.length === 0) {
             return [];
         }
 
@@ -798,7 +798,7 @@ export class MekkoChart implements IVisual {
         currentDataPoints.forEach(dataPoint => {
             const currentrect: RectDataPoint = {
                 x: layout.shapeLayout.x(dataPoint) + xShift,
-                y: layout.shapeLayout.y(dataPoint)+ yShift,
+                y: layout.shapeLayout.y(dataPoint) + yShift,
                 height: layout.shapeLayout.height(dataPoint),
                 width: layout.shapeLayout.width(dataPoint),
             };
@@ -809,12 +809,12 @@ export class MekkoChart implements IVisual {
         return result;
     }
 
-     private getXShift(legendPosition: LegendPosition, margin: IMargin): number {
+    private getXShift(legendPosition: LegendPosition, margin: IMargin): number {
         const defaultShift: number = margin.left;
         switch (legendPosition) {
             case LegendPosition.Left:
             case LegendPosition.LeftCenter:
-                return defaultShift+ this.legend.getMargins().width;
+                return defaultShift + this.legend.getMargins().width;
             default:
                 return defaultShift;
         }
@@ -1044,9 +1044,8 @@ export class MekkoChart implements IVisual {
                     ? this.layerLegendData.title || ""
                     : legendData.title;
 
-                if (legendSettings.titleText.value)
-                {
-                    if (!this.settingsModel.sortLegend.groupByCategory.value){
+                if (legendSettings.titleText.value) {
+                    if (!this.settingsModel.sortLegend.groupByCategory.value) {
                         legendData.title = legendSettings.titleText.value;
                     }
                 }
@@ -1061,7 +1060,7 @@ export class MekkoChart implements IVisual {
                     legendData.grouped = true;
                 }
 
-                if (this.layerLegendData.labelColor){
+                if (this.layerLegendData.labelColor) {
                     legendData.labelColor = this.layerLegendData.labelColor;
                 }
             }
@@ -1231,7 +1230,7 @@ export class MekkoChart implements IVisual {
         this.legendSelection = this.rootElement
             .selectAll(MekkoChart.LegendSelector.selectorName);
 
-        this.legendSelection.style("font-weight", legendSettings.fontControl.bold.value? "bold" : "normal");
+        this.legendSelection.style("font-weight", legendSettings.fontControl.bold.value ? "bold" : "normal");
         this.legendSelection.style("font-style", legendSettings.fontControl.italic.value ? "italic" : "normal");
         this.legendSelection.style("text-decoration", legendSettings.fontControl.underline.value ? "underline" : "none");
         this.legendSelection.style("fill", this.colorPalette.isHighContrast ? this.colorPalette.foreground.value : legendSettings.color.value.value);
@@ -1254,7 +1253,7 @@ export class MekkoChart implements IVisual {
         axisProperties: IAxisProperties): boolean {
 
         if (axisProperties) {
-            if (axisProperties.isCategoryAxis && this.settingsModel.categoryAxis.show.value){
+            if (axisProperties.isCategoryAxis && this.settingsModel.categoryAxis.show.value) {
 
                 return axisProperties.values
                     && axisProperties.values.length > 0;
@@ -1276,7 +1275,7 @@ export class MekkoChart implements IVisual {
             .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
             .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Legend"));
 
-            this.legendSelection.select(".legendTitle")
+        this.legendSelection.select(".legendTitle")
             .classed(HtmlSubSelectableClass, isFormatMode && settings.show.value && settings.showTitle.value)
             .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.LegendTitle)
             .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
@@ -1728,14 +1727,14 @@ export class MekkoChart implements IVisual {
                 yFontFamily = this.settingsModel.categoryAxis.fontControl.fontFamily.value;
                 yFontBold = this.settingsModel.categoryAxis.fontControl.bold.value;
                 yFontItalic = this.settingsModel.categoryAxis.fontControl.italic.value;
-                yFontUnderline = this.settingsModel.categoryAxis.fontControl.underline.value; 
+                yFontUnderline = this.settingsModel.categoryAxis.fontControl.underline.value;
             } else {
                 yLabelColor = this.settingsModel.valueAxis.labelColor.value.value;
                 yFontSize = this.settingsModel.valueAxis.fontControl.fontSize.value;
                 yFontFamily = this.settingsModel.valueAxis.fontControl.fontFamily.value;
                 yFontBold = this.settingsModel.valueAxis.fontControl.bold.value;
                 yFontItalic = this.settingsModel.valueAxis.fontControl.italic.value;
-                yFontUnderline = this.settingsModel.valueAxis.fontControl.underline.value; 
+                yFontUnderline = this.settingsModel.valueAxis.fontControl.underline.value;
             }
 
             yFontSize = PixelConverter.fromPointToPixel(yFontSize);
@@ -1827,11 +1826,16 @@ export class MekkoChart implements IVisual {
             }
 
             const forceDisplay: boolean = this.settingsModel.labels.forceDisplay.value;
-            drawDefaultLabelsForDataPointChart(
-                resultsLabelDataPoints,
-                this.labelGraphicsContextScrollable,
-                this.getLabelLayout(forceDisplay),
-                this.currentViewport, false, 0, false, !forceDisplay);
+            drawDefaultLabelsForDataPointChart({
+                data: resultsLabelDataPoints,
+                context: this.labelGraphicsContextScrollable,
+                layout: this.getLabelLayout(forceDisplay),
+                viewport: this.currentViewport,
+                isAnimator: false,
+                animationDuration: 0,
+                hasSelection: false,
+                hideCollidedLabels: !forceDisplay
+            });
 
             this.applyOnObjectStylesToLabels(isFormatMode);
 
