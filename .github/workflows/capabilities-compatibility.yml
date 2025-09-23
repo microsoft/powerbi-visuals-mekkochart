@@ -2,24 +2,42 @@ name: Capabilities compatibility check
 
 on:
   pull_request:
-    paths:
-      - 'capabilities.json'
 
 jobs:
   check-capabilities:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout base and PR
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          # needed to get the base branch
+          fetch-depth: 0 # Fetches all history to allow diffing against the base branch
+
+      - name: Check for capabilities.json changes
+        id: check_changes
+        run: |
+          # Compare the PR branch with the base branch to find changed files
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
+          echo "Files changed in this PR:"
+          echo "$CHANGED_FILES"
+          
+          if echo "$CHANGED_FILES" | grep -q "capabilities.json"; then
+            echo "capabilities.json was modified."
+            echo "any_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "capabilities.json was not modified. Skipping compatibility check."
+            echo "any_changed=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
       - name: Determine base ref
+        if: steps.check_changes.outputs.any_changed == 'true'
         id: vars
         run: |
           echo "BASE_REF=${{ github.event.pull_request.base.ref }}" >> $GITHUB_OUTPUT
           echo "PR_REF=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+
       - name: Checkout base branch file
+        if: steps.check_changes.outputs.any_changed == 'true'
         run: |
           git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
           if git show origin/${{ github.event.pull_request.base.ref }}:capabilities.json > capabilities.base.json 2>/dev/null; then
@@ -28,7 +46,9 @@ jobs:
             echo "No capabilities.json in base branch - treating as new file"
             echo '{}' > capabilities.base.json
           fi
+
       - name: Run compatibility script
+        if: steps.check_changes.outputs.any_changed == 'true'
         run: |
           node ./.github/scripts/check-capabilities-compatibility.js --baseFile=capabilities.base.json --prFile=capabilities.json || exit 1
         shell: bash
