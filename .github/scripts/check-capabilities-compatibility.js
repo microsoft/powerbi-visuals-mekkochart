@@ -94,7 +94,7 @@ function compareObjects(baseNode, prNode, parentPath) {
   if (Array.isArray(baseNode)) {
     // Heuristics: if array of objects and elements have `name` property, match by name.
     if (baseNode.length > 0 && typeof baseNode[0] === 'object' && baseNode[0] !== null) {
-      const byName = baseNode[0] && baseNode[0].name !== undefined;
+      const byName = baseNode[0] && Object.prototype.hasOwnProperty.call(baseNode[0], 'name');
       if (byName) {
         const map = new Map();
         (prNode || []).forEach(item => { if (item && item.name) map.set(item.name, item); });
