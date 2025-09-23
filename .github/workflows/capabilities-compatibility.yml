@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - 'capabilities.json'
-      - '.github/**'
 
 jobs:
   check-capabilities:
@@ -23,7 +22,12 @@ jobs:
       - name: Checkout base branch file
         run: |
           git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
-          git show origin/${{ github.event.pull_request.base.ref }}:capabilities.json > capabilities.base.json
+          if git show origin/${{ github.event.pull_request.base.ref }}:capabilities.json > capabilities.base.json 2>/dev/null; then
+            echo "Base capabilities.json found"
+          else
+            echo "No capabilities.json in base branch - treating as new file"
+            echo 'null' > capabilities.base.json
+          fi
       - name: Run compatibility script
         run: |
           node ./.github/scripts/check-capabilities-compatibility.js --baseFile=capabilities.base.json --prFile=capabilities.json || exit 1

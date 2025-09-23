@@ -20,7 +20,12 @@ const allowlistFile = args.allowlist ? path.resolve(args.allowlist) : path.resol
 
 function readJson(file) {
   try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
+    const content = fs.readFileSync(file, 'utf8').trim();
+    if (!content) {
+      console.warn(`Warning: ${file} is empty, treating as empty object`);
+      return {};
+    }
+    return JSON.parse(content);
   } catch (e) {
     console.error(`Failed to read or parse JSON file: ${file}\n${e.message}`);
     process.exit(2);
@@ -29,6 +34,30 @@ function readJson(file) {
 
 const base = readJson(baseFile);
 const pr = readJson(prFile);
+
+// Special case: if base is null (missing file), only validate PR structure
+if (base === null || (typeof base === 'object' && Object.keys(base).length === 0)) {
+  console.log('Base capabilities.json is missing or empty - treating as new file addition.');
+  console.log('Performing basic validation of new capabilities.json structure...');
+  
+  // Basic validation for required properties in new capabilities.json
+  const requiredProps = ['dataRoles', 'dataViewMappings'];
+  const missingProps = requiredProps.filter(prop => !pr.hasOwnProperty(prop));
+  if (missingProps.length > 0) {
+    console.error(`\nNew capabilities.json is missing required properties: ${missingProps.join(', ')}`);
+    process.exit(1);
+  }
+  
+  // Check for WebAccess (not allowed)
+  if (pr.privileges && pr.privileges.includes('WebAccess')) {
+    console.error('\nWebAccess privilege is not allowed in capabilities.json');
+    process.exit(1);
+  }
+  
+  console.log('New capabilities.json structure is valid.');
+  process.exit(0);
+}
+
 let allowlist = [];
 if (fs.existsSync(allowlistFile)) {
   try { allowlist = JSON.parse(fs.readFileSync(allowlistFile, 'utf8')); } catch (e) { console.warn('Warning: failed to parse allowlist, continuing without it'); }
