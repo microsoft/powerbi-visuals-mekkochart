@@ -60,7 +60,12 @@ if (typeof base === 'object' && base !== null && Object.keys(base).length === 0)
 
 let allowlist = [];
 if (fs.existsSync(allowlistFile)) {
-  try { allowlist = JSON.parse(fs.readFileSync(allowlistFile, 'utf8')); } catch (e) { console.warn('Warning: failed to parse allowlist, continuing without it'); }
+  try {
+    const allowlistContent = fs.readFileSync(allowlistFile, 'utf8');
+    allowlist = JSON.parse(allowlistContent);
+  } catch (e) {
+    console.warn('Warning: failed to parse allowlist, continuing without it');
+  }
 }
 
 function isPrimitive(val) {
@@ -89,7 +94,7 @@ function compareObjects(baseNode, prNode, parentPath) {
   if (Array.isArray(baseNode)) {
     // Heuristics: if array of objects and elements have `name` property, match by name.
     if (baseNode.length > 0 && typeof baseNode[0] === 'object' && baseNode[0] !== null) {
-      const byName = baseNode[0] && Object.prototype.hasOwnProperty.call(baseNode[0], 'name');
+      const byName = baseNode[0] && baseNode[0].name !== undefined;
       if (byName) {
         const map = new Map();
         (prNode || []).forEach(item => { if (item && item.name) map.set(item.name, item); });
