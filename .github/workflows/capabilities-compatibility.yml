@@ -16,7 +16,7 @@ jobs:
         id: check_changes
         run: |
           # Compare the PR branch with the base branch to find changed files
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }})
           echo "Files changed in this PR:"
           echo "$CHANGED_FILES"
           
