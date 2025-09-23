@@ -25,7 +25,8 @@ export default [
             "coverage/**",
             "test/**",
             "karma.conf.ts",
-            "test.webpack.config.js"
+            "test.webpack.config.js",
+            ".github/**",
         ],
     },
 ];
