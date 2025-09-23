@@ -1157,9 +1157,7 @@ export class MekkoChart implements IVisual {
         const legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style("position", "absolute")
             .style("top", (data, index) => PixelConverter.toString((svgHeight + MekkoChart.LegendBarHeightMargin) * index));
-
-        // Disable linter rule for aliasing this to local variable as it is required in this instance
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
+            
         const mekko = this;
         this.categoryLegends = this.categoryLegends || [];
         legendParentsWithChildsAttr.each(function (data, index) {
