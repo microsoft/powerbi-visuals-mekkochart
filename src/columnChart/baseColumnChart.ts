@@ -512,7 +512,7 @@ export class BaseColumnChart implements IColumnChart {
             ? (position / absTotal) / position
             : BaseColumnChart.DefaultStackedPosition;
     }
-    // eslint-disable-next-line max-lines-per-function
+
     private static createDataPoints({
         visualHost,
         dataViewCat,

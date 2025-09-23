@@ -460,8 +460,6 @@ export class MekkoChart implements IVisual {
     }
 
     public static getTranslation(transform): [number, number, number] {
-        // Allow an http namespace as nothing is fetched (https not required)
-        // eslint-disable-next-line powerbi-visuals/no-http-string
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
         g.setAttributeNS(null, "transform", transform);
@@ -1026,7 +1024,6 @@ export class MekkoChart implements IVisual {
         return layers;
     }
 
-    // eslint-disable-next-line max-lines-per-function
     private renderLegend(legendSettings: LegendSettings, isFormatMode: boolean): void {
         const layers: IColumnChart[] = this.layers,
             legendData: ILegendData = {
@@ -1157,7 +1154,7 @@ export class MekkoChart implements IVisual {
         const legendParentsWithChildsAttr = legendParentsWithChilds.classed("legendParent", true)
             .style("position", "absolute")
             .style("top", (data, index) => PixelConverter.toString((svgHeight + MekkoChart.LegendBarHeightMargin) * index));
-            
+
         const mekko = this;
         this.categoryLegends = this.categoryLegends || [];
         legendParentsWithChildsAttr.each(function (data, index) {
@@ -1281,10 +1278,8 @@ export class MekkoChart implements IVisual {
             .attr(SubSelectableDirectEdit, titleEditSubSelection);
     }
 
-    // eslint-disable-next-line max-lines-per-function
     private render(formatMode: boolean, suppressAnimations: boolean = true): void {
         this.setVisibility(true);
-
         this.legendMargins = this.legendMargins || this.legend.getMargins();
 
         if (this.legend.isVisible()) {
@@ -1592,7 +1587,6 @@ export class MekkoChart implements IVisual {
         });
     }
 
-    // eslint-disable-next-line max-lines-per-function
     private renderChart(
         mainAxisScale: any,
         axes: MekkoChartAxisProperties,

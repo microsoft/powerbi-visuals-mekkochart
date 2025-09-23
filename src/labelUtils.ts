@@ -62,7 +62,6 @@ const DefaultOverflow: number = 0;
 const HeightFactor: number = 1.4;
 const HeightOffset: number = 15;
 
-// eslint-disable-next-line max-lines-per-function
 export function getTickLabelMargins(
     viewport: IViewport,
     yMarginLimit: number,

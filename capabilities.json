@@ -382,12 +382,12 @@
                         "enumeration":[
                             {
                                 "value":"absolute",
-                                "displayName":"Persentage",
+                                "displayName":"Absolute",
                                 "displayNameKey":"Visual_Absolute"
                             },
                             {
                                 "value":"percentage",
-                                "displayName":"Persentage",
+                                "displayName":"Percentage",
                                 "displayNameKey":"Visual_Percentage"
                             }
                         ]
