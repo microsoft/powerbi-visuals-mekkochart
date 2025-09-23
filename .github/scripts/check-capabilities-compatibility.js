@@ -21,15 +21,16 @@ const allowlistFile = args.allowlist ? path.resolve(args.allowlist) : path.resol
 function readJson(file) {
   try {
     const content = fs.readFileSync(file, 'utf8').trim();
-    if (
-      !content ||
-      content.toLowerCase() === 'null' ||
-      content.toLowerCase() === 'undefined'
-    ) {
-      console.warn(`Warning: ${file} is empty, null, or undefined, treating as empty object`);
+    if (!content) {
+      console.warn(`Warning: ${file} is empty, treating as empty object`);
       return {};
     }
-    return JSON.parse(content);
+    const parsed = JSON.parse(content);
+    if (parsed === null) {
+      console.warn(`Warning: ${file} contains JSON null, treating as empty object`);
+      return {};
+    }
+    return parsed;
   } catch (e) {
     console.error(`Failed to read or parse JSON file: ${file}\n${e.message}`);
     process.exit(2);
