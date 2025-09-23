@@ -105,7 +105,7 @@
   - State/races/leaks; excessive coupling; duplication.
   - Power BI SDK/utilities compliance, formatting, API contracts.
 
-## ✅ Spellcheck Configuration
+## Spellcheck Configuration
 
 ### What to Check:
 - UI strings in code (`src/**`)
