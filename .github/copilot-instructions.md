@@ -109,7 +109,8 @@
 
 ### What to Check:
 - UI strings in code (`src/**`)
-- localization files (`stringResources/en-US/**`).
+- localization files (`stringResources/en-US/**`)
+- PR title and description.
 
 ### Severity:
 - `warning` — UI strings and localization.
