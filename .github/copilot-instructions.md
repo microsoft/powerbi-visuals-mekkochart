@@ -1,97 +1,156 @@
 # Agent-oriented Copilot instructions for PR checks
 
-Purpose: keep only the checks and guidance that an automated coding agent (Copilot-style) can perform reliably during a PR review. Manual tasks and interactive certification steps moved to `HUMAN-certification-checklist.md`.
+**Purpose.** Keep only the checks and guidance that an automated coding agent (Copilot-style) can perform reliably during a PR review for a Power BI custom visual repository. Interactive/manual steps live in `HUMAN-certification-checklist.md`.
 
-Context: This repository contains a Microsoft custom visual for Power BI. All code contributions must follow Microsoft coding standards and Power BI custom visual development guidelines. Agents should prioritize checks that enforce those standards and flag deviations for human reviewers.
+**Context.** This repository contains a Microsoft custom visual for Power BI. All contributions must follow Microsoft coding standards and Power BI custom visual guidelines. The agent prioritizes checks that enforce those standards and flags deviations for human review.
 
-Agent-capable checks (what the agent should do on each PR):
+---
 
-- Verify presence of required files: `capabilities.json`, `pbiviz.json`, `package.json`, `tsconfig.json`, `src/visual.ts`.
-- Static scan for strictly forbidden patterns and unsafe APIs:
-  - `fetch\(`, `XMLHttpRequest`, `WebSocket` usages
-  - `eval\(`, `new Function\(`, `setTimeout\(.*\bFunction\b`, `setInterval\(.*\bFunction\b`
-  - `innerHTML\s*=`, `D3.html\(` or other direct HTML injection points
-  - Any `.min.js` or obviously minified JS/TS code committed to `src/`
-- Validate `capabilities.json` does not include WebAccess privileges and that dataRoles/dataViewMappings exist.
-<!-- TEMPORARILY DISABLED: TypeScript strictness check. Uncomment this line when ready to re-enable.
-- Check TypeScript strictness: `tsconfig.json` contains `"strict": true` (or explicitly documents deviations).
--->
-- Check `package.json` scripts include common targets: `lint`, `package` (or `pbiviz package`).
-- Lint configuration: presence of ESLint config or `eslint` devDependency.
-- Detect unsafe network or runtime requirements in source (hard-coded URLs, credentials, external service calls).
-- Validate use of safe DOM APIs: prefer `textContent`, `setAttribute` over `innerHTML` in `src/` files.
-- Search for `TODO`/`FIXME` comments that indicate unfinished security-sensitive code and flag them.
-- Check spelling of user-facing string values and string literals (agent-built spellcheck; no external scripts required).
-  - Scan all locale folders under `stringResources/**` (check only `en-US` as source-of-truth) and also scan string literals in `src/`.
-  - Report likely misspellings with file/line locations and suggested corrections. When a suggestion is low-confidence, mark as `info`; medium-confidence as `warning`.
-  - Detect untranslated or new UI strings added only to code (not present in `stringResources`) and warn about missing locale entries.
-  - Avoid false positives by skipping: code identifiers, product names, acronyms, and known technical terms listed in a configurable whitelist file (e.g., `.spellcheck-whitelist`).
-  - Do not auto-apply fixes. For high-confidence typos, suggest an explicit replacement snippet in the PR comment.
-- Verify code is not minified: simple heuristics such as very long single-line files or `.min.` in filenames under `src/`.
-- Check for large bundled assets accidentally committed under `src/`.
-- Run repository-wide text searches for banned patterns and report exact file/line matches in PR comments.
-- Suggest automated fixes where safe and trivial (e.g., replace `innerHTML = x` with `textContent = x` when x is simple string literal), but do not apply changes that require semantic understanding without reviewer approval.
+## Summary of agent-capable checks (categories)
 
-Additional machine-checkable PR review rules for AI agents
----------------------------------------------------------
+- **PR metadata**: non-empty description; conventional commit title.
+- **Manifests & capabilities (Power BI)**: presence & schema sanity of `capabilities.json`, `pbiviz.json`, `package.json`, `tsconfig.json`, `src/visual.ts`; no `WebAccess`; version bump rules.
+- **Security & forbidden patterns**: unsafe DOM, dynamic scripts, timers-with-strings, `eval/new Function`, network APIs, unsafe bindings.
+- **Secrets scanning**: common tokens/keys; urgent human review.
+- **Build artifacts & minification & assets**: `.min.*` in `src/`, overly large or minified-looking files.
+- **Linting, tests, CI**: scripts present; ESLint config; CI status present if `src/**` changed.
+- **Dependencies**: lockfile updated on dependency change; major version bumps flagged.
+- **Tests & localization**: unit tests reminder on logic changes; `stringResources/en-US/**` coverage; spellcheck.
+- **Documentation & changelog**: `changelog.md` on non-trivial changes; usage examples for public APIs.
+- **Code quality & architecture**: scope summary, performance & accessibility hints, state/event cleanup, error handling, maintainability notes.
+- **Reporting**: one-line summary counts; per-finding snippets; suggested fixes; auto-labels.
 
-The agent should apply the following automated checks on every pull request and comment with findings. When possible provide a short remediation message and suggested code snippet.
+> Maintainers: thresholds, regexes and message templates are the **single source of truth** in this file to avoid divergence.
 
-- PR metadata
-  - Require non-empty PR description. If missing, comment: "Please add a description with intent, scope, and testing notes.".
-  - Check PR title against conventional commit-like template: `^(feat|fix|chore|docs|refactor|test|ci)(\(.+\))?: .{1,72}`. If not matched, suggest a compliant example.
+---
 
-- Secrets & credentials
-  - Run regex scans for common secrets (examples):
-    - AWS keys: `AKIA[0-9A-Z]{16}`
-    - Azure keys / connection strings: `(?i)(?:azure|access).*key|connectionstring` (heuristic)
-    - Generic tokens: `[A-Za-z0-9-_]{20,}` (with path/context check to reduce false positives)
-  - If matched, post an urgent comment and mark the finding for human review. Do not attempt to redact automatically.
+## Detailed rules
 
-- Build artifacts & large files
-  - Flag files that look like build outputs: very large single-line files or filenames containing `.min.`.
-  - Require `package-lock.json` or `yarn.lock` to be updated when `package.json` dependencies change.
+### 1) Manifests & capabilities (Power BI)
+- **Presence**: `capabilities.json`, `pbiviz.json`, `package.json`, `tsconfig.json`, `src/visual.ts`.  
+  Missing → `error`.
+- **Capabilities**:
+  - No `WebAccess` or privileges that permit arbitrary network calls → `error`.
+  - `dataRoles` and `dataViewMappings` must be present → `error`.
+- **`pbiviz.json`**:
+  - `visual.version` must bump for functional changes (semver).  
+  - `visual.guid`, `visual.displayName`, `author`, `supportUrl`, `apiVersion` present.  
+  - `apiVersion` compatible with `@types/powerbi-visuals-api` (major alignment) → mismatch → `warning`.
 
-- Power BI visual manifest & capability checks
-  - Validate presence and basic JSON schema of `capabilities.json`, `pbiviz.json`, `package.json`, `tsconfig.json`, and `src/visual.ts` when touched by PR.
-  - Verify `capabilities.json` does not request `WebAccess` and that `dataRoles`/`dataViewMappings` are present.
-  - When `pbiviz.json` is changed, ensure the visual version is bumped for functionality changes.
+### 2) Security & forbidden patterns (report file:line)
+- Unsafe DOM:
+  - `innerHTML\s*=` → `error` with safe alternative.
+  - `.html\(` (D3 selections) → `error` when D3 imported; otherwise `warning`.
+- Dynamic scripts / code eval:
+  - `createElement\(['"]script['"]\)` / `appendChild` of scripts → `error`.
+  - `eval\(` or `new Function\(` → `error`.
+  - String-based timers:  
+    `set(?:Timeout|Interval)\(\s*(['"]).*?\1` → `error`.
+- Network / runtime:
+  - `fetch\(`, `XMLHttpRequest`, `WebSocket` → `error` (Power BI certified visuals constraint).
+- Prefer safe APIs:
+  - `textContent`, `setAttribute` over `innerHTML`. Provide auto-fix snippet if RHS is a simple string literal.
 
-- Static security & DOM safety
-  - Reuse existing banning list and add checks for `innerText` vs `textContent` suggestions, and flag `innerHTML` usage when the source is not a safe literal.
-  - Flag dynamic script injection patterns and `setTimeout(new Function(...))` patterns.
+### 3) Secrets & credentials
+- Run regex scans on changed text files (exclude binaries and lock files).
+- Examples (non-exhaustive):
+  - `AKIA[0-9A-Z]{16}` (AWS)
+  - `ghp_[A-Za-z0-9]{36,}` (GitHub)
+  - `xox[baprs]-[A-Za-z0-9-]{10,48}` (Slack)
+  - `eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}` (JWT)
+  - `(AccountKey|SharedAccessKey|SAS|Sig|se=|sp=|sr=|spr=|sv=|st=|sk=|connection\s*string)\s*=\s*[^;'\n]+` (Azure)
+  - `npm_[A-Za-z0-9]{36,}` (NPM)
+  - `-----BEGIN (?:RSA |EC |DSA )?PRIVATE KEY-----`
+- Any hit → `error` + urgent human review. **Do not auto-edit.**
 
-- Linting, tests, CI
-  - Verify `package.json` contains `lint` and `test` scripts. If missing, warn.
-  - If PR modifies source files, verify that CI workflow is present or that tests/lint pass in CI status; if CI is not triggered, warn the author.
-  - Verify an ESLint config file exists at the repository root. Prefer `eslint.config.mjs` (recommended) but accept other valid ESLint configurations (`.eslintrc.js`, `.eslintrc.cjs`, `.eslintrc.json`, or `package.json` `eslintConfig`). If `eslint.config.mjs` is missing, warn and suggest adding a root `eslint.config.mjs` with recommended settings for Power BI visuals. Also verify `eslint` is listed in `devDependencies`.
+### 4) Build artifacts, minification & large assets
+- `error`: any `\.min\.(js|ts|css)$` under `src/**`.
+- `warning`: likely-minified file (avg line length > 300 and median > 120) in `src/**`.
+- `warning`: large files in `src/**` > 250 KB (exclude `assets/**` and PBIVIZ icons).
+- `warning`: assets > 500 KB — recommend re-evaluating bundling, compression, or CDN prohibition (if applicable).
 
-- Tests & localization
-  - Encourage adding or updating unit tests when logic changes. If code is edited without tests in same area, add a reminder comment.
-  - For UI text changes, check `stringResources/**` for corresponding entries; warn on missing locales.
+### 5) Linting, tests
+- `package.json` scripts must include:
+  - `lint`, `test`, `package` (or `pbiviz package`) → missing → `warning`.
+- ESLint configuration must exist at repo root:
+  - Prefer `eslint.config.mjs`; if `.eslintrc.*` or `.eslintignore` or `eslintConfig` in `package.json` -> ask to migrate to `eslint.config.mjs`.
+  - Missing → `warning` + suggest basic config for Power BI visuals.
 
-- Dependencies
-  - Flag major-version bumps in `package.json` dependencies. For minor/patch bumps, require `package-lock.json` update.
+### 6) Dependencies
+- On `dependencies`/`devDependencies` changes require updated `package-lock.json` or `yarn.lock` → `warning`.
+- Major-bump in `package.json` → `warning` with request to describe motivation/test-case.
+- When adding new features → ensure minor-version is bumped.
+- (Optional, as `info`) suggest running `npm audit` (at maintainers' discretion).
 
-- Documentation & changelog
-  - Remind authors to update `changelog.md` for non-trivial changes and to add usage examples for new public APIs.
+### 7) Tests & localization
+- If logic touched in `src/**` and no new/updated tests nearby → `warning`-reminder.
+- UI strings:
+  - Check `stringResources/en-US/resources.resjson` and string correspondence from code.
+  - Missing localization keys → `warning`.
+- Spellcheck (en-US as source):
+  - Report probable typos with level (`info`/`warning`) and replacement suggestion.
+  - Exclude identifiers/acronyms/brand-names based on `.spellcheck-whitelist`.
 
-- Automated actions and severity
-  - Categorize findings as `error` (must fix), `warning` (should fix), or `info` (suggestion). Examples:
-    - error: secret found, minified file under `src/`, WebAccess in `capabilities.json`.
-    - warning: missing PR description, missing tests, major dependency bump.
-    - info: style suggestion, minor spelling nit.
-  - For safe, localizable fixes (e.g., replace `innerHTML = "literal"` with `textContent = "literal"`), propose an auto-fix snippet but do not apply without reviewer approval.
+### 8) Documentation & changelog
+- For non-trivial changes — update `changelog.md` → `info`/`warning`.
+- For new public APIs — add usage examples → `info`.
 
-- Reporting
-  - In the PR comment, include:
-    - One-line summary of results (counts of errors/warnings/info).
-    - File/line snippets for each finding.
-    - Suggested remediation text and minimal code snippet when available.
-  - Add repository labels automatically (e.g., `needs-review`, `security`, `tests`) based on highest-severity finding.
+### 9) Code quality & architecture (senior review mindset)
+- Briefly summarize PR purpose and affected areas (render, data, settings, UI).
+- Highlight:
+  - Potential performance bottlenecks (DOM in hot paths, unnecessary loops, re-renders).
+  - Accessibility (ARIA, contrasts, keyboard navigation, screen reader).
+  - Errors/edge-cases: null/undefined/empty data.
+  - Resource management: cleanup D3-selectors, event handlers, timers.
+  - State/races/leaks; excessive coupling; duplication.
+  - Power BI SDK/utilities compliance, formatting, API contracts.
 
-Implementation notes for maintainers:
-- Document exact regexes and message templates in this file so agents add precise PR comments.
-- Keep false-positive-prone checks behind a `warning` severity until tuned.
+## ✅ Spellcheck Configuration
 
-# Refer to `HUMAN-certification-checklist.md` for manual steps and interactive QA.
+### What to Check:
+- UI strings in code (`src/**`)
+- localization files (`stringResources/en-US/**`).
+
+### Severity:
+- `warning` — UI strings and localization.
+- `info` — PR metadata and comments.
+
+---
+
+## Severity & automated labels
+
+- **error** — must fix before merge (e.g., secrets, `WebAccess`, minified code in `src/**`, forbidden APIs).
+- **warning** — should fix soon (e.g., missing PR description/tests, major dep bump, large assets).
+- **info** — suggestions/style (typos, architecture improvements).
+
+**Auto-labels** (by highest severity and change type):  
+`security`, `needs-review`, `tests`, `enhancement`, `performance`, `localization`.
+
+---
+
+## Canonical regex library (reference)
+```
+# Conventional commits
+^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9-./]+\))?(!)?: .{1,72}$
+
+# Unsafe DOM / HTML injection
+\binnerHTML\s*=
+\.html\s*\(
+
+# Dynamic scripts / code eval
+createElement\s*\(\s*['"]script['"]\s*\)|appendChild\s*\([^)]*script[^)]*\)
+\beval\s*\(
+\bnew\s+Function\s*\(
+set(?:Timeout|Interval)\s*\(\s*(['"]).*?\1
+
+# Network APIs
+\bXMLHttpRequest\b|\bWebSocket\b|\bfetch\s*\(
+
+# Secrets (subset)
+AKIA[0-9A-Z]{16}
+ghp_[A-Za-z0-9]{36,}
+xox[baprs]-[A-Za-z0-9-]{10,48}
+eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}
+(AccountKey|SharedAccessKey|SAS|Sig|se=|sp=|sr=|spr=|sv=|st=|sk=|connection\s*string)\s*=\s*[^;'\n]+
+npm_[A-Za-z0-9]{36,}
+```
