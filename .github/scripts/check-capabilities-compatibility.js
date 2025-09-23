@@ -21,8 +21,8 @@ const allowlistFile = args.allowlist ? path.resolve(args.allowlist) : path.resol
 function readJson(file) {
   try {
     const content = fs.readFileSync(file, 'utf8').trim();
-    if (!content) {
-      console.warn(`Warning: ${file} is empty, treating as empty object`);
+    if (!content || content.toLowerCase() === 'null') {
+      console.warn(`Warning: ${file} is empty or null, treating as empty object`);
       return {};
     }
     return JSON.parse(content);
@@ -35,9 +35,9 @@ function readJson(file) {
 const base = readJson(baseFile);
 const pr = readJson(prFile);
 
-// Special case: if base is null (missing file), only validate PR structure
-if (base === null || (typeof base === 'object' && Object.keys(base).length === 0)) {
-  console.log('Base capabilities.json is missing or empty - treating as new file addition.');
+// Special case: if base is empty object (missing file), only validate PR structure
+if (typeof base === 'object' && base !== null && Object.keys(base).length === 0) {
+  console.log('Base capabilities.json is missing - treating as new file addition.');
   console.log('Performing basic validation of new capabilities.json structure...');
   
   // Basic validation for required properties in new capabilities.json

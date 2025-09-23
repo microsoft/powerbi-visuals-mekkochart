@@ -26,7 +26,7 @@ jobs:
             echo "Base capabilities.json found"
           else
             echo "No capabilities.json in base branch - treating as new file"
-            echo 'null' > capabilities.base.json
+            echo '{}' > capabilities.base.json
           fi
       - name: Run compatibility script
         run: |
