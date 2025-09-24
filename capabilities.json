@@ -376,6 +376,22 @@
                     "type": {
                         "bool": true
                     }
+                },
+                "valueMode": {
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "absolute",
+                                "displayName": "Absolute",
+                                "displayNameKey": "Visual_Absolute"
+                            },
+                            {
+                                "value": "percentage",
+                                "displayName": "Percentage",
+                                "displayNameKey": "Visual_Percentage"
+                            }
+                        ]
+                    }
                 }
             }
         },
@@ -485,6 +501,7 @@
     ],
     "supportsHighlight": true,
     "supportsKeyboardFocus": true,
+    "supportsMultiVisualSelection": true,
     "sorting": {
         "default": {}
     },

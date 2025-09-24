@@ -1,3 +1,6 @@
+## 3.8.0.0
+* Added new setting Visual mode
+
 ## 3.7.0.0
 
 ### New features
