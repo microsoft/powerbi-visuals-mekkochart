@@ -377,18 +377,18 @@
                         "bool": true
                     }
                 },
-                "valueMode":{
-                    "type":{    
-                        "enumeration":[
+                "valueMode": {
+                    "type": {
+                        "enumeration": [
                             {
-                                "value":"absolute",
-                                "displayName":"Absolute",
-                                "displayNameKey":"Visual_Absolute"
+                                "value": "absolute",
+                                "displayName": "Absolute",
+                                "displayNameKey": "Visual_Absolute"
                             },
                             {
-                                "value":"percentage",
-                                "displayName":"Percentage",
-                                "displayNameKey":"Visual_Percentage"
+                                "value": "percentage",
+                                "displayName": "Percentage",
+                                "displayNameKey": "Visual_Percentage"
                             }
                         ]
                     }

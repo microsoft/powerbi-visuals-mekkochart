@@ -91,5 +91,6 @@
 	"Visual_DisableSortSeries": "Disable series sorting",
 	"Visual_Value_Mode":"Visual Mode",
 	"Visual_Percentage":"Percentage",
-	"Visual_Absolute":"Absolute"
+	"Visual_Absolute":"Absolute",
+	"Visual_Description_ValueMode":"Choose 'percentage' to display values as a percentage of the total, or 'absolute' to display raw values"
 }

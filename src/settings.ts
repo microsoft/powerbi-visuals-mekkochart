@@ -473,6 +473,8 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
         name: "valueMode",
         displayName: "Value Mode",
         displayNameKey: "Visual_Value_Mode",
+        descriptionKey: "Visual_Description_ValueMode",
+        description: "Choose 'percentage' to display values as a percentage of the total, or 'absolute' to display raw values.",
         value: "percentage",
     })
 
