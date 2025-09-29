@@ -342,7 +342,7 @@ export class BaseColumnChart implements IColumnChart {
 
         if (settingsModel.sortSeries.enabled.value) {
             const columns = BaseColumnChart.createAlternateStructure(result, settingsModel.sortSeries.direction.value === "des");
-            BaseColumnChart.reorderPositions(result, columns);
+            BaseColumnChart.reorderPositions(result, columns, is100PercentStacked);
         }
 
         const valuesMetadata: DataViewMetadataColumn[] = [];
@@ -428,9 +428,23 @@ export class BaseColumnChart implements IColumnChart {
         return columns;
     }
 
-    private static reorderPositions(dataPoint: MekkoDataPoints, columns: ICategoryValuesCollection[]) {
+    private static reorderPositions(dataPoint: MekkoDataPoints, columns: ICategoryValuesCollection[], is100PercentStacked: boolean = true): void {
         const series: MekkoChartSeries[] = dataPoint.series;
         const colsCount: number = series[0].data.length;
+        const columnValues: number[] = [];
+
+        if (!is100PercentStacked) {
+            for (let col = 0; col < colsCount; col++) {
+                const summed = sum(columns[col].map((val) => {
+                    if (val === undefined) {
+                        return 0;
+                    }
+                    return val.valueAbsolute;
+                }));
+                columnValues.push(summed);
+            }
+        }
+
         for (let col = 0; col < colsCount; col++) {
             let columnAbsoluteValue: number = sum(columns[col].map((val) => {
                 if (val === undefined) {
@@ -438,7 +452,7 @@ export class BaseColumnChart implements IColumnChart {
                 }
                 return val.valueAbsolute;
             }));
-            const absValScale: LinearScale<number, number> = scaleLinear().domain([0, columnAbsoluteValue]).range([0, 1]);
+            const absValScale: LinearScale<number, number> = scaleLinear().domain([0, columnAbsoluteValue]).range([0, is100PercentStacked ? 1 : columnValues[col]]);
             const rowsCount: number = columns[col].length;
             for (let row = 0; row < rowsCount; row++) {
                 if (columns[col][row] === undefined) {
