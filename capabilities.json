@@ -392,6 +392,82 @@
                             }
                         ]
                     }
+                },
+                "gridColor":{
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "gridTransparency":{
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "gridStyle":{
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "solid",
+                                "displayName": "Solid",
+                                "displayNameKey": "Visual_Solid"
+                            },
+                            {
+                                "value": "dashed",
+                                "displayName": "Dashed",
+                                "displayNameKey": "Visual_Dashed"
+                            },
+                            {
+                                "value": "dotted",
+                                "displayName": "Dotted",
+                                "displayNameKey": "Visual_Dotted"
+                            },
+                            {
+                                "value": "custom",
+                                "displayName": "Custom",
+                                "displayNameKey": "Visual_Custom"
+                            }
+                        ]
+                    }
+                },
+                "gridDashArray":{
+                    "type": {
+                        "text": true
+                    }
+                },
+                "gridScale":{
+                    "type":{
+                        "bool": true
+                    }
+                },
+                "gridDashCap":{
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "butt",
+                                "displayName": "Flat",
+                                "displayNameKey": "Visual_Flat"
+                            },
+                            {
+                                "value": "round",
+                                "displayName": "Round",
+                                "displayNameKey": "Visual_Round"
+                            },
+                            {
+                                "value": "square",
+                                "displayName": "Square",
+                                "displayNameKey": "Visual_Square"
+                            }
+                        ]
+                    }
+                },
+                "gridWidth":{
+                    "type": {
+                        "numeric": true
+                    }
                 }
             }
         },

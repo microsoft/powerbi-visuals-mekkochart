@@ -478,7 +478,67 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
         value: "percentage",
     })
 
-    public slices: FormattingSettingsSlice[] = [this.showTitle, this.labelColor, this.fontControl, this.valueMode];
+    public gridColor = new formattingSettings.ColorPicker({
+        name: "gridColor",
+        displayNameKey: "Visual_Grid_Color",
+        descriptionKey: "Visual_Description_GridColor",
+        value: { value: "#e6e6e6" },
+    });
+    public gridTransparency = new formattingSettings.Slider({
+        name: "gridTransparency",
+        displayNameKey: "Visual_Grid_Transparency",
+        value: 0,
+        options: {
+            minValue: {
+                type: powerbi.visuals.ValidatorType.Min,
+                value: 0
+            },
+            maxValue: {
+                type: powerbi.visuals.ValidatorType.Max,
+                value: 100
+            },
+            unitSymbol: "%"
+        }
+    });
+    public gridWidth = new formattingSettings.NumUpDown({
+        name: "gridWidth",
+        displayNameKey: "Visual_Grid_Width",
+        value: 1,
+        options: {
+            minValue: {
+                type: powerbi.visuals.ValidatorType.Min,
+                value: 0
+            }
+        }
+    });
+
+    public gridStyle = new formattingSettings.AutoDropdown({
+        name: "gridStyle",
+        displayNameKey: "Visual_Grid_Style",
+        value: "solid",
+    });
+
+    public gridDashArray = new formattingSettings.TextInput({
+        name: "gridDashArray",
+        displayNameKey: "Visual_Grid_Custom_Style",
+        value: "5,5",
+        placeholder: "e.g. 5,2,2,2"
+    });
+
+    public gridScale = new formattingSettings.ToggleSwitch({
+        name: "gridScale",
+        displayNameKey: "Visual_Grid_Scale",
+        value: false
+    });
+
+    public gridDashCap = new formattingSettings.AutoDropdown({
+        name: "gridDashCap",
+        displayNameKey: "Visual_Grid_Cap",
+        value: "flat"
+    });
+
+
+    public slices: FormattingSettingsSlice[] = [this.showTitle, this.labelColor, this.fontControl, this.valueMode, this.gridColor, this.gridTransparency, this.gridStyle, this.gridDashArray, this.gridScale, this.gridDashCap, this.gridWidth];
 }
 
 export class DataPointSettings extends FormattingSettingsSimpleCard {

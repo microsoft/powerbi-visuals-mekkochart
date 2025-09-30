@@ -1731,6 +1731,7 @@ export class MekkoChart implements IVisual {
 
             yFontSize = PixelConverter.fromPointToPixel(yFontSize);
 
+            // Configure Y-axis ticks and grid lines
             axes.y1.axis
                 .tickSize(-width)
                 .tickPadding(MekkoChart.TickPaddingY);
@@ -1748,12 +1749,17 @@ export class MekkoChart implements IVisual {
                     .call(axes.y1.axis);
             }
 
+            if (this.settingsModel.valueAxis.valueMode.value == "absolute") {
+                this.applyGridSettings();
+            }
+
             y1AxisGraphicsElement
                 .call(MekkoChart.darkenZeroLine)
                 .call(MekkoChart.setAxisLabelColor, yLabelColor)
                 .call(MekkoChart.setAxisLabelFontSize, yFontSize)
                 .call(MekkoChart.setAxisLabelFontFamily, yFontFamily)
                 .call(MekkoChart.setAxisLabelFontStyle, yFontBold, yFontItalic, yFontUnderline);
+
 
             if (tickLabelMargins.yLeft >= leftRightMarginLimit) {
                 y1AxisGraphicsElement
@@ -1894,6 +1900,55 @@ export class MekkoChart implements IVisual {
                 },
             }
         };
+    }
+
+    private applyGridSettings(): void {
+        const gridStyle = this.settingsModel.valueAxis.gridStyle?.value;
+        const gridWidth = this.settingsModel.valueAxis.gridWidth?.value;
+        const gridScale = this.settingsModel.valueAxis.gridScale?.value;
+        let dashArray = "none";
+        let lineCap = this.settingsModel.valueAxis.gridDashCap?.value;
+
+        switch (gridStyle) {
+            case "dashed":
+                dashArray = `${gridWidth * 4}, ${gridWidth * 2}`;
+                break;
+            case "dotted":
+                dashArray = `${gridWidth * 0.1}, ${gridWidth * 3}`;
+                lineCap = "round";
+                break;
+            case "custom":
+                const customPattern = this.settingsModel.valueAxis.gridDashArray?.value;
+                dashArray = customPattern;
+                // Scale the dash pattern by gridWidth if it's a numeric pattern
+                if (gridScale) {
+                    dashArray = dashArray
+                        .split(",")
+                        .map(s => parseFloat(s.trim()) * gridWidth)
+                        .join(", ");
+                }
+                break;
+            case "solid":
+            default:
+                dashArray = "none";
+                break;
+        }
+
+        this.y1AxisGraphicsContext
+            .selectAll(".tick line")
+            .style("stroke", this.settingsModel.valueAxis.gridColor.value.value)
+            .style("stroke-width", this.settingsModel.valueAxis.gridWidth.value)
+            .style("stroke-dasharray", dashArray)
+            .style("stroke-linecap", lineCap)
+            .style("opacity", (100 - this.settingsModel.valueAxis.gridTransparency.value) / 100);
+
+        // // Customize the main axis line (domain line)
+        this.y1AxisGraphicsContext
+            .select(".domain")
+            .style("stroke-width", "0px");
+        this.y1AxisGraphicsContext
+            .select(".tick line:last-of-type")
+            .style("stroke-width", 0)
     }
 
     /**
