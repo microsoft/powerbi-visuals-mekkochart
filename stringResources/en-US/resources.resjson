@@ -92,5 +92,19 @@
 	"Visual_Value_Mode":"Visual Mode",
 	"Visual_Percentage":"Percentage",
 	"Visual_Absolute":"Absolute",
-	"Visual_Description_ValueMode":"Choose 'percentage' to display values as a percentage of the total, or 'absolute' to display raw values"
+	"Visual_Description_ValueMode":"Choose 'percentage' to display values as a percentage of the total, or 'absolute' to display raw values",
+	"Visual_Grid_Color":"Grid color",
+	"Visual_Grid_Transparency":"Grid Transparency",
+	"Visual_Grid_Width":"Grid width",
+	"Visual_Grid_Style":"Grid style",
+	"Visual_Grid_Dash_Array":"Dash array",
+	"Visual_Grid_Scale":"Scale by width",
+	"Visual_Grid_Cap":"Dash cap",
+	"Visual_Flat":"Flat",
+	"Visual_Round":"Round",
+	"Visual_Square":"Square",
+	"Visual_Solid":"Solid",
+	"Visual_Dashed":"Dashed",
+	"Visual_Dotted":"Dotted",
+	"Visual_Custom":"Custom"
 }

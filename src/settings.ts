@@ -483,6 +483,7 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
         displayNameKey: "Visual_Grid_Color",
         descriptionKey: "Visual_Description_GridColor",
         value: { value: "#e6e6e6" },
+        visible: false
     });
     public gridTransparency = new formattingSettings.Slider({
         name: "gridTransparency",
@@ -498,7 +499,8 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
                 value: 100
             },
             unitSymbol: "%"
-        }
+        },
+        visible: false
     });
     public gridWidth = new formattingSettings.NumUpDown({
         name: "gridWidth",
@@ -508,33 +510,43 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
             minValue: {
                 type: powerbi.visuals.ValidatorType.Min,
                 value: 0
-            }
-        }
+            },
+            maxValue: {
+                type: powerbi.visuals.ValidatorType.Max,
+                value: 4
+            },
+            unitSymbol: "px"
+        },
+        visible: false
     });
 
     public gridStyle = new formattingSettings.AutoDropdown({
         name: "gridStyle",
         displayNameKey: "Visual_Grid_Style",
         value: "solid",
+        visible: false
     });
 
     public gridDashArray = new formattingSettings.TextInput({
         name: "gridDashArray",
-        displayNameKey: "Visual_Grid_Custom_Style",
+        displayNameKey: "Visual_Grid_Dash_Array",
         value: "5,5",
-        placeholder: "e.g. 5,2,2,2"
+        placeholder: "e.g. 5,2,2,2",
+        visible: false
     });
 
     public gridScale = new formattingSettings.ToggleSwitch({
         name: "gridScale",
         displayNameKey: "Visual_Grid_Scale",
-        value: false
+        value: false,
+        visible: false
     });
 
     public gridDashCap = new formattingSettings.AutoDropdown({
         name: "gridDashCap",
         displayNameKey: "Visual_Grid_Cap",
-        value: "flat"
+        value: "butt",
+        visible: false
     });
 
 
@@ -690,5 +702,24 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
             defaultColorSlice.visible = true;
             showAllSlice.visible = true;
         }
+
+        if (this.valueAxis.valueMode.value === "absolute") {
+            this.valueAxis.gridColor.visible = true;
+            this.valueAxis.gridTransparency.visible = true;
+            this.valueAxis.gridStyle.visible = true;
+            this.valueAxis.gridDashArray.visible = this.valueAxis.gridStyle.value == "custom";
+            this.valueAxis.gridDashCap.visible = this.valueAxis.gridStyle.value == "custom";
+            this.valueAxis.gridScale.visible = this.valueAxis.gridStyle.value == "custom";
+            this.valueAxis.gridWidth.visible = true;
+        } else {
+            this.valueAxis.gridColor.visible = false;
+            this.valueAxis.gridTransparency.visible = false;
+            this.valueAxis.gridStyle.visible = false;
+            this.valueAxis.gridDashArray.visible = false;
+            this.valueAxis.gridScale.visible = false;
+            this.valueAxis.gridWidth.visible = false;
+        }
+
+        this.sortSeries.displayPercents.visible = this.valueAxis.valueMode.value === "percentage";
     }
 }
