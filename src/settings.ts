@@ -707,9 +707,9 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
             this.valueAxis.gridColor.visible = true;
             this.valueAxis.gridTransparency.visible = true;
             this.valueAxis.gridStyle.visible = true;
-            this.valueAxis.gridDashArray.visible = this.valueAxis.gridStyle.value == "custom";
-            this.valueAxis.gridDashCap.visible = this.valueAxis.gridStyle.value == "custom";
-            this.valueAxis.gridScale.visible = this.valueAxis.gridStyle.value == "custom";
+            this.valueAxis.gridDashArray.visible = this.valueAxis.gridStyle.value === "custom";
+            this.valueAxis.gridDashCap.visible = this.valueAxis.gridStyle.value === "custom";
+            this.valueAxis.gridScale.visible = this.valueAxis.gridStyle.value === "custom";
             this.valueAxis.gridWidth.visible = true;
         } else {
             this.valueAxis.gridColor.visible = false;

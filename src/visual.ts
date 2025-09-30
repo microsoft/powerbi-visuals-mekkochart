@@ -1749,7 +1749,7 @@ export class MekkoChart implements IVisual {
                     .call(axes.y1.axis);
             }
 
-            if (this.settingsModel.valueAxis.valueMode.value == "absolute") {
+            if (this.settingsModel.valueAxis.valueMode.value === "absolute") {
                 this.applyGridSettings();
             }
 
@@ -1948,7 +1948,7 @@ export class MekkoChart implements IVisual {
             .style("stroke-width", "0px");
         this.y1AxisGraphicsContext
             .select(".tick line:last-of-type")
-            .style("stroke-width", 0)
+            .style("stroke-width", 0);
     }
 
     /**
