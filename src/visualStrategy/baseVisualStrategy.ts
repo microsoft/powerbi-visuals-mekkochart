@@ -78,7 +78,7 @@ import { HtmlSubSelectableClass, SubSelectableDisplayNameAttribute, SubSelectabl
 // d3
 import { Selection as d3Selection } from "d3-selection";
 import { ScaleLinear as d3ScaleLinear, scaleLinear as scaleLinear } from "d3-scale";
-import { axisLeft, axisBottom, Axis as d3Axis} from "d3-axis";
+import { axisLeft, axisBottom, Axis as d3Axis } from "d3-axis";
 type Selection<T> = d3Selection<any, T, any, any>;
 type ScaleLinear<T> = d3ScaleLinear<T, T, never>;
 type Axis = d3Axis<any>;
@@ -411,7 +411,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
             },
             scaleType: axisScaleType,
         },
-        settingsModel.columnBorder
+            settingsModel.columnBorder
         );
 
         // intentionally updating the input layout by ref
@@ -613,7 +613,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
         return allShapes;
     }
 
-    private static applyOnObjectStylesToShapes(shapes: Selection<MekkoChartColumnDataPoint>, isFormatMode: boolean, data: MekkoColumnChartData): void{
+    private static applyOnObjectStylesToShapes(shapes: Selection<MekkoChartColumnDataPoint>, isFormatMode: boolean, data: MekkoColumnChartData): void {
         const seriesCount: number = data.series.length;
         const isMultiSeries: boolean = data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata;
 
@@ -795,7 +795,6 @@ export class BaseVisualStrategy implements IVisualStrategy {
             shapeLayout = this.layout.shapeLayout;
 
         for (const currentSeries of dataSeries) {
-
             if (!settingModel.labels.show.value || !currentSeries.data) {
                 continue;
             }
@@ -817,7 +816,9 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 let formatString: string = null,
                     value: number = dataPoint.valueOriginal;
 
-                if (!settingModel.labels.displayUnits.value) {
+                if (settingModel.valueAxis.visualMode.value === "absolute") {
+                    value = dataPoint.valueOriginal;
+                } else if (!settingModel.labels.displayUnits.value) {
                     formatString = hundredPercentFormat;
                     if (settingModel.sortSeries.displayPercents.value === "category") {
                         value = dataPoint.valueAbsolute;
