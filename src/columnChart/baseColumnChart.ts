@@ -175,7 +175,7 @@ export class BaseColumnChart implements IColumnChart {
 
     private static ColumSortField: string = "valueOriginal";
 
-    private static Is100Pct: boolean = true;
+    private Is100Pct: boolean = true;
 
     private svg: Selection<any, any, any, any>;
     private unclippedGraphicsContext: Selection<any, any, any, any>;
@@ -1146,12 +1146,12 @@ export class BaseColumnChart implements IColumnChart {
 
             if (dataView && dataView.categorical) {
                 this.dataViewCat = dataView.categorical;
-                BaseColumnChart.Is100Pct = settingsModel.valueAxis.valueMode.value === "percentage";
+                this.Is100Pct = settingsModel.valueAxis.visualMode.value === "percentage";
                 this.data = BaseColumnChart.converter({
                     visualHost: this.visualHost,
                     categorical: this.dataViewCat,
                     colors: this.cartesianVisualHost.getSharedColors(),
-                    is100PercentStacked: BaseColumnChart.Is100Pct,
+                    is100PercentStacked: this.Is100Pct,
                     isScalar: false,
                     supportsOverflow: this.supportsOverflow,
                     localizationManager: this.localizationManager,
@@ -1249,7 +1249,7 @@ export class BaseColumnChart implements IColumnChart {
             layout: chartLayout,
             viewportHeight: this.currentViewport.height - (this.margin.top + this.margin.bottom),
             viewportWidth: this.currentViewport.width - (this.margin.left + this.margin.right),
-            is100Pct: BaseColumnChart.Is100Pct,
+            is100Pct: this.Is100Pct,
             isComboChart: true,
         };
 
@@ -1262,7 +1262,7 @@ export class BaseColumnChart implements IColumnChart {
         }
 
         this.xAxisProperties = this.columnChart.setXScale(
-            BaseColumnChart.Is100Pct,
+            this.Is100Pct,
             settingsModel,
             options.forcedTickCount,
             options.forcedXDomain,
@@ -1271,7 +1271,7 @@ export class BaseColumnChart implements IColumnChart {
                 : options.categoryAxisScaleType);
 
         this.yAxisProperties = this.columnChart.setYScale(
-            BaseColumnChart.Is100Pct,
+            this.Is100Pct,
             options.forcedTickCount,
             options.forcedYDomain,
             isBarChart

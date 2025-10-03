@@ -377,7 +377,7 @@
                         "bool": true
                     }
                 },
-                "valueMode": {
+                "visualMode": {
                     "type": {
                         "enumeration": [
                             {
@@ -393,7 +393,7 @@
                         ]
                     }
                 },
-                "gridColor":{
+                "gridlineColor":{
                     "type": {
                         "fill": {
                             "solid": {
@@ -402,12 +402,12 @@
                         }
                     }
                 },
-                "gridTransparency":{
+                "gridlineTransparency":{
                     "type": {
                         "numeric": true
                     }
                 },
-                "gridStyle":{
+                "gridlineStyle":{
                     "type": {
                         "enumeration": [
                             {
@@ -433,17 +433,17 @@
                         ]
                     }
                 },
-                "gridDashArray":{
+                "gridlineDashArray":{
                     "type": {
                         "text": true
                     }
                 },
-                "gridScale":{
+                "gridlineScale":{
                     "type":{
                         "bool": true
                     }
                 },
-                "gridDashCap":{
+                "gridlineDashCap":{
                     "type": {
                         "enumeration": [
                             {
@@ -464,7 +464,7 @@
                         ]
                     }
                 },
-                "gridWidth":{
+                "gridlineWidth":{
                     "type": {
                         "numeric": true
                     }

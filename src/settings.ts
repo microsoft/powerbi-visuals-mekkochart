@@ -469,25 +469,25 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
             value: false
         })
     });
-    public valueMode = new formattingSettings.AutoDropdown({
-        name: "valueMode",
+    public visualMode = new formattingSettings.AutoDropdown({
+        name: "visualMode",
         displayName: "Value Mode",
-        displayNameKey: "Visual_Value_Mode",
-        descriptionKey: "Visual_Description_ValueMode",
+        displayNameKey: "Visual_Mode",
+        descriptionKey: "Visual_Mode_Description",
         description: "Choose 'percentage' to display values as a percentage of the total, or 'absolute' to display raw values.",
         value: "percentage",
     })
 
-    public gridColor = new formattingSettings.ColorPicker({
-        name: "gridColor",
-        displayNameKey: "Visual_Grid_Color",
+    public gridlineColor = new formattingSettings.ColorPicker({
+        name: "gridlineColor",
+        displayNameKey: "Visual_Gridline_Color",
         descriptionKey: "Visual_Description_GridColor",
         value: { value: "#e6e6e6" },
         visible: false
     });
-    public gridTransparency = new formattingSettings.Slider({
-        name: "gridTransparency",
-        displayNameKey: "Visual_Grid_Transparency",
+    public gridlineTransparency = new formattingSettings.Slider({
+        name: "gridlineTransparency",
+        displayNameKey: "Visual_Gridline_Transparency",
         value: 0,
         options: {
             minValue: {
@@ -502,9 +502,9 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
         },
         visible: false
     });
-    public gridWidth = new formattingSettings.NumUpDown({
-        name: "gridWidth",
-        displayNameKey: "Visual_Grid_Width",
+    public gridlineWidth = new formattingSettings.NumUpDown({
+        name: "gridlineWidth",
+        displayNameKey: "Visual_Gridline_Width",
         value: 1,
         options: {
             minValue: {
@@ -520,37 +520,37 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
         visible: false
     });
 
-    public gridStyle = new formattingSettings.AutoDropdown({
-        name: "gridStyle",
-        displayNameKey: "Visual_Grid_Style",
+    public gridlineStyle = new formattingSettings.AutoDropdown({
+        name: "gridlineStyle",
+        displayNameKey: "Visual_Gridline_Style",
         value: "solid",
         visible: false
     });
 
-    public gridDashArray = new formattingSettings.TextInput({
-        name: "gridDashArray",
-        displayNameKey: "Visual_Grid_Dash_Array",
+    public gridlineDashArray = new formattingSettings.TextInput({
+        name: "gridlineDashArray",
+        displayNameKey: "Visual_Dash_Array",
         value: "5,5",
         placeholder: "e.g. 5,2,2,2",
         visible: false
     });
 
-    public gridScale = new formattingSettings.ToggleSwitch({
-        name: "gridScale",
-        displayNameKey: "Visual_Grid_Scale",
+    public gridlineScale = new formattingSettings.ToggleSwitch({
+        name: "gridlineScale",
+        displayNameKey: "Visual_Scale_By_Width",
         value: false,
         visible: false
     });
 
-    public gridDashCap = new formattingSettings.AutoDropdown({
-        name: "gridDashCap",
-        displayNameKey: "Visual_Grid_Cap",
+    public gridlineDashCap = new formattingSettings.AutoDropdown({
+        name: "gridlineDashCap",
+        displayNameKey: "Visual_Dash_Cap",
         value: "butt",
         visible: false
     });
 
 
-    public slices: FormattingSettingsSlice[] = [this.showTitle, this.labelColor, this.fontControl, this.valueMode, this.gridColor, this.gridTransparency, this.gridStyle, this.gridDashArray, this.gridScale, this.gridDashCap, this.gridWidth];
+    public slices: FormattingSettingsSlice[] = [this.showTitle, this.labelColor, this.fontControl, this.visualMode, this.gridlineColor, this.gridlineTransparency, this.gridlineStyle, this.gridlineDashArray, this.gridlineScale, this.gridlineDashCap, this.gridlineWidth];
 }
 
 export class DataPointSettings extends FormattingSettingsSimpleCard {
@@ -703,23 +703,23 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
             showAllSlice.visible = true;
         }
 
-        if (this.valueAxis.valueMode.value === "absolute") {
-            this.valueAxis.gridColor.visible = true;
-            this.valueAxis.gridTransparency.visible = true;
-            this.valueAxis.gridStyle.visible = true;
-            this.valueAxis.gridDashArray.visible = this.valueAxis.gridStyle.value === "custom";
-            this.valueAxis.gridDashCap.visible = this.valueAxis.gridStyle.value === "custom";
-            this.valueAxis.gridScale.visible = this.valueAxis.gridStyle.value === "custom";
-            this.valueAxis.gridWidth.visible = true;
+        if (this.valueAxis.visualMode.value === "absolute") {
+            this.valueAxis.gridlineColor.visible = true;
+            this.valueAxis.gridlineTransparency.visible = true;
+            this.valueAxis.gridlineStyle.visible = true;
+            this.valueAxis.gridlineDashArray.visible = this.valueAxis.gridlineStyle.value === "custom";
+            this.valueAxis.gridlineDashCap.visible = this.valueAxis.gridlineStyle.value === "custom";
+            this.valueAxis.gridlineScale.visible = this.valueAxis.gridlineStyle.value === "custom";
+            this.valueAxis.gridlineWidth.visible = true;
         } else {
-            this.valueAxis.gridColor.visible = false;
-            this.valueAxis.gridTransparency.visible = false;
-            this.valueAxis.gridStyle.visible = false;
-            this.valueAxis.gridDashArray.visible = false;
-            this.valueAxis.gridScale.visible = false;
-            this.valueAxis.gridWidth.visible = false;
+            this.valueAxis.gridlineColor.visible = false;
+            this.valueAxis.gridlineTransparency.visible = false;
+            this.valueAxis.gridlineStyle.visible = false;
+            this.valueAxis.gridlineDashArray.visible = false;
+            this.valueAxis.gridlineScale.visible = false;
+            this.valueAxis.gridlineWidth.visible = false;
         }
 
-        this.sortSeries.displayPercents.visible = this.valueAxis.valueMode.value === "percentage";
+        this.sortSeries.displayPercents.visible = this.valueAxis.visualMode.value === "percentage";
     }
 }

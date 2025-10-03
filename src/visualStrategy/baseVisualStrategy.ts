@@ -816,7 +816,7 @@ export class BaseVisualStrategy implements IVisualStrategy {
                 let formatString: string = null,
                     value: number = dataPoint.valueOriginal;
 
-                if (settingModel.valueAxis.valueMode.value === "absolute") {
+                if (settingModel.valueAxis.visualMode.value === "absolute") {
                     value = dataPoint.valueOriginal;
                 } else if (!settingModel.labels.displayUnits.value) {
                     formatString = hundredPercentFormat;

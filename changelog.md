@@ -1,5 +1,5 @@
 ## 3.8.0.0
-* Added new setting Visual mode
+* Added new formatting setting "Visual mode" to switch between absolute and percentage display modes
 
 ## 3.7.0.0
 

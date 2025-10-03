@@ -1749,7 +1749,7 @@ export class MekkoChart implements IVisual {
                     .call(axes.y1.axis);
             }
 
-            if (this.settingsModel.valueAxis.valueMode.value === "absolute") {
+            if (this.settingsModel.valueAxis.visualMode.value === "absolute") {
                 this.applyGridSettings();
             }
 
@@ -1903,28 +1903,28 @@ export class MekkoChart implements IVisual {
     }
 
     private applyGridSettings(): void {
-        const gridStyle = this.settingsModel.valueAxis.gridStyle?.value;
-        const gridWidth = this.settingsModel.valueAxis.gridWidth?.value;
-        const gridScale = this.settingsModel.valueAxis.gridScale?.value;
+        const gridlineStyle = this.settingsModel.valueAxis.gridlineStyle?.value;
+        const gridlineWidth = this.settingsModel.valueAxis.gridlineWidth?.value;
+        const gridlineScale = this.settingsModel.valueAxis.gridlineScale?.value;
         let dashArray = "none";
-        let lineCap = this.settingsModel.valueAxis.gridDashCap?.value;
+        let lineCap = this.settingsModel.valueAxis.gridlineDashCap?.value;
 
-        switch (gridStyle) {
+        switch (gridlineStyle) {
             case "dashed":
-                dashArray = `${gridWidth * 4}, ${gridWidth * 2}`;
+                dashArray = `${gridlineWidth * 4}, ${gridlineWidth * 2}`;
                 break;
             case "dotted":
-                dashArray = `${gridWidth * 0.1}, ${gridWidth * 3}`;
+                dashArray = `${gridlineWidth * 0.1}, ${gridlineWidth * 3}`;
                 lineCap = "round";
                 break;
             case "custom":
-                const customPattern = this.settingsModel.valueAxis.gridDashArray?.value;
+                const customPattern = this.settingsModel.valueAxis.gridlineDashArray?.value;
                 dashArray = customPattern;
-                // Scale the dash pattern by gridWidth if it's a numeric pattern
-                if (gridScale) {
+                // Scale the dash pattern by gridlineWidth if it's a numeric pattern
+                if (gridlineScale) {
                     dashArray = dashArray
                         .split(",")
-                        .map(s => parseFloat(s.trim()) * gridWidth)
+                        .map(s => parseFloat(s.trim()) * gridlineWidth)
                         .join(", ");
                 }
                 break;
@@ -1936,11 +1936,11 @@ export class MekkoChart implements IVisual {
 
         this.y1AxisGraphicsContext
             .selectAll(".tick line")
-            .style("stroke", this.settingsModel.valueAxis.gridColor.value.value)
-            .style("stroke-width", this.settingsModel.valueAxis.gridWidth.value)
+            .style("stroke", this.settingsModel.valueAxis.gridlineColor.value.value)
+            .style("stroke-width", this.settingsModel.valueAxis.gridlineWidth.value)
             .style("stroke-dasharray", dashArray)
             .style("stroke-linecap", lineCap)
-            .style("opacity", (100 - this.settingsModel.valueAxis.gridTransparency.value) / 100);
+            .style("opacity", (100 - this.settingsModel.valueAxis.gridlineTransparency.value) / 100);
 
         // // Customize the main axis line (domain line)
         this.y1AxisGraphicsContext
@@ -1948,7 +1948,7 @@ export class MekkoChart implements IVisual {
             .style("stroke-width", "0px");
         this.y1AxisGraphicsContext
             .select(".tick line:last-of-type")
-            .style("stroke-width", 0);
+            .style("stroke-width", "0px");
     }
 
     /**
@@ -2032,5 +2032,3 @@ export function createLayers(
 
     return layers;
 }
-
-
