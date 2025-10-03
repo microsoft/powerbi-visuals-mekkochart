@@ -1942,7 +1942,7 @@ export class MekkoChart implements IVisual {
             .style("stroke-linecap", lineCap)
             .style("opacity", (100 - this.settingsModel.valueAxis.gridlineTransparency.value) / 100);
 
-        // // Customize the main axis line (domain line)
+        // Customize the main axis line (domain line)
         this.y1AxisGraphicsContext
             .select(".domain")
             .style("stroke-width", "0px");
