@@ -1,3 +1,8 @@
+## 3.8.0.0
+
+### New features
+* Added new formatting setting "Visual mode" to switch between absolute and percentage display modes
+
 ## 3.7.0.0
 
 ### New features

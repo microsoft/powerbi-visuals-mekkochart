@@ -376,6 +376,98 @@
                     "type": {
                         "bool": true
                     }
+                },
+                "visualMode": {
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "absolute",
+                                "displayName": "Absolute",
+                                "displayNameKey": "Visual_Absolute"
+                            },
+                            {
+                                "value": "percentage",
+                                "displayName": "Percentage",
+                                "displayNameKey": "Visual_Percentage"
+                            }
+                        ]
+                    }
+                },
+                "gridlineColor":{
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "gridlineTransparency":{
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "gridlineStyle":{
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "solid",
+                                "displayName": "Solid",
+                                "displayNameKey": "Visual_Solid"
+                            },
+                            {
+                                "value": "dashed",
+                                "displayName": "Dashed",
+                                "displayNameKey": "Visual_Dashed"
+                            },
+                            {
+                                "value": "dotted",
+                                "displayName": "Dotted",
+                                "displayNameKey": "Visual_Dotted"
+                            },
+                            {
+                                "value": "custom",
+                                "displayName": "Custom",
+                                "displayNameKey": "Visual_Custom"
+                            }
+                        ]
+                    }
+                },
+                "gridlineDashArray":{
+                    "type": {
+                        "text": true
+                    }
+                },
+                "gridlineScale":{
+                    "type":{
+                        "bool": true
+                    }
+                },
+                "gridlineDashCap":{
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "butt",
+                                "displayName": "Flat",
+                                "displayNameKey": "Visual_Flat"
+                            },
+                            {
+                                "value": "round",
+                                "displayName": "Round",
+                                "displayNameKey": "Visual_Round"
+                            },
+                            {
+                                "value": "square",
+                                "displayName": "Square",
+                                "displayNameKey": "Visual_Square"
+                            }
+                        ]
+                    }
+                },
+                "gridlineWidth":{
+                    "type": {
+                        "numeric": true
+                    }
                 }
             }
         },
@@ -485,6 +577,7 @@
     ],
     "supportsHighlight": true,
     "supportsKeyboardFocus": true,
+    "supportsMultiVisualSelection": true,
     "sorting": {
         "default": {}
     },

@@ -97,6 +97,8 @@ import { max, sum } from "d3-array";
 import { select } from "d3-selection";
 import { brushX, BrushBehavior } from "d3-brush";
 import { ScaleLinear as d3ScaleLinear } from "d3-scale";
+
+import type { TickLabelMargins } from "./labelUtils";
 type ScaleLinear<T> = d3ScaleLinear<T, T, never>;
 
 // powerbi.extensibility.utils.chart
@@ -111,7 +113,6 @@ import {
 } from "powerbi-visuals-utils-chartutils";
 
 import IAxisProperties = axisInterfaces.IAxisProperties;
-import TickLabelMargins = axisInterfaces.TickLabelMargins;
 import ILegend = legendInterfaces.ILegend;
 import ILegendData = legendInterfaces.LegendData;
 import ISelectableDataPoint = legendInterfaces.ISelectableDataPoint;
@@ -415,8 +416,8 @@ export class MekkoChart implements IVisual {
         this.y1AxisGraphicsContext
             .classed(MekkoChart.ShowLinesOnAxisSelector.className, true)
             .classed(MekkoChart.HideLinesOnAxisSelector.className, false);
-        
-            
+
+
         this.selectionManager = options.host.createSelectionManager();
         this.behavior = new CustomVisualBehavior(this.selectionManager, this.colorPalette);
 
@@ -460,8 +461,6 @@ export class MekkoChart implements IVisual {
     }
 
     public static getTranslation(transform): [number, number, number] {
-        // Allow an http namespace as nothing is fetched (https not required)
-        // eslint-disable-next-line powerbi-visuals/no-http-string
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
         g.setAttributeNS(null, "transform", transform);
@@ -510,7 +509,7 @@ export class MekkoChart implements IVisual {
                 .classed(MekkoChart.AxisSelector.className, true)
                 .classed(MekkoChart.AxisLabelSelector.className, true);
 
-                xAxisLabel.call(
+            xAxisLabel.call(
                 AxisHelper.LabelLayoutStrategy.clip,
                 width,
                 textMeasurementService.svgEllipsis);
@@ -555,7 +554,7 @@ export class MekkoChart implements IVisual {
             .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Axis"));
     }
 
-    private applyOnObjectStylesToAxisTitle(label: Selection, isFormatMode: boolean, objectName: string){
+    private applyOnObjectStylesToAxisTitle(label: Selection, isFormatMode: boolean, objectName: string) {
         label
             .classed(HtmlSubSelectableClass, isFormatMode)
             .attr(SubSelectableObjectNameAttribute, objectName)
@@ -754,7 +753,7 @@ export class MekkoChart implements IVisual {
         this.visualHost.eventService.renderingFinished(options);
     }
 
-    private applyOnObjectFormatting(isFormatMode: boolean, updateType: VisualUpdateType, subSelections?: CustomVisualSubSelection[]): void{
+    private applyOnObjectFormatting(isFormatMode: boolean, updateType: VisualUpdateType, subSelections?: CustomVisualSubSelection[]): void {
         this.visualOnObjectFormatting.setFormatMode(isFormatMode);
 
         const shouldUpdateSubSelection = updateType & (powerbi.VisualUpdateType.Data
@@ -777,7 +776,7 @@ export class MekkoChart implements IVisual {
                 return foundDataPoint ? [foundDataPoint] : [];
             })();
 
-        if (currentDataPoints.length === 0){
+        if (currentDataPoints.length === 0) {
             return [];
         }
 
@@ -798,7 +797,7 @@ export class MekkoChart implements IVisual {
         currentDataPoints.forEach(dataPoint => {
             const currentrect: RectDataPoint = {
                 x: layout.shapeLayout.x(dataPoint) + xShift,
-                y: layout.shapeLayout.y(dataPoint)+ yShift,
+                y: layout.shapeLayout.y(dataPoint) + yShift,
                 height: layout.shapeLayout.height(dataPoint),
                 width: layout.shapeLayout.width(dataPoint),
             };
@@ -809,12 +808,12 @@ export class MekkoChart implements IVisual {
         return result;
     }
 
-     private getXShift(legendPosition: LegendPosition, margin: IMargin): number {
+    private getXShift(legendPosition: LegendPosition, margin: IMargin): number {
         const defaultShift: number = margin.left;
         switch (legendPosition) {
             case LegendPosition.Left:
             case LegendPosition.LeftCenter:
-                return defaultShift+ this.legend.getMargins().width;
+                return defaultShift + this.legend.getMargins().width;
             default:
                 return defaultShift;
         }
@@ -1026,7 +1025,6 @@ export class MekkoChart implements IVisual {
         return layers;
     }
 
-    // eslint-disable-next-line max-lines-per-function
     private renderLegend(legendSettings: LegendSettings, isFormatMode: boolean): void {
         const layers: IColumnChart[] = this.layers,
             legendData: ILegendData = {
@@ -1044,9 +1042,8 @@ export class MekkoChart implements IVisual {
                     ? this.layerLegendData.title || ""
                     : legendData.title;
 
-                if (legendSettings.titleText.value)
-                {
-                    if (!this.settingsModel.sortLegend.groupByCategory.value){
+                if (legendSettings.titleText.value) {
+                    if (!this.settingsModel.sortLegend.groupByCategory.value) {
                         legendData.title = legendSettings.titleText.value;
                     }
                 }
@@ -1061,7 +1058,7 @@ export class MekkoChart implements IVisual {
                     legendData.grouped = true;
                 }
 
-                if (this.layerLegendData.labelColor){
+                if (this.layerLegendData.labelColor) {
                     legendData.labelColor = this.layerLegendData.labelColor;
                 }
             }
@@ -1159,8 +1156,6 @@ export class MekkoChart implements IVisual {
             .style("position", "absolute")
             .style("top", (data, index) => PixelConverter.toString((svgHeight + MekkoChart.LegendBarHeightMargin) * index));
 
-        // Disable linter rule for aliasing this to local variable as it is required in this instance
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const mekko = this;
         this.categoryLegends = this.categoryLegends || [];
         legendParentsWithChildsAttr.each(function (data, index) {
@@ -1231,7 +1226,7 @@ export class MekkoChart implements IVisual {
         this.legendSelection = this.rootElement
             .selectAll(MekkoChart.LegendSelector.selectorName);
 
-        this.legendSelection.style("font-weight", legendSettings.fontControl.bold.value? "bold" : "normal");
+        this.legendSelection.style("font-weight", legendSettings.fontControl.bold.value ? "bold" : "normal");
         this.legendSelection.style("font-style", legendSettings.fontControl.italic.value ? "italic" : "normal");
         this.legendSelection.style("text-decoration", legendSettings.fontControl.underline.value ? "underline" : "none");
         this.legendSelection.style("fill", this.colorPalette.isHighContrast ? this.colorPalette.foreground.value : legendSettings.color.value.value);
@@ -1254,7 +1249,7 @@ export class MekkoChart implements IVisual {
         axisProperties: IAxisProperties): boolean {
 
         if (axisProperties) {
-            if (axisProperties.isCategoryAxis && this.settingsModel.categoryAxis.show.value){
+            if (axisProperties.isCategoryAxis && this.settingsModel.categoryAxis.show.value) {
 
                 return axisProperties.values
                     && axisProperties.values.length > 0;
@@ -1276,7 +1271,7 @@ export class MekkoChart implements IVisual {
             .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
             .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Legend"));
 
-            this.legendSelection.select(".legendTitle")
+        this.legendSelection.select(".legendTitle")
             .classed(HtmlSubSelectableClass, isFormatMode && settings.show.value && settings.showTitle.value)
             .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.LegendTitle)
             .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
@@ -1284,10 +1279,8 @@ export class MekkoChart implements IVisual {
             .attr(SubSelectableDirectEdit, titleEditSubSelection);
     }
 
-    // eslint-disable-next-line max-lines-per-function
     private render(formatMode: boolean, suppressAnimations: boolean = true): void {
         this.setVisibility(true);
-
         this.legendMargins = this.legendMargins || this.legend.getMargins();
 
         if (this.legend.isVisible()) {
@@ -1595,7 +1588,6 @@ export class MekkoChart implements IVisual {
         });
     }
 
-    // eslint-disable-next-line max-lines-per-function
     private renderChart(
         mainAxisScale: any,
         axes: MekkoChartAxisProperties,
@@ -1728,18 +1720,19 @@ export class MekkoChart implements IVisual {
                 yFontFamily = this.settingsModel.categoryAxis.fontControl.fontFamily.value;
                 yFontBold = this.settingsModel.categoryAxis.fontControl.bold.value;
                 yFontItalic = this.settingsModel.categoryAxis.fontControl.italic.value;
-                yFontUnderline = this.settingsModel.categoryAxis.fontControl.underline.value; 
+                yFontUnderline = this.settingsModel.categoryAxis.fontControl.underline.value;
             } else {
                 yLabelColor = this.settingsModel.valueAxis.labelColor.value.value;
                 yFontSize = this.settingsModel.valueAxis.fontControl.fontSize.value;
                 yFontFamily = this.settingsModel.valueAxis.fontControl.fontFamily.value;
                 yFontBold = this.settingsModel.valueAxis.fontControl.bold.value;
                 yFontItalic = this.settingsModel.valueAxis.fontControl.italic.value;
-                yFontUnderline = this.settingsModel.valueAxis.fontControl.underline.value; 
+                yFontUnderline = this.settingsModel.valueAxis.fontControl.underline.value;
             }
 
             yFontSize = PixelConverter.fromPointToPixel(yFontSize);
 
+            // Configure Y-axis ticks and grid lines
             axes.y1.axis
                 .tickSize(-width)
                 .tickPadding(MekkoChart.TickPaddingY);
@@ -1755,6 +1748,10 @@ export class MekkoChart implements IVisual {
             else {
                 y1AxisGraphicsElement
                     .call(axes.y1.axis);
+            }
+
+            if (this.settingsModel.valueAxis.visualMode.value === "absolute") {
+                this.applyGridSettings();
             }
 
             y1AxisGraphicsElement
@@ -1827,11 +1824,16 @@ export class MekkoChart implements IVisual {
             }
 
             const forceDisplay: boolean = this.settingsModel.labels.forceDisplay.value;
-            drawDefaultLabelsForDataPointChart(
-                resultsLabelDataPoints,
-                this.labelGraphicsContextScrollable,
-                this.getLabelLayout(forceDisplay),
-                this.currentViewport, false, 0, false, !forceDisplay);
+            drawDefaultLabelsForDataPointChart({
+                data: resultsLabelDataPoints,
+                context: this.labelGraphicsContextScrollable,
+                layout: this.getLabelLayout(forceDisplay),
+                viewport: this.currentViewport,
+                isAnimator: false,
+                animationDuration: 0,
+                hasSelection: false,
+                hideCollidedLabels: !forceDisplay
+            });
 
             this.applyOnObjectStylesToLabels(isFormatMode);
 
@@ -1898,6 +1900,55 @@ export class MekkoChart implements IVisual {
                 },
             }
         };
+    }
+
+    private applyGridSettings(): void {
+        const gridlineStyle = this.settingsModel.valueAxis.gridlineStyle?.value;
+        const gridlineWidth = this.settingsModel.valueAxis.gridlineWidth?.value;
+        const gridlineScale = this.settingsModel.valueAxis.gridlineScale?.value;
+        let dashArray = "none";
+        let lineCap = this.settingsModel.valueAxis.gridlineDashCap?.value;
+
+        switch (gridlineStyle) {
+            case "dashed":
+                dashArray = `${gridlineWidth * 4}, ${gridlineWidth * 2}`;
+                break;
+            case "dotted":
+                dashArray = `${gridlineWidth * 0.1}, ${gridlineWidth * 3}`;
+                lineCap = "round";
+                break;
+            case "custom":
+                const customPattern = this.settingsModel.valueAxis.gridlineDashArray?.value;
+                dashArray = customPattern;
+                // Scale the dash pattern by gridlineWidth if it's a numeric pattern
+                if (gridlineScale) {
+                    dashArray = dashArray
+                        .split(",")
+                        .map(s => parseFloat(s.trim()) * gridlineWidth)
+                        .join(", ");
+                }
+                break;
+            case "solid":
+            default:
+                dashArray = "none";
+                break;
+        }
+
+        this.y1AxisGraphicsContext
+            .selectAll(".tick line")
+            .style("stroke", this.settingsModel.valueAxis.gridlineColor.value.value)
+            .style("stroke-width", this.settingsModel.valueAxis.gridlineWidth.value)
+            .style("stroke-dasharray", dashArray)
+            .style("stroke-linecap", lineCap)
+            .style("opacity", (100 - this.settingsModel.valueAxis.gridlineTransparency.value) / 100);
+
+        // Customize the main axis line (domain line)
+        this.y1AxisGraphicsContext
+            .select(".domain")
+            .style("stroke-width", "0px");
+        this.y1AxisGraphicsContext
+            .select(".tick line:last-of-type")
+            .style("stroke-width", "0px");
     }
 
     /**
@@ -1981,5 +2032,3 @@ export function createLayers(
 
     return layers;
 }
-
-

@@ -35,7 +35,7 @@ import {
     IMargin,
     CssConstants
 }
-from "powerbi-visuals-utils-svgutils";
+    from "powerbi-visuals-utils-svgutils";
 
 import {
     axis as AxisHelper,
@@ -44,7 +44,7 @@ import {
     dataLabelUtils,
     dataLabelInterfaces
 }
-from "powerbi-visuals-utils-chartutils";
+    from "powerbi-visuals-utils-chartutils";
 
 import {
     prototype as Prototype,
@@ -52,20 +52,20 @@ import {
     enumExtensions,
     arrayExtensions
 }
-from "powerbi-visuals-utils-typeutils";
+    from "powerbi-visuals-utils-typeutils";
 
 import {
     valueFormatter,
     displayUnitSystemType
 }
-from "powerbi-visuals-utils-formattingutils";
+    from "powerbi-visuals-utils-formattingutils";
 
 import {
     ITooltipServiceWrapper,
     TooltipEnabledDataPoint,
     createTooltipServiceWrapper
 }
-from "powerbi-visuals-utils-tooltiputils";
+    from "powerbi-visuals-utils-tooltiputils";
 
 import {
     MekkoColumnChartData,
@@ -90,7 +90,7 @@ import {
     BaseConverterOptions,
     CreateDataPointsOptions
 }
-from "./../dataInterfaces";
+    from "./../dataInterfaces";
 
 import * as axisUtils from "./../axis/utils";
 
@@ -175,7 +175,7 @@ export class BaseColumnChart implements IColumnChart {
 
     private static ColumSortField: string = "valueOriginal";
 
-    private static Is100Pct: boolean = true;
+    private Is100Pct: boolean = true;
 
     private svg: Selection<any, any, any, any>;
     private unclippedGraphicsContext: Selection<any, any, any, any>;
@@ -285,8 +285,8 @@ export class BaseColumnChart implements IColumnChart {
         supportsOverflow,
         localizationManager,
         settingsModel,
-        chartType, 
-        isFormatMode } : BaseConverterOptions) : MekkoColumnChartData {
+        chartType,
+        isFormatMode }: BaseConverterOptions): MekkoColumnChartData {
 
         const converterStrategy: BaseConverterStrategy = new BaseConverterStrategy(categorical, visualHost);
 
@@ -337,11 +337,12 @@ export class BaseColumnChart implements IColumnChart {
                 RoleNames.category),
             categoryObjectsList: firstCategory?.objects,
             chartType,
-            categoryMetadata});
+            categoryMetadata
+        });
 
         if (settingsModel.sortSeries.enabled.value) {
             const columns = BaseColumnChart.createAlternateStructure(result, settingsModel.sortSeries.direction.value === "des");
-            BaseColumnChart.reorderPositions(result, columns);
+            BaseColumnChart.reorderPositions(result, columns, is100PercentStacked);
         }
 
         const valuesMetadata: DataViewMetadataColumn[] = [];
@@ -427,9 +428,23 @@ export class BaseColumnChart implements IColumnChart {
         return columns;
     }
 
-    private static reorderPositions(dataPoint: MekkoDataPoints, columns: ICategoryValuesCollection[]) {
+    private static reorderPositions(dataPoint: MekkoDataPoints, columns: ICategoryValuesCollection[], is100PercentStacked: boolean = true): void {
         const series: MekkoChartSeries[] = dataPoint.series;
         const colsCount: number = series[0].data.length;
+        const columnValues: number[] = [];
+
+        if (!is100PercentStacked) {
+            for (let col = 0; col < colsCount; col++) {
+                const summed = sum(columns[col].map((val) => {
+                    if (val === undefined) {
+                        return 0;
+                    }
+                    return val.valueAbsolute;
+                }));
+                columnValues.push(summed);
+            }
+        }
+
         for (let col = 0; col < colsCount; col++) {
             let columnAbsoluteValue: number = sum(columns[col].map((val) => {
                 if (val === undefined) {
@@ -437,7 +452,8 @@ export class BaseColumnChart implements IColumnChart {
                 }
                 return val.valueAbsolute;
             }));
-            const absValScale: LinearScale<number, number> = scaleLinear().domain([0, columnAbsoluteValue]).range([0, 1]);
+            const absValScaleMax: number = is100PercentStacked ? 1 : columnValues[col];
+            const absValScale: LinearScale<number, number> = scaleLinear().domain([0, columnAbsoluteValue]).range([0, absValScaleMax]);
             const rowsCount: number = columns[col].length;
             for (let row = 0; row < rowsCount; row++) {
                 if (columns[col][row] === undefined) {
@@ -511,7 +527,7 @@ export class BaseColumnChart implements IColumnChart {
             ? (position / absTotal) / position
             : BaseColumnChart.DefaultStackedPosition;
     }
-    // eslint-disable-next-line max-lines-per-function
+
     private static createDataPoints({
         visualHost,
         dataViewCat,
@@ -527,7 +543,7 @@ export class BaseColumnChart implements IColumnChart {
         categoryObjectsList,
         chartType,
         categoryMetadata,
-        colorPalette } : CreateDataPointsOptions) : MekkoDataPoints {
+        colorPalette }: CreateDataPointsOptions): MekkoDataPoints {
 
         const grouped: DataViewValueColumnGroup[] = dataViewCat && dataViewCat.values
             ? dataViewCat.values.grouped()
@@ -676,7 +692,7 @@ export class BaseColumnChart implements IColumnChart {
         for (let seriesIndex: number = 0; seriesIndex < seriesCount; seriesIndex++) {
             const seriesDataPoints: MekkoChartColumnDataPoint[] = [],
                 legendItem: MekkoLegendDataPoint = legend[seriesIndex];
-            
+
             let seriesLabelSettings: VisualDataLabelsSettings;
 
             if (!hasDynamicSeries) {
@@ -1036,7 +1052,7 @@ export class BaseColumnChart implements IColumnChart {
                 dataPointObjects[categoryIndex],
                 MekkoChart.Properties.dataPoint.defaultColor);
 
-            if (defaultColorOverride){
+            if (defaultColorOverride) {
                 return defaultColorOverride;
             }
         }
@@ -1131,11 +1147,12 @@ export class BaseColumnChart implements IColumnChart {
 
             if (dataView && dataView.categorical) {
                 this.dataViewCat = dataView.categorical;
+                this.Is100Pct = settingsModel.valueAxis.visualMode.value === "percentage";
                 this.data = BaseColumnChart.converter({
                     visualHost: this.visualHost,
                     categorical: this.dataViewCat,
                     colors: this.cartesianVisualHost.getSharedColors(),
-                    is100PercentStacked: true,
+                    is100PercentStacked: this.Is100Pct,
                     isScalar: false,
                     supportsOverflow: this.supportsOverflow,
                     localizationManager: this.localizationManager,
@@ -1233,7 +1250,7 @@ export class BaseColumnChart implements IColumnChart {
             layout: chartLayout,
             viewportHeight: this.currentViewport.height - (this.margin.top + this.margin.bottom),
             viewportWidth: this.currentViewport.width - (this.margin.left + this.margin.right),
-            is100Pct: BaseColumnChart.Is100Pct,
+            is100Pct: this.Is100Pct,
             isComboChart: true,
         };
 
@@ -1246,7 +1263,7 @@ export class BaseColumnChart implements IColumnChart {
         }
 
         this.xAxisProperties = this.columnChart.setXScale(
-            BaseColumnChart.Is100Pct,
+            this.Is100Pct,
             settingsModel,
             options.forcedTickCount,
             options.forcedXDomain,
@@ -1255,7 +1272,7 @@ export class BaseColumnChart implements IColumnChart {
                 : options.categoryAxisScaleType);
 
         this.yAxisProperties = this.columnChart.setYScale(
-            BaseColumnChart.Is100Pct,
+            this.Is100Pct,
             options.forcedTickCount,
             options.forcedYDomain,
             isBarChart
