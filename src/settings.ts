@@ -550,7 +550,19 @@ export class ValueAxisSettings extends FormattingSettingsSimpleCard {
     });
 
 
-    public slices: FormattingSettingsSlice[] = [this.showTitle, this.labelColor, this.fontControl, this.visualMode, this.gridlineColor, this.gridlineTransparency, this.gridlineStyle, this.gridlineDashArray, this.gridlineScale, this.gridlineDashCap, this.gridlineWidth];
+    public slices: FormattingSettingsSlice[] = [
+        this.showTitle,
+        this.labelColor,
+        this.fontControl,
+        this.visualMode,
+        this.gridlineColor,
+        this.gridlineTransparency,
+        this.gridlineStyle,
+        this.gridlineDashArray,
+        this.gridlineScale,
+        this.gridlineDashCap,
+        this.gridlineWidth
+    ];
 }
 
 export class DataPointSettings extends FormattingSettingsSimpleCard {

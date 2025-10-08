@@ -83,7 +83,6 @@ import {
 import * as dataViewUtils from "./dataViewUtils";
 
 import * as labelUtils from "./labelUtils";
-import { TickLabelMargins } from "./labelUtils";
 
 import * as axisType from "./axis/type";
 import * as axisPosition from "./axis/position";
@@ -98,6 +97,8 @@ import { max, sum } from "d3-array";
 import { select } from "d3-selection";
 import { brushX, BrushBehavior } from "d3-brush";
 import { ScaleLinear as d3ScaleLinear } from "d3-scale";
+
+import type { TickLabelMargins } from "./labelUtils";
 type ScaleLinear<T> = d3ScaleLinear<T, T, never>;
 
 // powerbi.extensibility.utils.chart
@@ -1759,7 +1760,6 @@ export class MekkoChart implements IVisual {
                 .call(MekkoChart.setAxisLabelFontSize, yFontSize)
                 .call(MekkoChart.setAxisLabelFontFamily, yFontFamily)
                 .call(MekkoChart.setAxisLabelFontStyle, yFontBold, yFontItalic, yFontUnderline);
-
 
             if (tickLabelMargins.yLeft >= leftRightMarginLimit) {
                 y1AxisGraphicsElement
