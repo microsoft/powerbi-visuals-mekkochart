@@ -1669,7 +1669,7 @@ export class MekkoChart implements IVisual {
                 .attr("y", 0)
                 .attr("width", xWidth)
                 .attr("height", xHeight)
-                .style("pointer-events", "all")
+                .style("pointer-events", "all");
 
             const xAxisTextNodes: Selection = xAxisGraphicsElement.selectAll("text");
 
@@ -1980,7 +1980,7 @@ export class MekkoChart implements IVisual {
             .style("opacity", (100 - this.settingsModel.valueAxis.gridlineTransparency.value) / 100);
 
         tickslines
-            .filter((d, i) => i === tickslines.size() - 1)
+            .filter((d, i) => i === tickslines.nodes().length - 1)
             .style("stroke-width", "0px");
 
         this.y1AxisGraphicsContext
