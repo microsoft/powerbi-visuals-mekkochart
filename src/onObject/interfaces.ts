@@ -37,6 +37,10 @@ export interface IAxisReference extends IFontReference {
     showTitle: FormattingId;
 }
 
+export interface IYAxisReference extends IAxisReference {
+    visualMode: FormattingId;
+}
+
 export interface IXAxisLabelsRotationReference extends IAxisReference {
     enableRotation: FormattingId;
 }

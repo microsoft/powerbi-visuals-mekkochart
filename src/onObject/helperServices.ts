@@ -86,7 +86,7 @@ export class SubSelectionStylesService {
     }
 
     public static GetYAxisStyles(): SubSelectionStyles {
-        return SubSelectionStylesService.GetSubselectionStylesForText(yAxisReferences);
+        return { ...SubSelectionStylesService.GetSubselectionStylesForText(yAxisReferences) };
     }
 
     public static GetDataPointStyles(subSelections: CustomVisualSubSelection[], localizationManager: ILocalizationManager): SubSelectionStyles {
@@ -111,7 +111,7 @@ export class SubSelectionStylesService {
 }
 
 export class SubSelectionShortcutsService {
-    public static GetLegendShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts{
+    public static GetLegendShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
         return [
             {
                 type: VisualShortcutType.Toggle,
@@ -297,7 +297,7 @@ export class SubSelectionShortcutsService {
     }
 
     public static GetXAxisShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
-       return SubSelectionShortcutsService.GetAxisShortcuts(xAxisReferences, "Visual_FormatXAxis", localizationManager);
+        return SubSelectionShortcutsService.GetAxisShortcuts(xAxisReferences, "Visual_FormatXAxis", localizationManager);
     }
 
     public static GetXAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
@@ -305,9 +305,16 @@ export class SubSelectionShortcutsService {
     }
 
     public static GetYAxisShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
-        return SubSelectionShortcutsService.GetAxisShortcuts(yAxisReferences, "Visual_FormatYAxis", localizationManager);
+        return [
+            {
+                type: VisualShortcutType.Picker,
+                ...yAxisReferences.visualMode,
+                label: localizationManager.getDisplayName("Visual_Mode"),
+            },
+            ...SubSelectionShortcutsService.GetAxisShortcuts(yAxisReferences, "Visual_FormatYAxis", localizationManager),
+        ];
     }
- 
+
     public static GetYAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
         return SubSelectionShortcutsService.GetAxisTitleShortcuts(yAxisReferences, localizationManager);
     }

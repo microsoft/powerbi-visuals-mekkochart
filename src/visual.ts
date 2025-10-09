@@ -1670,7 +1670,6 @@ export class MekkoChart implements IVisual {
                 .attr("width", xWidth)
                 .attr("height", xHeight)
                 .style("pointer-events", "all")
-                .attr("fill", "black");
 
             const xAxisTextNodes: Selection = xAxisGraphicsElement.selectAll("text");
 
@@ -1773,19 +1772,28 @@ export class MekkoChart implements IVisual {
                 .call(MekkoChart.setAxisLabelFontFamily, yFontFamily)
                 .call(MekkoChart.setAxisLabelFontStyle, yFontBold, yFontItalic, yFontUnderline);
 
-            const showY1OnRight = this.yAxisOrientation === axisPosition.left;
-            const yWidth = showY1OnRight ? this.margin.left : this.margin.right;
+            const showY1OnRight = this.yAxisOrientation === axisPosition.right;
+
+            // Calculate width for tick labels only (excluding title area)
+            let tickAreaWidth = showY1OnRight ? this.margin.right : this.margin.left;
+
+            // Check if Y-axis title is present and subtract title padding
+            const hasYAxisTitle = axisLabels && axisLabels.y != null;
+            if (hasYAxisTitle) {
+                tickAreaWidth -= MekkoChart.YAxisLabelPadding; // Subtract title area
+            }
+
             const yHeight = viewport.height - this.margin.top - this.margin.bottom;
 
             const backgroundRect = MekkoChart.createBgRect(y1AxisGraphicsElement);
 
             backgroundRect
-                .attr("x", showY1OnRight ? -yWidth : 0)
+                .attr("x", showY1OnRight ? 0 : -tickAreaWidth)
                 .attr("y", 0)
-                .attr("width", yWidth)
+                .attr("width", tickAreaWidth)
                 .attr("height", yHeight)
                 .style("pointer-events", "all")
-                .attr("fill", "black")
+                .style("fill", "transparent");
 
             if (tickLabelMargins.yLeft >= leftRightMarginLimit) {
                 y1AxisGraphicsElement
