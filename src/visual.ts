@@ -514,7 +514,6 @@ export class MekkoChart implements IVisual {
                 width,
                 textMeasurementService.svgEllipsis);
 
-            this.applyOnObjectStylesToAxis(this.axisGraphicsContext, options.isFormatMode, MekkoChartObjectNames.XAxis);
             this.applyOnObjectStylesToAxisTitle(xAxisLabel, options.isFormatMode, MekkoChartObjectNames.XAxisTitle);
         }
 
@@ -540,9 +539,9 @@ export class MekkoChart implements IVisual {
                 height - (margin.bottom + margin.top),
                 textMeasurementService.svgEllipsis);
 
-            this.applyOnObjectStylesToAxis(this.axisGraphicsContextScrollable, options.isFormatMode, MekkoChartObjectNames.YAxis);
             this.applyOnObjectStylesToAxisTitle(yAxisLabel, options.isFormatMode, MekkoChartObjectNames.YAxisTitle);
         }
+
     }
 
     private applyOnObjectStylesToAxis(axis: Selection, isFormatMode: boolean, objectName: string): void {
@@ -1660,6 +1659,19 @@ export class MekkoChart implements IVisual {
                 .call(MekkoChart.setAxisLabelFontFamily, xFontFamily)
                 .call(MekkoChart.setAxisLabelFontStyle, xFontBold, xFontItalic, xFontUnderline);
 
+            const xWidth = viewport.width - (this.margin.left + this.margin.right);
+            const xHeight = this.margin.bottom;
+
+            let backgroundRect = MekkoChart.createBgRect(xAxisGraphicsElement);
+
+            backgroundRect
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", xWidth)
+                .attr("height", xHeight)
+                .style("pointer-events", "all")
+                .attr("fill", "black");
+
             const xAxisTextNodes: Selection = xAxisGraphicsElement.selectAll("text");
 
             let columnWidth: number[] = [],
@@ -1761,6 +1773,20 @@ export class MekkoChart implements IVisual {
                 .call(MekkoChart.setAxisLabelFontFamily, yFontFamily)
                 .call(MekkoChart.setAxisLabelFontStyle, yFontBold, yFontItalic, yFontUnderline);
 
+            const showY1OnRight = this.yAxisOrientation === axisPosition.left;
+            const yWidth = showY1OnRight ? this.margin.left : this.margin.right;
+            const yHeight = viewport.height - this.margin.top - this.margin.bottom;
+
+            const backgroundRect = MekkoChart.createBgRect(y1AxisGraphicsElement);
+
+            backgroundRect
+                .attr("x", showY1OnRight ? -yWidth : 0)
+                .attr("y", 0)
+                .attr("width", yWidth)
+                .attr("height", yHeight)
+                .style("pointer-events", "all")
+                .attr("fill", "black")
+
             if (tickLabelMargins.yLeft >= leftRightMarginLimit) {
                 y1AxisGraphicsElement
                     .selectAll("text")
@@ -1836,6 +1862,8 @@ export class MekkoChart implements IVisual {
             });
 
             this.applyOnObjectStylesToLabels(isFormatMode);
+            this.applyOnObjectStylesToAxis(this.axisGraphicsContext, isFormatMode, MekkoChartObjectNames.XAxis);
+            this.applyOnObjectStylesToAxis(this.axisGraphicsContextScrollable, isFormatMode, MekkoChartObjectNames.YAxis);
 
             const behaviorOptions: CustomVisualBehaviorOptions = {
                 layerOptions: layerBehaviorOptions,
@@ -1934,20 +1962,21 @@ export class MekkoChart implements IVisual {
                 break;
         }
 
-        this.y1AxisGraphicsContext
-            .selectAll(".tick line")
+        const tickslines = MekkoChart.getTickLines(this.y1AxisGraphicsContext);
+
+        tickslines
             .style("stroke", this.settingsModel.valueAxis.gridlineColor.value.value)
             .style("stroke-width", this.settingsModel.valueAxis.gridlineWidth.value)
             .style("stroke-dasharray", dashArray)
             .style("stroke-linecap", lineCap)
             .style("opacity", (100 - this.settingsModel.valueAxis.gridlineTransparency.value) / 100);
 
-        // Customize the main axis line (domain line)
+        tickslines
+            .filter((d, i) => i === tickslines.size() - 1)
+            .style("stroke-width", "0px");
+
         this.y1AxisGraphicsContext
             .select(".domain")
-            .style("stroke-width", "0px");
-        this.y1AxisGraphicsContext
-            .select(".tick line:last-of-type")
             .style("stroke-width", "0px");
     }
 
@@ -1974,6 +2003,10 @@ export class MekkoChart implements IVisual {
 
     private static getTickText(selection: Selection): Selection {
         return selection.selectAll("g.tick text");
+    }
+
+    private static getTickLines(selection: Selection): Selection {
+        return selection.selectAll("g.tick line");
     }
 
     private static setAxisLabelColor(selection: Selection, fill: string): void {
@@ -2012,6 +2045,17 @@ export class MekkoChart implements IVisual {
             .attr("transform", (value: number, index: number) => {
                 return manipulation.translate(scale(value) + (borderWidth * index), yOffset);
             });
+    }
+
+    private static createBgRect(selection: Selection): Selection {
+        let backgroundRect = selection.select(".background-rect");
+
+        if (backgroundRect.empty()) {
+            backgroundRect = selection
+                .append("rect")
+                .attr("class", "background-rect");
+        }
+        return backgroundRect;
     }
 }
 
