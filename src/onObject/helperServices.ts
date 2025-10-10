@@ -7,6 +7,7 @@ import VisualShortcutType = powerbi.visuals.VisualShortcutType;
 import TextSubSelectionStyles = powerbi.visuals.TextSubSelectionStyles;
 import NumericTextSubSelectionStyles = powerbi.visuals.NumericTextSubSelectionStyles;
 import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
+import CustomSubSelectionStyleType = powerbi.visuals.CustomSubSelectionStyleType;
 
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
@@ -85,8 +86,20 @@ export class SubSelectionStylesService {
         return SubSelectionStylesService.GetSubselectionStylesForText(xAxisReferences);
     }
 
-    public static GetYAxisStyles(): SubSelectionStyles {
-        return { ...SubSelectionStylesService.GetSubselectionStylesForText(yAxisReferences) };
+    public static GetYAxisStyles(localizationManager: ILocalizationManager): SubSelectionStyles | null {
+        return {
+            type: SubSelectionStylesType.Shape,
+            fill: {
+                reference: {
+                    ...yAxisReferences.gridlineColor
+                },
+                label: localizationManager.getDisplayName("Visual_Gridline_Color")
+            }
+        }
+    }
+
+    public static GetYAxisTickTextStyles(): SubSelectionStyles {
+        return SubSelectionStylesService.GetSubselectionStylesForText(yAxisReferences);
     }
 
     public static GetDataPointStyles(subSelections: CustomVisualSubSelection[], localizationManager: ILocalizationManager): SubSelectionStyles {

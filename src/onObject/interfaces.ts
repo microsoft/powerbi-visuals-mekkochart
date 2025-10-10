@@ -39,6 +39,7 @@ export interface IAxisReference extends IFontReference {
 
 export interface IYAxisReference extends IAxisReference {
     visualMode: FormattingId;
+    gridlineColor: FormattingId;
 }
 
 export interface IXAxisLabelsRotationReference extends IAxisReference {

@@ -137,6 +137,10 @@ export const yAxisReferences: IYAxisReference = {
     visualMode: {
         objectName: MekkoChartObjectNames.YAxis,
         propertyName: "visualMode"
+    },
+    gridlineColor: {
+        objectName: MekkoChartObjectNames.YAxis,
+        propertyName: "gridlineColor"
     }
 }
 

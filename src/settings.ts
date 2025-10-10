@@ -43,11 +43,14 @@ export const enum MekkoChartObjectNames {
     XAxis = "categoryAxis",
     XAxisTitle = "categoryAxisTitle",
     YAxis = "valueAxis",
+    YAxisShort = "valueAxisShort",
     YAxisTitle = "valueAxisTitle",
     XAxisRotation = "xAxisLabels",
     DataPoint = "dataPoint",
     ColumnBorder = "columnBorder",
-    SortSeries = "sortSeries"
+    SortSeries = "sortSeries",
+    Gridlines = "gridlines",
+    YAxisTickText = "axisTickText"
 }
 
 export class ColumnBorderSettings extends FormattingSettingsSimpleCard {

@@ -243,6 +243,7 @@ export class MekkoChart implements IVisual {
 
     private static ClassName: string = "mekkoChart";
     private static AxisGraphicsContextClassName: string = "axisGraphicsContext";
+    private static BgRectClassname: string = "bg-rect";
     private static MaxMarginFactor: number = 0.25;
     private static MinBottomMargin: number = 50;
     private static LeftPadding: number = 17;
@@ -544,13 +545,13 @@ export class MekkoChart implements IVisual {
 
     }
 
-    private applyOnObjectStylesToAxis(axis: Selection, isFormatMode: boolean, objectName: string): void {
+    private applyOnObjectStylesToAxis(axis: Selection, isFormatMode: boolean, objectName: string, displayName: string): void {
         axis
             .select(MekkoChart.AxisSelector.selectorName)
             .classed(HtmlSubSelectableClass, isFormatMode)
             .attr(SubSelectableObjectNameAttribute, objectName)
             .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
-            .attr(SubSelectableDisplayNameAttribute, this.localizationManager.getDisplayName("Visual_Axis"));
+            .attr(SubSelectableDisplayNameAttribute, displayName);
     }
 
     private applyOnObjectStylesToAxisTitle(label: Selection, isFormatMode: boolean, objectName: string) {
@@ -1669,7 +1670,9 @@ export class MekkoChart implements IVisual {
                 .attr("y", 0)
                 .attr("width", xWidth)
                 .attr("height", xHeight)
-                .style("pointer-events", "all");
+                .style("pointer-events", "all")
+                .style("fill", "transparent")
+                .lower(); // Move rectangle behind text
 
             const xAxisTextNodes: Selection = xAxisGraphicsElement.selectAll("text");
 
@@ -1783,7 +1786,7 @@ export class MekkoChart implements IVisual {
                 tickAreaWidth -= MekkoChart.YAxisLabelPadding; // Subtract title area
             }
 
-            const yHeight = viewport.height - this.margin.top - this.margin.bottom;
+            const yHeight = viewport.height - this.margin.bottom;
 
             const backgroundRect = MekkoChart.createBgRect(y1AxisGraphicsElement);
 
@@ -1793,7 +1796,8 @@ export class MekkoChart implements IVisual {
                 .attr("width", tickAreaWidth)
                 .attr("height", yHeight)
                 .style("pointer-events", "all")
-                .style("fill", "transparent");
+                .style("fill", "transparent")
+                .lower(); // Move rectangle behind text
 
             if (tickLabelMargins.yLeft >= leftRightMarginLimit) {
                 y1AxisGraphicsElement
@@ -1870,8 +1874,11 @@ export class MekkoChart implements IVisual {
             });
 
             this.applyOnObjectStylesToLabels(isFormatMode);
-            this.applyOnObjectStylesToAxis(this.axisGraphicsContext, isFormatMode, MekkoChartObjectNames.XAxis);
-            this.applyOnObjectStylesToAxis(this.axisGraphicsContextScrollable, isFormatMode, MekkoChartObjectNames.YAxis);
+            this.applyOnObjectStylesToAxisTickText(this.y1AxisGraphicsContext, isFormatMode);
+            this.applyOnObjectStylesToAxis(this.axisGraphicsContext, isFormatMode, MekkoChartObjectNames.XAxis, this.localizationManager.getDisplayName("Visual_X_Axis"));
+
+            const showGridStyles = this.settingsModel.valueAxis.visualMode.value === "absolute";
+            this.applyOnObjectStylesToAxis(this.axisGraphicsContextScrollable, isFormatMode, showGridStyles ? MekkoChartObjectNames.YAxis : MekkoChartObjectNames.YAxisShort, this.localizationManager.getDisplayName("Visual_Y_Axis"));
 
             const behaviorOptions: CustomVisualBehaviorOptions = {
                 layerOptions: layerBehaviorOptions,
@@ -1883,6 +1890,16 @@ export class MekkoChart implements IVisual {
             this.behavior.bindEvents(behaviorOptions);
             this.behavior.renderSelection();
         }
+    }
+
+    private applyOnObjectStylesToAxisTickText(axisContext: Selection, isFormatMode: boolean): void {
+        const tickLines = MekkoChart.getTickText(axisContext);
+
+        tickLines
+            .classed(HtmlSubSelectableClass, isFormatMode)
+            .attr(SubSelectableObjectNameAttribute, MekkoChartObjectNames.YAxisTickText)
+            .attr(SubSelectableTypeAttribute, SubSelectionStylesType.Text)
+            .attr(SubSelectableDisplayNameAttribute, "BOCHEQUE");
     }
 
     private applyOnObjectStylesToLabels(isFormatMode: boolean): void {
@@ -2056,12 +2073,12 @@ export class MekkoChart implements IVisual {
     }
 
     private static createBgRect(selection: Selection): Selection {
-        let backgroundRect = selection.select(".background-rect");
+        let backgroundRect = selection.select(`.${MekkoChart.BgRectClassname}`);
 
         if (backgroundRect.empty()) {
             backgroundRect = selection
                 .append("rect")
-                .attr("class", "background-rect");
+                .attr("class", MekkoChart.BgRectClassname);
         }
         return backgroundRect;
     }

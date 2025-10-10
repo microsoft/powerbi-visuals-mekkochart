@@ -49,11 +49,11 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
         this.htmlSubSelectionHelper.updateOutlinesFromSubSelections(subSelections, clearExistingOutlines, suppressRender);
     }
 
-    public getSubSelectables(filter?: SubSelectionStylesType): CustomVisualSubSelection[] | undefined{
+    public getSubSelectables(filter?: SubSelectionStylesType): CustomVisualSubSelection[] | undefined {
         return this.htmlSubSelectionHelper.getAllSubSelectables(filter);
     }
 
-    public getSubSelectionStyles(subSelections: CustomVisualSubSelection[]): SubSelectionStyles | undefined{
+    public getSubSelectionStyles(subSelections: CustomVisualSubSelection[]): SubSelectionStyles | undefined {
         const visualObject = subSelections[0]?.customVisualObjects[0];
 
         if (visualObject) {
@@ -64,15 +64,17 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
                     return SubSelectionStylesService.GetLabelsStyles();
                 case MekkoChartObjectNames.XAxis:
                     return SubSelectionStylesService.GetXAxisStyles();
+                case MekkoChartObjectNames.YAxisTickText:
+                    return SubSelectionStylesService.GetYAxisTickTextStyles();
                 case MekkoChartObjectNames.YAxis:
-                    return SubSelectionStylesService.GetYAxisStyles();
+                    return SubSelectionStylesService.GetYAxisStyles(this.localizationManager);
                 case MekkoChartObjectNames.DataPoint:
                     return SubSelectionStylesService.GetDataPointStyles(subSelections, this.localizationManager);
             }
         }
     }
 
-    public getSubSelectionShortcuts(subSelections: CustomVisualSubSelection[]): VisualSubSelectionShortcuts | undefined{
+    public getSubSelectionShortcuts(subSelections: CustomVisualSubSelection[]): VisualSubSelectionShortcuts | undefined {
         const visualObject = subSelections[0]?.customVisualObjects[0];
 
         if (visualObject) {
@@ -88,6 +90,7 @@ export class MekkoChartOnObjectService implements VisualOnObjectFormatting {
                 case MekkoChartObjectNames.XAxisTitle:
                     return SubSelectionShortcutsService.GetXAxisTitleShortcuts(this.localizationManager);
                 case MekkoChartObjectNames.YAxis:
+                case MekkoChartObjectNames.YAxisShort:
                     return SubSelectionShortcutsService.GetYAxisShortcuts(this.localizationManager);
                 case MekkoChartObjectNames.YAxisTitle:
                     return SubSelectionShortcutsService.GetYAxisTitleShortcuts(this.localizationManager);
