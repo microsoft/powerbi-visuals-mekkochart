@@ -1862,11 +1862,16 @@ export class MekkoChart implements IVisual {
             }
 
             const forceDisplay: boolean = this.settingsModel.labels.forceDisplay.value;
-            drawDefaultLabelsForDataPointChart(
-                resultsLabelDataPoints,
-                this.labelGraphicsContextScrollable,
-                this.getLabelLayout(forceDisplay),
-                this.currentViewport, false, 0, false, !forceDisplay);
+            drawDefaultLabelsForDataPointChart({
+                data: resultsLabelDataPoints,
+                context: this.labelGraphicsContextScrollable,
+                layout: this.getLabelLayout(forceDisplay),
+                viewport: this.currentViewport,
+                isAnimator: false,
+                animationDuration: 0,
+                hasSelection: false,
+                hideCollidedLabels: !forceDisplay
+            });
 
             this.applyOnObjectStylesToLabels(isFormatMode);
             this.applyOnObjectStylesToAxisTickText(this.y1AxisGraphicsContext, isFormatMode);
