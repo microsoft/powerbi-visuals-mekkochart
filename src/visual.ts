@@ -545,7 +545,7 @@ export class MekkoChart implements IVisual {
 
     }
 
-    private applyOnObjectStylesToAxis(axis: Selection, isFormatMode: boolean, objectName: string, displayName: string): void {
+    private applyOnObjectStylesToAxis(axis: Selection, isFormatMode: boolean, objectName: string, displayName: string = ""): void {
         axis
             .select(MekkoChart.AxisSelector.selectorName)
             .classed(HtmlSubSelectableClass, isFormatMode)
