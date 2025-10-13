@@ -1996,12 +1996,6 @@ export class MekkoChart implements IVisual {
             .style("stroke-linecap", lineCap)
             .style("opacity", (100 - this.settingsModel.valueAxis.gridlineTransparency.value) / 100);
 
-        // Hide the last tick line to prevent overlap with the axis domain line,
-        // ensuring visual consistency and avoiding double lines at the chart edge.
-        tickslines
-            .filter((d, i) => i === tickslines.nodes().length - 1)
-            .style("stroke-width", "0px");
-
         this.y1AxisGraphicsContext
             .select(".domain")
             .style("stroke-width", "0px");
