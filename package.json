@@ -79,7 +79,7 @@
     "d3-selection": "^3.0.0",
     "d3-transition": "^3.0.1",
     "eslint": "^9.36.0",
-    "eslint-plugin-powerbi-visuals": "^1.0.0",
+    "eslint-plugin-powerbi-visuals": "^1.1.0",
     "powerbi-visuals-api": "~5.11.0",
     "powerbi-visuals-utils-chartutils": "^8.1.0",
     "powerbi-visuals-utils-colorutils": "^6.0.5",
