@@ -1996,9 +1996,14 @@ export class MekkoChart implements IVisual {
             .style("stroke-linecap", lineCap)
             .style("opacity", (100 - this.settingsModel.valueAxis.gridlineTransparency.value) / 100);
 
+        // Remove domain lines when grid lines are shown    
         this.y1AxisGraphicsContext
             .select(".domain")
-            .style("stroke-width", "0px");
+            .remove();
+        this.xAxisGraphicsContext
+            .select(".domain")
+            .remove();
+
     }
 
     /**
