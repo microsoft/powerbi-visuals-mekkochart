@@ -2,6 +2,8 @@
 
 ### New features
 * Added new formatting setting "Visual mode" to switch between absolute and percentage display modes
+* Added formatting setting for "Grid"
+* Added on-Object formatting for "Visual mode" and "Grid" settings
 
 ## 3.7.0.0
 

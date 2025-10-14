@@ -513,6 +513,233 @@ describe("MekkoChart", () => {
                         assertColorsMatch(elementColor, color);
                     });
             });
+
+            describe("Y-axis grid settings", () => {
+                beforeEach(() => {
+                    dataView.metadata.objects = {
+                        valueAxis: {
+                            show: true,
+                            visualMode: "absolute"
+                        }
+                    };
+                });
+
+                it("solid gridline style", () => {
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "solid";
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = 2;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        expect(dashArray).toBe("none");
+                    });
+                });
+
+                it("dashed gridline style", () => {
+                    const gridlineWidth: number = 2;
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "dashed";
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = gridlineWidth;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedDashArray: string = `${gridlineWidth * 4}px, ${gridlineWidth * 2}px`;
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        expect(dashArray).toBe(expectedDashArray);
+                    });
+                });
+
+                it("dotted gridline style", () => {
+                    const gridlineWidth: number = 2;
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "dotted";
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = gridlineWidth;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedDashArray: string = `${gridlineWidth * 0.1}px, ${gridlineWidth * 3}px`;
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        const lineCap: string = elementComputedStyle.getPropertyValue("stroke-linecap");
+                        expect(dashArray).toBe(expectedDashArray);
+                        expect(lineCap).toBe("round");
+                    });
+                });
+
+                it("custom gridline style without scaling", () => {
+                    const customPattern: string = "5, 3, 2, 3";
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "custom";
+                    (dataView.metadata.objects as any).valueAxis.gridlineDashArray = customPattern;
+                    (dataView.metadata.objects as any).valueAxis.gridlineScale = false;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        // Browser adds 'px' units to the dash array values
+                        expect(dashArray).toBe("5px, 3px, 2px, 3px");
+                    });
+                });
+
+                it("custom gridline style with scaling", () => {
+                    const customPattern: string = "5, 3, 2, 3";
+                    const gridlineWidth: number = 2;
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "custom";
+                    (dataView.metadata.objects as any).valueAxis.gridlineDashArray = customPattern;
+                    (dataView.metadata.objects as any).valueAxis.gridlineScale = true;
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = gridlineWidth;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedDashArray: string = customPattern
+                        .split(",")
+                        .map(s => parseFloat(s.trim()) * gridlineWidth + "px")
+                        .join(", ");
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        expect(dashArray).toBe(expectedDashArray);
+                    });
+                });
+
+                it("gridline transparency", () => {
+                    const transparency: number = 30; // 30% transparency = 70% opacity
+                    (dataView.metadata.objects as any).valueAxis.gridlineTransparency = transparency;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedOpacity: number = (100 - transparency) / 100;
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const opacity: string = elementComputedStyle.getPropertyValue("opacity");
+                        expect(parseFloat(opacity)).toBeCloseTo(expectedOpacity, 2);
+                    });
+                });
+
+                it("gridline dash cap", () => {
+                    const dashCap: string = "square";
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "dashed";
+                    (dataView.metadata.objects as any).valueAxis.gridlineDashCap = dashCap;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const lineCap: string = elementComputedStyle.getPropertyValue("stroke-linecap");
+                        expect(lineCap).toBe(dashCap);
+                    });
+                });
+
+                it("should remove domain lines when grid lines are shown", () => {
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    // Check that Y-axis domain line is removed
+                    const yAxisDomain = visualBuilder.svgScrollableAxisGraphicsContext.querySelector(".domain");
+                    expect(yAxisDomain).toBeNull();
+
+                    // Check that X-axis domain line is removed  
+                    const xAxisDomain = visualBuilder.rootAxisGraphicsContext.querySelector(".domain");
+                    expect(xAxisDomain).toBeNull();
+                });
+
+                it("multiple gridline properties applied together", () => {
+                    const color: string = "#FF5733";
+                    const width: number = 3;
+                    const transparency: number = 20;
+                    const style: string = "dashed";
+
+                    (dataView.metadata.objects as any).valueAxis = {
+                        ...((dataView.metadata.objects as any).valueAxis),
+                        gridlineColor: getSolidColorStructuralObject(color),
+                        gridlineWidth: width,
+                        gridlineTransparency: transparency,
+                        gridlineStyle: style
+                    };
+
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedOpacity: number = (100 - transparency) / 100;
+                    const expectedDashArray: string = `${width * 4}px, ${width * 2}px`; // Browser adds px units
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+
+                        assertColorsMatch(elementComputedStyle.getPropertyValue("stroke"), color);
+                        expect(parseFloat(elementComputedStyle.getPropertyValue("stroke-width"))).toBe(width);
+                        expect(parseFloat(elementComputedStyle.getPropertyValue("opacity"))).toBeCloseTo(expectedOpacity, 2);
+                        expect(elementComputedStyle.getPropertyValue("stroke-dasharray")).toBe(expectedDashArray);
+                    });
+                });
+
+                it("default gridline style fallback", () => {
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "unknown";
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        expect(dashArray).toBe("none");
+                    });
+                });
+
+                it("custom pattern with invalid numbers should not break", () => {
+                    const invalidPattern: string = "5, abc, 2, 3";
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "custom";
+                    (dataView.metadata.objects as any).valueAxis.gridlineDashArray = invalidPattern;
+                    (dataView.metadata.objects as any).valueAxis.gridlineScale = true;
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = 2;
+
+                    expect(() => {
+                        visualBuilder.updateFlushAllD3Transitions(dataView);
+                    }).not.toThrow();
+
+                    // Should still apply the pattern as-is when parsing fails
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        // Browser handles invalid values gracefully by defaulting to 'none'
+                        expect(dashArray).toBe("none");
+                    });
+                });
+            });
+            describe("Visual Mode Settings", () => {
+                it("should pass correct is100PercentStacked parameter to converter in percentage mode", (done) => {
+                    // Spy on the converter to verify the parameter
+                    spyOn(BaseColumnChart, 'converter').and.callThrough();
+
+                    dataView.metadata.objects = {
+                        valueAxis: {
+                            visualMode: "percentage"
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        expect(BaseColumnChart.converter).toHaveBeenCalled();
+
+                        // Get the arguments passed to converter
+                        const converterArgs = (BaseColumnChart.converter as jasmine.Spy).calls.mostRecent().args[0];
+                        expect(converterArgs.is100PercentStacked).toBe(true);
+                        done();
+                    });
+                });
+
+                it("should pass correct is100PercentStacked parameter to converter in absolute mode", (done) => {
+                    spyOn(BaseColumnChart, 'converter').and.callThrough();
+
+                    dataView.metadata.objects = {
+                        valueAxis: {
+                            visualMode: "absolute"
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        expect(BaseColumnChart.converter).toHaveBeenCalled();
+
+                        const converterArgs = (BaseColumnChart.converter as jasmine.Spy).calls.mostRecent().args[0];
+                        expect(converterArgs.is100PercentStacked).toBe(false);
+                        done();
+                    });
+                });
+
+            });
         });
     });
 
