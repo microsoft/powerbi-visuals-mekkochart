@@ -700,6 +700,46 @@ describe("MekkoChart", () => {
                     });
                 });
             });
+            describe("Visual Mode Settings", () => {
+                it("should pass correct is100PercentStacked parameter to converter in percentage mode", (done) => {
+                    // Spy on the converter to verify the parameter
+                    spyOn(BaseColumnChart, 'converter').and.callThrough();
+
+                    dataView.metadata.objects = {
+                        valueAxis: {
+                            visualMode: "percentage"
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        expect(BaseColumnChart.converter).toHaveBeenCalled();
+
+                        // Get the arguments passed to converter
+                        const converterArgs = (BaseColumnChart.converter as jasmine.Spy).calls.mostRecent().args[0];
+                        expect(converterArgs.is100PercentStacked).toBe(true);
+                        done();
+                    });
+                });
+
+                it("should pass correct is100PercentStacked parameter to converter in absolute mode", (done) => {
+                    spyOn(BaseColumnChart, 'converter').and.callThrough();
+
+                    dataView.metadata.objects = {
+                        valueAxis: {
+                            visualMode: "absolute"
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        expect(BaseColumnChart.converter).toHaveBeenCalled();
+
+                        const converterArgs = (BaseColumnChart.converter as jasmine.Spy).calls.mostRecent().args[0];
+                        expect(converterArgs.is100PercentStacked).toBe(false);
+                        done();
+                    });
+                });
+
+            });
         });
 
         describe("MekkoColumnChartData", () => {
