@@ -299,7 +299,7 @@ describe("MekkoChart", () => {
             checkMultisilection(ClickEventType.ShiftKey);
         });
 
-        function checkMultisilection(eventType: number): void{
+        function checkMultisilection(eventType: number): void {
             dataView = defaultDataViewBuilder.getDataView([
                 MekkoChartData.ColumnCategory,
                 MekkoChartData.ColumnY
@@ -513,584 +513,771 @@ describe("MekkoChart", () => {
                         assertColorsMatch(elementColor, color);
                     });
             });
-        });
-    });
 
-    describe("MekkoColumnChartData", () => {
-        describe("converter", () => {
-            let mekkoColumnChartData: MekkoColumnChartData;
-
-            beforeEach((done) => {
-                const visualHost: IVisualHost = createVisualHost({});
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    visualBuilder.instance.getFormattingModel();
-                    mekkoColumnChartData = BaseColumnChart.converter({
-                        visualHost,
-                        categorical: dataView.categorical,
-                        colors: visualHost.colorPalette,
-                        is100PercentStacked: true,
-                        isScalar: false,
-                        supportsOverflow: false,
-                        localizationManager: null,
-                        settingsModel: visualBuilder.instance.settingsModel,
-                        isFormatMode: false
-                    });
-                    done();
-                });
-            });
-
-            it("mekkoColumnChartData is defined", () => {
-                expect(mekkoColumnChartData).toBeDefined();
-                expect(mekkoColumnChartData).not.toBeNull();
-            });
-
-            describe("series", () => {
-                let series: MekkoChartSeries[];
-
+            describe("Y-axis grid settings", () => {
                 beforeEach(() => {
-                    series = mekkoColumnChartData.series;
-                });
-
-                it("series are defined", () => {
-                    expect(series).toBeDefined();
-                    expect(series).not.toBeNull();
-                });
-
-                it("each element of series is defined", () => {
-                    series.map((columnChartSeries: MekkoChartSeries) => {
-                        expect(columnChartSeries).toBeDefined();
-                        expect(columnChartSeries).not.toBeNull();
-                    });
-                });
-
-                describe("identity", () => {
-                    it("identity is defined", () => {
-                        series.map((columnChartSeries: MekkoChartSeries) => {
-                            expect(columnChartSeries.identity).toBeDefined();
-                            expect(columnChartSeries.identity).not.toBeNull();
-                        });
-                    });
-
-                    it("identity has key", () => {
-                        series.map((columnChartSeries: MekkoChartSeries) => {
-                            expect(columnChartSeries.identity.getKey()).toBeDefined();
-                        });
-                    });
-                });
-            });
-        });
-    });
-
-    describe("Data Labels test", () => {
-        describe("converter", () => {
-            it("nodes border change color", done => {
-                let color: string = "#123123";
-
-                dataView.metadata.objects = {
-                    columnBorder: {
-                        color: getSolidColorStructuralObject(color)
-                    }
-                };
-
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    const element: HTMLElement = visualBuilder.mainElement.querySelector("rect.mekkoborder");
-                    const borderElementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
-                    const elementFillColor: string = borderElementComputedStyle.getPropertyValue("fill");
-
-                    assertColorsMatch(elementFillColor, color);
-
-                    done();
-                });
-
-            });
-
-            it("category axes label font-size", done => {
-                const categoryAxisFontSize: number = 17,
-                    valueAxisFontSize: number = 15;
-
-                dataView.metadata.objects = {
-                    categoryAxis: {
-                        fontSize: categoryAxisFontSize
-                    },
-                    valueAxis: {
-                        fontSize: valueAxisFontSize
-                    }
-                };
-
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    const xAxisElement: HTMLElement = visualBuilder.mainElement.querySelector(".x.axis g.tick text");
-                    const xAxisElementComputedStyle: CSSStyleDeclaration = getComputedStyle(xAxisElement);
-                    const xAxisFontSize: number= parseFloat(xAxisElementComputedStyle.getPropertyValue("font-size"));
-
-                    expect(Math.round(xAxisFontSize)).toBe(Math.round(fromPointToPixel(categoryAxisFontSize)));
-
-                    const yAxisElement: HTMLElement = visualBuilder.mainElement.querySelector(".y.axis g.tick text");
-                    const yAxisElementComputedStyle: CSSStyleDeclaration = getComputedStyle(yAxisElement);
-                    const yAxisFontSize: number = parseFloat(yAxisElementComputedStyle.getPropertyValue("font-size"));
-
-                    expect(Math.round(yAxisFontSize)).toBe(Math.round(fromPointToPixel(valueAxisFontSize)));
-
-                    done();
-                });
-
-            });
-
-            it("Display units - millions", done => {
-                dataView.metadata.objects = {
-                    labels: {
-                        show: true,
-                        labelDisplayUnits: 1000000
-                    }
-                };
-
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    const firstLabelText: string = visualBuilder.dataLabels[0].textContent;
-
-                    expect(firstLabelText).toMatch(/[0-9.]*M/);
-
-                    done();
-                });
-            });
-
-            it("Display units - thousands", done => {
-                dataView.metadata.objects = {
-                    labels: {
-                        show: true,
-                        labelDisplayUnits: 1000
-                    }
-                };
-
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    const firstLabelText: string = visualBuilder.dataLabels[0].textContent;
-
-                    expect(firstLabelText).toMatch(/[0-9.]*K/);
-
-                    done();
-                });
-
-            });
-
-            it("Limit Decimal Places value", done => {
-                dataView.metadata.objects = {
-                    labels: {
-                        show: true,
-                        labelDisplayUnits: 0,
-                        labelPrecision: 4
-                    }
-                };
-                visualBuilder.updateRenderTimeout(dataView, () => {
-                    const firstLabelText: string = visualBuilder.dataLabels[0].textContent;
-
-                    expect(firstLabelText).toMatch(/\d*[.]\d{4}%/);
-
-                    done();
-                });
-            });
-        });
-    });
-
-    describe("Mekko chart legend features:", () => {
-        beforeEach(() => {
-            dataView = defaultDataViewBuilder.getSpecificDataView();
-        });
-
-        it("sort legend by value", (done) => {
-            dataView.metadata.objects = {
-                sortLegend: {
-                    enabled: true,
-                    direction: "asc",
-                    groupByCategory: false,
-                    groupByCategoryDirection: "asc"
-                }
-            };
-
-            interface ValueLegend {
-                key: string;
-                data: number;
-            }
-            
-            let data = dataView.categorical.values.grouped().map(v => { return { key: v.name, data: sum(v.values[0].values) }; });
-
-            let reduced = {};
-            data.forEach(d => {
-                reduced[d.key.toString()] = reduced[d.key.toString()] || { data: 0 };
-                reduced[d.key.toString()].data += d.data;
-            });
-
-            let index = 0;
-            let array: Array<ValueLegend> = [];
-
-            for (let key in reduced) {
-                array[index++] = {
-                    key: key,
-                    data: reduced[key].data
-                };
-            }
-
-            array = array.sort((a, b) => a.data > b.data ? 1 : -1);
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(document.body.contains(visualBuilder.legendGroup)).toBeTruthy();
-                let textElements = visualBuilder.legendGroup.querySelectorAll("g.legendItem > text");
-                array.forEach((element, index) => {
-                    expect(element.key).toEqual(textElements[index].textContent);
-                });
-                done();
-            }, 300);
-        });
-
-        it("group legend by category", (done) => {
-            dataView.metadata.objects = {
-                sortLegend: {
-                    enabled: true,
-                    direction: "asc",
-                    groupByCategory: true,
-                    groupByCategoryDirection: "asc"
-                }
-            };
-
-            let data = dataView.categorical.values.grouped();
-            let catigoried = data.map(d => { return { name: d.name, values: d.values[0].values, category: findIndex(d.values[0].values, i => i !== null) }; });
-            catigoried = sortBy(catigoried, "values");
-
-            interface CategoryLegendDom {
-                position: string;
-                dom: Element;
-            }
-
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(document.body.contains(visualBuilder.categoryLegendGroup[0])).toBeTruthy();
-                expect(visualBuilder.categoryLegendGroup.length).toEqual(dataView.categorical.categories[0].values.length);
-
-                let mappedCategoryLegendGroup: Array<CategoryLegendDom> = Array.from(visualBuilder.categoryLegendGroup).map((clg) => {
-                    return <CategoryLegendDom>{
-                        position: clg.parentElement.parentElement.style.top.replace("px", ""),
-                        dom: clg
+                    dataView.metadata.objects = {
+                        valueAxis: {
+                            show: true,
+                            visualMode: "absolute"
+                        }
                     };
                 });
 
-                dataView.categorical.categories[0].values.forEach((category, index) => {
-                    let filteredByCategory = catigoried.filter(cat => cat.category === index);
-                    filteredByCategory = filteredByCategory.sort((a, b) => a.values > b.values ? 1 : -1);
-                    let categoryDOM: Array<CategoryLegendDom> = mappedCategoryLegendGroup.filter((val: CategoryLegendDom, index: number) => { return ((mappedCategoryLegendGroup[index].dom).querySelector("text.legendTitle > title").textContent === category); });
-                    let legentItem = ((categoryDOM[0].dom)).querySelectorAll("g.legendItem > title");
-                    expect(filteredByCategory.length).toEqual(legentItem.length);
-                    filteredByCategory.forEach((categoryItem, index) => {
-                        expect(legentItem[index].textContent).toEqual(categoryItem.name?.toString());
+                it("solid gridline style", () => {
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "solid";
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = 2;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        expect(dashArray).toBe("none");
                     });
                 });
-                done();
-            }, 300);
+
+                it("dashed gridline style", () => {
+                    const gridlineWidth: number = 2;
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "dashed";
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = gridlineWidth;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedDashArray: string = `${gridlineWidth * 4}px, ${gridlineWidth * 2}px`;
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        expect(dashArray).toBe(expectedDashArray);
+                    });
+                });
+
+                it("dotted gridline style", () => {
+                    const gridlineWidth: number = 2;
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "dotted";
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = gridlineWidth;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedDashArray: string = `${gridlineWidth * 0.1}px, ${gridlineWidth * 3}px`;
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        const lineCap: string = elementComputedStyle.getPropertyValue("stroke-linecap");
+                        expect(dashArray).toBe(expectedDashArray);
+                        expect(lineCap).toBe("round");
+                    });
+                });
+
+                it("custom gridline style without scaling", () => {
+                    const customPattern: string = "5, 3, 2, 3";
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "custom";
+                    (dataView.metadata.objects as any).valueAxis.gridlineDashArray = customPattern;
+                    (dataView.metadata.objects as any).valueAxis.gridlineScale = false;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        // Browser adds 'px' units to the dash array values
+                        expect(dashArray).toBe("5px, 3px, 2px, 3px");
+                    });
+                });
+
+                it("custom gridline style with scaling", () => {
+                    const customPattern: string = "5, 3, 2, 3";
+                    const gridlineWidth: number = 2;
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "custom";
+                    (dataView.metadata.objects as any).valueAxis.gridlineDashArray = customPattern;
+                    (dataView.metadata.objects as any).valueAxis.gridlineScale = true;
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = gridlineWidth;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedDashArray: string = customPattern
+                        .split(",")
+                        .map(s => parseFloat(s.trim()) * gridlineWidth + "px")
+                        .join(", ");
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        expect(dashArray).toBe(expectedDashArray);
+                    });
+                });
+
+                it("gridline transparency", () => {
+                    const transparency: number = 30; // 30% transparency = 70% opacity
+                    (dataView.metadata.objects as any).valueAxis.gridlineTransparency = transparency;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedOpacity: number = (100 - transparency) / 100;
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const opacity: string = elementComputedStyle.getPropertyValue("opacity");
+                        expect(parseFloat(opacity)).toBeCloseTo(expectedOpacity, 2);
+                    });
+                });
+
+                it("gridline dash cap", () => {
+                    const dashCap: string = "square";
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "dashed";
+                    (dataView.metadata.objects as any).valueAxis.gridlineDashCap = dashCap;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const lineCap: string = elementComputedStyle.getPropertyValue("stroke-linecap");
+                        expect(lineCap).toBe(dashCap);
+                    });
+                });
+
+                it("should remove domain lines when grid lines are shown", () => {
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    // Check that Y-axis domain line is removed
+                    const yAxisDomain = visualBuilder.svgScrollableAxisGraphicsContext.querySelector(".domain");
+                    expect(yAxisDomain).toBeNull();
+
+                    // Check that X-axis domain line is removed  
+                    const xAxisDomain = visualBuilder.rootAxisGraphicsContext.querySelector(".domain");
+                    expect(xAxisDomain).toBeNull();
+                });
+
+                it("multiple gridline properties applied together", () => {
+                    const color: string = "#FF5733";
+                    const width: number = 3;
+                    const transparency: number = 20;
+                    const style: string = "dashed";
+
+                    (dataView.metadata.objects as any).valueAxis = {
+                        ...((dataView.metadata.objects as any).valueAxis),
+                        gridlineColor: getSolidColorStructuralObject(color),
+                        gridlineWidth: width,
+                        gridlineTransparency: transparency,
+                        gridlineStyle: style
+                    };
+
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    const expectedOpacity: number = (100 - transparency) / 100;
+                    const expectedDashArray: string = `${width * 4}px, ${width * 2}px`; // Browser adds px units
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+
+                        assertColorsMatch(elementComputedStyle.getPropertyValue("stroke"), color);
+                        expect(parseFloat(elementComputedStyle.getPropertyValue("stroke-width"))).toBe(width);
+                        expect(parseFloat(elementComputedStyle.getPropertyValue("opacity"))).toBeCloseTo(expectedOpacity, 2);
+                        expect(elementComputedStyle.getPropertyValue("stroke-dasharray")).toBe(expectedDashArray);
+                    });
+                });
+
+                it("default gridline style fallback", () => {
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "unknown";
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        expect(dashArray).toBe("none");
+                    });
+                });
+
+                it("custom pattern with invalid numbers should not break", () => {
+                    const invalidPattern: string = "5, abc, 2, 3";
+                    (dataView.metadata.objects as any).valueAxis.gridlineStyle = "custom";
+                    (dataView.metadata.objects as any).valueAxis.gridlineDashArray = invalidPattern;
+                    (dataView.metadata.objects as any).valueAxis.gridlineScale = true;
+                    (dataView.metadata.objects as any).valueAxis.gridlineWidth = 2;
+
+                    expect(() => {
+                        visualBuilder.updateFlushAllD3Transitions(dataView);
+                    }).not.toThrow();
+
+                    // Should still apply the pattern as-is when parsing fails
+                    visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                        const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
+                        // Browser handles invalid values gracefully by defaulting to 'none'
+                        expect(dashArray).toBe("none");
+                    });
+                });
+            });
         });
-    });
 
-    describe("Mekko chart label features:", () => {
-        beforeEach(() => {
-            dataView = defaultDataViewBuilder.getSpecificDataView();
+        describe("MekkoColumnChartData", () => {
+            describe("converter", () => {
+                let mekkoColumnChartData: MekkoColumnChartData;
+
+                beforeEach((done) => {
+                    const visualHost: IVisualHost = createVisualHost({});
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        visualBuilder.instance.getFormattingModel();
+                        mekkoColumnChartData = BaseColumnChart.converter({
+                            visualHost,
+                            categorical: dataView.categorical,
+                            colors: visualHost.colorPalette,
+                            is100PercentStacked: true,
+                            isScalar: false,
+                            supportsOverflow: false,
+                            localizationManager: null,
+                            settingsModel: visualBuilder.instance.settingsModel,
+                            isFormatMode: false
+                        });
+                        done();
+                    });
+                });
+
+                it("mekkoColumnChartData is defined", () => {
+                    expect(mekkoColumnChartData).toBeDefined();
+                    expect(mekkoColumnChartData).not.toBeNull();
+                });
+
+                describe("series", () => {
+                    let series: MekkoChartSeries[];
+
+                    beforeEach(() => {
+                        series = mekkoColumnChartData.series;
+                    });
+
+                    it("series are defined", () => {
+                        expect(series).toBeDefined();
+                        expect(series).not.toBeNull();
+                    });
+
+                    it("each element of series is defined", () => {
+                        series.map((columnChartSeries: MekkoChartSeries) => {
+                            expect(columnChartSeries).toBeDefined();
+                            expect(columnChartSeries).not.toBeNull();
+                        });
+                    });
+
+                    describe("identity", () => {
+                        it("identity is defined", () => {
+                            series.map((columnChartSeries: MekkoChartSeries) => {
+                                expect(columnChartSeries.identity).toBeDefined();
+                                expect(columnChartSeries.identity).not.toBeNull();
+                            });
+                        });
+
+                        it("identity has key", () => {
+                            series.map((columnChartSeries: MekkoChartSeries) => {
+                                expect(columnChartSeries.identity.getKey()).toBeDefined();
+                            });
+                        });
+                    });
+                });
+            });
         });
 
-        it("force display", (done) => {
-            dataView.metadata.objects = {
-                labels: {
-                    show: true,
-                    forceDisplay: true
-                }
-            };
+        describe("Data Labels test", () => {
+            describe("converter", () => {
+                it("nodes border change color", done => {
+                    let color: string = "#123123";
 
-            let countBefore: number = 0;
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                countBefore = visualBuilder.dataLabels.length;
+                    dataView.metadata.objects = {
+                        columnBorder: {
+                            color: getSolidColorStructuralObject(color)
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        const element: HTMLElement = visualBuilder.mainElement.querySelector("rect.mekkoborder");
+                        const borderElementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
+                        const elementFillColor: string = borderElementComputedStyle.getPropertyValue("fill");
+
+                        assertColorsMatch(elementFillColor, color);
+
+                        done();
+                    });
+
+                });
+
+                it("category axes label font-size", done => {
+                    const categoryAxisFontSize: number = 17,
+                        valueAxisFontSize: number = 15;
+
+                    dataView.metadata.objects = {
+                        categoryAxis: {
+                            fontSize: categoryAxisFontSize
+                        },
+                        valueAxis: {
+                            fontSize: valueAxisFontSize
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        const xAxisElement: HTMLElement = visualBuilder.mainElement.querySelector(".x.axis g.tick text");
+                        const xAxisElementComputedStyle: CSSStyleDeclaration = getComputedStyle(xAxisElement);
+                        const xAxisFontSize: number = parseFloat(xAxisElementComputedStyle.getPropertyValue("font-size"));
+
+                        expect(Math.round(xAxisFontSize)).toBe(Math.round(fromPointToPixel(categoryAxisFontSize)));
+
+                        const yAxisElement: HTMLElement = visualBuilder.mainElement.querySelector(".y.axis g.tick text");
+                        const yAxisElementComputedStyle: CSSStyleDeclaration = getComputedStyle(yAxisElement);
+                        const yAxisFontSize: number = parseFloat(yAxisElementComputedStyle.getPropertyValue("font-size"));
+
+                        expect(Math.round(yAxisFontSize)).toBe(Math.round(fromPointToPixel(valueAxisFontSize)));
+
+                        done();
+                    });
+
+                });
+
+                it("Display units - millions", done => {
+                    dataView.metadata.objects = {
+                        labels: {
+                            show: true,
+                            labelDisplayUnits: 1000000
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        const firstLabelText: string = visualBuilder.dataLabels[0].textContent;
+
+                        expect(firstLabelText).toMatch(/[0-9.]*M/);
+
+                        done();
+                    });
+                });
+
+                it("Display units - thousands", done => {
+                    dataView.metadata.objects = {
+                        labels: {
+                            show: true,
+                            labelDisplayUnits: 1000
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        const firstLabelText: string = visualBuilder.dataLabels[0].textContent;
+
+                        expect(firstLabelText).toMatch(/[0-9.]*K/);
+
+                        done();
+                    });
+
+                });
+
+                it("Limit Decimal Places value", done => {
+                    dataView.metadata.objects = {
+                        labels: {
+                            show: true,
+                            labelDisplayUnits: 0,
+                            labelPrecision: 4
+                        }
+                    };
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        const firstLabelText: string = visualBuilder.dataLabels[0].textContent;
+
+                        expect(firstLabelText).toMatch(/\d*[.]\d{4}%/);
+
+                        done();
+                    });
+                });
+            });
+        });
+
+        describe("Mekko chart legend features:", () => {
+            beforeEach(() => {
+                dataView = defaultDataViewBuilder.getSpecificDataView();
             });
 
-            dataView.metadata.objects = {
-                labels: {
-                    show: true,
-                    forceDisplay: false
-                }
-            };
-
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                expect(countBefore).toBeGreaterThanOrEqual(visualBuilder.dataLabels.length);
-                done();
-            });
-        });
-
-        it("rotate category label to 45 degrees", (done) => {
-            dataView.metadata.objects = {
-                xAxisLabels: {
-                    enableRotataion: true
-                },
-                categoryAxis: {
-                    showAxisTitle: true,
-                    show: true
-                },
-                valueAxis: {
-                    show: true,
-                    showAxisTitle: true
-                }
-            };
-
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                let expectedDegree: number = -45;
-                visualBuilder.xAxisTicks.forEach((element: HTMLElement) => {
-                    const selection = select(element.querySelector("text"));
-                    expect(MekkoChart.getTranslation(selection.attr("transform"))[2]).toBeCloseTo(expectedDegree);
-                });
-                done();
-            }, 300);
-        });
-    });
-
-    describe("Mekko chart series features:", () => {
-        beforeEach(() => {
-            dataView = defaultDataViewBuilder.getSpecificDataView();
-        });
-
-        it("sort series by value", (done) => {
-            dataView.metadata.objects = {
-                labels: {
-                    show: true,
-                    forceDisplay: true
-                },
-                sortSeries: {
-                    enabled: true,
-                    direction: "asc",
-                    displayPercents: "category"
-                }
-            };
-
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                let seriesElements = visualBuilder.mainElement.querySelectorAll(".columnChartMainGraphicsContext > .series");
-                let mappedSeries = [];
-                const firstCtegory: number = 0;
-                const secondCtegory: number = 1;
-                const thirdCtegory: number = 2;
-                const seriesMainRectanglePositionIndex: number = 0;
-                // first category elements
-                mappedSeries[firstCtegory] = [];
-                mappedSeries[firstCtegory].push(seriesElements[0].children[seriesMainRectanglePositionIndex]);
-                mappedSeries[firstCtegory].push(seriesElements[1].children[seriesMainRectanglePositionIndex]);
-                mappedSeries[firstCtegory].push(seriesElements[2].children[seriesMainRectanglePositionIndex]);
-
-                // second category elements
-                mappedSeries[secondCtegory] = [];
-                mappedSeries[secondCtegory].push(seriesElements[3].children[seriesMainRectanglePositionIndex]);
-                mappedSeries[secondCtegory].push(seriesElements[4].children[seriesMainRectanglePositionIndex]);
-                mappedSeries[secondCtegory].push(seriesElements[5].children[seriesMainRectanglePositionIndex]);
-
-                // third category elements
-                mappedSeries[thirdCtegory] = [];
-                mappedSeries[thirdCtegory].push(seriesElements[6].children[seriesMainRectanglePositionIndex]);
-                mappedSeries[thirdCtegory].push(seriesElements[7].children[seriesMainRectanglePositionIndex]);
-                mappedSeries[thirdCtegory].push(seriesElements[8].children[seriesMainRectanglePositionIndex]);
-
-                mappedSeries.forEach((element: any[]) => {
-                    let sortedByHeight = sortBy(element, "height");
-                    let sortedByPosition = sortBy(element, "y");
-                    sortedByHeight.forEach((el, index) => expect(sortedByHeight[index] === sortedByPosition[index]).toBeTruthy());
-                });
-                done();
-            }, 300);
-        });
-    });
-
-    describe("Highlight test", () => {
-        let dataLabels: NodeListOf<HTMLElement>;
-        let columns: Element[];
-        let columnsWithoutSize: Element[];
-        let dataViewWithHighLighted: DataView;
-        let highlightedColumnWithoutHeight: boolean = false;
-
-        beforeEach(() => {
-            dataViewWithHighLighted = defaultDataViewBuilder.getDataView(undefined, true);
-            visualBuilder.update(dataViewWithHighLighted);
-
-            columns = visualBuilder.columnsWithSize;
-            columnsWithoutSize = visualBuilder.columnsWithoutSize;
-        });
-
-        it("bars rendering", (done) => {
-            visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
-                const allColumnsLength: number = columns.length;
-                let notHighligtedColumnsCount: number = 0;
-
-                columnsWithoutSize.forEach(column => {
-                    if (column.matches('.highlight')) {
-                        highlightedColumnWithoutHeight = true;
-                        return;
+            it("sort legend by value", (done) => {
+                dataView.metadata.objects = {
+                    sortLegend: {
+                        enabled: true,
+                        direction: "asc",
+                        groupByCategory: false,
+                        groupByCategoryDirection: "asc"
                     }
-                });
-                columns.forEach(column => {
-                    const columnComputedStyle: CSSStyleDeclaration = getComputedStyle(column);
-                    const columnFillOpacity: string = columnComputedStyle.getPropertyValue("fill-opacity");
-                    if (Number(columnFillOpacity) !== 1)
-                        notHighligtedColumnsCount++;
-                });
+                };
 
-                const expectedNonHighlightedColumnsCount: number = highlightedColumnWithoutHeight ? allColumnsLength : allColumnsLength - 1;
-                // for data with tiny values
-                expect(notHighligtedColumnsCount).toBeLessThanOrEqual(expectedNonHighlightedColumnsCount);
-                done();
-            });
-        });
-
-        it("labels rendering", (done) => {
-            dataViewWithHighLighted.metadata.objects = {
-                labels: {
-                    show: true,
-                    forceDisplay: true
+                interface ValueLegend {
+                    key: string;
+                    data: number;
                 }
-            };
-            visualBuilder.update(dataViewWithHighLighted);
-            visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
-                columnsWithoutSize.forEach(column => {
-                    if (column.matches(".highlight")) {
-                        highlightedColumnWithoutHeight = true;
-                        return;
-                    }
+
+                let data = dataView.categorical.values.grouped().map(v => { return { key: v.name, data: sum(v.values[0].values) }; });
+
+                let reduced = {};
+                data.forEach(d => {
+                    reduced[d.key.toString()] = reduced[d.key.toString()] || { data: 0 };
+                    reduced[d.key.toString()].data += d.data;
                 });
-                dataLabels = visualBuilder.dataLabels;
 
-                const expectedHighlightedDataLabelsCount: number = highlightedColumnWithoutHeight ? 0 : 1;
-                // for data with tiny values
-                expect(dataLabels.length).toBeGreaterThanOrEqual(expectedHighlightedDataLabelsCount);
-                done();
+                let index = 0;
+                let array: Array<ValueLegend> = [];
+
+                for (let key in reduced) {
+                    array[index++] = {
+                        key: key,
+                        data: reduced[key].data
+                    };
+                }
+
+                array = array.sort((a, b) => a.data > b.data ? 1 : -1);
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(document.body.contains(visualBuilder.legendGroup)).toBeTruthy();
+                    let textElements = visualBuilder.legendGroup.querySelectorAll("g.legendItem > text");
+                    array.forEach((element, index) => {
+                        expect(element.key).toEqual(textElements[index].textContent);
+                    });
+                    done();
+                }, 300);
+            });
+
+            it("group legend by category", (done) => {
+                dataView.metadata.objects = {
+                    sortLegend: {
+                        enabled: true,
+                        direction: "asc",
+                        groupByCategory: true,
+                        groupByCategoryDirection: "asc"
+                    }
+                };
+
+                let data = dataView.categorical.values.grouped();
+                let catigoried = data.map(d => { return { name: d.name, values: d.values[0].values, category: findIndex(d.values[0].values, i => i !== null) }; });
+                catigoried = sortBy(catigoried, "values");
+
+                interface CategoryLegendDom {
+                    position: string;
+                    dom: Element;
+                }
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(document.body.contains(visualBuilder.categoryLegendGroup[0])).toBeTruthy();
+                    expect(visualBuilder.categoryLegendGroup.length).toEqual(dataView.categorical.categories[0].values.length);
+
+                    let mappedCategoryLegendGroup: Array<CategoryLegendDom> = Array.from(visualBuilder.categoryLegendGroup).map((clg) => {
+                        return <CategoryLegendDom>{
+                            position: clg.parentElement.parentElement.style.top.replace("px", ""),
+                            dom: clg
+                        };
+                    });
+
+                    dataView.categorical.categories[0].values.forEach((category, index) => {
+                        let filteredByCategory = catigoried.filter(cat => cat.category === index);
+                        filteredByCategory = filteredByCategory.sort((a, b) => a.values > b.values ? 1 : -1);
+                        let categoryDOM: Array<CategoryLegendDom> = mappedCategoryLegendGroup.filter((val: CategoryLegendDom, index: number) => { return ((mappedCategoryLegendGroup[index].dom).querySelector("text.legendTitle > title").textContent === category); });
+                        let legentItem = ((categoryDOM[0].dom)).querySelectorAll("g.legendItem > title");
+                        expect(filteredByCategory.length).toEqual(legentItem.length);
+                        filteredByCategory.forEach((categoryItem, index) => {
+                            expect(legentItem[index].textContent).toEqual(categoryItem.name?.toString());
+                        });
+                    });
+                    done();
+                }, 300);
             });
         });
-    });
 
-    describe("Keyboard navigation test", () => {
-        it("enter toggles the correct column", (done) => {
-            const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
-            visualBuilder.updateRenderTimeout(
-                dataView, () => {
-                    const columns: HTMLElement[] = [...visualBuilder.columns];
-
-                    columns[0].dispatchEvent(enterEvent);
-                    expect(columns[0].getAttribute("aria-selected")).toBe("true");
-
-                    const otherColumns: HTMLElement[] = columns.slice(1);
-                    otherColumns.forEach((column: HTMLElement) => {
-                        expect(column.getAttribute("aria-selected")).toBe("false");
-                    });
-
-                    columns[1].dispatchEvent(enterEvent);
-                    expect(columns[1].getAttribute("aria-selected")).toBe("true");
-
-                    columns.splice(1,1);
-                    columns.forEach((column: HTMLElement) => {
-                        expect(column.getAttribute("aria-selected")).toBe("false");
-                    });
-                    done();
-                },
-            );
-        });
-
-        it("space toggles the correct column", (done) => {
-            const enterEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
-            visualBuilder.updateRenderTimeout(
-                dataView, () => {
-                    const columns: HTMLElement[] = [...visualBuilder.columns];
-
-                    columns[0].dispatchEvent(enterEvent);
-                    expect(columns[0].getAttribute("aria-selected")).toBe("true");
-
-                    const otherColumns: HTMLElement[] = columns.slice(1);
-                    otherColumns.forEach((column: HTMLElement) => {
-                        expect(column.getAttribute("aria-selected")).toBe("false");
-                    });
-
-                    columns[1].dispatchEvent(enterEvent);
-                    expect(columns[1].getAttribute("aria-selected")).toBe("true");
-
-                    columns.splice(1,1);
-                    columns.forEach((column: HTMLElement) => {
-                        expect(column.getAttribute("aria-selected")).toBe("false");
-                    });
-                    done();
-                },
-            );
-        });
-
-        it("multiselection should work with ctrlKey", (done) => {
-            const enterEventCtrlKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, ctrlKey: true });
-            visualBuilder.updateRenderTimeout(
-                dataView, () => {
-                    checkKeyboardMultiSelection(enterEventCtrlKey);
-                    done();
-                },
-            );
-        });
-
-        it("multiselection should work with metaKey", (done) => {
-            const enterEventMetaKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, metaKey: true });
-            visualBuilder.updateRenderTimeout(
-                dataView, () => {
-                    checkKeyboardMultiSelection(enterEventMetaKey);
-                    done();
-                },
-            );
-        });
-
-        it("multiselection should work with shiftKey", (done) => {
-            const enterEventShiftKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, shiftKey: true });
-            visualBuilder.updateRenderTimeout(
-                dataView, () => {
-                    checkKeyboardMultiSelection(enterEventShiftKey);
-                    done();
-                },
-            );
-        });
-
-        it("columns can be focused", (done) => {
-            visualBuilder.updateRenderTimeout(
-                dataView, () => {
-                    const columns: HTMLElement[] = [...visualBuilder.columns];
-                    columns.forEach((column: HTMLElement) => {
-                        expect(column.matches(":focus-visible")).toBeFalse();
-                    });
-
-                    columns[0].focus();
-                    expect(columns[0].matches(':focus-visible')).toBeTrue();
-
-                    const otherColumns: HTMLElement[] = columns.slice(1);
-                    otherColumns.forEach((column: HTMLElement) => {
-                        expect(column.matches(":focus-visible")).toBeFalse();
-                    });
-
-                    done();
-                },
-            );
-        });
-
-        function checkKeyboardMultiSelection(keyboardMultiselectionEvent: KeyboardEvent): void{
-            const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
-
-            const columns: HTMLElement[] = [...visualBuilder.columns];
-            const firstColumn: HTMLElement = columns[0];
-            const secondColumn: HTMLElement = columns[1];
-
-            // select first column
-            firstColumn.dispatchEvent(enterEvent);
-            const firstColumnCSS: CSSStyleDeclaration = getComputedStyle(firstColumn);
-            const firstColumnFillOpacity: string = firstColumnCSS.getPropertyValue("fill-opacity");
-            // multiselect second column
-            secondColumn.dispatchEvent(keyboardMultiselectionEvent);
-            const secondColumnCSS: CSSStyleDeclaration = getComputedStyle(secondColumn);
-            const secondColumnFillOpacity: string = secondColumnCSS.getPropertyValue("fill-opacity");
-
-            expect(firstColumn.getAttribute("aria-selected")).toBe("true");
-            expect(parseFloat(firstColumnFillOpacity)).toBe(1);
-
-            expect(secondColumn.getAttribute("aria-selected")).toBe("true");
-            expect(parseFloat(secondColumnFillOpacity)).toBe(1);
-
-            const notSelectedColumns: HTMLElement[] = columns.slice(2);
-            notSelectedColumns.forEach((column: HTMLElement) => {
-                const columnCSS: CSSStyleDeclaration = getComputedStyle(column);
-                const columnFillOpacity: string = columnCSS.getPropertyValue("fill-opacity");
-                expect(parseFloat(columnFillOpacity)).toBeLessThan(1);
-                expect(column.getAttribute("aria-selected")).toBe("false");
+        describe("Mekko chart label features:", () => {
+            beforeEach(() => {
+                dataView = defaultDataViewBuilder.getSpecificDataView();
             });
-        }
+
+            it("force display", (done) => {
+                dataView.metadata.objects = {
+                    labels: {
+                        show: true,
+                        forceDisplay: true
+                    }
+                };
+
+                let countBefore: number = 0;
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    countBefore = visualBuilder.dataLabels.length;
+                });
+
+                dataView.metadata.objects = {
+                    labels: {
+                        show: true,
+                        forceDisplay: false
+                    }
+                };
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    expect(countBefore).toBeGreaterThanOrEqual(visualBuilder.dataLabels.length);
+                    done();
+                });
+            });
+
+            it("rotate category label to 45 degrees", (done) => {
+                dataView.metadata.objects = {
+                    xAxisLabels: {
+                        enableRotataion: true
+                    },
+                    categoryAxis: {
+                        showAxisTitle: true,
+                        show: true
+                    },
+                    valueAxis: {
+                        show: true,
+                        showAxisTitle: true
+                    }
+                };
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    let expectedDegree: number = -45;
+                    visualBuilder.xAxisTicks.forEach((element: HTMLElement) => {
+                        const selection = select(element.querySelector("text"));
+                        expect(MekkoChart.getTranslation(selection.attr("transform"))[2]).toBeCloseTo(expectedDegree);
+                    });
+                    done();
+                }, 300);
+            });
+        });
+
+        describe("Mekko chart series features:", () => {
+            beforeEach(() => {
+                dataView = defaultDataViewBuilder.getSpecificDataView();
+            });
+
+            it("sort series by value", (done) => {
+                dataView.metadata.objects = {
+                    labels: {
+                        show: true,
+                        forceDisplay: true
+                    },
+                    sortSeries: {
+                        enabled: true,
+                        direction: "asc",
+                        displayPercents: "category"
+                    }
+                };
+
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    let seriesElements = visualBuilder.mainElement.querySelectorAll(".columnChartMainGraphicsContext > .series");
+                    let mappedSeries = [];
+                    const firstCtegory: number = 0;
+                    const secondCtegory: number = 1;
+                    const thirdCtegory: number = 2;
+                    const seriesMainRectanglePositionIndex: number = 0;
+                    // first category elements
+                    mappedSeries[firstCtegory] = [];
+                    mappedSeries[firstCtegory].push(seriesElements[0].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[firstCtegory].push(seriesElements[1].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[firstCtegory].push(seriesElements[2].children[seriesMainRectanglePositionIndex]);
+
+                    // second category elements
+                    mappedSeries[secondCtegory] = [];
+                    mappedSeries[secondCtegory].push(seriesElements[3].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[secondCtegory].push(seriesElements[4].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[secondCtegory].push(seriesElements[5].children[seriesMainRectanglePositionIndex]);
+
+                    // third category elements
+                    mappedSeries[thirdCtegory] = [];
+                    mappedSeries[thirdCtegory].push(seriesElements[6].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[thirdCtegory].push(seriesElements[7].children[seriesMainRectanglePositionIndex]);
+                    mappedSeries[thirdCtegory].push(seriesElements[8].children[seriesMainRectanglePositionIndex]);
+
+                    mappedSeries.forEach((element: any[]) => {
+                        let sortedByHeight = sortBy(element, "height");
+                        let sortedByPosition = sortBy(element, "y");
+                        sortedByHeight.forEach((el, index) => expect(sortedByHeight[index] === sortedByPosition[index]).toBeTruthy());
+                    });
+                    done();
+                }, 300);
+            });
+        });
+
+        describe("Highlight test", () => {
+            let dataLabels: NodeListOf<HTMLElement>;
+            let columns: Element[];
+            let columnsWithoutSize: Element[];
+            let dataViewWithHighLighted: DataView;
+            let highlightedColumnWithoutHeight: boolean = false;
+
+            beforeEach(() => {
+                dataViewWithHighLighted = defaultDataViewBuilder.getDataView(undefined, true);
+                visualBuilder.update(dataViewWithHighLighted);
+
+                columns = visualBuilder.columnsWithSize;
+                columnsWithoutSize = visualBuilder.columnsWithoutSize;
+            });
+
+            it("bars rendering", (done) => {
+                visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
+                    const allColumnsLength: number = columns.length;
+                    let notHighligtedColumnsCount: number = 0;
+
+                    columnsWithoutSize.forEach(column => {
+                        if (column.matches('.highlight')) {
+                            highlightedColumnWithoutHeight = true;
+                            return;
+                        }
+                    });
+                    columns.forEach(column => {
+                        const columnComputedStyle: CSSStyleDeclaration = getComputedStyle(column);
+                        const columnFillOpacity: string = columnComputedStyle.getPropertyValue("fill-opacity");
+                        if (Number(columnFillOpacity) !== 1)
+                            notHighligtedColumnsCount++;
+                    });
+
+                    const expectedNonHighlightedColumnsCount: number = highlightedColumnWithoutHeight ? allColumnsLength : allColumnsLength - 1;
+                    // for data with tiny values
+                    expect(notHighligtedColumnsCount).toBeLessThanOrEqual(expectedNonHighlightedColumnsCount);
+                    done();
+                });
+            });
+
+            it("labels rendering", (done) => {
+                dataViewWithHighLighted.metadata.objects = {
+                    labels: {
+                        show: true,
+                        forceDisplay: true
+                    }
+                };
+                visualBuilder.update(dataViewWithHighLighted);
+                visualBuilder.updateRenderTimeout(dataViewWithHighLighted, () => {
+                    columnsWithoutSize.forEach(column => {
+                        if (column.matches(".highlight")) {
+                            highlightedColumnWithoutHeight = true;
+                            return;
+                        }
+                    });
+                    dataLabels = visualBuilder.dataLabels;
+
+                    const expectedHighlightedDataLabelsCount: number = highlightedColumnWithoutHeight ? 0 : 1;
+                    // for data with tiny values
+                    expect(dataLabels.length).toBeGreaterThanOrEqual(expectedHighlightedDataLabelsCount);
+                    done();
+                });
+            });
+        });
+
+        describe("Keyboard navigation test", () => {
+            it("enter toggles the correct column", (done) => {
+                const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+                visualBuilder.updateRenderTimeout(
+                    dataView, () => {
+                        const columns: HTMLElement[] = [...visualBuilder.columns];
+
+                        columns[0].dispatchEvent(enterEvent);
+                        expect(columns[0].getAttribute("aria-selected")).toBe("true");
+
+                        const otherColumns: HTMLElement[] = columns.slice(1);
+                        otherColumns.forEach((column: HTMLElement) => {
+                            expect(column.getAttribute("aria-selected")).toBe("false");
+                        });
+
+                        columns[1].dispatchEvent(enterEvent);
+                        expect(columns[1].getAttribute("aria-selected")).toBe("true");
+
+                        columns.splice(1, 1);
+                        columns.forEach((column: HTMLElement) => {
+                            expect(column.getAttribute("aria-selected")).toBe("false");
+                        });
+                        done();
+                    },
+                );
+            });
+
+            it("space toggles the correct column", (done) => {
+                const enterEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+                visualBuilder.updateRenderTimeout(
+                    dataView, () => {
+                        const columns: HTMLElement[] = [...visualBuilder.columns];
+
+                        columns[0].dispatchEvent(enterEvent);
+                        expect(columns[0].getAttribute("aria-selected")).toBe("true");
+
+                        const otherColumns: HTMLElement[] = columns.slice(1);
+                        otherColumns.forEach((column: HTMLElement) => {
+                            expect(column.getAttribute("aria-selected")).toBe("false");
+                        });
+
+                        columns[1].dispatchEvent(enterEvent);
+                        expect(columns[1].getAttribute("aria-selected")).toBe("true");
+
+                        columns.splice(1, 1);
+                        columns.forEach((column: HTMLElement) => {
+                            expect(column.getAttribute("aria-selected")).toBe("false");
+                        });
+                        done();
+                    },
+                );
+            });
+
+            it("multiselection should work with ctrlKey", (done) => {
+                const enterEventCtrlKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, ctrlKey: true });
+                visualBuilder.updateRenderTimeout(
+                    dataView, () => {
+                        checkKeyboardMultiSelection(enterEventCtrlKey);
+                        done();
+                    },
+                );
+            });
+
+            it("multiselection should work with metaKey", (done) => {
+                const enterEventMetaKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, metaKey: true });
+                visualBuilder.updateRenderTimeout(
+                    dataView, () => {
+                        checkKeyboardMultiSelection(enterEventMetaKey);
+                        done();
+                    },
+                );
+            });
+
+            it("multiselection should work with shiftKey", (done) => {
+                const enterEventShiftKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, shiftKey: true });
+                visualBuilder.updateRenderTimeout(
+                    dataView, () => {
+                        checkKeyboardMultiSelection(enterEventShiftKey);
+                        done();
+                    },
+                );
+            });
+
+            it("columns can be focused", (done) => {
+                visualBuilder.updateRenderTimeout(
+                    dataView, () => {
+                        const columns: HTMLElement[] = [...visualBuilder.columns];
+                        columns.forEach((column: HTMLElement) => {
+                            expect(column.matches(":focus-visible")).toBeFalse();
+                        });
+
+                        columns[0].focus();
+                        expect(columns[0].matches(':focus-visible')).toBeTrue();
+
+                        const otherColumns: HTMLElement[] = columns.slice(1);
+                        otherColumns.forEach((column: HTMLElement) => {
+                            expect(column.matches(":focus-visible")).toBeFalse();
+                        });
+
+                        done();
+                    },
+                );
+            });
+
+            function checkKeyboardMultiSelection(keyboardMultiselectionEvent: KeyboardEvent): void {
+                const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+
+                const columns: HTMLElement[] = [...visualBuilder.columns];
+                const firstColumn: HTMLElement = columns[0];
+                const secondColumn: HTMLElement = columns[1];
+
+                // select first column
+                firstColumn.dispatchEvent(enterEvent);
+                const firstColumnCSS: CSSStyleDeclaration = getComputedStyle(firstColumn);
+                const firstColumnFillOpacity: string = firstColumnCSS.getPropertyValue("fill-opacity");
+                // multiselect second column
+                secondColumn.dispatchEvent(keyboardMultiselectionEvent);
+                const secondColumnCSS: CSSStyleDeclaration = getComputedStyle(secondColumn);
+                const secondColumnFillOpacity: string = secondColumnCSS.getPropertyValue("fill-opacity");
+
+                expect(firstColumn.getAttribute("aria-selected")).toBe("true");
+                expect(parseFloat(firstColumnFillOpacity)).toBe(1);
+
+                expect(secondColumn.getAttribute("aria-selected")).toBe("true");
+                expect(parseFloat(secondColumnFillOpacity)).toBe(1);
+
+                const notSelectedColumns: HTMLElement[] = columns.slice(2);
+                notSelectedColumns.forEach((column: HTMLElement) => {
+                    const columnCSS: CSSStyleDeclaration = getComputedStyle(column);
+                    const columnFillOpacity: string = columnCSS.getPropertyValue("fill-opacity");
+                    expect(parseFloat(columnFillOpacity)).toBeLessThan(1);
+                    expect(column.getAttribute("aria-selected")).toBe("false");
+                });
+            }
+        });
     });
 });
