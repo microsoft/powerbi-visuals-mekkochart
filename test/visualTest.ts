@@ -695,7 +695,6 @@ describe("MekkoChart", () => {
                     visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
                         const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
                         const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
-                        // Browser handles invalid values gracefully by defaulting to 'none'
                         expect(dashArray).toBe("none");
                     });
                 });
