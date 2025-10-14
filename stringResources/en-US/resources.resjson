@@ -106,5 +106,9 @@
 	"Visual_Solid": "Solid",
 	"Visual_Dashed": "Dashed",
 	"Visual_Dotted": "Dotted",
-	"Visual_Custom": "Custom"
+	"Visual_Custom": "Custom",
+	"Visual_Y_Axis": "Visual Y axis",
+	"Visual_X_Axis": "Visual X axis",
+	"Visual_LegendName": "Visual legend Name",
+	"Visual_Y_Axis_Tick_Text": "Visual Y axis tick"
 }

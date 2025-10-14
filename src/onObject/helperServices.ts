@@ -7,6 +7,7 @@ import VisualShortcutType = powerbi.visuals.VisualShortcutType;
 import TextSubSelectionStyles = powerbi.visuals.TextSubSelectionStyles;
 import NumericTextSubSelectionStyles = powerbi.visuals.NumericTextSubSelectionStyles;
 import CustomVisualSubSelection = powerbi.visuals.CustomVisualSubSelection;
+import CustomSubSelectionStyleType = powerbi.visuals.CustomSubSelectionStyleType;
 
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
@@ -85,7 +86,19 @@ export class SubSelectionStylesService {
         return SubSelectionStylesService.GetSubselectionStylesForText(xAxisReferences);
     }
 
-    public static GetYAxisStyles(): SubSelectionStyles {
+    public static GetYAxisStyles(localizationManager: ILocalizationManager): SubSelectionStyles | null {
+        return {
+            type: SubSelectionStylesType.Shape,
+            fill: {
+                reference: {
+                    ...yAxisReferences.gridlineColor
+                },
+                label: localizationManager.getDisplayName("Visual_Gridline_Color")
+            }
+        }
+    }
+
+    public static GetYAxisTickTextStyles(): SubSelectionStyles {
         return SubSelectionStylesService.GetSubselectionStylesForText(yAxisReferences);
     }
 
@@ -111,7 +124,7 @@ export class SubSelectionStylesService {
 }
 
 export class SubSelectionShortcutsService {
-    public static GetLegendShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts{
+    public static GetLegendShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
         return [
             {
                 type: VisualShortcutType.Toggle,
@@ -297,7 +310,7 @@ export class SubSelectionShortcutsService {
     }
 
     public static GetXAxisShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
-       return SubSelectionShortcutsService.GetAxisShortcuts(xAxisReferences, "Visual_FormatXAxis", localizationManager);
+        return SubSelectionShortcutsService.GetAxisShortcuts(xAxisReferences, "Visual_FormatXAxis", localizationManager);
     }
 
     public static GetXAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
@@ -305,9 +318,16 @@ export class SubSelectionShortcutsService {
     }
 
     public static GetYAxisShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
-        return SubSelectionShortcutsService.GetAxisShortcuts(yAxisReferences, "Visual_FormatYAxis", localizationManager);
+        return [
+            {
+                type: VisualShortcutType.Picker,
+                ...yAxisReferences.visualMode,
+                label: localizationManager.getDisplayName("Visual_Mode"),
+            },
+            ...SubSelectionShortcutsService.GetAxisShortcuts(yAxisReferences, "Visual_FormatYAxis", localizationManager),
+        ];
     }
- 
+
     public static GetYAxisTitleShortcuts(localizationManager: ILocalizationManager): VisualSubSelectionShortcuts {
         return SubSelectionShortcutsService.GetAxisTitleShortcuts(yAxisReferences, localizationManager);
     }

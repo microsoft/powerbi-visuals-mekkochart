@@ -2,7 +2,7 @@ import powerbi from "powerbi-visuals-api";
 import SubSelectableDirectEdit = powerbi.visuals.SubSelectableDirectEdit;
 import SubSelectableDirectEditStyle = powerbi.visuals.SubSelectableDirectEditStyle;
 
-import { IAxisReference, IColumnBorderReference, IDataPointReference, IFontReference, ILabelsReference, ILegendReference, ISortLegendReference, ISortSeriesReference, IXAxisLabelsRotationReference } from "./interfaces";
+import { IAxisReference, IYAxisReference, IColumnBorderReference, IDataPointReference, IFontReference, ILabelsReference, ILegendReference, ISortLegendReference, ISortSeriesReference, IXAxisLabelsRotationReference } from "./interfaces";
 import { MekkoChartObjectNames } from "../settings";
 
 const createBaseFontReference = (objectName: string, colorName: string = ""): IFontReference => {
@@ -122,7 +122,7 @@ export const xAxisReferences: IXAxisLabelsRotationReference = {
     }
 }
 
-export const yAxisReferences: IAxisReference = {
+export const yAxisReferences: IYAxisReference = {
     ...createBaseFontReference(MekkoChartObjectNames.YAxis, "label"),
     cardUid: "Visual-valueAxis-card",
     groupUid: "valueAxis-group",
@@ -134,6 +134,14 @@ export const yAxisReferences: IAxisReference = {
         objectName: MekkoChartObjectNames.YAxis,
         propertyName: "showAxisTitle"
     },
+    visualMode: {
+        objectName: MekkoChartObjectNames.YAxis,
+        propertyName: "visualMode"
+    },
+    gridlineColor: {
+        objectName: MekkoChartObjectNames.YAxis,
+        propertyName: "gridlineColor"
+    }
 }
 
 export const dataPointReferences: IDataPointReference = {
