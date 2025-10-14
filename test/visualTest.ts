@@ -691,7 +691,6 @@ describe("MekkoChart", () => {
                         visualBuilder.updateFlushAllD3Transitions(dataView);
                     }).not.toThrow();
 
-                    // Should still apply the pattern as-is when parsing fails
                     visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
                         const elementComputedStyle: CSSStyleDeclaration = getComputedStyle(element);
                         const dashArray: string = elementComputedStyle.getPropertyValue("stroke-dasharray");
