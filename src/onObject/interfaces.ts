@@ -44,6 +44,7 @@ export interface IYAxisReference extends IAxisReference {
 
 export interface IXAxisLabelsRotationReference extends IAxisReference {
     enableRotation: FormattingId;
+    rotationDegree: FormattingId;
 }
 
 export interface IDataPointReference extends GroupFormattingModelReference {

@@ -213,6 +213,7 @@ export class MekkoChart implements IVisual {
     private static XBrushSelector: ClassAndSelector = createClassAndSelector("x brush");
     private static BrushSelector: ClassAndSelector = createClassAndSelector("brush");
     private static LabelMiddleSelector: ClassAndSelector = createClassAndSelector("labelMiddle");
+    private static LabelRotateSelector: ClassAndSelector = createClassAndSelector("labelRotate");
     private static ZeroLineSelector: ClassAndSelector = createClassAndSelector("zero-line");
     private static SvgScrollableSelector: ClassAndSelector = createClassAndSelector("svgScrollable");
     private static XSelector: ClassAndSelector = createClassAndSelector("x");
@@ -267,8 +268,6 @@ export class MekkoChart implements IVisual {
 
     private static SortDirectionDescending: string = "des";
     private static SortDirectionAscending: string = "asc";
-
-    private static CategoryTextRotataionDegree: number = 45.0;
 
     private static LegendBarHeightMargin: number = 5;
 
@@ -457,7 +456,7 @@ export class MekkoChart implements IVisual {
         const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.categoryAxis.fontControl.fontSize.value, this.settingsModel.categoryAxis.fontControl.fontFamily.value);
 
         const longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory.toString());
-        const requiredHeight = longestCategoryWidth * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180);
+        const requiredHeight = longestCategoryWidth * Math.sin(this.settingsModel.xAxisLabels.rotationDegree.value * Math.PI / 180);
         return requiredHeight;
     }
 
@@ -1574,6 +1573,7 @@ export class MekkoChart implements IVisual {
             }
 
             node
+                .classed(MekkoChart.LabelRotateSelector.className, false)
                 .classed(MekkoChart.LabelMiddleSelector.className, true)
                 .attr("dx", MekkoChart.DefaultLabelDx)
                 .attr("dy", MekkoChart.DefaultLabelDy)
@@ -1703,22 +1703,10 @@ export class MekkoChart implements IVisual {
             else {
                 xAxisTextNodes
                     .classed(MekkoChart.LabelMiddleSelector.className, true)
+                    .classed(MekkoChart.LabelRotateSelector.className, true)
+                    .style("--rotation", `${-this.settingsModel.xAxisLabels.rotationDegree.value}deg`)
                     .attr("dx", MekkoChart.DefaultLabelDx)
-                    .attr("dy", MekkoChart.DefaultLabelDy)
-                    .attr("transform", `rotate(-${MekkoChart.CategoryTextRotataionDegree})`);
-
-                // fix positions
-                const categoryLabels = xAxisGraphicsElement.selectAll(".tick");
-                categoryLabels.each(function () {
-                    const shiftX: number = (<any>this).getBBox().width / Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
-                    const shiftY: number = (<any>this).getBBox().width * Math.tan(MekkoChart.CategoryTextRotataionDegree * Math.PI / 180) / 2.0;
-                    const currTransform: string = (<any>this).attributes.transform.value;
-                    const translate: [number, number, number] = MekkoChart.getTranslation(currTransform);
-                    select(<any>this)
-                        .attr("transform", () => {
-                            return manipulation.translate(+translate[0] - shiftX, +translate[1] + shiftY);
-                        });
-                });
+                    .attr("dy", MekkoChart.DefaultLabelDy);
             }
         }
         else {

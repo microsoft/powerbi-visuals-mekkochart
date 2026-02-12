@@ -50,7 +50,8 @@
         }
         
         &:focus-visible {
-            outline: auto 1px;
+            outline: auto 2px;
+            outline-offset: -2px;
             outline-color: -webkit-focus-ring-color;
         }
     }
@@ -63,6 +64,13 @@
     .yAxisLabel,
     .labelMiddle {
         text-anchor: middle;
+    }
+
+    .labelRotate {
+        transform-box: fill-box;
+        transform-origin: right center;
+        text-anchor: end;
+        rotate: var(--rotation);
     }
 
     .svgScrollable {

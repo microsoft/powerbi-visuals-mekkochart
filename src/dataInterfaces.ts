@@ -386,6 +386,7 @@ export interface MekkoSeriesSortSettings {
 
 export interface MekkoXAxisLabelsSettings {
     enableRotataion: boolean;
+    rotationDegree: number;
 }
 
 export interface MekkoCategoryColorSettings {

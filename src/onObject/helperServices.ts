@@ -274,7 +274,8 @@ export class SubSelectionShortcutsService {
                     axisReference.underline,
                     axisReference.color,
                     axisReference.show,
-                    xAxisInterface?.enableRotation
+                    xAxisInterface?.enableRotation,
+                    xAxisInterface?.rotationDegree,
                 ]
             },
             {

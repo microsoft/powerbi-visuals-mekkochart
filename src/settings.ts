@@ -25,7 +25,7 @@ class ColumnBorderWidthDefaultOptions {
 
 class FontSizeDefaultOptions {
     public static FontSize: number = 9;
-    public static MinFontSize: number = 9;
+    public static MinFontSize: number = 6;
     public static MaxFontSize: number = 30;
 }
 
@@ -337,7 +337,23 @@ export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
         value: false
     });
 
-    public slices: FormattingSettingsSlice[] = [this.enableRotataion];
+    public rotationDegree = new formattingSettings.Slider({
+        name: "rotationDegree",
+        displayNameKey: "Visual_Rotation_Degree",
+        value: 45,
+        options: {
+            minValue: {
+                type: powerbi.visuals.ValidatorType.Min,
+                value: 10,
+            },
+            maxValue: {
+                type: powerbi.visuals.ValidatorType.Max,
+                value: 90,
+            }
+        }
+    });
+
+    public slices: FormattingSettingsSlice[] = [this.enableRotataion, this.rotationDegree];
 }
 
 export class CategoryAxisSettings extends FormattingSettingsSimpleCard {

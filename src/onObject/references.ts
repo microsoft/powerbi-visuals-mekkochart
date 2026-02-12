@@ -119,6 +119,10 @@ export const xAxisReferences: IXAxisLabelsRotationReference = {
     enableRotation: {
         objectName: MekkoChartObjectNames.XAxisRotation,
         propertyName: "enableRotataion"
+    },
+    rotationDegree: {
+        objectName: MekkoChartObjectNames.XAxisRotation,
+        propertyName: "rotationDegree"
     }
 }
 
