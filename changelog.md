@@ -1,3 +1,8 @@
+## 3.9.0.0
+* Added ability to customize X axis label rotation angle
+* Fixed wide margin below rotated X axis label
+* Fixed column focus ring getting obscured by nearby elements
+
 ## 3.8.0.0
 
 ### New features
