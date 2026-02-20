@@ -1043,7 +1043,7 @@ describe("MekkoChart", () => {
             dataView.metadata.objects = {
                 xAxisLabels: {
                     enableRotataion: true,
-                    rotationAngle: 45
+                    rotationDegree: 30
                 },
                 categoryAxis: {
                     showAxisTitle: true,
@@ -1056,7 +1056,7 @@ describe("MekkoChart", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                let expectedDegree: number = -45;
+                let expectedDegree: number = -30;
                 visualBuilder.xAxisTicks.forEach((element: HTMLElement) => {
                     const selection = select(element.querySelector("text"));
                     expect(selection.style("--rotation")).toBe(`${expectedDegree}deg`);
