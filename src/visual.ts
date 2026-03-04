@@ -1575,6 +1575,7 @@ export class MekkoChart implements IVisual {
             node
                 .classed(MekkoChart.LabelRotationSelector.className, false)
                 .classed(MekkoChart.LabelMiddleSelector.className, true)
+                .style("--rotation", null)
                 .attr("dx", MekkoChart.DefaultLabelDx)
                 .attr("dy", MekkoChart.DefaultLabelDy)
                 .attr("transform", MekkoChart.DefaultLabelRotate);
