@@ -1043,7 +1043,7 @@ describe("MekkoChart", () => {
             dataView.metadata.objects = {
                 xAxisLabels: {
                     enableRotataion: true,
-                    rotationDegree: 30
+                    rotationAngle: 30
                 },
                 categoryAxis: {
                     showAxisTitle: true,

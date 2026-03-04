@@ -273,7 +273,7 @@
                         "bool": true
                     }
                 },
-                "rotationDegree": {
+                "rotationAngle": {
                     "type": {
                         "numeric": true
                     }

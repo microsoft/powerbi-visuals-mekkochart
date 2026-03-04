@@ -337,8 +337,8 @@ export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
         value: false
     });
 
-    public rotationDegree = new formattingSettings.Slider({
-        name: "rotationDegree",
+    public rotationAngle = new formattingSettings.Slider({
+        name: "rotationAngle",
         displayNameKey: "Visual_Rotation_Degree",
         value: 45,
         options: {
@@ -353,7 +353,7 @@ export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
         }
     });
 
-    public slices: FormattingSettingsSlice[] = [this.enableRotataion, this.rotationDegree];
+    public slices: FormattingSettingsSlice[] = [this.enableRotataion, this.rotationAngle];
 }
 
 export class CategoryAxisSettings extends FormattingSettingsSimpleCard {

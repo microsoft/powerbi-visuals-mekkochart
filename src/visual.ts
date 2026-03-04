@@ -213,7 +213,7 @@ export class MekkoChart implements IVisual {
     private static XBrushSelector: ClassAndSelector = createClassAndSelector("x brush");
     private static BrushSelector: ClassAndSelector = createClassAndSelector("brush");
     private static LabelMiddleSelector: ClassAndSelector = createClassAndSelector("labelMiddle");
-    private static LabelRotateSelector: ClassAndSelector = createClassAndSelector("labelRotate");
+    private static LabelRotationSelector: ClassAndSelector = createClassAndSelector("labelRotate");
     private static ZeroLineSelector: ClassAndSelector = createClassAndSelector("zero-line");
     private static SvgScrollableSelector: ClassAndSelector = createClassAndSelector("svgScrollable");
     private static XSelector: ClassAndSelector = createClassAndSelector("x");
@@ -456,7 +456,7 @@ export class MekkoChart implements IVisual {
         const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.categoryAxis.fontControl.fontSize.value, this.settingsModel.categoryAxis.fontControl.fontFamily.value);
 
         const longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory.toString());
-        const requiredHeight = longestCategoryWidth * Math.sin(this.settingsModel.xAxisLabels.rotationDegree.value * Math.PI / 180);
+        const requiredHeight = longestCategoryWidth * Math.sin(this.settingsModel.xAxisLabels.rotationAngle.value * Math.PI / 180);
         return requiredHeight;
     }
 
@@ -1573,7 +1573,7 @@ export class MekkoChart implements IVisual {
             }
 
             node
-                .classed(MekkoChart.LabelRotateSelector.className, false)
+                .classed(MekkoChart.LabelRotationSelector.className, false)
                 .classed(MekkoChart.LabelMiddleSelector.className, true)
                 .attr("dx", MekkoChart.DefaultLabelDx)
                 .attr("dy", MekkoChart.DefaultLabelDy)
@@ -1703,8 +1703,8 @@ export class MekkoChart implements IVisual {
             else {
                 xAxisTextNodes
                     .classed(MekkoChart.LabelMiddleSelector.className, true)
-                    .classed(MekkoChart.LabelRotateSelector.className, true)
-                    .style("--rotation", `${-this.settingsModel.xAxisLabels.rotationDegree.value}deg`)
+                    .classed(MekkoChart.LabelRotationSelector.className, true)
+                    .style("--rotation", `${-this.settingsModel.xAxisLabels.rotationAngle.value}deg`)
                     .attr("dx", MekkoChart.DefaultLabelDx)
                     .attr("dy", MekkoChart.DefaultLabelDy);
             }
