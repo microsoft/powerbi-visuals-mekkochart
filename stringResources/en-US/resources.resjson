@@ -111,5 +111,5 @@
 	"Visual_X_Axis": "Visual X axis",
 	"Visual_LegendName": "Visual legend Name",
 	"Visual_Y_Axis_Tick_Text": "Visual Y axis tick",
-	"Visual_Rotation_Degree": "Angle"
+	"Visual_Angle": "Angle"
 }

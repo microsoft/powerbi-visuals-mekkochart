@@ -339,7 +339,7 @@ export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
 
     public rotationAngle = new formattingSettings.Slider({
         name: "rotationAngle",
-        displayNameKey: "Visual_Rotation_Degree",
+        displayNameKey: "Visual_Angle",
         value: 45,
         options: {
             minValue: {
