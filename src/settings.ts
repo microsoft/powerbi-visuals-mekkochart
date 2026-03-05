@@ -25,7 +25,7 @@ class ColumnBorderWidthDefaultOptions {
 
 class FontSizeDefaultOptions {
     public static FontSize: number = 9;
-    public static MinFontSize: number = 9;
+    public static MinFontSize: number = 6;
     public static MaxFontSize: number = 30;
 }
 
@@ -337,7 +337,23 @@ export class XAxisLabelsSettings extends FormattingSettingsSimpleCard {
         value: false
     });
 
-    public slices: FormattingSettingsSlice[] = [this.enableRotataion];
+    public rotationAngle = new formattingSettings.Slider({
+        name: "rotationAngle",
+        displayNameKey: "Visual_Angle",
+        value: 45,
+        options: {
+            minValue: {
+                type: powerbi.visuals.ValidatorType.Min,
+                value: 10,
+            },
+            maxValue: {
+                type: powerbi.visuals.ValidatorType.Max,
+                value: 90,
+            }
+        }
+    });
+
+    public slices: FormattingSettingsSlice[] = [this.enableRotataion, this.rotationAngle];
 }
 
 export class CategoryAxisSettings extends FormattingSettingsSimpleCard {
@@ -691,7 +707,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
             )
         }
     }
-    public setVisibilityOfFileds(data: MekkoColumnChartData): void {
+    public setVisibilityOfFields(data: MekkoColumnChartData): void {
         // Hide xAxis labels rotation if the categoryAxis is off
         this.xAxisLabels.visible = this.categoryAxis.show.value;
 
@@ -736,5 +752,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         }
 
         this.sortSeries.displayPercents.visible = this.valueAxis.visualMode.value === "percentage";
+
+        this.xAxisLabels.rotationAngle.disabled = !this.xAxisLabels.enableRotataion.value;
     }
 }

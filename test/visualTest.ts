@@ -1039,10 +1039,11 @@ describe("MekkoChart", () => {
             });
         });
 
-        it("rotate category label to 45 degrees", (done) => {
+        it("rotate category label to specified angle", (done) => {
             dataView.metadata.objects = {
                 xAxisLabels: {
-                    enableRotataion: true
+                    enableRotataion: true,
+                    rotationAngle: 30
                 },
                 categoryAxis: {
                     showAxisTitle: true,
@@ -1055,10 +1056,10 @@ describe("MekkoChart", () => {
             };
 
             visualBuilder.updateRenderTimeout(dataView, () => {
-                let expectedDegree: number = -45;
+                let expectedDegree: number = -30;
                 visualBuilder.xAxisTicks.forEach((element: HTMLElement) => {
                     const selection = select(element.querySelector("text"));
-                    expect(MekkoChart.getTranslation(selection.attr("transform"))[2]).toBeCloseTo(expectedDegree);
+                    expect(selection.style("--rotation")).toBe(`${expectedDegree}deg`);
                 });
                 done();
             }, 300);

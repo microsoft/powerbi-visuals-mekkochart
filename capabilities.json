@@ -272,6 +272,11 @@
                     "type": {
                         "bool": true
                     }
+                },
+                "rotationAngle": {
+                    "type": {
+                        "numeric": true
+                    }
                 }
             }
         },
