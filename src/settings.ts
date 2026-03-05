@@ -707,7 +707,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
             )
         }
     }
-    public setVisibilityOfFileds(data: MekkoColumnChartData): void {
+    public setVisibilityOfFields(data: MekkoColumnChartData): void {
         // Hide xAxis labels rotation if the categoryAxis is off
         this.xAxisLabels.visible = this.categoryAxis.show.value;
 
@@ -752,5 +752,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         }
 
         this.sortSeries.displayPercents.visible = this.valueAxis.visualMode.value === "percentage";
+
+        this.xAxisLabels.rotationAngle.disabled = !this.xAxisLabels.enableRotataion.value;
     }
 }

@@ -974,7 +974,7 @@ export class MekkoChart implements IVisual {
         const data: MekkoColumnChartData = (<BaseColumnChart>this.layers[0]).getData();
         const seriesCount: number = data.series.length;
 
-        this.settingsModel.setVisibilityOfFileds(data);
+        this.settingsModel.setVisibilityOfFields(data);
 
         if (data.hasDynamicSeries || seriesCount > 1 || !data.categoryMetadata) {
             this.settingsModel.setDataPointColorPickerSlices(this.layers);
