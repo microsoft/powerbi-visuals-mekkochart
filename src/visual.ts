@@ -1553,6 +1553,24 @@ export class MekkoChart implements IVisual {
         };
     }
 
+    private static svgEllipsis(
+        text: Selection,
+        angle: number,
+        margin: IMargin
+    ): void {
+        const svgOffsetX: number = (text.node() as SVGTextElement)?.ownerSVGElement?.getBoundingClientRect().x ?? 0;
+        text.each(function () {
+            const boundingRect: DOMRect = this.getBoundingClientRect();
+            const relativeX: number = boundingRect.x - svgOffsetX;
+            if (relativeX > margin.left) {
+                return;
+            }
+            const desiredWidth: number = boundingRect.width + relativeX - margin.left;
+            const desiredTextLength: number = desiredWidth / Math.cos(angle * Math.PI / 180);
+            textMeasurementService.svgEllipsis(this, desiredTextLength);
+        });
+    }
+
     private static wordBreak(
         text: Selection,
         axisProperties: IAxisProperties,
@@ -1563,22 +1581,12 @@ export class MekkoChart implements IVisual {
             let width: number,
                 allowedLength: number;
 
-            const node: Selection = select(this);
-
-            if (columnsWidth.length >= index) {
+            if (index < columnsWidth.length) {
                 width = columnsWidth[index];
                 allowedLength = axisProperties.scale(width);
             } else {
                 allowedLength = axisProperties.xLabelMaxWidth;
             }
-
-            node
-                .classed(MekkoChart.LabelRotationSelector.className, false)
-                .classed(MekkoChart.LabelMiddleSelector.className, true)
-                .style("--rotation", null)
-                .attr("dx", MekkoChart.DefaultLabelDx)
-                .attr("dy", MekkoChart.DefaultLabelDy)
-                .attr("transform", MekkoChart.DefaultLabelRotate);
 
             textMeasurementService.wordBreak(
                 this,
@@ -1695,6 +1703,12 @@ export class MekkoChart implements IVisual {
             const rotationEnabled: boolean = this.settingsModel.xAxisLabels.enableRotataion.value;
             if (!rotationEnabled) {
                 xAxisTextNodes
+                    .classed(MekkoChart.LabelRotationSelector.className, false)
+                    .classed(MekkoChart.LabelMiddleSelector.className, true)
+                    .style("--rotation", null)
+                    .attr("dx", MekkoChart.DefaultLabelDx)
+                    .attr("dy", MekkoChart.DefaultLabelDy)
+                    .attr("transform", MekkoChart.DefaultLabelRotate)
                     .call(
                         MekkoChart.wordBreak,
                         axes.x,
@@ -1707,7 +1721,8 @@ export class MekkoChart implements IVisual {
                     .classed(MekkoChart.LabelRotationSelector.className, true)
                     .style("--rotation", `${-this.settingsModel.xAxisLabels.rotationAngle.value}deg`)
                     .attr("dx", MekkoChart.DefaultLabelDx)
-                    .attr("dy", MekkoChart.DefaultLabelDy);
+                    .attr("dy", MekkoChart.DefaultLabelDy)
+                    .call(MekkoChart.svgEllipsis, this.settingsModel.xAxisLabels.rotationAngle.value, this.margin);
             }
         }
         else {

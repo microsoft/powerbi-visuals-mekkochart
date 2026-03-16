@@ -49,7 +49,7 @@ export class MekkoChartData extends TestDataViewBuilder {
     public static ColumnWidth: string = "Sum Total Units This Year";
 
     public valuesCategorySeries: string[][] = [
-        ["William", "DE"],
+        ["William Long Middle Name Long Last Name", "DE"],
         ["James", "GA"],
         ["Harper", "KY"],
         ["Aiden", "MD"],

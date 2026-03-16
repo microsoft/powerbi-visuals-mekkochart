@@ -279,6 +279,52 @@ describe("MekkoChart", () => {
             }, 300);
         });
 
+        it("rotated X axis labels shouldn't be cut off", (done) => {
+            dataView.metadata.objects = {
+                xAxisLabels: {
+                    enableRotataion: true,
+                    rotationAngle: 45
+                },
+                categoryAxis: {
+                    show: true,
+                    showAxisTitle: true
+                },
+                valueAxis: {
+                    show: true,
+                    showAxisTitle: true
+                }
+            };
+
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                visualBuilder.xAxisTicks.forEach((tick: Element) => {
+                    checkAxisLabels(
+                        visualBuilder.mainElement,
+                        tick);
+                });
+
+                done();
+            }, 300);
+        });
+
+        it("rotated X axis labels should use ellipsis truncation", (done) => {
+            dataView.metadata.objects = {
+                xAxisLabels: {
+                    enableRotataion: true,
+                    rotationAngle: 45
+                },
+                categoryAxis: {
+                    show: true
+                }
+            };
+
+            const svgEllipsisSpy = spyOn<any>(MekkoChart, "svgEllipsis").and.callThrough();
+
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                expect(svgEllipsisSpy).toHaveBeenCalled();
+                done();
+            }, 300);
+        });
+
         function checkAxisLabels(mainElement: Element, textElement: Element): void {
             expect(isTextElementInOrOutElement(
                 mainElement,
@@ -299,7 +345,7 @@ describe("MekkoChart", () => {
             checkMultisilection(ClickEventType.ShiftKey);
         });
 
-        function checkMultisilection(eventType: number): void{
+        function checkMultisilection(eventType: number): void {
             dataView = defaultDataViewBuilder.getDataView([
                 MekkoChartData.ColumnCategory,
                 MekkoChartData.ColumnY
@@ -845,7 +891,7 @@ describe("MekkoChart", () => {
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     const xAxisElement: HTMLElement = visualBuilder.mainElement.querySelector(".x.axis g.tick text");
                     const xAxisElementComputedStyle: CSSStyleDeclaration = getComputedStyle(xAxisElement);
-                    const xAxisFontSize: number= parseFloat(xAxisElementComputedStyle.getPropertyValue("font-size"));
+                    const xAxisFontSize: number = parseFloat(xAxisElementComputedStyle.getPropertyValue("font-size"));
 
                     expect(Math.round(xAxisFontSize)).toBe(Math.round(fromPointToPixel(categoryAxisFontSize)));
 
@@ -933,7 +979,7 @@ describe("MekkoChart", () => {
                 key: string;
                 data: number;
             }
-            
+
             let data = dataView.categorical.values.grouped().map(v => { return { key: v.name, data: sum(v.values[0].values) }; });
 
             let reduced = {};
@@ -1202,7 +1248,7 @@ describe("MekkoChart", () => {
                     columns[1].dispatchEvent(enterEvent);
                     expect(columns[1].getAttribute("aria-selected")).toBe("true");
 
-                    columns.splice(1,1);
+                    columns.splice(1, 1);
                     columns.forEach((column: HTMLElement) => {
                         expect(column.getAttribute("aria-selected")).toBe("false");
                     });
@@ -1228,7 +1274,7 @@ describe("MekkoChart", () => {
                     columns[1].dispatchEvent(enterEvent);
                     expect(columns[1].getAttribute("aria-selected")).toBe("true");
 
-                    columns.splice(1,1);
+                    columns.splice(1, 1);
                     columns.forEach((column: HTMLElement) => {
                         expect(column.getAttribute("aria-selected")).toBe("false");
                     });
@@ -1288,7 +1334,7 @@ describe("MekkoChart", () => {
             );
         });
 
-        function checkKeyboardMultiSelection(keyboardMultiselectionEvent: KeyboardEvent): void{
+        function checkKeyboardMultiSelection(keyboardMultiselectionEvent: KeyboardEvent): void {
             const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
 
             const columns: HTMLElement[] = [...visualBuilder.columns];
