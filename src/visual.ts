@@ -1558,12 +1558,14 @@ export class MekkoChart implements IVisual {
         angle: number,
         margin: IMargin
     ): void {
+        const svgOffsetX: number = (text.node() as SVGTextElement)?.ownerSVGElement?.getBoundingClientRect().x ?? 0;
         text.each(function () {
             const boundingRect: DOMRect = this.getBoundingClientRect();
-            if (boundingRect.x > margin.left) {
+            const relativeX: number = boundingRect.x - svgOffsetX;
+            if (relativeX > margin.left) {
                 return;
             }
-            const desiredWidth: number = boundingRect.width + boundingRect.x - margin.left;
+            const desiredWidth: number = boundingRect.width + relativeX - margin.left;
             const desiredTextLength: number = desiredWidth / Math.cos(angle * Math.PI / 180);
             textMeasurementService.svgEllipsis(this, desiredTextLength);
         });
