@@ -1579,7 +1579,7 @@ export class MekkoChart implements IVisual {
             let width: number,
                 allowedLength: number;
 
-            if (columnsWidth.length >= index) {
+            if (index < columnsWidth.length) {
                 width = columnsWidth[index];
                 allowedLength = axisProperties.scale(width);
             } else {
