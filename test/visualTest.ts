@@ -306,6 +306,25 @@ describe("MekkoChart", () => {
             }, 300);
         });
 
+        it("rotated X axis labels should use ellipsis truncation", (done) => {
+            dataView.metadata.objects = {
+                xAxisLabels: {
+                    enableRotataion: true,
+                    rotationAngle: 45
+                },
+                categoryAxis: {
+                    show: true
+                }
+            };
+
+            const svgEllipsisSpy = spyOn<any>(MekkoChart, "svgEllipsis").and.callThrough();
+
+            visualBuilder.updateRenderTimeout(dataView, () => {
+                expect(svgEllipsisSpy).toHaveBeenCalled();
+                done();
+            }, 300);
+        });
+
         function checkAxisLabels(mainElement: Element, textElement: Element): void {
             expect(isTextElementInOrOutElement(
                 mainElement,
