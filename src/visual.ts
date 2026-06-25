@@ -456,7 +456,9 @@ export class MekkoChart implements IVisual {
         const xAxisTextProperties: TextProperties = MekkoChart.getTextProperties(this.settingsModel.categoryAxis.fontControl.fontSize.value, this.settingsModel.categoryAxis.fontControl.fontFamily.value);
 
         const longestCategoryWidth = textMeasurementService.measureSvgTextWidth(xAxisTextProperties, longestCategory.toString());
-        const requiredHeight = longestCategoryWidth * Math.sin(this.settingsModel.xAxisLabels.rotationAngle.value * Math.PI / 180);
+        const textHeight = textMeasurementService.estimateSvgTextHeight(xAxisTextProperties);
+        const angleInRadians = this.settingsModel.xAxisLabels.rotationAngle.value * Math.PI / 180;
+        const requiredHeight = longestCategoryWidth * Math.sin(angleInRadians) + textHeight * Math.cos(angleInRadians);
         return requiredHeight;
     }
 

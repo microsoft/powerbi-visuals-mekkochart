@@ -1,3 +1,12 @@
+## 3.9.1.0
+### Fix
+* Fixed rotated X axis label height calculation to prevent labels from being clipped at the bottom
+* Added missing description for the Y axis gridline color setting
+
+### CI & tooling
+* Updated GitHub Actions workflows: bumped action versions, refreshed Node matrix to 20.x/22.x, added npm caching, minimal token permissions and concurrency cancellation
+* Updated Copilot PR-review instructions: added capabilities.json backward-compatibility rule, clarified version bump scheme, strengthened localization checks
+
 ## 3.9.0.0
 * Added ability to customize X axis label rotation angle
 * Fixed wide margin below rotated X axis label
