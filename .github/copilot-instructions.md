@@ -1,6 +1,6 @@
 # Agent-oriented Copilot instructions for PR checks
 
-**Purpose.** Keep only the checks and guidance that an automated coding agent (Copilot-style) can perform reliably during a PR review for a Power BI custom visual repository. Interactive/manual steps live in `HUMAN-certification-checklist.md`.
+**Purpose.** Keep only the checks and guidance that an automated coding agent (Copilot-style) can perform reliably during a PR review for a Power BI custom visual repository. Interactive/manual certification steps are out of scope here and are handled by human reviewers.
 
 **Context.** This repository contains a Microsoft custom visual for Power BI. All contributions must follow Microsoft coding standards and Power BI custom visual guidelines. The agent prioritizes checks that enforce those standards and flags deviations for human review.
 
@@ -32,8 +32,12 @@
 - **Capabilities**:
   - No `WebAccess` or privileges that permit arbitrary network calls → `error`.
   - `dataRoles` and `dataViewMappings` must be present → `error`.
+- **Backward compatibility of `capabilities.json` (persisted settings)** — critical:
+  - Changes must be **additive only**. Allowed: adding a new object, adding a new property to an existing object, adding a new member to an existing `enumeration`.
+  - **Forbidden** (→ `error`, breaks settings mapping in users' existing reports): renaming or removing an existing object/property; changing the `type` of an existing property; renaming/removing existing `enumeration` values; renaming/removing `dataRoles` `name` or `dataViewMappings` bindings.
+  - When in doubt, diff `capabilities.json` against the last released tag and confirm every change is an addition.
 - **`pbiviz.json`**:
-  - `visual.version` must bump for functional changes (semver).  
+  - Version is 4-part `major.minor.patch.build`. Bump for functional changes: new feature → bump **minor** (2nd digit); bug fix → bump **patch** (3rd digit). `pbiviz.json` `visual.version`, `visual.displayName` (the `Mekko Chart x.y.z.w` suffix) and `package.json` `version` must all match.  
   - `visual.guid`, `visual.displayName`, `author`, `supportUrl`, `apiVersion` present.  
   - `apiVersion` compatible with `@types/powerbi-visuals-api` (major alignment) → mismatch → `warning`.
 
@@ -86,10 +90,12 @@
 - If logic touched in `src/**` and no new/updated tests nearby → `warning`-reminder.
 - UI strings:
   - Check `stringResources/en-US/resources.resjson` and string correspondence from code.
+  - Every `displayNameKey` / `descriptionKey` referenced in `src/**` and `capabilities.json` must have a matching entry in `stringResources/en-US/resources.resjson`; a referenced-but-missing key → `warning`.
   - Missing localization keys → `warning`.
+  - New en-US keys need not be translated in the PR — non-en-US locales are handled by a dedicated translation team.
 - Spellcheck (en-US as source):
   - Report probable typos with level (`info`/`warning`) and replacement suggestion.
-  - Exclude identifiers/acronyms/brand-names based on `.spellcheck-whitelist`.
+  - Exclude identifiers/acronyms/brand-names (use a repo spellcheck whitelist file if one exists).
 
 ### 8) Documentation & changelog
 - For non-trivial changes — update `changelog.md` → `info`/`warning`.
@@ -104,6 +110,7 @@
   - Resource management: cleanup D3-selectors, event handlers, timers.
   - State/races/leaks; excessive coupling; duplication.
   - Power BI SDK/utilities compliance, formatting, API contracts.
+  - On-object formatting: sub-selection object names and `FormattingId` references (in `src/onObject/**`) must point to real `capabilities.json` objects/properties, and the formatting model (`src/settings.ts`) cards/slices must stay in sync with `capabilities.json`.
 
 ## Spellcheck Configuration
 
