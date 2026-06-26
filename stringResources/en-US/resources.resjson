@@ -93,7 +93,6 @@
 	"Visual_Percentage": "Percentage",
 	"Visual_Absolute": "Absolute",
 	"Visual_Mode_Description": "Choose 'percentage' to display values as a percentage of the total, or 'absolute' to display raw values",
-	"Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
 	"Visual_Gridline_Color": "Gridline color",
 	"Visual_Gridline_Transparency": "Gridline Transparency",
 	"Visual_Gridline_Width": "Gridline width",
