@@ -623,6 +623,8 @@ export class DrillControlCard extends FormattingSettingsSimpleCard {
 }
 
 export class VisualFormattingSettingsModel extends FormattingSettingsModel {
+    private isHighContrastMode: boolean = false;
+
     public columnBorder: ColumnBorderSettings = new ColumnBorderSettings();
     public legend: LegendSettings = new LegendSettings();
     public sortLegend: SortLegendSettings = new SortLegendSettings();
@@ -648,8 +650,8 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
     ];
 
     public setHighContrastMode(colorPalette: ISandboxExtendedColorPalette): void {
-        const isHighContrastMode: boolean = colorPalette.isHighContrast;
-        if (isHighContrastMode) {
+        this.isHighContrastMode = colorPalette.isHighContrast;
+        if (this.isHighContrastMode) {
             const foregroundColor: string = colorPalette.foreground.value;
             const backgroundColor: string = colorPalette.background.value;
 
@@ -657,14 +659,16 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
             this.labels.color.value.value = foregroundColor;
             this.categoryAxis.labelColor.value.value = foregroundColor;
             this.valueAxis.labelColor.value.value = foregroundColor;
+            this.valueAxis.gridlineColor.value.value = foregroundColor;
             this.dataPoint.defaultStrokeColor = foregroundColor;
         }
 
-        this.dataPoint.visible = !isHighContrastMode;
-        this.columnBorder.color.visible = !isHighContrastMode;
-        this.labels.color.visible = !isHighContrastMode;
-        this.categoryAxis.labelColor.visible = !isHighContrastMode;
-        this.valueAxis.labelColor.visible = !isHighContrastMode;
+        this.dataPoint.visible = !this.isHighContrastMode;
+        this.columnBorder.color.visible = !this.isHighContrastMode;
+        this.labels.color.visible = !this.isHighContrastMode;
+        this.categoryAxis.labelColor.visible = !this.isHighContrastMode;
+        this.valueAxis.labelColor.visible = !this.isHighContrastMode;
+        this.valueAxis.gridlineColor.visible = !this.isHighContrastMode;
     }
 
     public setDataPointColorPickerSlices(layers: IColumnChart[]) {
@@ -735,7 +739,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         }
 
         if (this.valueAxis.visualMode.value === "absolute") {
-            this.valueAxis.gridlineColor.visible = true;
+            this.valueAxis.gridlineColor.visible = !this.isHighContrastMode;
             this.valueAxis.gridlineTransparency.visible = true;
             this.valueAxis.gridlineStyle.visible = true;
             this.valueAxis.gridlineDashArray.visible = this.valueAxis.gridlineStyle.value === "custom";

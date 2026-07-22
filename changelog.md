@@ -2,6 +2,7 @@
 ### Fix
 * Fixed rotated X axis label height calculation to prevent labels from being clipped at the bottom
 * Added missing description for the Y axis gridline color setting
+* Fixed Y axis gridline color to adapt to high contrast mode
 
 ### CI & tooling
 * Updated GitHub Actions workflows: bumped action versions, refreshed Node matrix to 20.x/22.x, added npm caching, minimal token permissions and concurrency cancellation
