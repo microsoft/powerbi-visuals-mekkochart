@@ -93,6 +93,7 @@
   "Visual_Percentage": "Peratusan",
   "Visual_Absolute": "Mutlak",
   "Visual_Mode_Description": "Pilih 'peratusan' untuk memaparkan nilai sebagai peratusan daripada jumlah keseluruhan, atau 'mutlak' untuk memaparkan nilai mentah",
+  "Visual_Description_GridColor": "Pilih warna garis grid paksi Y",
   "Visual_Gridline_Color": "Warna garisan grid",
   "Visual_Gridline_Transparency": "Ketelusan Garisan Grid",
   "Visual_Gridline_Width": "Lebar garisan grid",

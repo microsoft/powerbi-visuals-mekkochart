@@ -93,6 +93,7 @@
   "Visual_Percentage": "Percentage",
   "Visual_Absolute": "Absoluut",
   "Visual_Mode_Description": "Kies Percentage om waarden weer te geven als percentage van het totaal of Absoluut om onbewerkte waarden weer te geven",
+  "Visual_Description_GridColor": "De kleur van de rasterlijnen van de Y-as selecteren",
   "Visual_Gridline_Color": "Rasterlijnkleur",
   "Visual_Gridline_Transparency": "Rasterlijntransparantie",
   "Visual_Gridline_Width": "Rasterlijnbreedte",

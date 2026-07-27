@@ -93,6 +93,7 @@
   "Visual_Percentage": "Percentagem",
   "Visual_Absolute": "Absoluto",
   "Visual_Mode_Description": "Escolha \"percentagem\" para apresentar os valores como uma percentagem do total, ou \"absoluto\" para apresentar os valores brutos",
+  "Visual_Description_GridColor": "Selecione a cor das linhas de grelha do eixo Y",
   "Visual_Gridline_Color": "Cor da linha de grelha",
   "Visual_Gridline_Transparency": "Transparência da linha de grelha",
   "Visual_Gridline_Width": "Largura da linha de grelha",

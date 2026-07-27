@@ -93,6 +93,7 @@
   "Visual_Percentage": "백분율",
   "Visual_Absolute": "절대값",
   "Visual_Mode_Description": "값을 전체의 백분율로 표시하려면 '백분율'을 선택하고, 원시 값을 표시하려면 '절댓값'을 선택하세요.",
+  "Visual_Description_GridColor": "Y축 눈금선의 색을 선택하세요",
   "Visual_Gridline_Color": "눈금선 색",
   "Visual_Gridline_Transparency": "눈금선 투명도",
   "Visual_Gridline_Width": "눈금선 너비",

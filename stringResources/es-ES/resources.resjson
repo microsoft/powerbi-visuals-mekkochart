@@ -93,6 +93,7 @@
   "Visual_Percentage": "Porcentaje",
   "Visual_Absolute": "Absoluto",
   "Visual_Mode_Description": "Elija \"porcentaje\" para mostrar los valores como porcentaje del total o \"absoluto\" para mostrar los valores sin procesar.",
+  "Visual_Description_GridColor": "Seleccionar el color de las líneas de cuadrícula del eje Y",
   "Visual_Gridline_Color": "Color de línea de cuadrícula",
   "Visual_Gridline_Transparency": "Transparencia de línea de cuadrícula",
   "Visual_Gridline_Width": "Ancho de línea de cuadrícula",

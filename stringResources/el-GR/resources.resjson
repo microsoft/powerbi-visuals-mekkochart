@@ -93,6 +93,7 @@
   "Visual_Percentage": "Ποσοστό",
   "Visual_Absolute": "Απόλυτο",
   "Visual_Mode_Description": "Επιλέξτε \"ποσοστό\" για να εμφανίσετε τιμές ως ποσοστό του συνόλου ή \"απόλυτο\" για να εμφανίσετε μη επεξεργασμένες τιμές",
+  "Visual_Description_GridColor": "Επιλέξτε το χρώμα των γραμμών πλέγματος του άξονα Υ",
   "Visual_Gridline_Color": "Χρώμα γραμμής πλέγματος",
   "Visual_Gridline_Transparency": "Διαφάνεια γραμμής πλέγματος",
   "Visual_Gridline_Width": "Πλάτος γραμμής πλέγματος",
