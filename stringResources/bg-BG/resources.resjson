@@ -93,6 +93,7 @@
   "Visual_Percentage": "Процент",
   "Visual_Absolute": "Абсолютна",
   "Visual_Mode_Description": "Изберете „процент“, за да показвате стойностите като процент от общата сума, или „абсолютно“, за да показвате необработените стойности",
+  "Visual_Description_GridColor": "Изберете цвета на линиите на мрежата по оста Y",
   "Visual_Gridline_Color": "Цвят на линиите на мрежата",
   "Visual_Gridline_Transparency": "Прозрачност на линиите на мрежата",
   "Visual_Gridline_Width": "Ширина на линиите на мрежата",

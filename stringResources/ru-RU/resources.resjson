@@ -93,6 +93,7 @@
   "Visual_Percentage": "Процент",
   "Visual_Absolute": "Абсолютное значение",
   "Visual_Mode_Description": "Выберите \"Процент\", чтобы показать значения в процентах от общего итога, или \"Абсолютные\", чтобы показать значения без обработки",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Цвет линии сетки",
   "Visual_Gridline_Transparency": "Прозрачность линии сетки",
   "Visual_Gridline_Width": "Ширина линии сетки",

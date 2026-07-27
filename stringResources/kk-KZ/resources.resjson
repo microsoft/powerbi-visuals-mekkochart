@@ -93,6 +93,7 @@
   "Visual_Percentage": "Пайыз",
   "Visual_Absolute": "Абсолюттік мән",
   "Visual_Mode_Description": "Мәндерді жалпы мәннің пайызы ретінде көрсету үшін \"пайыздық\" немесе өңделмеген мәндерді көрсету үшін \"абсолюттік\" таңдаңыз",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Тор сызығының түсі",
   "Visual_Gridline_Transparency": "Тор сызығының мөлдірлігі",
   "Visual_Gridline_Width": "Тор сызығының ені",

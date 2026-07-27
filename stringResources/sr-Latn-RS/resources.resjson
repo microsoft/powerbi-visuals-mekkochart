@@ -93,6 +93,7 @@
   "Visual_Percentage": "Procenat",
   "Visual_Absolute": "Apsolutna vrednost",
   "Visual_Mode_Description": "Odaberite „procenat“ da prikažete vrednosti kao procenat ukupnog iznosa, ili „apsolutno“ da prikažete sirove vrednosti",
+  "Visual_Description_GridColor": "Izaberite boju koordinatnih linija ose Y",
   "Visual_Gridline_Color": "Boja koordinatne linije",
   "Visual_Gridline_Transparency": "Prozirnost koordinatne linije",
   "Visual_Gridline_Width": "Širina koordinatne linije",

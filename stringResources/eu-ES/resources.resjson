@@ -93,6 +93,7 @@
   "Visual_Percentage": "Ehunekoa",
   "Visual_Absolute": "Absolutua",
   "Visual_Mode_Description": "Aukeratu «ehunekoa» balioak guztizkoaren ehuneko gisa bistaratzeko, edo «absolutua» balio gordinen moduan bistaratzeko",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Saretaren kolorea",
   "Visual_Gridline_Transparency": "Saretaren gardentasuna",
   "Visual_Gridline_Width": "Saretaren zabalera",

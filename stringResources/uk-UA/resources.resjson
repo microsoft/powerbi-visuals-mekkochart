@@ -93,6 +93,7 @@
   "Visual_Percentage": "Відсоток",
   "Visual_Absolute": "Абсолютна величина",
   "Visual_Mode_Description": "Виберіть \"відсоток\", щоб відобразити значення у відсотках від загальної суми, або \"абсолютне\", щоб відобразити початкові значення",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Колір лінії сітки",
   "Visual_Gridline_Transparency": "Прозорість ліній сітки",
   "Visual_Gridline_Width": "Ширина ліній сітки",

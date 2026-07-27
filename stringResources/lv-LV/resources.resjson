@@ -93,6 +93,7 @@
   "Visual_Percentage": "Procentuālā vērtība",
   "Visual_Absolute": "Absolūts",
   "Visual_Mode_Description": "Izvēlieties “procentuālā vērtība”, lai rādītu vērtības kā procentuālo daļu no kopējā apjoma, vai “absolūti”, lai rādītu neapstrādātās vērtības",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Režģlīnijas krāsa",
   "Visual_Gridline_Transparency": "Režģlīnijas caurspīdīgums",
   "Visual_Gridline_Width": "Režģlīnijas platums",

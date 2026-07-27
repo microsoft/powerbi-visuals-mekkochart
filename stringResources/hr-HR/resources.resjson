@@ -93,6 +93,7 @@
   "Visual_Percentage": "Postotak",
   "Visual_Absolute": "Apsolutno",
   "Visual_Mode_Description": "Odaberite „postotak” za prikaz vrijednosti kao postotak ukupnog zbroja ili „apsolutno” za prikaz neobrađenih vrijednosti",
+  "Visual_Description_GridColor": "Odabir boje crta rešetke osi Y",
   "Visual_Gridline_Color": "Boja crte rešetke",
   "Visual_Gridline_Transparency": "Transparentnost crte rešetke",
   "Visual_Gridline_Width": "Širina crte rešetke",

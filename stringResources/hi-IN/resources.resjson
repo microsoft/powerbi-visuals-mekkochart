@@ -93,6 +93,7 @@
   "Visual_Percentage": "प्रतिशत",
   "Visual_Absolute": "निरपेक्ष",
   "Visual_Mode_Description": "कुल के प्रतिशत के रूप में मानों को प्रदर्शित करने के लिए 'प्रतिशत' चुनें, या अपरिष्कृत मानों को प्रदर्शित करने के लिए 'निरपेक्ष' चुनें",
+  "Visual_Description_GridColor": "Y-अक्ष ग्रिडलाइन्स का रंग चुनें",
   "Visual_Gridline_Color": "ग्रिडलाइन का रंग",
   "Visual_Gridline_Transparency": "ग्रिडलाइन की पारदर्शिता",
   "Visual_Gridline_Width": "ग्रिडलाइन की चौड़ाई",

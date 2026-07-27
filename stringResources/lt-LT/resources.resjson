@@ -93,6 +93,7 @@
   "Visual_Percentage": "Procentinė dalis",
   "Visual_Absolute": "Absoliutusis",
   "Visual_Mode_Description": "Pasirinkite „procentai“, jei norite rodyti reikšmes kaip bendros sumos procentinę dalį, arba „absoliutūs“, jei norite rodyti neapdorotas reikšmes",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Tinklelio spalva",
   "Visual_Gridline_Transparency": "Tinklelio skaidrumas",
   "Visual_Gridline_Width": "Tinklelio plotis",

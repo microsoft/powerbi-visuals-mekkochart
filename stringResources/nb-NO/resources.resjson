@@ -93,6 +93,7 @@
   "Visual_Percentage": "Prosentdel",
   "Visual_Absolute": "Absolutt",
   "Visual_Mode_Description": "Velg «prosent» for å vise verdier som en prosentdel av totalen, eller «absolutt» for å vise råverdier",
+  "Visual_Description_GridColor": "Velg fargen på rutenettlinjene for Y-aksen",
   "Visual_Gridline_Color": "Støttelinjefarge",
   "Visual_Gridline_Transparency": "Støttelinjegjennomsiktighet",
   "Visual_Gridline_Width": "Støttelinjebredde",

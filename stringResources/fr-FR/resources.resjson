@@ -93,6 +93,7 @@
   "Visual_Percentage": "Pourcentage",
   "Visual_Absolute": "Absolu",
   "Visual_Mode_Description": "Choisissez « pourcentage » pour afficher les valeurs sous forme de pourcentage du total ou « absolu » pour afficher les valeurs brutes",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Couleur du quadrillage",
   "Visual_Gridline_Transparency": "Transparence du quadrillage",
   "Visual_Gridline_Width": "Largeur de quadrillage",

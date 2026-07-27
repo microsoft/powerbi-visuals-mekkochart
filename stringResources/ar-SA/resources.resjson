@@ -93,6 +93,7 @@
   "Visual_Percentage": "النسبة المئوية",
   "Visual_Absolute": "مطلق",
   "Visual_Mode_Description": "اختر 'النسبة المئوية' لعرض القيم كنسبة مئوية من الإجمالي أو 'مطلقة' لعرض القيم الأولية",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "لون خط الشبكة",
   "Visual_Gridline_Transparency": "شفافية خط الشبكة",
   "Visual_Gridline_Width": "عرض خط الشبكة",

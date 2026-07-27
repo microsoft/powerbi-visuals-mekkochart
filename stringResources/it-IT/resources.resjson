@@ -93,6 +93,7 @@
   "Visual_Percentage": "Percentuale",
   "Visual_Absolute": "Assoluto",
   "Visual_Mode_Description": "Scegliere 'percentage' per visualizzare i valori come percentuale del totale, oppure 'absolute' per visualizzare i valori assoluti",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Colore griglia",
   "Visual_Gridline_Transparency": "Trasparenza linea della griglia",
   "Visual_Gridline_Width": "Larghezza linea della griglia",

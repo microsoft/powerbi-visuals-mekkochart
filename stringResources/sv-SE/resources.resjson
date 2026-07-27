@@ -93,6 +93,7 @@
   "Visual_Percentage": "Procent",
   "Visual_Absolute": "Absolut",
   "Visual_Mode_Description": "Välj ”procent” om du vill visa värden som en procentandel av totalsumman, eller ”absolut” för att visa råa värden",
+  "Visual_Description_GridColor": "Välj färg för Y-axelns stödlinjer",
   "Visual_Gridline_Color": "Stödlinjefärg",
   "Visual_Gridline_Transparency": "Stödlinjetransparens",
   "Visual_Gridline_Width": "Stödlinjebredd",

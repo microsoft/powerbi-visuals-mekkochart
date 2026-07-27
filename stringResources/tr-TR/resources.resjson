@@ -93,6 +93,7 @@
   "Visual_Percentage": "Yüzde",
   "Visual_Absolute": "Mutlak",
   "Visual_Mode_Description": "Değerleri toplamın yüzdesi olarak göstermek için 'yüzde' seçeneğini belirtin, ham değerleri göstermek için 'mutlak' seçeneğini belirtin",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Kılavuz çizgisi rengi",
   "Visual_Gridline_Transparency": "Kılavuz Çizgisi Saydamlığı",
   "Visual_Gridline_Width": "Kılavuz çizgisi genişliği",

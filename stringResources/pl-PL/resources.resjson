@@ -93,6 +93,7 @@
   "Visual_Percentage": "Wartość procentowa",
   "Visual_Absolute": "Bezwzględne",
   "Visual_Mode_Description": "Wybierz opcję „procent”, aby wyświetlić wartości jako procent całości, lub „absolutną”, aby wyświetlić wartości bezwzględne",
+  "Visual_Description_GridColor": "Select the color of the Y-axis gridlines",
   "Visual_Gridline_Color": "Kolor linii siatki",
   "Visual_Gridline_Transparency": "Przezroczystość linii siatki",
   "Visual_Gridline_Width": "Szerokość linii siatki",

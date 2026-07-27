@@ -93,6 +93,7 @@
   "Visual_Percentage": "Odstotek",
   "Visual_Absolute": "Absolutno",
   "Visual_Mode_Description": "Izberite »odstotek«, da prikažete vrednosti kot odstotek celote, ali »absolutno«, da prikažete neobdelane vrednosti",
+  "Visual_Description_GridColor": "Izberite barvo mrežnih črt na osi Y",
   "Visual_Gridline_Color": "Barva mrežnih črt",
   "Visual_Gridline_Transparency": "Prosojnost mrežnih črt",
   "Visual_Gridline_Width": "Debelina mrežne črte",
