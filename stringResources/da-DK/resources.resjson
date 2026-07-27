@@ -93,6 +93,7 @@
   "Visual_Percentage": "Procentdel",
   "Visual_Absolute": "Absolut",
   "Visual_Mode_Description": "Vælg 'procent' for at vise værdier som en procentdel af totalen, eller 'absolut' for at vise rå værdier",
+  "Visual_Description_GridColor": "Vælg farven på Y-aksens gitterlinjer",
   "Visual_Gridline_Color": "Gitterlinjefarve",
   "Visual_Gridline_Transparency": "Gennemsigtighed af gitterlinjer",
   "Visual_Gridline_Width": "Gitterlinje med",

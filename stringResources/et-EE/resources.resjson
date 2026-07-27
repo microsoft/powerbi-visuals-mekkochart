@@ -93,6 +93,7 @@
   "Visual_Percentage": "Protsent",
   "Visual_Absolute": "Absoluutne",
   "Visual_Mode_Description": "Valige „protsent“, et kuvada väärtused protsendina kogusummast, või „absoluutne“, et kuvada töötlemata väärtused",
+  "Visual_Description_GridColor": "Valige Y-telje ruudujoonte värv",
   "Visual_Gridline_Color": "Ruudujoone värv",
   "Visual_Gridline_Transparency": "Ruudujoone läbipaistvus",
   "Visual_Gridline_Width": "Ruudustiku laius",

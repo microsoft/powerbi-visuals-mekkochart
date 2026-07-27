@@ -93,6 +93,7 @@
   "Visual_Percentage": "Prozent",
   "Visual_Absolute": "Absolut",
   "Visual_Mode_Description": "Wählen Sie „Prozentsatz“, um Werte als Anteil der Gesamtsumme anzuzeigen, oder „absolut“, um die Rohwerte darzustellen.",
+  "Visual_Description_GridColor": "Wählen Sie die Farbe der Gitternetzlinien der Y-Achse aus.",
   "Visual_Gridline_Color": "Gitternetzlinienfarbe",
   "Visual_Gridline_Transparency": "Gitternetzlinientransparenz",
   "Visual_Gridline_Width": "Gitternetzlinienstärke",

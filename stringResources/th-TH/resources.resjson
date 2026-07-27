@@ -93,6 +93,7 @@
   "Visual_Percentage": "เปอร์เซ็นต์",
   "Visual_Absolute": "สัมบูรณ์",
   "Visual_Mode_Description": "เลือก 'เปอร์เซ็นต์' เพื่อแสดงค่าเป็นเปอร์เซ็นต์ของยอดรวม หรือ 'ค่าสัมบูรณ์' เพื่อแสดงค่าดิบ",
+  "Visual_Description_GridColor": "เลือกสีของเส้นตารางแกน Y",
   "Visual_Gridline_Color": "สีเส้นตาราง",
   "Visual_Gridline_Transparency": "ความโปร่งใสของเส้นตาราง",
   "Visual_Gridline_Width": "ความกว้างเส้นตาราง",

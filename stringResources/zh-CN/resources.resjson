@@ -93,6 +93,7 @@
   "Visual_Percentage": "百分比",
   "Visual_Absolute": "绝对",
   "Visual_Mode_Description": "选择“百分比”以将值显示为总数的百分比，或选择“绝对”以显示原始值",
+  "Visual_Description_GridColor": "选择 Y 轴网格线的颜色",
   "Visual_Gridline_Color": "网格线颜色",
   "Visual_Gridline_Transparency": "网格线透明度",
   "Visual_Gridline_Width": "网格线宽度",

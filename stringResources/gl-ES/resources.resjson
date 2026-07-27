@@ -93,6 +93,7 @@
   "Visual_Percentage": "Porcentaxe",
   "Visual_Absolute": "Absoluto",
   "Visual_Mode_Description": "Escolle \"porcentaxe\" para mostrar os valores como unha porcentaxe do total, ou \"absoluto\" para mostrar os valores brutos",
+  "Visual_Description_GridColor": "Selecciona a cor das liñas da cuadrícula do eixe Y",
   "Visual_Gridline_Color": "Cor da liña de grade",
   "Visual_Gridline_Transparency": "Transparencia da liña de grade",
   "Visual_Gridline_Width": "Largura da liña de grade",

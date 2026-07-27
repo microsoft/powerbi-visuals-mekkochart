@@ -93,6 +93,7 @@
   "Visual_Percentage": "Százalék",
   "Visual_Absolute": "Abszolút",
   "Visual_Mode_Description": "Válassza a „százalék” lehetőséget az értékek százalékos értékként való megjelenítéséhez, vagy az „abszolút” lehetőséget a nyers értékek megjelenítéséhez",
+  "Visual_Description_GridColor": "Az Y tengely rácsvonalai színének kiválasztása",
   "Visual_Gridline_Color": "Rácsvonal színe",
   "Visual_Gridline_Transparency": "Rácsvonal áttetszősége",
   "Visual_Gridline_Width": "Rácsvonal szélessége",

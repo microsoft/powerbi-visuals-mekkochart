@@ -93,6 +93,7 @@
   "Visual_Percentage": "Prosentti",
   "Visual_Absolute": "Absoluuttinen",
   "Visual_Mode_Description": "Valitse \"prosentti\", jos haluat näyttää arvot prosenttiosuutena kokonaismäärästä, tai \"absoluuttinen\", jos haluat näyttää arvot sellaisenaan",
+  "Visual_Description_GridColor": "Valitse Y-akselin ruudukon viivojen väri",
   "Visual_Gridline_Color": "Ruudukon väri",
   "Visual_Gridline_Transparency": "Ruudukkoviivan läpinäkyvyys",
   "Visual_Gridline_Width": "Ruudukkoviivan leveys",
