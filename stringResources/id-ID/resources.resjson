@@ -93,6 +93,7 @@
   "Visual_Percentage": "Persentase",
   "Visual_Absolute": "Absolut",
   "Visual_Mode_Description": "Pilih 'persentase' untuk menampilkan nilai sebagai persentase dari total, atau 'absolut' untuk menampilkan nilai mentah",
+  "Visual_Description_GridColor": "Pilih warna garis kisi sumbu Y",
   "Visual_Gridline_Color": "Warna garis kisi",
   "Visual_Gridline_Transparency": "Transparansi Garis Kisi",
   "Visual_Gridline_Width": "Lebar garis kisi",

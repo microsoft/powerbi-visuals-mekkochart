@@ -93,6 +93,7 @@
   "Visual_Percentage": "Percento",
   "Visual_Absolute": "Absolútny",
   "Visual_Mode_Description": "Ak chcete zobraziť hodnoty ako percento z celkového súčtu, vyberte možnosť Percento. Ak chcete zobraziť nespracované hodnoty, vyberte možnosť Absolútne.",
+  "Visual_Description_GridColor": "Vyberte farbu mriežky osi y",
   "Visual_Gridline_Color": "Farba mriežky",
   "Visual_Gridline_Transparency": "Priehľadnosť mriežky",
   "Visual_Gridline_Width": "Šírka mriežky",

@@ -93,6 +93,7 @@
   "Visual_Percentage": "Procentaj",
   "Visual_Absolute": "Valoare absolută",
   "Visual_Mode_Description": "Alegeți „procent” pentru a afișa valorile ca procent din total sau „absolut” pentru a afișa valorile brute",
+  "Visual_Description_GridColor": "Selectați culoarea liniilor de grilă de pe axa Y",
   "Visual_Gridline_Color": "Culoare linie de grilă",
   "Visual_Gridline_Transparency": "Transparența liniei de grilă",
   "Visual_Gridline_Width": "Lățimea liniei de grilă",
