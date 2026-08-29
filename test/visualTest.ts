@@ -715,6 +715,39 @@ describe("MekkoChart", () => {
                     });
                 });
 
+                it("uses the foreground color in high contrast mode and restores the persisted color", () => {
+                    const persistedColor: string = "#FF0000";
+                    const highContrastForeground: string = "#FFFF00";
+                    const colorPalette = visualBuilder.visualHost.colorPalette;
+
+                    (dataView.metadata.objects as any).valueAxis.gridlineColor = getSolidColorStructuralObject(persistedColor);
+
+                    const expectGridlineColor = (expectedColor: string): void => {
+                        visualBuilder.yAxisTicks[0].querySelectorAll("line").forEach((element: Element) => {
+                            assertColorsMatch(getComputedStyle(element).getPropertyValue("stroke"), expectedColor);
+                        });
+                    };
+
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+                    expectGridlineColor(persistedColor);
+
+                    colorPalette.isHighContrast = true;
+                    colorPalette.foreground.value = highContrastForeground;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+                    visualBuilder.instance.getFormattingModel();
+
+                    expectGridlineColor(highContrastForeground);
+                    expect(visualBuilder.instance.settingsModel.valueAxis.gridlineColor.visible).toBeFalse();
+                    expect(visualBuilder.instance.settingsModel.valueAxis.gridlineWidth.visible).toBeTrue();
+
+                    colorPalette.isHighContrast = false;
+                    visualBuilder.updateFlushAllD3Transitions(dataView);
+                    visualBuilder.instance.getFormattingModel();
+
+                    expectGridlineColor(persistedColor);
+                    expect(visualBuilder.instance.settingsModel.valueAxis.gridlineColor.visible).toBeTrue();
+                });
+
                 it("default gridline style fallback", () => {
                     (dataView.metadata.objects as any).valueAxis.gridlineStyle = "unknown";
                     visualBuilder.updateFlushAllD3Transitions(dataView);

@@ -1,3 +1,7 @@
+## 3.9.2.0
+### Fix
+* Fixed Y axis gridline color to adapt to high contrast mode
+
 ## 3.9.1.0
 ### Fix
 * Fixed rotated X axis label height calculation to prevent labels from being clipped at the bottom
