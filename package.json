@@ -62,7 +62,7 @@
     "lodash.sum": "^4.0.2",
     "playwright-chromium": "^1.56.0",
     "powerbi-visuals-tools": "^7.0.2",
-    "powerbi-visuals-utils-testutils": "^6.1.1",
+    "powerbi-visuals-utils-testutils": "^7.0.1",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",
